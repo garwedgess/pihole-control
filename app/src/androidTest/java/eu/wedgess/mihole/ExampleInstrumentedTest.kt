@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("eu.wedgess.piholecontrol", appContext.packageName)
+        assertEquals("eu.wedgess.mihole", appContext.packageName)
     }
 }

@@ -1,0 +1,28 @@
+CREATE TABLE MiHoles(
+ Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+ Name TEXT NOT NULL,
+ Scheme TEXT NOT NULL,
+ Host TEXT NOT NULL,
+ ApiPath TEXT NOT NULL,
+ Port TEXT NOT NULL,
+ Token TEXT,
+ AuthUserName TEXT,
+ AuthPassword TEXT,
+ AuthRealm TEXT,
+ TrustAllCertificates INTEGER DEFAULT 0
+);
+
+insert:
+INSERT OR FAIL INTO MiHoles
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM MiHoles;
+
+selectById:
+SELECT * FROM MiHoles
+WHERE Id = :id;
+
+delete:
+DELETE FROM MiHoles WHERE Id = :id;
+
