@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PiHoleOverTimeData(
     @SerialName("domains_over_time")
-    val domainsOverTime: Map<Int, Int> = mapOf(),
+    val domainsOverTime: Map<Float, Float> = mapOf(),
     @SerialName("ads_over_time")
-    val adsOverTime: Map<Int, Int> = mapOf(),
+    val adsOverTime: Map<Float, Float> = mapOf(),
 )

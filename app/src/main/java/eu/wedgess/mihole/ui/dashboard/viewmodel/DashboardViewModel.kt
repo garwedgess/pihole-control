@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
-import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -33,18 +32,33 @@ class DashboardViewModel @Inject constructor(
     override fun onEvent(event: DashboardContract.Event) {
         when (event) {
             DashboardContract.Event.FetchStatistics -> fetchStatistics()
+            DashboardContract.Event.FetchQueriesOvertime -> fetchQueriesOverTime()
         }
     }
 
     private val statisticsErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.summary(Resource.Error(throwable.message ?: "Unknown error")) }
+        _uiState.update { it.summaryError(throwable.message ?: "Unknown error") }
+    }
+
+    private val queriesOverTimeErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        _uiState.update { it.overtimeError(throwable.message ?: "Unknown error") }
     }
 
     private fun fetchStatistics() = viewModelScope.launch(statisticsErrorHandler) {
         when (val response = repository.fetchStatusSummary()) {
-            is ResponseResult.Success -> _uiState.update { it.summary(Resource.Success(response.data)) }
+            is ResponseResult.Success -> _uiState.update { it.summary(response.data) }
 
             is ResponseResult.Error -> statisticsErrorHandler.handleException(
+                this@launch.coroutineContext,
+                response.handleError()
+            )
+        }
+    }
+
+    private fun fetchQueriesOverTime() = viewModelScope.launch(queriesOverTimeErrorHandler) {
+        when (val response = repository.fetchOverTimeData()) {
+            is ResponseResult.Success -> _uiState.update { it.overtime(response.data) }
+            is ResponseResult.Error -> queriesOverTimeErrorHandler.handleException(
                 this@launch.coroutineContext,
                 response.handleError()
             )

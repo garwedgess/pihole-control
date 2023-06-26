@@ -14,14 +14,20 @@ import androidx.compose.material.icons.filled.BackHand
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Public
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleSummary
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
+import eu.wedgess.mihole.ui.theme.percentageBlockedBackground
+import eu.wedgess.mihole.ui.theme.queriesBlockedBackground
+import eu.wedgess.mihole.ui.theme.totalQueriesBackground
 
 @Composable
 fun SummarySection(summary: PiHoleSummary) {
@@ -58,45 +64,49 @@ fun SummarySection(summary: PiHoleSummary) {
         )
     )
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 8.dp, end = 8.dp, top = 8.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SummaryItem.Number(
                 modifier = Modifier.weight(1f),
-                title = "Total Queries",
+                title = stringResource(R.string.summary_title_total_queries),
                 value = totalQueries,
                 imageVector = Icons.Default.Public,
-                backgroundColor = Color(0xFF00A65A)
+                backgroundColor = MaterialTheme.colorScheme.totalQueriesBackground
             )
             SummaryItem.Number(
                 modifier = Modifier.weight(1f),
-                title = "Blocked Queries",
+                title = stringResource(R.string.summary_title_blocked_queries),
                 value = adsBlocked,
                 imageVector = Icons.Default.BackHand,
-                backgroundColor = Color(0xFF00C0EF)
+                backgroundColor = MaterialTheme.colorScheme.queriesBlockedBackground
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SummaryItem.Percentage(
                 modifier = Modifier.weight(1f),
-                title = "Percent Blocked",
+                title = stringResource(R.string.summary_title_percent_blocked),
                 value = percentageBlocked,
                 imageVector = Icons.Default.PieChart,
-                backgroundColor = Color(0xFFF39C12)
+                backgroundColor = MaterialTheme.colorScheme.percentageBlockedBackground
             )
             SummaryItem.Number(
                 modifier = Modifier.weight(1f),
-                title = "Domains on Blocklist",
+                title = stringResource(R.string.summary_title_domains_on_blocklist),
                 value = domainsBeingBlocked,
                 imageVector = Icons.Default.ListAlt,
-                backgroundColor = Color(0xFFDD4B39)
+                backgroundColor = MaterialTheme.colorScheme.domainsOnAdListBackground
             )
         }
     }

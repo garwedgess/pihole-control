@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MiHole</string>
+    <string name="summary_title_total_queries">Total Queries</string>
+    <string name="summary_title_blocked_queries">Blocked Queries</string>
+    <string name="summary_title_percent_blocked">Percent Blocked</string>
+    <string name="summary_title_domains_on_blocklist">Domains on Blocklist</string>
 </resources>

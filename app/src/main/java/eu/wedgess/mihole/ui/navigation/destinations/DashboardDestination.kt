@@ -32,6 +32,7 @@ fun NavGraphBuilder.DashboardDestination(
             )
             do {
                 viewModel.onEvent(DashboardContract.Event.FetchStatistics)
+                viewModel.onEvent(DashboardContract.Event.FetchQueriesOvertime)
                 delay(10_000)
             } while (true)
         }

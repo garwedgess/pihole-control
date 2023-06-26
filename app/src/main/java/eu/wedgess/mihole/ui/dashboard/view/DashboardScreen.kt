@@ -11,6 +11,8 @@ import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
+import eu.wedgess.mihole.ui.dashboard.view.components.QueriesOverTimeSection
+import eu.wedgess.mihole.ui.dashboard.view.components.QueriesOvertimeGraph
 import eu.wedgess.mihole.ui.dashboard.view.components.SummarySection
 
 @Composable
@@ -31,6 +33,15 @@ fun DashboardScreen(
                     onRetry = { onEvent(DashboardContract.Event.FetchStatistics) })
 
                 Resource.Loading -> LoadingContent(message = "Fetching statistics")
+            }
+
+            when (val overtime = uiState.queriesOverTime) {
+                is Resource.Success -> QueriesOverTimeSection(overTimeData = overtime.data)
+                is Resource.Error -> ErrorMessage(
+                    errorMessage = overtime.errorMessage,
+                    onRetry = { onEvent(DashboardContract.Event.FetchStatistics) })
+
+                Resource.Loading -> LoadingContent(message = "Fetching over time data")
             }
 
 
