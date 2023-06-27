@@ -33,6 +33,7 @@ class DashboardViewModel @Inject constructor(
         when (event) {
             DashboardContract.Event.FetchStatistics -> fetchStatistics()
             DashboardContract.Event.FetchQueriesOvertime -> fetchQueriesOverTime()
+            DashboardContract.Event.FetchClientQueriesOvertime -> fetchClientQueriesOverTime()
         }
     }
 
@@ -41,6 +42,10 @@ class DashboardViewModel @Inject constructor(
     }
 
     private val queriesOverTimeErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        _uiState.update { it.overtimeError(throwable.message ?: "Unknown error") }
+    }
+
+    private val clientQueriesOverTimeErrorHandler = CoroutineExceptionHandler { _, throwable ->
         _uiState.update { it.overtimeError(throwable.message ?: "Unknown error") }
     }
 
@@ -59,6 +64,16 @@ class DashboardViewModel @Inject constructor(
         when (val response = repository.fetchOverTimeData()) {
             is ResponseResult.Success -> _uiState.update { it.overtime(response.data) }
             is ResponseResult.Error -> queriesOverTimeErrorHandler.handleException(
+                this@launch.coroutineContext,
+                response.handleError()
+            )
+        }
+    }
+
+    private fun fetchClientQueriesOverTime() = viewModelScope.launch(clientQueriesOverTimeErrorHandler) {
+        when (val response = repository.fetchOverTimeDataClients()) {
+            is ResponseResult.Success -> _uiState.update { it.clientOvertime(response.data) }
+            is ResponseResult.Error -> clientQueriesOverTimeErrorHandler.handleException(
                 this@launch.coroutineContext,
                 response.handleError()
             )

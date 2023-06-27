@@ -60,7 +60,7 @@ fun QueriesOvertimeGraph(
         shape = RoundedCornerShape(4.dp)
     ) {
         Chart(
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
             marker = rememberMarker(),
             chart = lineChart(
                 lines = listOf(

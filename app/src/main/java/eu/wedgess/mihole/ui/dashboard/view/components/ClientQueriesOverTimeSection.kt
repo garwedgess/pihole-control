@@ -10,11 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 
 @Composable
-fun QueriesOverTimeSection(
-    overTimeData: PiHoleOverTimeData
+fun ClientQueriesOverTimeSection(
+    overTimeData: PiHoleClientsOverTimeData
 ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
@@ -22,9 +23,9 @@ fun QueriesOverTimeSection(
     ) {
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = "Queries Over The Last 24hours",
+            text = "Client Queries Over The Last 24hours",
             style = MaterialTheme.typography.titleLarge
         )
-        QueriesOvertimeGraph(overTimeData = overTimeData)
+        ClientQueriesOvertimeGraph(overTimeData = overTimeData)
     }
 }

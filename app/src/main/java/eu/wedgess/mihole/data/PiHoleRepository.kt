@@ -24,6 +24,10 @@ class PiHoleRepository @Inject constructor(
         api.fetchOverTimeData10Minutes(currentPiHole.first())
     }
 
+    suspend fun fetchOverTimeDataClients() = withContext(dispatcherProvider.io) {
+        api.fetchOverTimeDataClients(currentPiHole.first())
+    }
+
     suspend fun fetchStatistics() = withContext(dispatcherProvider.io) {
         api.fetchStatistics(currentPiHole.first())
     }

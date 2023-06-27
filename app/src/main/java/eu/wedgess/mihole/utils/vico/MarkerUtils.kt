@@ -34,7 +34,7 @@ import eu.wedgess.mihole.utils.extensions.formatMilliseconds
 import java.util.concurrent.TimeUnit
 
 @Composable
-internal fun rememberMarker(): Marker {
+internal fun rememberMarker(showZero: Boolean = true): Marker {
     val labelBackgroundColor = MaterialTheme.colorScheme.surface
     val labelBackground = remember(labelBackgroundColor) {
         ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
@@ -71,13 +71,14 @@ internal fun rememberMarker(): Marker {
         object : MarkerComponent(label, indicator, guideline) {
             init {
                 labelFormatter = MarkerLabelFormatter { markedEntries ->
-                    markedEntries.transformToSpannable() { model ->
+                    val filteredEntries = if (showZero) markedEntries else markedEntries.filterNot { it.entry.y == 0f }
+                    filteredEntries.transformToSpannable() { model ->
                         appendCompat(
                             "%.0f".format(model.entry.y),
                             ForegroundColorSpan(model.color),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
                         )
-                        model.takeIf { markedEntries.indexOf(model) == markedEntries.size.minus(1) }
+                        model.takeIf { model == filteredEntries.last() }
                             ?.run {
                                 appendCompat(
                                     "${System.getProperty("line.separator")}${

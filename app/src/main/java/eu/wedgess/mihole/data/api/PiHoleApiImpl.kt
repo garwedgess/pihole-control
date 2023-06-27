@@ -2,6 +2,7 @@ package eu.wedgess.mihole.data.api
 
 import eu.wedgess.mihole.data.model.MiHolesInfo
 import eu.wedgess.mihole.data.model.PiHoleApiResponse
+import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.data.model.PiHoleStatusResponse
@@ -59,6 +60,16 @@ class PiHoleApiImpl @Inject constructor(
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["overTimeData10mins"] = true.toString()
+            }
+        }
+    }
+
+    override suspend fun fetchOverTimeDataClients(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleClientsOverTimeData> {
+        return httpClient.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["overTimeDataClients"] = true.toString()
+                parameters["getClientNames"] = true.toString()
             }
         }
     }
