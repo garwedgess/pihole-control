@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 data class PiHoleStatistics(
     @SerialName("querytypes")
     val queryTypes: QueryTypes = QueryTypes(),
+    @SerialName("forward_destinations")
+    val forwardDestinations: Map<String, Float> = mapOf(),
     @SerialName("top_queries")
     val topQueries: Map<String, Int> = mapOf(),
     @SerialName("top_ads")
@@ -17,36 +19,55 @@ data class PiHoleStatistics(
     @Serializable
     data class QueryTypes(
         @SerialName("A (IPv4)")
-        val AIPv4: Double = 0.0,
+        val AIPv4: Float = 0f,
         @SerialName("AAAA (IPv6)")
-        val AAAAIPv6: Double = 0.0,
+        val AAAAIPv6: Float = 0f,
         @SerialName("ANY")
-        val any: Double = 0.0,
+        val any: Float = 0f,
         @SerialName("SRV")
-        val SRV: Double = 0.0,
+        val SRV: Float = 0f,
         @SerialName("SOA")
-        val SOA: Double = 0.0,
+        val SOA: Float = 0f,
         @SerialName("PTR")
-        val PTR: Double = 0.0,
+        val PTR: Float = 0f,
         @SerialName("TXT")
-        val TXT: Double = 0.0,
+        val TXT: Float = 0f,
         @SerialName("NAPTR")
-        val NAPTR: Double = 0.0,
+        val NAPTR: Float = 0f,
         @SerialName("MX")
-        val MX: Double = 0.0,
+        val MX: Float = 0f,
         @SerialName("DS")
-        val DS: Double = 0.0,
+        val DS: Float = 0f,
         @SerialName("RRSIG")
-        val RRSIG: Double = 0.0,
+        val RRSIG: Float = 0f,
         @SerialName("DNSKEY")
-        val DNSKey: Double = 0.0,
+        val DNSKey: Float = 0f,
         @SerialName("NS")
-        val NS: Double = 0.0,
+        val NS: Float = 0f,
         @SerialName("OTHER")
-        val other: Double = 0.0,
+        val other: Float = 0f,
         @SerialName("SVCB")
-        val SVCB: Double = 0.0,
+        val SVCB: Float = 0f,
         @SerialName("HTTPS")
-        val HTTPS: Double = 0.0
-    )
+        val HTTPS: Float = 0f
+    ) {
+        fun asList(): List<Pair<String, Float>> = listOf(
+            Pair("A (IPv4)", AIPv4),
+            Pair("AAAA (IPv6)", AAAAIPv6),
+            Pair("ANY", any),
+            Pair("SRV", SRV),
+            Pair("SOA", SOA),
+            Pair("PTR", PTR),
+            Pair("TXT", TXT),
+            Pair("NAPTR", NAPTR),
+            Pair("MX", MX),
+            Pair("DS", DS),
+            Pair("RRSIG", RRSIG),
+            Pair("DNSKey", DNSKey),
+            Pair("NS", NS),
+            Pair("OTHER", other),
+            Pair("SVCB", SVCB),
+            Pair("HTTPS", HTTPS)
+        ).filterNot { it.second == 0f }
+    }
 }

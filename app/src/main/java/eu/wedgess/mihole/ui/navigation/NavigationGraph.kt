@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.navigation.destinations.DashboardDestination
+import eu.wedgess.mihole.ui.navigation.destinations.StatisticsDestination
 
 // https://developer.android.com/guide/navigation/design/type-safety
 // https://developer.android.com/guide/navigation/navigation-type-safety
@@ -21,5 +22,6 @@ fun NavigationGraph(
         modifier = modifier
     ) {
         DashboardDestination(onComposing)
+        StatisticsDestination(onComposing)
     }
 }

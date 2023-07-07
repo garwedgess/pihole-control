@@ -31,7 +31,7 @@ class DashboardViewModel @Inject constructor(
 
     override fun onEvent(event: DashboardContract.Event) {
         when (event) {
-            DashboardContract.Event.FetchStatistics -> fetchStatistics()
+            DashboardContract.Event.FetchSummary -> fetchStatistics()
             DashboardContract.Event.FetchQueriesOvertime -> fetchQueriesOverTime()
             DashboardContract.Event.FetchClientQueriesOvertime -> fetchClientQueriesOverTime()
         }

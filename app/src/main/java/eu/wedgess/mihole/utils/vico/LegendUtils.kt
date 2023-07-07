@@ -1,6 +1,5 @@
 package eu.wedgess.mihole.utils.vico
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -44,7 +43,7 @@ fun rememberClientLegend(clientData: List<PiHoleClientsOverTimeData.ClientData>)
         LegendItem(
             icon = shapeComponent(
                 shape = Shapes.pillShape,
-                color = ColorGenerator(isLightTheme = false).generateColor(str = it.ip+it.name)
+                color = ColorGenerator(isLightTheme = false).generateColorComposable(str = it.ip+it.name)
             ),
             label = textComponent(),
             labelText = "${it.ip} : ${it.name}"

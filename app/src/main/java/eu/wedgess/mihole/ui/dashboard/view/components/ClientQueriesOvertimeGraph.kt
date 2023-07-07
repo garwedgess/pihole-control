@@ -1,27 +1,14 @@
 package eu.wedgess.mihole.ui.dashboard.view.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -36,6 +23,8 @@ import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
+import eu.wedgess.mihole.ui.common.LegendData
+import eu.wedgess.mihole.ui.common.LegendGridImpl
 import eu.wedgess.mihole.utils.ColorGenerator
 import eu.wedgess.mihole.utils.extensions.formatMilliseconds
 import eu.wedgess.mihole.utils.extensions.toColorInt
@@ -104,7 +93,7 @@ fun ClientQueriesOvertimeGraph(
                 chart = lineChart(
                     lines = overTimeData.clients.map {
                         Timber.d("Client: ${it.ip + it.name}")
-                        with(colorGenerator.generateColor(str = it.ip + it.name)) {
+                        with(colorGenerator.generateColorComposable(str = it.ip + it.name + it.hashCode())) {
                             LineChart.LineSpec(
                                 lineColor = this.toColorInt(),
                                 lineBackgroundShader = verticalGradient(
@@ -129,49 +118,17 @@ fun ClientQueriesOvertimeGraph(
                     ),
                     valueFormatter = axisValueFormatter
                 ),
-//            legend = rememberClientLegend(overTimeData.clients),
                 isZoomEnabled = true,
                 chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
             )
 
-            FlowRow(
-                modifier = Modifier.fillMaxWidth().padding(4.dp),
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                overTimeData.clients.forEach {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(4.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    colorGenerator.generateColor(
-                                        str = it.ip + it.name
-                                    )
-                                )
-                        )
-                        Column(modifier = Modifier.padding(start = 8.dp)) {
-                            it.name.takeIf { it.isNotBlank() }?.run {
-                                Text(
-                                    text = it.name,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                            Text(
-                                text = it.ip,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-
-                    }
-                }
-            }
+            LegendGridImpl(legendData = overTimeData.clients.map {
+                LegendData(
+                    title = it.ip,
+                    subTitle = it.name,
+                    color = colorGenerator.generateColor(it.ip + it.name)
+                )
+            })
         }
     }
 }

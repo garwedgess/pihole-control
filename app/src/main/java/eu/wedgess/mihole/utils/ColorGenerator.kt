@@ -26,6 +26,12 @@ class ColorGenerator(isLightTheme: Boolean = false) {
     }
 
     @Composable
+    fun generateColorComposable(str: String): Color {
+        val rgb = generateHex(str)
+        Timber.d("RGB: $rgb for Client: $str")
+        return Color(android.graphics.Color.parseColor(rgb))
+    }
+
     fun generateColor(str: String): Color {
         val rgb = generateHex(str)
         Timber.d("RGB: $rgb for Client: $str")

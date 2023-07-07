@@ -47,7 +47,7 @@ interface DashboardContract :
     }
 
     sealed interface Event {
-        object FetchStatistics : Event
+        object FetchSummary : Event
         object FetchQueriesOvertime : Event
         object FetchClientQueriesOvertime : Event
     }

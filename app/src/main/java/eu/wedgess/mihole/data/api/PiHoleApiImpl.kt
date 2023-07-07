@@ -79,6 +79,7 @@ class PiHoleApiImpl @Inject constructor(
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["getQueryTypes"] = true.toString()
+                parameters["getForwardDestinations"] = true.toString()
                 parameters["topItems"] = true.toString()
                 parameters["topClients"] = true.toString()
             }

@@ -7,30 +7,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.ui.base.AppBarState
-import eu.wedgess.mihole.ui.dashboard.DashboardContract
-import eu.wedgess.mihole.ui.dashboard.view.DashboardScreen
-import eu.wedgess.mihole.ui.dashboard.viewmodel.DashboardViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
+import eu.wedgess.mihole.ui.statistics.StatisticsContract
+import eu.wedgess.mihole.ui.statistics.view.StatisticsScreen
+import eu.wedgess.mihole.ui.statistics.viewmodel.StatisticsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-fun NavGraphBuilder.DashboardDestination(
+fun NavGraphBuilder.StatisticsDestination(
     onComposing: (AppBarState) -> Unit
 ) {
-    composable(Screens.Dashboard.route) {
-        val viewModel: DashboardViewModel = hiltViewModel()
+    composable(Screens.Statistics.route) {
+        val viewModel: StatisticsViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             onComposing(
                 AppBarState(
-                    title = "Dashboard"
+                    title = "Statistics"
                 )
             )
             do {
-                viewModel.onEvent(DashboardContract.Event.FetchSummary)
-                viewModel.onEvent(DashboardContract.Event.FetchQueriesOvertime)
-                viewModel.onEvent(DashboardContract.Event.FetchClientQueriesOvertime)
+                viewModel.onEvent(StatisticsContract.Event.FetchStatistics)
                 delay(10_000)
             } while (true)
         }
@@ -41,7 +39,7 @@ fun NavGraphBuilder.DashboardDestination(
             }
         }
 
-        DashboardScreen(
+        StatisticsScreen(
             uiState,
             viewModel::onEvent
         )

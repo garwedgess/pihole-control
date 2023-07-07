@@ -16,11 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.common.MainAppBar
 import eu.wedgess.mihole.ui.navigation.NavigationGraph
+import eu.wedgess.mihole.ui.navigation.bottom.BottomNavigationBar
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @AndroidEntryPoint
@@ -30,6 +32,7 @@ class MiHoleEntryPointActivity : ComponentActivity() {
         setContent {
 
             val navHostController = rememberNavController()
+            val backStackEntry = navHostController.currentBackStackEntryAsState()
             var appBarState by remember { mutableStateOf(AppBarState()) }
 
             MiHoleTheme {
@@ -42,13 +45,24 @@ class MiHoleEntryPointActivity : ComponentActivity() {
                             MainAppBar(
                                 appBarState = appBarState,
                                 onNavigateBack = { navHostController.navigateUp() })
+                        },
+                        bottomBar = {
+                            BottomNavigationBar(
+                                selectedItemRoute = backStackEntry.value?.destination?.route,
+                                onNavigateTo = { route ->
+                                    if (route != backStackEntry.value?.destination?.route) {
+                                        navHostController.navigate(route)
+                                    }
+                                }
+                            )
+                        },
+                        content = { contentPadding ->
+                            NavigationGraph(
+                                modifier = Modifier.padding(contentPadding),
+                                navController = navHostController,
+                                onComposing = { appBarState = it })
                         }
-                    ) { contentPadding ->
-                        NavigationGraph(
-                            modifier = Modifier.padding(contentPadding),
-                            navController = navHostController,
-                            onComposing = { appBarState = it })
-                    }
+                    )
                 }
             }
         }
