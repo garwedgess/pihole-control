@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'eu.wedgess.mihole'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "eu.wedgess.mihole"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -61,15 +61,17 @@ sqldelight {
 // https://github.com/yml-org/YCharts
 dependencies {
 
+    def compose_version = "1.5.0-beta03"
+
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.2'
 
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
-    implementation 'androidx.compose.ui:ui:1.4.3'
-    implementation 'androidx.compose.ui:ui-graphics:1.4.3'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.4.3'
+    implementation "androidx.compose.ui:ui:${compose_version}"
+    implementation "androidx.compose.ui:ui-graphics:${compose_version}"
+    implementation "androidx.compose.ui:ui-tooling-preview:${compose_version}"
     implementation 'androidx.compose.material3:material3:1.1.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -87,7 +89,7 @@ dependencies {
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
 
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    implementation "androidx.navigation:navigation-compose:2.7.0-beta02"
 
     // hilt
     implementation "com.google.dagger:hilt-android:2.44.2"

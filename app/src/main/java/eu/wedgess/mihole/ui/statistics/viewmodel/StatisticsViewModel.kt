@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
-import eu.wedgess.mihole.ui.dashboard.DashboardContract
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
+import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -50,14 +50,4 @@ class StatisticsViewModel @Inject constructor(
             )
         }
     }
-
-    private fun <E> ResponseResult.Error<E>.handleError(): Throwable =
-        when (this) {
-            is ResponseResult.Error.Api -> Throwable(this.body as String? ?: "Unknown error")
-            is ResponseResult.Error.Network -> this.exception
-            is ResponseResult.Error.Serialization -> this.exception
-            is ResponseResult.Error.Unknown -> this.exception
-        }
-
-
 }

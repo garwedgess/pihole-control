@@ -9,13 +9,12 @@ import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
-import eu.wedgess.mihole.ui.statistics.view.QueryTypesContent
+import eu.wedgess.mihole.ui.statistics.view.content.QueryTypesContent
 import eu.wedgess.mihole.utils.ColorGenerator
 import timber.log.Timber
 
 @Composable
 fun QueryTypesScreen(statistics: Resource<PiHoleStatistics>, colorGenerator: ColorGenerator) {
-    Timber.d("STatistics: $statistics")
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally

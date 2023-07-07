@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.statistics.view
+package eu.wedgess.mihole.ui.statistics.view.content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

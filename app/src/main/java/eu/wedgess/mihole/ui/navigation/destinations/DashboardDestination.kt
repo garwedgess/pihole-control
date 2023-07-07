@@ -1,5 +1,7 @@
 package eu.wedgess.mihole.ui.navigation.destinations
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,14 +19,40 @@ import kotlinx.coroutines.flow.collectLatest
 fun NavGraphBuilder.DashboardDestination(
     onComposing: (AppBarState) -> Unit
 ) {
-    composable(Screens.Dashboard.route) {
+    composable(
+        route = Screens.Dashboard.route,
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(300)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(300)
+            )
+        }
+    ) {
         val viewModel: DashboardViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             onComposing(
                 AppBarState(
-                    title = "Dashboard"
+                    title = "Home"
                 )
             )
             do {

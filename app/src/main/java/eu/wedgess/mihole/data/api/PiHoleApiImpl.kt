@@ -1,18 +1,22 @@
 package eu.wedgess.mihole.data.api
 
 import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.ModifyFilterRuleResponse
 import eu.wedgess.mihole.data.model.PiHoleApiResponse
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
+import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.data.model.PiHoleStatusResponse
 import eu.wedgess.mihole.data.model.PiHoleSummary
+import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.utils.safeRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.BasicAuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.encodedPath
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -82,6 +86,46 @@ class PiHoleApiImpl @Inject constructor(
                 parameters["getForwardDestinations"] = true.toString()
                 parameters["topItems"] = true.toString()
                 parameters["topClients"] = true.toString()
+            }
+        }
+    }
+
+    override suspend fun fetchFilterRules(
+        activeMiHole: MiHolesInfo,
+        ruleType: FilterRuleType
+    ): PiHoleApiResponse<PiHoleFilterRules> {
+        return httpClient.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
+            }
+        }
+    }
+
+    override suspend fun addFilterRule(
+        activeMiHole: MiHolesInfo,
+        rule: String,
+        ruleType: FilterRuleType
+    ): PiHoleApiResponse<ModifyFilterRuleResponse> {
+        return httpClient.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
+                parameters["add"] = rule
+            }
+        }
+    }
+
+    override suspend fun removeFilterRule(
+        activeMiHole: MiHolesInfo,
+        rule: String,
+        ruleType: FilterRuleType
+    ): PiHoleApiResponse<ModifyFilterRuleResponse> {
+        return httpClient.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
+                parameters["sub"] = rule
             }
         }
     }

@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
+import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -70,23 +71,14 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun fetchClientQueriesOverTime() = viewModelScope.launch(clientQueriesOverTimeErrorHandler) {
-        when (val response = repository.fetchOverTimeDataClients()) {
-            is ResponseResult.Success -> _uiState.update { it.clientOvertime(response.data) }
-            is ResponseResult.Error -> clientQueriesOverTimeErrorHandler.handleException(
-                this@launch.coroutineContext,
-                response.handleError()
-            )
+    private fun fetchClientQueriesOverTime() =
+        viewModelScope.launch(clientQueriesOverTimeErrorHandler) {
+            when (val response = repository.fetchOverTimeDataClients()) {
+                is ResponseResult.Success -> _uiState.update { it.clientOvertime(response.data) }
+                is ResponseResult.Error -> clientQueriesOverTimeErrorHandler.handleException(
+                    this@launch.coroutineContext,
+                    response.handleError()
+                )
+            }
         }
-    }
-
-    private fun <E> ResponseResult.Error<E>.handleError(): Throwable =
-        when (this) {
-            is ResponseResult.Error.Api -> Throwable(this.body as String? ?: "Unknown error")
-            is ResponseResult.Error.Network -> this.exception
-            is ResponseResult.Error.Serialization -> this.exception
-            is ResponseResult.Error.Unknown -> this.exception
-        }
-
-
 }

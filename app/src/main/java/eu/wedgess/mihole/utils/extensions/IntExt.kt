@@ -5,3 +5,5 @@ import java.util.Locale
 
 fun Int.formatWithThousands(): String =
     NumberFormat.getNumberInstance(Locale.getDefault()).format(this)
+
+fun Int.toBoolean(): Boolean = this == 1

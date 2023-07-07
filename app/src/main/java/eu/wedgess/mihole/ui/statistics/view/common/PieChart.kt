@@ -95,7 +95,7 @@ fun PieChart(
             animatableInitialSweepAngle.animateTo(
                 targetValue = chartEndAngle,
                 animationSpec = tween(
-                    delayMillis = 300,
+                    delayMillis = 400,
                     durationMillis = 500,
                     easing = LinearEasing
                 )
