@@ -1,9 +1,11 @@
 package eu.wedgess.mihole.ui.filters
 
+import androidx.compose.ui.text.input.TextFieldValue
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
+import eu.wedgess.mihole.ui.common.search.SearchState
 
 interface FiltersContract :
     UnidirectionalViewModel<FiltersContract.UiState, FiltersContract.Event, FiltersContract.Effect> {
@@ -13,8 +15,32 @@ interface FiltersContract :
         val blockList: Resource<List<PiHoleFilterRules.PiHoleFilterRule>>,
         val selectedRule: PiHoleFilterRules.PiHoleFilterRule?,
         val currentFilterRuleType: FilterRuleType,
-        val displayAddRuleDialog: Boolean
+        val displayAddRuleDialog: Boolean,
+        val showSearchView: Boolean,
+        val searchState: SearchState<PiHoleFilterRules.PiHoleFilterRule>
     ) {
+
+        fun resetSearchState(): UiState =
+            this.copy(searchState = SearchState())
+
+        fun setSearchResults(result: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
+            this.copy(
+                searchState = this.searchState.copy(
+                    searchResults = result,
+                    searching = false
+                )
+            )
+
+        fun setSearchStateQuery(query: TextFieldValue): UiState =
+            this.copy(searchState = this.searchState.copy(query = query))
+
+        fun setSearchStateAsInProgress(): UiState =
+            this.copy(searchState = this.searchState.copy(searching = true))
+
+        fun showSearchView(): UiState =
+            this.copy(showSearchView = true)
+
+        fun hideSearchView(): UiState = this.copy(showSearchView = false).resetSearchState()
 
         fun showAddRuleDialog(): UiState = this.copy(displayAddRuleDialog = true)
 
@@ -22,6 +48,7 @@ interface FiltersContract :
 
         fun filterRuleType(tabIndex: Int): UiState =
             this.copy(currentFilterRuleType = if (tabIndex == 0) FilterRuleType.WHITE else FilterRuleType.BLACK)
+                .resetSearchState()
 
         fun allowList(allowList: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
             this.copy(allowList = Resource.Success(allowList))
@@ -46,7 +73,9 @@ interface FiltersContract :
                 blockList = Resource.Loading,
                 selectedRule = null,
                 displayAddRuleDialog = false,
-                currentFilterRuleType = FilterRuleType.WHITE
+                currentFilterRuleType = FilterRuleType.WHITE,
+                showSearchView = false,
+                searchState = SearchState()
             )
         }
     }
@@ -65,6 +94,9 @@ interface FiltersContract :
         object OnRuleDeselected : Event
         object OnAddRuleClick : Event
         object OnDismissAddRuleDialog : Event
+        object OnShowSearchView : Event
+        object OnHideShowSearchView : Event
+        data class OnSearchQueryChanged(val query: TextFieldValue) : Event
         data class AddRule(val rule: String, val isRegex: Boolean) : Event
         data class RemoveRule(val rule: String, val ruleType: FilterRuleType) : Event
         data class OnRuleSelected(val rule: PiHoleFilterRules.PiHoleFilterRule) : Event

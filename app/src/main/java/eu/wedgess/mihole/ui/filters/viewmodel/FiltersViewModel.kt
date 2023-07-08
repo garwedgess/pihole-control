@@ -1,5 +1,7 @@
 package eu.wedgess.mihole.ui.filters.viewmodel
 
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,14 +9,23 @@ import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
+import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,11 +49,49 @@ class FiltersViewModel @Inject constructor(
             FiltersContract.Event.OnDismissAddRuleDialog -> dismissAddRuleDialog()
             FiltersContract.Event.FetchRulesList -> fetchRulesList()
             FiltersContract.Event.OnRuleDeselected -> deselectRule()
+            FiltersContract.Event.OnShowSearchView -> showSearchView()
+            FiltersContract.Event.OnHideShowSearchView -> hideSearchView()
             is FiltersContract.Event.AddRule -> addRule(event.rule, event.isRegex)
             is FiltersContract.Event.RemoveRule -> removeRule(event.rule, event.ruleType)
             is FiltersContract.Event.OnRuleSelected -> ruleSelected(event.rule)
             is FiltersContract.Event.OnTabIndexChanged -> setCurrentFilterType(event.tabIndex)
+            is FiltersContract.Event.OnSearchQueryChanged -> handleSearchQuery(event.query)
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    private fun handleSearchQuery(query: TextFieldValue) = viewModelScope.launch {
+        _uiState.update { it.setSearchStateQuery(query = query) }
+        snapshotFlow { query }
+            .distinctUntilChanged()
+            .filter { query: TextFieldValue ->
+                query.text.isNotEmpty() && ! _uiState.value.searchState.sameAsPreviousQuery()
+            }
+            .map { query: TextFieldValue ->
+                _uiState.update { it.setSearchStateAsInProgress() }
+                query
+            }
+            .debounce(0)
+            .mapLatest { query: TextFieldValue ->
+                delay(300)
+                val list = if (_uiState.value.currentFilterRuleType == FilterRuleType.WHITE) {
+                    (_uiState.value.allowList as Resource.Success).data
+                } else {
+                    (_uiState.value.blockList as Resource.Success).data
+                }
+                list.filter { it.domain.lowercase().contains(query.text.lowercase()) }
+            }
+            .collect { results ->
+                _uiState.update { it.setSearchResults(results) }
+            }
+    }
+
+    private fun showSearchView() {
+        _uiState.update { it.showSearchView() }
+    }
+
+    private fun hideSearchView() {
+        _uiState.update { it.hideSearchView() }
     }
 
     private fun setCurrentFilterType(tabIndex: Int) =
@@ -106,6 +155,10 @@ class FiltersViewModel @Inject constructor(
                 _uiState.update { it.dismissAddRuleDialog() }
                 _effect.send(FiltersContract.Effect.Toast.RuleAdded)
                 fetchRulesList()
+                if (_uiState.value.searchState.query.text.isNotEmpty()) {
+                    _uiState.value.searchState.clearPreviousQueryText()
+                    handleSearchQuery(_uiState.value.searchState.query)
+                }
             }
 
             is ResponseResult.Error -> addRuleErrorHandler.handleException(
@@ -124,6 +177,10 @@ class FiltersViewModel @Inject constructor(
                 _uiState.update { it.ruleDeselected() }
                 _effect.send(FiltersContract.Effect.Toast.RuleRemoved)
                 fetchRulesList()
+                if (_uiState.value.searchState.query.text.isNotEmpty()) {
+                    _uiState.value.searchState.clearPreviousQueryText()
+                    handleSearchQuery(_uiState.value.searchState.query)
+                }
             }
 
             is ResponseResult.Error -> removeRuleErrorHandler.handleException(

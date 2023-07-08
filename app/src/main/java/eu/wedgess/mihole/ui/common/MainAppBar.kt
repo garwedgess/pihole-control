@@ -1,5 +1,6 @@
 package eu.wedgess.mihole.ui.common
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,13 +17,20 @@ import eu.wedgess.mihole.ui.base.AppBarState
 @Composable
 fun MainAppBar(appBarState: AppBarState, onNavigateBack: () -> Unit) {
     TopAppBar(
-        title = { Text(text = appBarState.title) },
+        title = {
+            Text(text = appBarState.title)
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         actions = {
-            appBarState.actions?.invoke(this)
+            AnimatedVisibility(visible = appBarState.showSearchView) {
+                appBarState.searchContent?.invoke()
+            }
+            AnimatedVisibility(visible = !appBarState.showSearchView) {
+                appBarState.actions?.invoke(this@TopAppBar)
+            }
         },
         navigationIcon = {
             if (appBarState.showNavigateBackIcon) {

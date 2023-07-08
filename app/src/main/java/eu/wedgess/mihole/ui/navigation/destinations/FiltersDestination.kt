@@ -11,11 +11,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.ui.base.AppBarState
+import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
+import eu.wedgess.mihole.ui.filters.view.components.FilterTopBarActions
+import eu.wedgess.mihole.ui.filters.view.components.SearchContent
 import eu.wedgess.mihole.ui.filters.viewmodel.FiltersViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
-import eu.wedgess.mihole.ui.statistics.view.StatisticsScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -61,12 +63,24 @@ fun NavGraphBuilder.FiltersDestination(
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val context = LocalContext.current
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(uiState.showSearchView, uiState.allowList, uiState.blockList) {
             onComposing(
                 AppBarState(
-                    title = "Filters"
+                    title = "Filters",
+                    actions = { FilterTopBarActions(onSearchClicked = { viewModel.onEvent(FiltersContract.Event.OnShowSearchView) }) },
+                    showSearchView = uiState.allowList is Resource.Success && uiState.blockList is Resource.Success && uiState.showSearchView,
+                    searchContent = {
+                        SearchContent(
+                            state = uiState.searchState,
+                            onQueryChanged = { viewModel.onEvent(FiltersContract.Event.OnSearchQueryChanged(it)) },
+                            onClosed = { viewModel.onEvent(FiltersContract.Event.OnHideShowSearchView) }
+                        )
+                    }
                 )
             )
+        }
+
+        LaunchedEffect(Unit) {
             do {
                 viewModel.onEvent(FiltersContract.Event.FetchRulesList)
                 delay(10_000)

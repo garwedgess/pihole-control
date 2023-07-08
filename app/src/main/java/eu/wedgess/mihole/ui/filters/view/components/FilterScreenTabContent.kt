@@ -9,11 +9,13 @@ import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.ui.base.Resource
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
+import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.filters.FiltersContract
 
 @Composable
 fun FilterScreenTabContent(
     filterList: Resource<List<PiHoleFilterRules.PiHoleFilterRule>>,
+    searchState: SearchState<PiHoleFilterRules.PiHoleFilterRule>,
     onEvent: (FiltersContract.Event) -> Unit
 ) {
     Column(
@@ -23,7 +25,7 @@ fun FilterScreenTabContent(
         when (filterList) {
             is Resource.Loading -> LoadingContent(message = "Loading filters")
             is Resource.Error -> ErrorMessage(errorMessage = filterList.errorMessage, onRetry = {})
-            is Resource.Success -> FilterListContent(filtersList = filterList.data, onEvent)
+            is Resource.Success -> FilterListContent(filtersList = filterList.data, searchState, onEvent)
         }
     }
 }

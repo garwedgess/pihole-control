@@ -14,17 +14,17 @@ fun FilterScreenContent(
     uiState: FiltersContract.UiState,
     onEvent: (FiltersContract.Event) -> Unit
 ) {
-    val tabItems = remember(uiState.allowList, uiState.blockList) {
+    val tabItems = remember(uiState.searchState, uiState.allowList, uiState.blockList) {
         mutableListOf(
             TabItem(
                 title = "Allow List",
                 icon = Icons.Default.CheckCircleOutline,
-                screen = { FilterScreenTabContent(uiState.allowList, onEvent) }
+                screen = { FilterScreenTabContent(uiState.allowList, uiState.searchState, onEvent) }
             ),
             TabItem(
                 title = "Block List",
                 icon = Icons.Default.Block,
-                screen = { FilterScreenTabContent(uiState.blockList, onEvent) }
+                screen = { FilterScreenTabContent(uiState.blockList, uiState.searchState, onEvent) }
             )
         )
     }
