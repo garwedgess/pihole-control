@@ -1,17 +1,17 @@
-package eu.wedgess.mihole.ui.filters.view.components
+package eu.wedgess.mihole.ui.filters.view.components.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -43,7 +44,7 @@ fun AddFilterRuleDialog(
     }
 
     Dialog(onDismissRequest = onDismissRequest) {
-        AddFilterRuleCard(
+        AddFilterRuleDialogContent(
             focusRequester = focusRequester,
             onConfirmClick = onConfirmClick,
             onCancelClick = onDismissRequest
@@ -52,7 +53,7 @@ fun AddFilterRuleDialog(
 }
 
 @Composable
-fun AddFilterRuleCard(
+private fun AddFilterRuleDialogContent(
     focusRequester: FocusRequester = remember { FocusRequester() },
     onConfirmClick: (rule: String, isWildCard: Boolean) -> Unit,
     onCancelClick: () -> Unit
@@ -63,47 +64,46 @@ fun AddFilterRuleCard(
     var value by remember {
         mutableStateOf("")
     }
-    Card {
-        Column {
-            Column(
-                Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                    Text("Add rule", style = MaterialTheme.typography.titleMedium)
-                }
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
-                    label = { Text("Domain") },
-                    leadingIcon = if (isWildcardChecked) {
-                        { Text(WILDCARD_REGEX_PREFIX) }
-                    } else null,
-                    value = value,
-                    trailingIcon = if (isWildcardChecked) {
-                        { Text(WILDCARD_REGEX_SUFFIX) }
-                    } else null,
-                    onValueChange = {
-                        value = it
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
-                )
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("Add as wildcard")
-                    Switch(
-                        checked = isWildcardChecked,
-                        onCheckedChange = {
-                            isWildcardChecked = it
-                        }
-                    )
-                }
+    Surface(shape = RoundedCornerShape(8.dp)) {
+        Column(
+            Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                Text("Add rule", style = MaterialTheme.typography.titleLarge)
             }
-            Divider()
-            Row(
-                Modifier
+            OutlinedTextField(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .focusRequester(focusRequester),
+                label = { Text("Domain") },
+                leadingIcon = if (isWildcardChecked) {
+                    { Text(WILDCARD_REGEX_PREFIX) }
+                } else null,
+                value = value,
+                trailingIcon = if (isWildcardChecked) {
+                    { Text(WILDCARD_REGEX_SUFFIX) }
+                } else null,
+                onValueChange = {
+                    value = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+            )
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Add as wildcard", style = MaterialTheme.typography.titleMedium)
+                Checkbox(
+                    checked = isWildcardChecked,
+                    onCheckedChange = {
+                        isWildcardChecked = it
+                    }
+                )
+            }
+            Row(
+                Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onCancelClick) { Text("CANCEL") }
@@ -116,7 +116,7 @@ fun AddFilterRuleCard(
 @Composable
 @Preview
 fun AddFilterRuleCardPreview() {
-    AddFilterRuleCard(
+    AddFilterRuleDialogContent(
         onConfirmClick = { _, _ -> },
         onCancelClick = {})
 }

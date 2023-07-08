@@ -1,12 +1,11 @@
-package eu.wedgess.mihole.ui.filters.view.components
+package eu.wedgess.mihole.ui.filters.view.components.dialogs
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -15,52 +14,57 @@ import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.Rule
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.extensions.toBoolean
 import java.text.DateFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayFilterRuleDialog(
     filterRule: PiHoleFilterRules.PiHoleFilterRule,
-    onDismiss: () -> Unit,
-    onDelete: (filterRule: PiHoleFilterRules.PiHoleFilterRule) -> Unit
+    onDelete: (filterRule: PiHoleFilterRules.PiHoleFilterRule) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        DisplayFilterRuleDialogContent(
+            filterRule = filterRule,
+            onDeleteClicked = { onDelete(filterRule) },
+            onCancelClicked = { onDismissRequest() }
+        )
+    }
+}
+
+@Composable
+private fun DisplayFilterRuleDialogContent(
+    filterRule: PiHoleFilterRules.PiHoleFilterRule,
+    onDeleteClicked: () -> Unit,
+    onCancelClicked: () -> Unit
 ) {
     val dateTimeInstance = remember { DateFormat.getDateInstance() }
 
-    AlertDialog(onDismissRequest = onDismiss) {
+    Surface(shape = RoundedCornerShape(8.dp)) {
         Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 32.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Filter Rule", style = MaterialTheme.typography.titleMedium)
-                IconButton(onClick = onDismiss) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "close")
-                }
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                Text("Filter rule", style = MaterialTheme.typography.titleLarge)
             }
             FilterDetailsRow(
                 icon = Icons.Default.Domain,
@@ -93,10 +97,12 @@ fun DisplayFilterRuleDialog(
                 value = filterRule.comment.takeIf { it?.isNotBlank() == true } ?: "No comment"
             )
 
-            Button(modifier = Modifier.fillMaxWidth().padding(top = 16.dp), onClick = {
-                onDelete(filterRule)
-            }) {
-                Text(text = "Delete Rule")
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = onCancelClicked) { Text("CANCEL") }
+                TextButton(onClick = onDeleteClicked) { Text("DELETE") }
             }
 
         }
@@ -121,5 +127,17 @@ private fun FilterDetailsRow(
             )
             Text(text = value, style = MaterialTheme.typography.bodySmall)
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DisplayFilterRuleDialogPreview() {
+    MiHoleTheme {
+        DisplayFilterRuleDialog(
+            filterRule = PiHoleFilterRules.PiHoleFilterRule(),
+            onDelete = {},
+            onDismissRequest = {}
+        )
     }
 }

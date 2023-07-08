@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.ui.filters.FiltersContract
+import eu.wedgess.mihole.ui.filters.view.components.dialogs.AddFilterRuleDialog
+import eu.wedgess.mihole.ui.filters.view.components.dialogs.DisplayFilterRuleDialog
 
 @Composable
 fun FilterDialogs(
@@ -14,7 +16,7 @@ fun FilterDialogs(
     AnimatedVisibility(visible = selectedRule != null) {
         DisplayFilterRuleDialog(
             filterRule = selectedRule ?: PiHoleFilterRules.PiHoleFilterRule(),
-            onDismiss = {
+            onDismissRequest = {
                 onEvent(FiltersContract.Event.OnRuleDeselected)
             },
             onDelete = {

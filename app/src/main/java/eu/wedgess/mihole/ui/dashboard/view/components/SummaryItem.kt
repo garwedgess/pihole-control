@@ -63,8 +63,8 @@ object SummaryItem {
                         text = title,
                         color = Color.White.copy(alpha = 0.8f),
                         textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
