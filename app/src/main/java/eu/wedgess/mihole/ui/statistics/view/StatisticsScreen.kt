@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import eu.wedgess.mihole.ui.common.tabs.FancyIndicatorContainerTabs
+import eu.wedgess.mihole.ui.common.tabs.AnimatedTabContainer
 import eu.wedgess.mihole.ui.common.tabs.TabItem
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
 import eu.wedgess.mihole.ui.statistics.view.screens.ForwardDestinationsScreen
@@ -52,5 +52,5 @@ fun StatisticsScreen(
             )
         )
     }
-    FancyIndicatorContainerTabs(tabItems = tabItems)
+    AnimatedTabContainer(tabItems = tabItems)
 }

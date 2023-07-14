@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import eu.wedgess.mihole.ui.common.tabs.FancyIndicatorContainerTabs
+import eu.wedgess.mihole.ui.common.tabs.AnimatedTabContainer
 import eu.wedgess.mihole.ui.common.tabs.TabItem
 import eu.wedgess.mihole.ui.filters.FiltersContract
 
@@ -28,7 +28,7 @@ fun FilterScreenContent(
             )
         )
     }
-    FancyIndicatorContainerTabs(
+    AnimatedTabContainer(
         tabItems = tabItems,
         onTabIndexChanged = { onEvent(FiltersContract.Event.OnTabIndexChanged(it)) }
     )

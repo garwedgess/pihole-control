@@ -2,12 +2,13 @@ package eu.wedgess.mihole.ui.common.tabs
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
@@ -21,15 +22,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import timber.log.Timber
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun FancyIndicatorContainerTabs(
+fun AnimatedTabContainer(
     tabItems: List<TabItem>,
     onTabIndexChanged: ((index: Int) -> Unit)? = null
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var previousTabIndex by remember { mutableIntStateOf(0) }
+    var isSwipeToTheLeft by remember { mutableStateOf(false) }
+    val dragState = rememberDraggableState(onDelta = { delta ->
+        isSwipeToTheLeft = delta > 0
+    })
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabRow(
@@ -72,7 +77,39 @@ fun FancyIndicatorContainerTabs(
                 )
             }
         ) { targetState ->
-            tabItems[targetState].screen()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .draggable(
+                        state = dragState,
+                        orientation = Orientation.Horizontal,
+                        onDragStarted = { },
+                        onDragStopped = {
+                            val newIndex = setSelectedIndexBasedOnSwipe(
+                                isSwipeLeft = isSwipeToTheLeft,
+                                currentIndex = selectedTabIndex,
+                                numOfTabs = tabItems.size.minus(1)
+                            )
+                            if (newIndex != selectedTabIndex) {
+                                previousTabIndex = selectedTabIndex
+                                selectedTabIndex = newIndex
+                            }
+                        })
+            ) {
+                tabItems[targetState].screen()
+            }
         }
+    }
+}
+
+private fun setSelectedIndexBasedOnSwipe(
+    isSwipeLeft: Boolean,
+    currentIndex: Int,
+    numOfTabs: Int
+): Int {
+    return if (isSwipeLeft) {
+        currentIndex.minus(1).coerceAtLeast(0)
+    } else {
+        currentIndex.plus(1).coerceAtMost(numOfTabs)
     }
 }
