@@ -5,6 +5,7 @@ import eu.wedgess.mihole.data.model.ModifyFilterRuleResponse
 import eu.wedgess.mihole.data.model.PiHoleApiResponse
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
+import eu.wedgess.mihole.data.model.PiHoleLogsResponse
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.data.model.PiHoleStatusResponse
@@ -21,6 +22,7 @@ interface PiHoleApi {
     suspend fun fetchFilterRules(activeMiHole: MiHolesInfo, ruleType: FilterRuleType): PiHoleApiResponse<PiHoleFilterRules>
     suspend fun addFilterRule(activeMiHole: MiHolesInfo, rule: String, ruleType: FilterRuleType): PiHoleApiResponse<ModifyFilterRuleResponse>
     suspend fun removeFilterRule(activeMiHole: MiHolesInfo, rule: String, ruleType: FilterRuleType): PiHoleApiResponse<ModifyFilterRuleResponse>
+    suspend fun fetchLogs(activeMiHole: MiHolesInfo, limit: Int): PiHoleApiResponse<PiHoleLogsResponse>
     suspend fun enableAdBlocking(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleStatusResponse>
     suspend fun disableAdBlocking(activeMiHole: MiHolesInfo, duration: Duration): PiHoleApiResponse<PiHoleStatusResponse>
 

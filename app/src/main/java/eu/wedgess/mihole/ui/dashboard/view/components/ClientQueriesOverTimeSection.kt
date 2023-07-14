@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
-import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 
 @Composable
 fun ClientQueriesOverTimeSection(

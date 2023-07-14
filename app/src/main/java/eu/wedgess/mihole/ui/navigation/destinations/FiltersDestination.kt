@@ -11,7 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.ui.base.AppBarState
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
 import eu.wedgess.mihole.ui.filters.view.components.FilterTopBarActions
@@ -68,7 +68,7 @@ fun NavGraphBuilder.FiltersDestination(
                 AppBarState(
                     title = "Filters",
                     actions = { FilterTopBarActions(onSearchClicked = { viewModel.onEvent(FiltersContract.Event.OnShowSearchView) }) },
-                    showSearchView = uiState.allowList is Resource.Success && uiState.blockList is Resource.Success && uiState.showSearchView,
+                    showSearchView = uiState.allowList is UiResult.Success && uiState.blockList is UiResult.Success && uiState.showSearchView,
                     searchContent = {
                         SearchContent(
                             state = uiState.searchState,

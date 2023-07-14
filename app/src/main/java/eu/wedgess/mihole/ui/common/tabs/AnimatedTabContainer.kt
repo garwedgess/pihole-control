@@ -6,6 +6,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,7 +59,7 @@ fun FancyIndicatorContainerTabs(
                         AnimatedContentTransitionScope.SlideDirection.Start
                     },
                     initialOffset = { it }
-                ).with(
+                ).togetherWith(
                     slideOutOfContainer(
                         animationSpec = tween(300, easing = EaseOut),
                         towards = if (selectedTabIndex < previousTabIndex) {

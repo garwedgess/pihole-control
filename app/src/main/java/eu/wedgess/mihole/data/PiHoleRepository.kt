@@ -61,6 +61,11 @@ class PiHoleRepository @Inject constructor(
             api.removeFilterRule(currentPiHole.first(), rule, filterRuleType)
         }
 
+    suspend fun fetchLogs(limit: Int) =
+        withContext(dispatcherProvider.io) {
+            api.fetchLogs(currentPiHole.first(), limit)
+        }
+
     suspend fun insertMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
             dao.insert(miHolesInfo.toMiHole())

@@ -1,25 +1,25 @@
 package eu.wedgess.mihole.ui.statistics
 
 import eu.wedgess.mihole.data.model.PiHoleStatistics
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 
 interface StatisticsContract :
     UnidirectionalViewModel<StatisticsContract.UiState, StatisticsContract.Event, StatisticsContract.Effect> {
 
     data class UiState(
-        val statistics: Resource<PiHoleStatistics>
+        val statistics: UiResult<PiHoleStatistics>
     ) {
 
         fun statistics(piHoleStatistics: PiHoleStatistics): UiState =
-            this.copy(statistics = Resource.Success(piHoleStatistics))
+            this.copy(statistics = UiResult.Success(piHoleStatistics))
 
         fun statisticsError(errorMessage: String): UiState =
-            this.copy(statistics = Resource.Error(errorMessage))
+            this.copy(statistics = UiResult.Error(errorMessage))
 
         companion object {
             fun initial() = UiState(
-                statistics = Resource.Loading
+                statistics = UiResult.Loading
             )
         }
     }

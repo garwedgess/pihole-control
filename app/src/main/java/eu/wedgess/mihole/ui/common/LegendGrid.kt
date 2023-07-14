@@ -239,7 +239,7 @@ private fun LegendGridPreview() {
                             color = Color.Black
                         ),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Clip
                     )
                 },
                 subTitle = {

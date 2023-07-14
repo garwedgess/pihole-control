@@ -3,7 +3,7 @@ package eu.wedgess.mihole.ui.filters
 import androidx.compose.ui.text.input.TextFieldValue
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.ui.common.search.SearchState
 
@@ -11,8 +11,8 @@ interface FiltersContract :
     UnidirectionalViewModel<FiltersContract.UiState, FiltersContract.Event, FiltersContract.Effect> {
 
     data class UiState(
-        val allowList: Resource<List<PiHoleFilterRules.PiHoleFilterRule>>,
-        val blockList: Resource<List<PiHoleFilterRules.PiHoleFilterRule>>,
+        val allowList: UiResult<List<PiHoleFilterRules.PiHoleFilterRule>>,
+        val blockList: UiResult<List<PiHoleFilterRules.PiHoleFilterRule>>,
         val selectedRule: PiHoleFilterRules.PiHoleFilterRule?,
         val currentFilterRuleType: FilterRuleType,
         val displayAddRuleDialog: Boolean,
@@ -20,7 +20,7 @@ interface FiltersContract :
         val searchState: SearchState<PiHoleFilterRules.PiHoleFilterRule>
     ) {
 
-        fun resetSearchState(): UiState =
+        private fun resetSearchState(): UiState =
             this.copy(searchState = SearchState())
 
         fun setSearchResults(result: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
@@ -51,15 +51,15 @@ interface FiltersContract :
                 .resetSearchState()
 
         fun allowList(allowList: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
-            this.copy(allowList = Resource.Success(allowList))
+            this.copy(allowList = UiResult.Success(allowList))
 
         fun blockList(blockList: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
-            this.copy(blockList = Resource.Success(blockList))
+            this.copy(blockList = UiResult.Success(blockList))
 
         fun filterListError(errorMessage: String): UiState =
             this.copy(
-                allowList = Resource.Error(errorMessage),
-                blockList = Resource.Error(errorMessage)
+                allowList = UiResult.Error(errorMessage),
+                blockList = UiResult.Error(errorMessage)
             )
 
         fun selectedRule(ruleInfo: PiHoleFilterRules.PiHoleFilterRule): UiState =
@@ -69,8 +69,8 @@ interface FiltersContract :
 
         companion object {
             fun initial() = UiState(
-                allowList = Resource.Loading,
-                blockList = Resource.Loading,
+                allowList = UiResult.Loading,
+                blockList = UiResult.Loading,
                 selectedRule = null,
                 displayAddRuleDialog = false,
                 currentFilterRuleType = FilterRuleType.WHITE,

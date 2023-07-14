@@ -6,22 +6,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import eu.wedgess.mihole.data.model.PiHoleStatistics
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
-import eu.wedgess.mihole.ui.statistics.view.TopDomainsContent
 import eu.wedgess.mihole.ui.statistics.view.content.TopClientsContent
 
 @Composable
-fun TopClientsScreen(statistics: Resource<PiHoleStatistics>) {
+fun TopClientsScreen(statistics: UiResult<PiHoleStatistics>) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (statistics) {
-            is Resource.Loading -> LoadingContent(message = "Loading query types")
-            is Resource.Error -> ErrorMessage(errorMessage = statistics.errorMessage, onRetry = {})
-            is Resource.Success -> TopClientsContent(
+            is UiResult.Loading -> LoadingContent(message = "Loading query types")
+            is UiResult.Error -> ErrorMessage(errorMessage = statistics.errorMessage, onRetry = {})
+            is UiResult.Success -> TopClientsContent(
                 topClients = statistics.data.topSources.map { (key, value) -> Pair(key, value) }
             )
         }

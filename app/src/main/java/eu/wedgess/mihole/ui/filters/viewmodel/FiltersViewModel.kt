@@ -9,7 +9,7 @@ import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -75,9 +75,9 @@ class FiltersViewModel @Inject constructor(
             .mapLatest { query: TextFieldValue ->
                 delay(300)
                 val list = if (_uiState.value.currentFilterRuleType == FilterRuleType.WHITE) {
-                    (_uiState.value.allowList as Resource.Success).data
+                    (_uiState.value.allowList as UiResult.Success).data
                 } else {
-                    (_uiState.value.blockList as Resource.Success).data
+                    (_uiState.value.blockList as UiResult.Success).data
                 }
                 list.filter { it.domain.lowercase().contains(query.text.lowercase()) }
             }

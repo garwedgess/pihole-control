@@ -7,11 +7,9 @@ import androidx.navigation.compose.NavHost
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.navigation.destinations.DashboardDestination
 import eu.wedgess.mihole.ui.navigation.destinations.FiltersDestination
+import eu.wedgess.mihole.ui.navigation.destinations.LogsDestination
 import eu.wedgess.mihole.ui.navigation.destinations.StatisticsDestination
 
-// https://developer.android.com/guide/navigation/design/type-safety
-// https://developer.android.com/guide/navigation/navigation-type-safety
-// https://github.com/google/accompanist/blob/main/sample/src/main/java/com/google/accompanist/sample/navigation/animation/AnimatedNavHostSample.kt
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
@@ -26,5 +24,6 @@ fun NavigationGraph(
         DashboardDestination(onComposing)
         StatisticsDestination(onComposing)
         FiltersDestination(onComposing)
+        LogsDestination(onComposing)
     }
 }

@@ -5,6 +5,7 @@ import eu.wedgess.mihole.data.model.ModifyFilterRuleResponse
 import eu.wedgess.mihole.data.model.PiHoleApiResponse
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
+import eu.wedgess.mihole.data.model.PiHoleLogsResponse
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.data.model.PiHoleStatusResponse
@@ -126,6 +127,15 @@ class PiHoleApiImpl @Inject constructor(
             url {
                 parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
                 parameters["sub"] = rule
+            }
+        }
+    }
+
+    override suspend fun fetchLogs(activeMiHole: MiHolesInfo, limit: Int): PiHoleApiResponse<PiHoleLogsResponse> {
+        return httpClient.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["getAllQueries"] = limit.toString()
             }
         }
     }

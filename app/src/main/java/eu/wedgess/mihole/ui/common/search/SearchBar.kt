@@ -66,7 +66,7 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = null,
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
 

@@ -3,41 +3,41 @@ package eu.wedgess.mihole.ui.dashboard
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.PiHoleSummary
-import eu.wedgess.mihole.ui.base.Resource
+import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 
 interface DashboardContract :
     UnidirectionalViewModel<DashboardContract.UiState, DashboardContract.Event, DashboardContract.Effect> {
 
     data class UiState(
-        val summary: Resource<PiHoleSummary>,
-        val queriesOverTime: Resource<PiHoleOverTimeData>,
-        val clientQueriesOverTime: Resource<PiHoleClientsOverTimeData>
+        val summary: UiResult<PiHoleSummary>,
+        val queriesOverTime: UiResult<PiHoleOverTimeData>,
+        val clientQueriesOverTime: UiResult<PiHoleClientsOverTimeData>
     ) {
 
         fun summary(statusSummary: PiHoleSummary): UiState =
-            this.copy(summary = Resource.Success(statusSummary))
+            this.copy(summary = UiResult.Success(statusSummary))
 
         fun summaryError(errorMessage: String): UiState =
-            this.copy(summary = Resource.Error(errorMessage))
+            this.copy(summary = UiResult.Error(errorMessage))
 
         fun overtime(queriesOverTime: PiHoleOverTimeData): UiState =
-            this.copy(queriesOverTime = Resource.Success(queriesOverTime))
+            this.copy(queriesOverTime = UiResult.Success(queriesOverTime))
 
         fun overtimeError(errorMessage: String): UiState =
-            this.copy(queriesOverTime = Resource.Error(errorMessage))
+            this.copy(queriesOverTime = UiResult.Error(errorMessage))
 
         fun clientOvertime(queriesOverTime: PiHoleClientsOverTimeData): UiState =
-            this.copy(clientQueriesOverTime = Resource.Success(queriesOverTime))
+            this.copy(clientQueriesOverTime = UiResult.Success(queriesOverTime))
 
         fun clientOvertimeError(errorMessage: String): UiState =
-            this.copy(clientQueriesOverTime = Resource.Error(errorMessage))
+            this.copy(clientQueriesOverTime = UiResult.Error(errorMessage))
 
         companion object {
             fun initial() = UiState(
-                summary = Resource.Loading,
-                queriesOverTime = Resource.Loading,
-                clientQueriesOverTime = Resource.Loading,
+                summary = UiResult.Loading,
+                queriesOverTime = UiResult.Loading,
+                clientQueriesOverTime = UiResult.Loading,
             )
         }
     }
