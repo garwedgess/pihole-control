@@ -10,14 +10,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
 import eu.wedgess.mihole.ui.filters.view.components.FilterTopBarActions
-import eu.wedgess.mihole.ui.filters.view.components.SearchContent
+import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.filters.viewmodel.FiltersViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
+import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -66,7 +68,7 @@ fun NavGraphBuilder.FiltersDestination(
         LaunchedEffect(uiState.showSearchView, uiState.allowList, uiState.blockList) {
             onComposing(
                 AppBarState(
-                    title = "Filters",
+                    title = UiText.StringResource(id = R.string.nav_title_filters),
                     actions = { FilterTopBarActions(onSearchClicked = { viewModel.onEvent(FiltersContract.Event.OnShowSearchView) }) },
                     showSearchView = uiState.allowList is UiResult.Success && uiState.blockList is UiResult.Success && uiState.showSearchView,
                     searchContent = {
@@ -94,8 +96,6 @@ fun NavGraphBuilder.FiltersDestination(
                 }
             }
         }
-
-        // https://github1s.com/SmartToolFactory/Jetpack-Compose-Tutorials/blob/HEAD/Tutorial1-1Basics/src/main/java/com/smarttoolfactory/tutorial1_1basics/Search.kt
 
         FiltersScreen(
             uiState,

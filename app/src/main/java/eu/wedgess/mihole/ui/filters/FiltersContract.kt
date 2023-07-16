@@ -6,6 +6,7 @@ import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.ui.common.search.SearchState
+import eu.wedgess.mihole.utils.UiText
 
 interface FiltersContract :
     UnidirectionalViewModel<FiltersContract.UiState, FiltersContract.Event, FiltersContract.Effect> {
@@ -56,7 +57,7 @@ interface FiltersContract :
         fun blockList(blockList: List<PiHoleFilterRules.PiHoleFilterRule>): UiState =
             this.copy(blockList = UiResult.Success(blockList))
 
-        fun filterListError(errorMessage: String): UiState =
+        fun filterListError(errorMessage: UiText): UiState =
             this.copy(
                 allowList = UiResult.Error(errorMessage),
                 blockList = UiResult.Error(errorMessage)

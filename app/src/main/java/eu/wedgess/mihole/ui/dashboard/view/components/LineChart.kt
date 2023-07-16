@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -21,6 +22,7 @@ import eu.wedgess.mihole.ui.dashboard.model.Entry
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.totalQueriesBackground
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.vico.rememberMarker
 import java.text.DateFormat
 import kotlin.math.roundToInt
@@ -33,6 +35,7 @@ fun LineChart(
 ) = ProvideChartStyle(
     m3ChartStyle(entityColors = data.map { it.color ?: MaterialTheme.colorScheme.primary })
 ) {
+    val context = LocalContext.current
     val entries = remember(data) {
         data.map { lineData ->
             lineData.data.mapIndexed { index, coordinate ->
@@ -40,7 +43,7 @@ fun LineChart(
                     if (xAxisFormatter == null) coordinate.first.toFloat() else index.toFloat(),
                     coordinate.second.toFloat(),
                     xDisplayValue = xAxisFormatter?.invoke(coordinate.first),
-                    yLabel = lineData.label
+                    yLabel = lineData.label.asString(context)
                 )
             }
         }
@@ -88,11 +91,11 @@ fun LineChartPreview() {
             modifier = Modifier.fillMaxSize(),
             data = listOf(
                 LineChartData(
-                    label = "label",
+                    label = UiText.DynamicString("label"),
                     data = listOf(1525546500 to 163, 1525547100 to 154, 1525547700 to 164),
                     color = MaterialTheme.colorScheme.totalQueriesBackground
                 ), LineChartData(
-                    label = "label",
+                    label = UiText.DynamicString("label"),
                     data = listOf(1525546500 to 30, 1525547100 to 64, 1525547700 to 10),
                     color = MaterialTheme.colorScheme.error
                 )

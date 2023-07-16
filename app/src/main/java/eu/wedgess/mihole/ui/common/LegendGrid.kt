@@ -1,7 +1,5 @@
 package eu.wedgess.mihole.ui.common
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -11,10 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -23,10 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
-import timber.log.Timber
 
 data class LegendData(
     val title: String,
@@ -52,8 +44,10 @@ private fun LegendGrid(
         (items.size / itemsPerRow).plus(if (items.size % itemsPerRow != 0) 1 else 0)
     }
 
-    val xAxisShapeSpacing = with(LocalDensity.current) { 8.dp.roundToPx() }
-    val yAxisSpacing = with(LocalDensity.current) { 4.dp.roundToPx() }
+    val xAxisShapeSpacing =
+        with(LocalDensity.current) { MiHoleTheme.dimens.padding.itemContent.roundToPx() }
+    val yAxisSpacing =
+        with(LocalDensity.current) { MiHoleTheme.dimens.padding.itemContentSmall.roundToPx() }
 
     Layout(
         contents = listOf(titleItems, subTitleItems, shapeItems),
@@ -175,17 +169,16 @@ fun LegendGridImpl(legendData: List<LegendData>, modifier: Modifier = Modifier) 
     val selectedItem = remember(legendData) {
         legendData.find { it.isSelected }
     }
-    Timber.d("Selected item is: $selectedItem")
 
     val defaultTitleText = MaterialTheme.typography.bodySmall.copy(
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontSize = MiHoleTheme.dimens.fontSize.legendTitle,
         color = Color.Unspecified,
     )
 
     val selectedTitleText = MaterialTheme.typography.bodySmall.copy(
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
+        fontSize = MiHoleTheme.dimens.fontSize.legendTitleSelected,
         color = selectedItem?.color ?: Color.Unspecified,
     )
 
@@ -204,8 +197,8 @@ fun LegendGridImpl(legendData: List<LegendData>, modifier: Modifier = Modifier) 
                 text = it,
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    color = Color.Unspecified
+                    fontSize = MiHoleTheme.dimens.fontSize.legendSubTitle,
+                    color = Color.Unspecified.copy(alpha = 0.6f)
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -214,7 +207,7 @@ fun LegendGridImpl(legendData: List<LegendData>, modifier: Modifier = Modifier) 
         shape = {
             Box(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(MiHoleTheme.dimens.size.legendIcon)
                     .clip(CircleShape)
                     .background(it)
             )
@@ -229,13 +222,13 @@ private fun LegendGridPreview() {
     MiHoleTheme {
         Surface {
             LegendGrid(
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContentSmall),
                 title = {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                            fontSize = MiHoleTheme.dimens.fontSize.legendTitle,
                             color = Color.Black
                         ),
                         maxLines = 1,
@@ -247,7 +240,7 @@ private fun LegendGridPreview() {
                         text = it,
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontWeight = FontWeight.Normal,
-                            fontSize = 16.sp,
+                            fontSize = MiHoleTheme.dimens.fontSize.legendSubTitle,
                             color = Color.Black
                         )
                     )
@@ -255,7 +248,7 @@ private fun LegendGridPreview() {
                 shape = {
                     Box(
                         modifier = Modifier
-                            .size(16.dp)
+                            .size(MiHoleTheme.dimens.size.legendIcon)
                             .clip(CircleShape)
                             .background(it)
                     )

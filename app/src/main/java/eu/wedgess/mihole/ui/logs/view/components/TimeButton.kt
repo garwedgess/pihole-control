@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
@@ -37,13 +39,13 @@ fun TimeButton(
 ) {
     Column(
         modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius))
             .border(
-                1.dp,
+                DividerDefaults.Thickness,
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)
             )
-            .width(164.dp)
+            .width(MiHoleTheme.dimens.size.timeButtonWidth)
             .clickable { onClick() },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,12 +54,12 @@ fun TimeButton(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(MiHoleTheme.dimens.padding.itemContent),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(MiHoleTheme.dimens.weight.full),
                 text = title,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary,
@@ -74,8 +76,8 @@ fun TimeButton(
                             onClearClicked()
                         },
                         modifier = Modifier
-                            .size(16.dp)
-                            .padding(1.dp)
+                            .size(MiHoleTheme.dimens.padding.itemContentLarge)
+                            .padding(DividerDefaults.Thickness)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Close,
@@ -87,8 +89,12 @@ fun TimeButton(
             }
         }
         Text(
-            modifier = Modifier.padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
-            text = subTitle ?: "Not set",
+            modifier = Modifier.padding(
+                bottom = MiHoleTheme.dimens.padding.itemContent,
+                start = MiHoleTheme.dimens.padding.itemContent,
+                end = MiHoleTheme.dimens.padding.itemContent
+            ),
+            text = subTitle ?: stringResource(R.string.logs_filter_sheet_time_button_value_not_set),
             style = MaterialTheme.typography.bodySmall
         )
     }

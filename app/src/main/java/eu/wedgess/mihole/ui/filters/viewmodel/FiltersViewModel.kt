@@ -5,12 +5,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -107,7 +109,10 @@ class FiltersViewModel @Inject constructor(
         _uiState.update { it.selectedRule(rule) }
 
     private val fetchRulesListErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.filterListError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.filterListError(errorMessage) }
     }
 
     private val addRuleErrorHandler = CoroutineExceptionHandler { _, throwable ->

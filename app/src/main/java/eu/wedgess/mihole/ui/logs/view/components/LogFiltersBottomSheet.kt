@@ -1,20 +1,24 @@
 package eu.wedgess.mihole.ui.logs.view.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.wedgess.mihole.ui.base.UiResult
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.model.LogEntryStatus
 import eu.wedgess.mihole.ui.logs.model.PickerType
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun LogFiltersBottomSheet(
@@ -23,23 +27,20 @@ fun LogFiltersBottomSheet(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
+            .fillMaxWidth()
+            .height(MiHoleTheme.dimens.size.logsBottomSheetHeight(LocalConfiguration.current.screenHeightDp.dp))
+            .padding(MiHoleTheme.dimens.padding.itemContent)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
             Text(
+                text = stringResource(R.string.logs_filter_sheet_title_number_of_queries),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                text = "Total Results: ${(uiState.logs as? UiResult.Success)?.data?.size ?: 0}",
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
-            Text(
-                text = "Number of Queries", modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                    .padding(
+                        start = MiHoleTheme.dimens.padding.itemContent,
+                        end = MiHoleTheme.dimens.padding.itemContent,
+                        bottom = MiHoleTheme.dimens.padding.itemContent
+                    )
             )
             LogsLimitRadioButtonGroup(
                 modifier = Modifier.fillMaxWidth(),
@@ -47,11 +48,15 @@ fun LogFiltersBottomSheet(
                 selectedItem = uiState.logsLimit,
                 onLogLimitSelected = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
             )
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            Divider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
             Text(
-                text = "Status", modifier = Modifier
+                text = stringResource(R.string.logs_filter_sheet_title_status), modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                    .padding(
+                        start = MiHoleTheme.dimens.padding.itemContent,
+                        end = MiHoleTheme.dimens.padding.itemContent,
+                        bottom = MiHoleTheme.dimens.padding.itemContent
+                    )
             )
             LogsEntryRadioButtonGroup(
                 modifier = Modifier.fillMaxWidth(),
@@ -59,11 +64,15 @@ fun LogFiltersBottomSheet(
                 selectedItem = uiState.selectedLogEntryStatus,
                 onLogEntryStatusSelected = { onEvent(LogsContract.Event.OnStatusChanged(it)) }
             )
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            Divider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
             Text(
-                text = "Time", modifier = Modifier
+                text = stringResource(R.string.logs_filter_sheet_title_time), modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                    .padding(
+                        start = MiHoleTheme.dimens.padding.itemContent,
+                        end = MiHoleTheme.dimens.padding.itemContent,
+                        bottom = MiHoleTheme.dimens.padding.itemContent
+                    )
             )
             TimePickerLayout(
                 fromTime = uiState.filterFromTime,

@@ -7,6 +7,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
@@ -30,10 +32,10 @@ fun DashboardScreen(
             when (val summary = uiState.summary) {
                 is UiResult.Success -> SummarySection(summary = summary.data)
                 is UiResult.Error -> ErrorMessage(
-                    errorMessage = summary.errorMessage,
+                    errorMessage = summary.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchSummary) })
 
-                UiResult.Loading -> LoadingContent(message = "Fetching statistics")
+                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_statistics))
             }
 
             when (val overtime = uiState.queriesOverTime) {
@@ -42,10 +44,10 @@ fun DashboardScreen(
                 )
 
                 is UiResult.Error -> ErrorMessage(
-                    errorMessage = overtime.errorMessage,
+                    errorMessage = overtime.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchQueriesOvertime) })
 
-                UiResult.Loading -> LoadingContent(message = "Fetching over time data")
+                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_over_time_data))
             }
 
             when (val overtime = uiState.clientQueriesOverTime) {
@@ -54,10 +56,10 @@ fun DashboardScreen(
                 )
 
                 is UiResult.Error -> ErrorMessage(
-                    errorMessage = overtime.errorMessage,
+                    errorMessage = overtime.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchClientQueriesOvertime) })
 
-                UiResult.Loading -> LoadingContent(message = "Fetching clients over time data")
+                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_clients_over_time_data))
             }
         }
     }

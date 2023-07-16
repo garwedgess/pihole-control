@@ -8,11 +8,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
 import eu.wedgess.mihole.ui.dashboard.view.DashboardScreen
 import eu.wedgess.mihole.ui.dashboard.viewmodel.DashboardViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
+import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -52,7 +54,7 @@ fun NavGraphBuilder.DashboardDestination(
         LaunchedEffect(Unit) {
             onComposing(
                 AppBarState(
-                    title = "Home"
+                    title = UiText.StringResource(id = R.string.nav_title_home)
                 )
             )
             do {

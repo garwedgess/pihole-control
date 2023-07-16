@@ -8,6 +8,7 @@ import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.logs.model.LogEntryStatus
 import eu.wedgess.mihole.ui.logs.model.LogSorting
 import eu.wedgess.mihole.ui.logs.model.PickerType
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.epochMillisToCurrentTimezoneEpochSeconds
 
 interface LogsContract :
@@ -26,6 +27,7 @@ interface LogsContract :
         val filterToTime: Long?,
         val showDatePicker: PickerType?,
         val showTimePicker: PickerType?,
+        val selectedLog: PiHoleLog?,
         private var allLogs: List<PiHoleLog>
     ) {
 
@@ -50,7 +52,7 @@ interface LogsContract :
 
         fun dismissTimePicker(): UiState = this.copy(showTimePicker = null)
 
-        fun logsError(errorMessage: String): UiState =
+        fun logsError(errorMessage: UiText): UiState =
             this.copy(logs = UiResult.Error(errorMessage))
 
         private fun resetSearchState(): UiState =
@@ -117,6 +119,7 @@ interface LogsContract :
                 showTimePicker = null,
                 showDatePicker = null,
                 sorting = LogSorting.DATE_DESC,
+                selectedLog = null,
                 allLogs = emptyList()
             )
 
@@ -178,6 +181,7 @@ interface LogsContract :
         object OnFromTimeCleared : Event
         object OnToTimeCleared : Event
         object OnSortingDismissed : Event
+        object OnLogDetailsDismissed : Event
         data class OnSearchQueryChanged(val query: TextFieldValue) : Event
         data class OnLogLimitChanged(val limit: Int) : Event
         data class OnStatusChanged(val status: LogEntryStatus) : Event
@@ -186,5 +190,6 @@ interface LogsContract :
         data class OnShowDatePicker(val type: PickerType) : Event
         data class OnShowTimePicker(val type: PickerType) : Event
         data class OnSortTypeSelected(val sorting: LogSorting) : Event
+        data class OnLogSelected(val log: PiHoleLog) : Event
     }
 }

@@ -3,9 +3,11 @@ package eu.wedgess.mihole.ui.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -39,15 +41,24 @@ class DashboardViewModel @Inject constructor(
     }
 
     private val statisticsErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.summaryError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.summaryError(errorMessage) }
     }
 
     private val queriesOverTimeErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.overtimeError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.overtimeError(errorMessage) }
     }
 
     private val clientQueriesOverTimeErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.overtimeError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.overtimeError(errorMessage) }
     }
 
     private fun fetchStatistics() = viewModelScope.launch(statisticsErrorHandler) {

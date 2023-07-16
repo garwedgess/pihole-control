@@ -11,12 +11,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.view.components.LogFiltersBottomSheet
 import eu.wedgess.mihole.ui.logs.view.components.LogsListContent
+import eu.wedgess.mihole.ui.logs.view.components.dialogs.LogDetailsDialog
 import eu.wedgess.mihole.ui.logs.view.components.dialogs.LogsDatePickerDialog
 import eu.wedgess.mihole.ui.logs.view.components.dialogs.LogsTimePickerDialog
 
@@ -42,9 +45,9 @@ fun LogsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (uiState.logs) {
-                    is UiResult.Loading -> LoadingContent(message = "Loading filters")
+                    is UiResult.Loading -> LoadingContent(message = stringResource(R.string.logs_msg_loading_query_logs))
                     is UiResult.Error -> ErrorMessage(
-                        errorMessage = uiState.logs.errorMessage,
+                        errorMessage = uiState.logs.errorMessage.asString(),
                         onRetry = {})
 
                     is UiResult.Success -> {
@@ -69,6 +72,15 @@ fun LogsScreen(
                     onDismiss = { onEvent(LogsContract.Event.OnDismissDatePicker) },
                     onConfirm = { timeMillis ->
                         onEvent(LogsContract.Event.OnTimeConfirmed(timeMillis))
+                    }
+                )
+            }
+            if (uiState.selectedLog != null) {
+                LogDetailsDialog(
+                    filterRule = uiState.selectedLog,
+                    onDismiss = { onEvent(LogsContract.Event.OnLogDetailsDismissed) },
+                    onConfirm = { log ->
+//                        onEvent(LogsContract.Event.OnTimeConfirmed(timeMillis))
                     }
                 )
             }

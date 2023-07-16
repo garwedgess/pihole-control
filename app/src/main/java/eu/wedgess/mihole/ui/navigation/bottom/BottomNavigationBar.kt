@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import eu.wedgess.mihole.ui.navigation.Screens
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun BottomNavigationBar(
@@ -16,8 +17,8 @@ fun BottomNavigationBar(
     selectedItemRoute: String? = null
 ) {
     NavigationBar(
-    containerColor = MaterialTheme.colorScheme.primary,
-    contentColor = Color.White
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = Color.White
     ) {
         BottomNavItem.all().forEach { item ->
             val selected = item.route == (selectedItemRoute ?: Screens.Dashboard.route)
@@ -25,11 +26,11 @@ fun BottomNavigationBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = { onNavigateTo(item.route) },
-                label = { Text(text = item.title) },
+                label = { Text(text = item.title.asString()) },
                 icon = { Icon(item.icon, contentDescription = "") },
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
-                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
+                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
                     indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
                     selectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimary

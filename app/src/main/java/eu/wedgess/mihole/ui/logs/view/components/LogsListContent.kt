@@ -2,26 +2,17 @@ package eu.wedgess.mihole.ui.logs.view.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleLog
 import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.common.search.SearchStatus
@@ -45,7 +36,7 @@ fun LogsListContent(
                     )
                 }
                 items(logsList) { log ->
-                    LogItem(log)
+                    LogItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
                 }
             }
 
@@ -58,7 +49,7 @@ fun LogsListContent(
 
                 }
                 items(searchState.searchResults) { log ->
-                    LogItem(log)
+                    LogItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
                 }
             }
 
@@ -69,7 +60,12 @@ fun LogsListContent(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "No results found for: ${searchState.query.text}")
+                        Text(
+                            text = stringResource(
+                                id = R.string.all_msg_no_results_found_for,
+                                searchState.query.text
+                            )
+                        )
                     }
                 }
             }

@@ -8,11 +8,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
 import eu.wedgess.mihole.ui.statistics.view.StatisticsScreen
 import eu.wedgess.mihole.ui.statistics.viewmodel.StatisticsViewModel
+import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -24,29 +26,57 @@ fun NavGraphBuilder.StatisticsDestination(
         enterTransition = {
             when (initialState.destination.route) {
                 Screens.Dashboard.route ->
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
-                else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
             }
         },
         exitTransition = {
             when (targetState.destination.route) {
                 Screens.Dashboard.route ->
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
-                else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
                 Screens.Dashboard.route ->
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
-                else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
                 Screens.Dashboard.route ->
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
-                else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
             }
         }
     ) {
@@ -56,7 +86,7 @@ fun NavGraphBuilder.StatisticsDestination(
         LaunchedEffect(Unit) {
             onComposing(
                 AppBarState(
-                    title = "Statistics"
+                    title = UiText.StringResource(id = R.string.nav_title_statistics)
                 )
             )
             do {

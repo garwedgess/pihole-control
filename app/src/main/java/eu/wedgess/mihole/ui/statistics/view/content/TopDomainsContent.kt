@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.statistics.view
+package eu.wedgess.mihole.ui.statistics.view.content
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -25,17 +25,14 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
-import eu.wedgess.mihole.ui.theme.queriesBlockedBackground
 import eu.wedgess.mihole.ui.theme.totalQueriesBackground
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
-import timber.log.Timber
-import kotlin.math.roundToInt
 
 @Composable
 fun TopDomainsContent(
@@ -44,11 +41,11 @@ fun TopDomainsContent(
 ) {
 
     val sumAllPermitted = remember {
-        mutableStateOf(topPermittedDomains.sumOf { it.second })
+        mutableIntStateOf(topPermittedDomains.sumOf { it.second })
     }
 
     val sumAllBlocked = remember {
-        mutableStateOf(topBlockedDomains.sumOf { it.second })
+        mutableIntStateOf(topBlockedDomains.sumOf { it.second })
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
@@ -56,7 +53,7 @@ fun TopDomainsContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

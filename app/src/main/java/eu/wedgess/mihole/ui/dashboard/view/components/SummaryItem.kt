@@ -1,27 +1,30 @@
 package eu.wedgess.mihole.ui.dashboard.view.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Public
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.extensions.formatPercentage
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
@@ -32,40 +35,50 @@ object SummaryItem {
     operator fun invoke(
         title: String,
         value: String,
+        caption: String?,
         imageVector: ImageVector,
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        Surface(
+        Card(
             modifier = modifier,
-            shadowElevation = 4.dp,
-            color = backgroundColor,
-            shape = RoundedCornerShape(4.dp)
+            colors = CardDefaults.cardColors(containerColor = backgroundColor)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(MiHoleTheme.dimens.padding.screenContent),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Icon(
                     imageVector = imageVector,
-                    modifier = Modifier.size(52.dp),
+                    modifier = Modifier.size(MiHoleTheme.dimens.size.summaryIcon),
                     contentDescription = title,
-                    tint = Color.Black.copy(alpha = 0.1f)
+                    tint = Color.Black.copy(alpha = MiHoleTheme.dimens.weight.minAlpha)
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = title,
-                        color = Color.White.copy(alpha = 0.8f),
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        Text(
+                            text = title,
+                            color = Color.White.copy(alpha = MiHoleTheme.dimens.weight.secondaryTextAlpha),
+                            textAlign = TextAlign.End,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (caption != null) {
+                            Text(
+                                modifier = Modifier.padding(start = MiHoleTheme.dimens.padding.itemContentSmall),
+                                text = stringResource(id = R.string.home_caption_clients, caption),
+                                style = MaterialTheme.typography.labelSmall,
+                                maxLines = 1,
+                                color = Color.White,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = value,
@@ -87,7 +100,7 @@ object SummaryItem {
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        SummaryItem(title, value.formatPercentage(), imageVector, backgroundColor, modifier)
+        SummaryItem(title, value.formatPercentage(), caption = null, imageVector, backgroundColor, modifier)
     }
 
     @Composable
@@ -98,7 +111,19 @@ object SummaryItem {
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        SummaryItem(title, value.formatWithThousands(), imageVector, backgroundColor, modifier)
+        SummaryItem(title, value.formatWithThousands(), caption = null, imageVector, backgroundColor, modifier)
+    }
+
+    @Composable
+    fun NumberWithCaption(
+        title: String,
+        value: Int,
+        caption: String,
+        imageVector: ImageVector,
+        backgroundColor: Color,
+        modifier: Modifier = Modifier
+    ) {
+        SummaryItem(title, value.formatWithThousands(), caption = caption, imageVector, backgroundColor, modifier)
     }
 
 }

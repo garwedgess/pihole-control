@@ -6,7 +6,7 @@ import eu.wedgess.mihole.utils.UiText
 
 enum class LogEntryStatus(val uiText: UiText, val categories: Set<LogsAnswerCategory>) {
     ALL(
-        uiText = UiText.StringResource(R.string.log_screen_label_all),
+        uiText = UiText.StringResource(R.string.log_label_all),
         setOf(
             LogsAnswerCategory.ALLOW,
             LogsAnswerCategory.CACHE,
@@ -15,11 +15,11 @@ enum class LogEntryStatus(val uiText: UiText, val categories: Set<LogsAnswerCate
         )
     ),
     ALLOWED(
-        uiText = UiText.StringResource(R.string.log_screen_label_allowed),
+        uiText = UiText.StringResource(R.string.log_label_allowed),
         setOf(LogsAnswerCategory.ALLOW, LogsAnswerCategory.CACHE)
     ),
     BLOCKED(
-        uiText = UiText.StringResource(R.string.log_screen_label_blocked),
+        uiText = UiText.StringResource(R.string.log_label_blocked),
         setOf(LogsAnswerCategory.BLOCK, LogsAnswerCategory.UNKNOWN)
     )
 }

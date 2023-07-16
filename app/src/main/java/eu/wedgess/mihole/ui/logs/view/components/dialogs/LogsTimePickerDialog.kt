@@ -19,9 +19,11 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import eu.wedgess.mihole.R
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import org.threeten.bp.OffsetDateTime
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +50,7 @@ fun LogsTimePickerDialog(
 
 @Composable
 private fun TimePickerDialog(
-    title: String = "Select Time",
+    title: String = stringResource(R.string.logs_dialog_time_picker_title_select_time),
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     toggle: @Composable () -> Unit = {},
@@ -61,7 +63,7 @@ private fun TimePickerDialog(
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
-        tonalElevation = 6.dp,
+        tonalElevation = MiHoleTheme.dimens.size.dialogTonalElevation,
         modifier = Modifier
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Min)
@@ -72,23 +74,23 @@ private fun TimePickerDialog(
     ) {
         toggle()
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(MiHoleTheme.dimens.padding.itemContentXLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 20.dp),
+                    .padding(bottom = MiHoleTheme.dimens.padding.screenContent),
                 text = title,
                 style = MaterialTheme.typography.labelMedium
             )
             content()
             Row(
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(MiHoleTheme.dimens.size.timeDialogButtonRowHeight)
                     .fillMaxWidth()
             ) {
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(MiHoleTheme.dimens.weight.full))
                 TextButton(
                     onClick = onCancel
                 ) { Text("Cancel") }

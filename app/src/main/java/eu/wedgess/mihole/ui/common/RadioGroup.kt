@@ -34,7 +34,6 @@ fun <T> RadioGroup(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
 ) {
     Row(modifier = modifier.wrapContentWidth(), horizontalArrangement = horizontalArrangement) {
-        val cornerRadius = 16.dp
 
         itemsList.forEachIndexed { index, item ->
 
@@ -53,17 +52,17 @@ fun <T> RadioGroup(
                 },
                 shape = when (index) {
                     0 -> RoundedCornerShape(
-                        topStart = cornerRadius,
+                        topStart = MiHoleTheme.dimens.size.cornerRadius,
                         topEnd = 0.dp,
-                        bottomStart = cornerRadius,
+                        bottomStart = MiHoleTheme.dimens.size.cornerRadius,
                         bottomEnd = 0.dp
                     )
 
                     itemsList.size - 1 -> RoundedCornerShape(
                         topStart = 0.dp,
-                        topEnd = cornerRadius,
+                        topEnd = MiHoleTheme.dimens.size.cornerRadius,
                         bottomStart = 0.dp,
-                        bottomEnd = cornerRadius
+                        bottomEnd = MiHoleTheme.dimens.size.cornerRadius
                     )
 
                     else -> RoundedCornerShape(
@@ -77,12 +76,12 @@ fun <T> RadioGroup(
                     1.dp, if (selectedItem == item) {
                         MaterialTheme.colorScheme.primary
                     } else {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)
+                        MaterialTheme.colorScheme.primary.copy(alpha = MiHoleTheme.dimens.weight.radioGroupUnSelectedBorderAlpha)
                     }
                 ),
                 colors = if (selectedItem == item) {
                     ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = MiHoleTheme.dimens.weight.minAlpha),
                         contentColor = MaterialTheme.colorScheme.primary
                     )
                 } else {
@@ -94,7 +93,9 @@ fun <T> RadioGroup(
             ) {
                 AnimatedVisibility(visible = selectedItem == item) {
                     Icon(
-                        modifier = Modifier.padding(end = 8.dp).size(16.dp),
+                        modifier = Modifier
+                            .padding(end = MiHoleTheme.dimens.padding.itemContent)
+                            .size(MiHoleTheme.dimens.size.radioGroupSelectedIcon),
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary

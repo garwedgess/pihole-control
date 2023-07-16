@@ -73,10 +73,11 @@ fun SummarySection(summary: PiHoleSummary) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            SummaryItem.Number(
+            SummaryItem.NumberWithCaption(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.summary_title_total_queries),
                 value = totalQueries,
+                caption = summary.uniqueClients.toString(),
                 imageVector = Icons.Default.Public,
                 backgroundColor = MaterialTheme.colorScheme.totalQueriesBackground
             )

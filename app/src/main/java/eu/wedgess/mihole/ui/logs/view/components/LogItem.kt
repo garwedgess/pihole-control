@@ -1,5 +1,6 @@
 package eu.wedgess.mihole.ui.logs.view.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,17 +24,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.data.model.PiHoleLog
 import eu.wedgess.mihole.data.model.enums.LogsAnswerCategory
 import eu.wedgess.mihole.data.model.enums.LogsAnswerType
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
 import eu.wedgess.mihole.ui.theme.queriesBlockedBackground
 import eu.wedgess.mihole.ui.theme.totalQueriesBackground
 import java.text.DateFormat
 
 @Composable
-fun LogItem(log: PiHoleLog, modifier: Modifier = Modifier) {
+fun LogItem(log: PiHoleLog, modifier: Modifier = Modifier, onItemClicked: () -> Unit) {
     val dateFormat = remember { DateFormat.getTimeInstance() }
     val (icon, tint) = when (log.answerType.category) {
         LogsAnswerCategory.BLOCK -> Pair(
@@ -53,17 +54,17 @@ fun LogItem(log: PiHoleLog, modifier: Modifier = Modifier) {
 
         LogsAnswerCategory.UNKNOWN -> Pair(
             Icons.Default.Help,
-            LocalContentColor.current.copy(alpha = 0.5f)
+            LocalContentColor.current.copy(alpha = MiHoleTheme.dimens.weight.half)
         )
     }
 
     ListItem(
-        modifier = modifier,
+        modifier = modifier.clickable { onItemClicked() },
         overlineContent = {
             Row(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
             ) {
                 Icon(
                     imageVector = icon,
@@ -80,9 +81,9 @@ fun LogItem(log: PiHoleLog, modifier: Modifier = Modifier) {
         headlineContent = { Text(log.requestedDomain) },
         supportingContent = { Text(log.client) },
         trailingContent = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)) {
                 Text(
-                    modifier = Modifier.padding(top = 6.dp),
+                    modifier = Modifier.padding(top = MiHoleTheme.dimens.padding.itemContentSmall),
                     text = dateFormat.format(log.timestamp * 1000L)
                 )
                 Text("%.1f ms".format(log.responseTime * 0.1))
@@ -96,14 +97,15 @@ fun LogItemPreview() {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         LogsAnswerType.values().forEach {
             LogItem(
-                PiHoleLog(
+                log = PiHoleLog(
                     timestamp = 1616407649532,
                     queryType = "IPv4",
                     requestedDomain = "www.google.com",
                     client = "My Android",
                     answerType = it,
                     responseTime = 1200
-                )
+                ),
+                onItemClicked = {}
             )
         }
     }

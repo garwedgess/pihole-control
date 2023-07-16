@@ -7,10 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.extensions.toDateString
-import timber.log.Timber
 
 @Composable
 fun TimePickerLayout(
@@ -21,21 +22,20 @@ fun TimePickerLayout(
     onFromTimeCleared: () -> Unit,
     onToTimeCleared: () -> Unit
 ) {
-    Timber.d("fromTime: $fromTime")
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         TimeButton(
-            title = "From Time",
+            title = stringResource(R.string.logs_filter_sheet_btn_from_time),
             subTitle = fromTime?.toDateString(),
             onClick = { onFromTimeClicked() },
             onClearClicked = { onFromTimeCleared() }
         )
-        Text("-")
+        Text(stringResource(R.string.logs_filter_sheet_time_divider))
         TimeButton(
-            title = "To Time",
+            title = stringResource(R.string.logs_filter_sheet_btn_to_time),
             subTitle = toTime?.toDateString(),
             onClick = { onToTimeClicked() },
             onClearClicked = { onToTimeCleared() }

@@ -3,19 +3,21 @@ package eu.wedgess.mihole.ui.dashboard.view.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.ui.common.LegendData
 import eu.wedgess.mihole.ui.common.LegendGridImpl
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
 import eu.wedgess.mihole.ui.theme.totalQueriesBackground
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
 import java.text.DateFormat
 import java.text.DateFormat.getTimeInstance
@@ -31,7 +33,7 @@ fun QueriesOvertimeGraph(
     val adsColor = MaterialTheme.colorScheme.domainsOnAdListBackground
     val adsEntry = remember(overTimeData.adsOverTime) {
         LineChartData(
-            label = "Blocked",
+            label = UiText.StringResource(R.string.home_title_queries_over_time_blocked),
             data = overTimeData.adsOverTime.map { Pair(it.key * 1000L, it.value) },
             color = adsColor
         )
@@ -40,26 +42,24 @@ fun QueriesOvertimeGraph(
     val domainsColor = MaterialTheme.colorScheme.totalQueriesBackground
     val domainsEntry = remember(overTimeData.domainsOverTime) {
         LineChartData(
-            label = "Permitted",
+            label = UiText.StringResource(R.string.home_title_queries_over_time_permitted),
             data = overTimeData.domainsOverTime.map { Pair(it.key * 1000L, it.value) },
             color = domainsColor
         )
     }
 
-    Surface(
+    Card(
         modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .fillMaxSize(),
-        shadowElevation = 4.dp,
-        shape = RoundedCornerShape(4.dp)
+            .padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
+            .fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
         ) {
             LineChart(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 10.dp),
+                    .padding(vertical = MiHoleTheme.dimens.padding.screenContent),
                 data = listOf(adsEntry, domainsEntry),
                 xAxisFormatter = dateFormatter.run {
                     { value ->
@@ -70,13 +70,19 @@ fun QueriesOvertimeGraph(
             LegendGridImpl(
                 legendData = listOf(
                     LegendData(
-                        title = "Permitted",
-                        subTitle = "Hits: ${domainsEntry.data.sumOf { it.second.toInt() }.formatWithThousands()}",
+                        title = stringResource(id = R.string.home_title_queries_over_time_permitted),
+                        subTitle = stringResource(
+                            id = R.string.home_legend_sub_title_queries_over_time,
+                            domainsEntry.data.sumOf { it.second.toInt() }.formatWithThousands()
+                        ),
                         color = domainsColor
                     ),
                     LegendData(
-                        title = "Blocked",
-                        subTitle = "Hits: ${adsEntry.data.sumOf { it.second.toInt() }.formatWithThousands()}",
+                        title = stringResource(id = R.string.home_title_queries_over_time_blocked),
+                        subTitle = stringResource(
+                            id = R.string.home_legend_sub_title_queries_over_time,
+                            adsEntry.data.sumOf { it.second.toInt() }.formatWithThousands()
+                        ),
                         color = adsColor
                     )
                 )

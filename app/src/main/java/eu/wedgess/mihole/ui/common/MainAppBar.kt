@@ -18,7 +18,7 @@ import eu.wedgess.mihole.ui.base.AppBarState
 fun MainAppBar(appBarState: AppBarState, onNavigateBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text(text = appBarState.title)
+            Text(text = appBarState.title.asString())
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,

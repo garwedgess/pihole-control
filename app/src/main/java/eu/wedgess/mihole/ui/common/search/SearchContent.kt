@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.filters.view.components
+package eu.wedgess.mihole.ui.common.search
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
@@ -13,8 +13,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
-import eu.wedgess.mihole.ui.common.search.SearchBar
-import eu.wedgess.mihole.ui.common.search.SearchState
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class)
 @Composable
@@ -30,7 +28,7 @@ fun <T> SearchContent(
         val keyboardController = LocalSoftwareKeyboardController.current
 
         val dispatcher: OnBackPressedDispatcher =
-            LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+            requireNotNull(LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher)
 
         val backCallback = remember {
             object : OnBackPressedCallback(true) {

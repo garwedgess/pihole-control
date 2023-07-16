@@ -5,6 +5,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import java.text.DateFormat
@@ -18,7 +20,7 @@ fun FilterRuleItem(
     ListItem(
         modifier = Modifier.clickable { onItemClicked() },
         overlineContent = when (rule.type) {
-            FilterRuleType.REGEX_BLACK, FilterRuleType.REGEX_WHITE -> ({ Text("RegExr") })
+            FilterRuleType.REGEX_BLACK, FilterRuleType.REGEX_WHITE -> ({ Text(stringResource(R.string.filters_label_regex)) })
             else -> null
         },
         headlineContent = { Text(rule.domain) },

@@ -25,12 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.enums.WILDCARD_REGEX_PREFIX
 import eu.wedgess.mihole.data.model.enums.WILDCARD_REGEX_SUFFIX
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun AddFilterRuleDialog(
@@ -64,19 +66,22 @@ private fun AddFilterRuleDialogContent(
     var value by remember {
         mutableStateOf("")
     }
-    Surface(shape = RoundedCornerShape(8.dp)) {
+    Surface(shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)) {
         Column(
-            Modifier.padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            Modifier.padding(MiHoleTheme.dimens.padding.dialogContent),
+            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
         ) {
             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                Text("Add rule", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(R.string.filters_add_rule_dialog_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
-                label = { Text("Domain") },
+                label = { Text(stringResource(R.string.filters_add_rule_dialog_label_domain)) },
                 leadingIcon = if (isWildcardChecked) {
                     { Text(WILDCARD_REGEX_PREFIX) }
                 } else null,
@@ -91,10 +96,16 @@ private fun AddFilterRuleDialogContent(
             )
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(
+                    MiHoleTheme.dimens.padding.itemContent,
+                    Alignment.Start
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Add as wildcard", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.filters_add_rule_dialog_label_as_wildcard),
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Checkbox(
                     checked = isWildcardChecked,
                     onCheckedChange = {
@@ -106,8 +117,12 @@ private fun AddFilterRuleDialogContent(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClick) { Text("CANCEL") }
-                TextButton(onClick = { onConfirmClick(value, isWildcardChecked) }) { Text("ADD") }
+                TextButton(onClick = onCancelClick) { Text(stringResource(R.string.all_btn_cancel)) }
+                TextButton(onClick = { onConfirmClick(value, isWildcardChecked) }) {
+                    Text(
+                        stringResource(R.string.filters_add_rule_dialog_btn_add)
+                    )
+                }
             }
         }
     }

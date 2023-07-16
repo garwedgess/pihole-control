@@ -10,14 +10,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.base.UiResult
-import eu.wedgess.mihole.ui.filters.view.components.SearchContent
+import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.view.LogsScreen
 import eu.wedgess.mihole.ui.logs.view.components.LogsTopBarActions
 import eu.wedgess.mihole.ui.logs.viewmodel.LogsViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
+import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -98,7 +100,7 @@ fun NavGraphBuilder.LogsDestination(
         LaunchedEffect(uiState.showSearchView, uiState.logs) {
             onComposing(
                 AppBarState(
-                    title = "Logs",
+                    title = UiText.StringResource(id = R.string.nav_title_logs),
                     actions = {
                         LogsTopBarActions(
                             onSearchClicked = { viewModel.onEvent(LogsContract.Event.OnShowSearchView) },

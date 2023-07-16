@@ -3,18 +3,20 @@ package eu.wedgess.mihole.ui.dashboard.view.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.ui.common.LegendData
 import eu.wedgess.mihole.ui.common.LegendGridImpl
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.ColorGenerator
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
 import java.text.DateFormat
 
@@ -39,12 +41,12 @@ fun ClientQueriesOvertimeGraph(
                     k to v[index]
                 }
             }
-            .groupBy({it.first}, {it.second})
+            .groupBy({ it.first }, { it.second })
             .mapValues { it.value.flatten() }
 
         clientDataOverTime.map { (client, clientActivityList) ->
             LineChartData(
-                label = client.name.takeIf { it.isNotBlank() } ?: client.ip,
+                label = UiText.DynamicString(client.name.takeIf { it.isNotBlank() } ?: client.ip),
                 data = clientActivityList.map {
                     Pair(it.first * 1000L, it.second.toFloat())
                 },
@@ -53,16 +55,14 @@ fun ClientQueriesOvertimeGraph(
         }.sortedByDescending { chartData -> chartData.data.sumOf { it.second.toInt() } }
     }
 
-    Surface(
-        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-        shadowElevation = 4.dp,
-        shape = RoundedCornerShape(4.dp)
+    Card(
+        modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
+            modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
         ) {
             LineChart(
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.screenContent),
                 data = clientsEntry,
                 xAxisFormatter = dateFormatter.run {
                     { value ->
@@ -74,8 +74,11 @@ fun ClientQueriesOvertimeGraph(
             LegendGridImpl(
                 legendData = clientsEntry.map { linesChartData ->
                     LegendData(
-                        title = linesChartData.label,
-                        subTitle = "Hits: ${linesChartData.data.sumOf { it.second.toInt() }.formatWithThousands()}",
+                        title = linesChartData.label.asString(),
+                        subTitle = stringResource(
+                            id = R.string.home_legend_sub_title_queries_over_time,
+                            linesChartData.data.sumOf { it.second.toInt() }.formatWithThousands()
+                        ),
                         color = linesChartData.color ?: Color.Unspecified
                     )
                 }

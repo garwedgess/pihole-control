@@ -5,11 +5,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.model.PickerType
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,6 +80,8 @@ class LogsViewModel @Inject constructor(
             LogsContract.Event.OnFromTimeCleared -> _uiState.update { it.fromTimeCleared() }
             LogsContract.Event.OnToTimeCleared -> _uiState.update { it.toTimeCleared() }
             is LogsContract.Event.OnSortTypeSelected -> _uiState.update { it.setSorting(event.sorting) }
+            is LogsContract.Event.OnLogSelected -> _uiState.update { it.copy(selectedLog = event.log) }
+            LogsContract.Event.OnLogDetailsDismissed -> _uiState.update { it.copy(selectedLog = null) }
         }
     }
 
@@ -123,7 +127,10 @@ class LogsViewModel @Inject constructor(
     }
 
     private val fetchLogsErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.logsError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.logsError(errorMessage) }
     }
 
     private fun fetchLogs() = viewModelScope.launch(fetchLogsErrorHandler) {

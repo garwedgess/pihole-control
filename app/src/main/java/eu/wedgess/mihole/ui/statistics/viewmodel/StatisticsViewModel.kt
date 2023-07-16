@@ -3,9 +3,11 @@ package eu.wedgess.mihole.ui.statistics.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
+import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +39,10 @@ class StatisticsViewModel @Inject constructor(
     }
 
     private val statisticsErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        _uiState.update { it.statisticsError(throwable.message ?: "Unknown error") }
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.statisticsError(errorMessage) }
     }
 
     private fun fetchStatistics() = viewModelScope.launch(statisticsErrorHandler) {

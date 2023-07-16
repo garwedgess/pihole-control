@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Devices
-import androidx.compose.material.icons.filled.GppBad
-import androidx.compose.material.icons.filled.GppGood
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
@@ -26,14 +24,14 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.queriesBlockedBackground
-import eu.wedgess.mihole.ui.theme.totalQueriesBackground
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
 
 @Composable
@@ -42,7 +40,7 @@ fun TopClientsContent(
 ) {
 
     val sumAllClients = remember {
-        mutableStateOf(topClients.sumOf { it.second })
+        mutableIntStateOf(topClients.sumOf { it.second })
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
@@ -50,17 +48,20 @@ fun TopClientsContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    .padding(MiHoleTheme.dimens.padding.screenContent),
+                horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    modifier = Modifier.size(32.dp),
+                    modifier = Modifier.size(MiHoleTheme.dimens.size.statisticsTitleIcon),
                     tint = MaterialTheme.colorScheme.queriesBlockedBackground,
                     imageVector = Icons.Default.Devices,
                     contentDescription = "icon"
                 )
-                Text(text = "Top clients", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    text = stringResource(R.string.statistics_title_top_clients),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
         }
         items(topClients) { client ->
@@ -87,7 +88,7 @@ fun TopClientsContent(
                 },
                 trailingContent = {
                     LinearProgressIndicator(
-                        modifier = Modifier.widthIn(max = 100.dp),
+                        modifier = Modifier.widthIn(max = MiHoleTheme.dimens.size.listPercentageBarWidth),
                         progress = animatedProgress
                     )
                 }

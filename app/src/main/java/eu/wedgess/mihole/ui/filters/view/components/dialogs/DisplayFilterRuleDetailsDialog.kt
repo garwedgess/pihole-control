@@ -26,23 +26,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.extensions.toBoolean
 import java.text.DateFormat
 
 @Composable
-fun DisplayFilterRuleDialog(
+fun DisplayFilterRuleDetailsDialog(
     filterRule: PiHoleFilterRules.PiHoleFilterRule,
     onDelete: (filterRule: PiHoleFilterRules.PiHoleFilterRule) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
-        DisplayFilterRuleDialogContent(
+        DisplayFilterRuleDetailsDialogContent(
             filterRule = filterRule,
             onDeleteClicked = { onDelete(filterRule) },
             onCancelClicked = { onDismissRequest() }
@@ -51,57 +52,63 @@ fun DisplayFilterRuleDialog(
 }
 
 @Composable
-private fun DisplayFilterRuleDialogContent(
+private fun DisplayFilterRuleDetailsDialogContent(
     filterRule: PiHoleFilterRules.PiHoleFilterRule,
     onDeleteClicked: () -> Unit,
     onCancelClicked: () -> Unit
 ) {
     val dateTimeInstance = remember { DateFormat.getDateInstance() }
 
-    Surface(shape = RoundedCornerShape(8.dp)) {
+    Surface(shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)) {
         Column(
-            Modifier.padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            Modifier.padding(MiHoleTheme.dimens.padding.dialogContent),
+            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
         ) {
             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                Text("Filter rule", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(R.string.filters_details_dialog_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
             FilterDetailsRow(
                 icon = Icons.Default.Domain,
-                title = "Domain",
+                title = stringResource(R.string.filters_details_dialog_label_domain),
                 value = filterRule.domain
             )
             FilterDetailsRow(
                 icon = Icons.Default.Rule,
-                title = "Type",
+                title = stringResource(R.string.filters_details_dialog_label_type),
                 value = filterRule.type.name.lowercase().replaceFirstChar(Char::titlecase)
             )
             FilterDetailsRow(
                 icon = Icons.Default.Schedule,
-                title = "Date Added",
+                title = stringResource(R.string.filters_details_dialog_label_date_added),
                 value = dateTimeInstance.format(filterRule.dateAdded * 1000L)
             )
             FilterDetailsRow(
                 icon = Icons.Default.Update,
-                title = "Date Modified",
+                title = stringResource(R.string.filters_details_dialog_label_date_modified),
                 value = dateTimeInstance.format(filterRule.dateModified * 1000L)
             )
             FilterDetailsRow(
                 icon = if (filterRule.enabled.toBoolean()) Icons.Default.Check else Icons.Default.Close,
-                title = "Status",
-                value = if (filterRule.enabled.toBoolean()) "Enabled" else "Disabled"
+                title = stringResource(R.string.filters_details_dialog_label_status),
+                value = if (filterRule.enabled.toBoolean()) stringResource(R.string.filters_details_dialog_value_enabled) else stringResource(
+                    R.string.filters_details_dialog_value_disabled
+                )
             )
             FilterDetailsRow(
                 icon = Icons.Default.Comment,
-                title = "Comment",
-                value = filterRule.comment.takeIf { it?.isNotBlank() == true } ?: "No comment"
+                title = stringResource(R.string.filters_details_dialog_label_comment),
+                value = filterRule.comment.takeIf { it?.isNotBlank() == true }
+                    ?: stringResource(R.string.filters_details_dialog_value_no_comment)
             )
 
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClicked) { Text("CANCEL") }
+                TextButton(onClick = onCancelClicked) { Text(stringResource(id = R.string.all_btn_cancel)) }
                 TextButton(onClick = onDeleteClicked) { Text("DELETE") }
             }
 
@@ -117,7 +124,7 @@ private fun FilterDetailsRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.screenContent)
     ) {
         Icon(imageVector = icon, contentDescription = title)
         Column(verticalArrangement = Arrangement.Center) {
@@ -132,9 +139,9 @@ private fun FilterDetailsRow(
 
 @Preview
 @Composable
-private fun DisplayFilterRuleDialogPreview() {
+private fun DisplayFilterRuleDetailsDialogPreview() {
     MiHoleTheme {
-        DisplayFilterRuleDialog(
+        DisplayFilterRuleDetailsDialog(
             filterRule = PiHoleFilterRules.PiHoleFilterRule(),
             onDelete = {},
             onDismissRequest = {}

@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
@@ -23,8 +25,8 @@ fun FilterScreenTabContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (filterList) {
-            is UiResult.Loading -> LoadingContent(message = "Loading filters")
-            is UiResult.Error -> ErrorMessage(errorMessage = filterList.errorMessage, onRetry = {})
+            is UiResult.Loading -> LoadingContent(message = stringResource(R.string.filters_msg_loading_filters))
+            is UiResult.Error -> ErrorMessage(errorMessage = filterList.errorMessage.asString(), onRetry = {})
             is UiResult.Success -> FilterListContent(filtersList = filterList.data, searchState, onEvent)
         }
     }

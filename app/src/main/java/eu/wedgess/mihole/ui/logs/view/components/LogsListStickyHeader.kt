@@ -30,7 +30,7 @@ fun LogsListStickyHeader(listSize: Int, onFilterButtonClicked: () -> Unit) {
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth()
-            .height(42.dp)
+            .height(MiHoleTheme.dimens.size.logsStickyHeaderHeight)
             .border(
                 bottom = Border(
                     DividerDefaults.Thickness,
@@ -41,7 +41,7 @@ fun LogsListStickyHeader(listSize: Int, onFilterButtonClicked: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = MiHoleTheme.dimens.padding.itemContentLarge),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

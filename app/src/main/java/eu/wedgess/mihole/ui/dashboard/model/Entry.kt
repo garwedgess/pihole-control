@@ -2,6 +2,7 @@ package eu.wedgess.mihole.ui.dashboard.model
 
 import androidx.compose.ui.graphics.Color
 import com.patrykandpatrick.vico.core.entry.ChartEntry
+import eu.wedgess.mihole.utils.UiText
 
 typealias Coordinate = Pair<Number, Number>
 
@@ -17,7 +18,7 @@ class Entry(
 }
 
 data class LineChartData(
-    val label: String,
+    val label: UiText,
     val data: Iterable<Coordinate>,
     val color: Color? = null,
 )

@@ -1,14 +1,89 @@
 <resources>
     <string name="app_name">MiHole</string>
+    <string name="all_btn_cancel">CANCEL</string>
+    <string name="all_btn_retry">Retry</string>
+    <string name="all_msg_no_results_found_for">No results found for: %s</string>
+    <string name="all_error_msg_unknown">Unknown error</string>
+
+    <!-- Bottom Nav / AppBar -->
+    <string name="nav_title_home">Home</string>
+    <string name="nav_title_statistics">Statistics</string>
+    <string name="nav_title_filters">Filters</string>
+    <string name="nav_title_logs">Logs</string>
+
+    <!-- Summary Screen -->
     <string name="summary_title_total_queries">Total Queries</string>
     <string name="summary_title_blocked_queries">Blocked Queries</string>
     <string name="summary_title_percent_blocked">Percent Blocked</string>
     <string name="summary_title_domains_on_blocklist">Domains on Blocklist</string>
-    <string name="log_screen_label_all">All</string>
-    <string name="log_screen_label_allowed">Allowed</string>
-    <string name="log_screen_label_blocked">Blocked</string>
-    <string name="log_screen_label_date_sort_desc">Date Descending</string>
-    <string name="log_screen_label_date_sort_asc">Date Ascending</string>
-    <string name="log_screen_label_response_time_sort_asc">Response Time Ascending</string>
-    <string name="log_screen_label_response_time_sort_desc">Response Time Descending</string>
+
+    <!-- Logs Screen -->
+    <string name="logs_msg_loading_query_logs">Loading query logs</string>
+    <string name="log_label_all">All</string>
+    <string name="log_label_allowed">Allowed</string>
+    <string name="log_label_blocked">Blocked</string>
+    <string name="log_label_date_sort_desc">Date Descending</string>
+    <string name="log_label_date_sort_asc">Date Ascending</string>
+    <string name="log_label_response_time_sort_asc">Response Time Ascending</string>
+    <string name="log_label_response_time_sort_desc">Response Time Descending</string>
+
+    <string name="log_dialog_details_title">Log Details</string>
+    <string name="log_dialog_details_label_url">URL</string>
+    <string name="log_dialog_details_label_type">Type</string>
+    <string name="log_dialog_details_label_device">Device</string>
+    <string name="log_dialog_details_label_time">Time</string>
+    <string name="log_dialog_details_label_status">Status</string>
+    <string name="log_dialog_details_label_response_time">Response Time</string>
+
+    <string name="logs_dialog_time_picker_title_select_time">Select Time</string>
+    <string name="logs_filter_sheet_title_number_of_queries">Number of Queries</string>
+    <string name="logs_filter_sheet_title_status">Status</string>
+    <string name="logs_filter_sheet_title_time">Time</string>
+    <string name="logs_filter_sheet_time_button_value_not_set">Not set</string>
+    <string name="logs_filter_sheet_btn_from_time">From Time</string>
+    <string name="logs_filter_sheet_btn_to_time">To Time</string>
+    <string name="logs_filter_sheet_time_divider">-</string>
+
+    <!-- Home Screen -->
+    <string name="home_title_clients_over_time">Client Queries Over The Last 24hours</string>
+    <string name="home_title_queries_over_time_blocked">Blocked</string>
+    <string name="home_title_queries_over_time_permitted">Permitted</string>
+    <string name="home_caption_clients">(Clients: %s)</string>
+    <string name="home_legend_sub_title_queries_over_time">Hits: %s</string>
+    <string name="home_title_queries_over_time">Queries Over The Last 24hours</string>
+    <string name="home_fetching_statistics">Fetching statistics</string>
+    <string name="home_fetching_over_time_data">Fetching over time data</string>
+    <string name="home_fetching_clients_over_time_data">Fetching clients over time data</string>
+
+    <!-- Filters Screen -->
+    <string name="filters_tab_title_allow_list">Allow List</string>
+    <string name="filters_tab_title_block_list">Block List</string>
+    <string name="filters_add_rule_dialog_title">Add rule</string>
+    <string name="filters_add_rule_dialog_label_as_wildcard">Add as wildcard</string>
+    <string name="filters_add_rule_dialog_btn_add">ADD</string>
+    <string name="filters_add_rule_dialog_label_domain">Domain</string>
+    <string name="filters_details_dialog_title">Filter rule</string>
+    <string name="filters_details_dialog_label_domain">Domain</string>
+    <string name="filters_details_dialog_label_type">Type</string>
+    <string name="filters_details_dialog_label_date_added">Date Added</string>
+    <string name="filters_details_dialog_label_date_modified">Date Modified</string>
+    <string name="filters_details_dialog_label_status">Status</string>
+    <string name="filters_details_dialog_value_enabled">Enabled</string>
+    <string name="filters_details_dialog_value_disabled">Disabled</string>
+    <string name="filters_details_dialog_value_no_comment">No comment</string>
+    <string name="filters_details_dialog_label_comment">Comment</string>
+    <string name="filters_label_regex">Regex</string>
+    <string name="filters_msg_loading_filters">Loading filters</string>
+
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title_top_clients">Top clients</string>
+    <string name="statistics_msg_loading_server">Loading server statistics</string>
+    <string name="statistics_msg_loading_query_type">Loading query type statistics</string>
+    <string name="statistics_msg_loading_top_clients">Loading top clients</string>
+    <string name="statistics_msg_loading_top_domains">Loading top domains</string>
+    <string name="statistics_tab_title_queries">Queries</string>
+    <string name="statistics_tab_title_servers">Servers</string>
+    <string name="statistics_tab_title_domains">Domains</string>
+    <string name="statistics_tab_title_clients">Clients</string>
 </resources>

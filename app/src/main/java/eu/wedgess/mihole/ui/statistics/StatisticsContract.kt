@@ -3,6 +3,7 @@ package eu.wedgess.mihole.ui.statistics
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
+import eu.wedgess.mihole.utils.UiText
 
 interface StatisticsContract :
     UnidirectionalViewModel<StatisticsContract.UiState, StatisticsContract.Event, StatisticsContract.Effect> {
@@ -14,7 +15,7 @@ interface StatisticsContract :
         fun statistics(piHoleStatistics: PiHoleStatistics): UiState =
             this.copy(statistics = UiResult.Success(piHoleStatistics))
 
-        fun statisticsError(errorMessage: String): UiState =
+        fun statisticsError(errorMessage: UiText): UiState =
             this.copy(statistics = UiResult.Error(errorMessage))
 
         companion object {

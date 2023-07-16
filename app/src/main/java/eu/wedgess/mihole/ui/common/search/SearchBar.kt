@@ -22,19 +22,15 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @ExperimentalAnimationApi
 @OptIn(ExperimentalComposeUiApi::class)
@@ -58,7 +54,7 @@ fun SearchBar(
 
         // Back button
         IconButton(
-            modifier = Modifier.padding(start = 2.dp),
+            modifier = Modifier.padding(start = MiHoleTheme.dimens.padding.searchBarIconPaddingStart),
             onClick = {
                 keyboardController?.hide()
                 onClose()
@@ -75,7 +71,7 @@ fun SearchBar(
             onQueryChange,
             onClearQuery,
             searching,
-            modifier.weight(1f)
+            modifier.weight(MiHoleTheme.dimens.weight.searchTextField)
         )
     }
 }
@@ -104,12 +100,12 @@ private fun SearchTextField(
         modifier = modifier
             .then(
                 Modifier
-                    .height(56.dp)
+                    .height(MiHoleTheme.dimens.size.searchBarHeight)
                     .padding(
-                        top = 8.dp,
-                        bottom = 8.dp,
-                        start = 0.dp,
-                        end = 16.dp
+                        top = MiHoleTheme.dimens.padding.itemContent,
+                        bottom = MiHoleTheme.dimens.padding.screenContent,
+                        start = MiHoleTheme.dimens.padding.none,
+                        end = MiHoleTheme.dimens.padding.itemContentLarge
                     )
             ),
         color = MaterialTheme.colorScheme.inversePrimary,
@@ -123,7 +119,12 @@ private fun SearchTextField(
             ) {
 
                 if (query.text.isEmpty()) {
-                    SearchHint(modifier.padding(start = 24.dp, end = 8.dp))
+                    SearchHint(
+                        modifier.padding(
+                            start = MiHoleTheme.dimens.padding.itemContentXLarge,
+                            end = MiHoleTheme.dimens.padding.itemContent
+                        )
+                    )
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -137,9 +138,14 @@ private fun SearchTextField(
                         onValueChange = onQueryChange,
                         modifier = Modifier
                             .fillMaxHeight()
-                            .weight(1f)
+                            .weight(MiHoleTheme.dimens.weight.searchTextField)
                             .focusRequester(focusRequester)
-                            .padding(top = 9.dp, bottom = 8.dp, start = 24.dp, end = 8.dp),
+                            .padding(
+                                top = MiHoleTheme.dimens.padding.itemContent,
+                                bottom = MiHoleTheme.dimens.padding.itemContent,
+                                start = MiHoleTheme.dimens.padding.itemContentXLarge,
+                                end = MiHoleTheme.dimens.padding.itemContent
+                            ),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Search
@@ -150,8 +156,8 @@ private fun SearchTextField(
                         searching && query.text.isNotEmpty() -> {
                             CircularProgressIndicator(
                                 modifier = Modifier
-                                    .padding(horizontal = 6.dp)
-                                    .size(36.dp)
+                                    .padding(horizontal = MiHoleTheme.dimens.padding.itemContentSmall)
+                                    .size(MiHoleTheme.dimens.size.searchProgress)
                             )
                         }
 
@@ -181,7 +187,9 @@ private fun SearchHint(modifier: Modifier = Modifier) {
 
     ) {
         Text(
-            color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.inversePrimary).copy(alpha = 0.6f),
+            color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.inversePrimary).copy(
+                alpha = MiHoleTheme.dimens.weight.searchHintAlpha
+            ),
             text = "Search a Tag or Description",
         )
     }
