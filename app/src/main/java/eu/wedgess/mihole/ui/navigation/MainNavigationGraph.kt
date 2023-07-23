@@ -11,13 +11,14 @@ import eu.wedgess.mihole.ui.navigation.destinations.LogsDestination
 import eu.wedgess.mihole.ui.navigation.destinations.StatisticsDestination
 
 @Composable
-fun NavigationGraph(
+fun MainNavigationGraph(
     navController: NavHostController,
     onComposing: (AppBarState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
+        route = Graphs.Main.route,
         startDestination = Screens.Dashboard.route,
         modifier = modifier
     ) {
@@ -25,5 +26,6 @@ fun NavigationGraph(
         StatisticsDestination(onComposing)
         FiltersDestination(onComposing)
         LogsDestination(onComposing)
+        SettingsNavigationGraph(navController, onComposing)
     }
 }

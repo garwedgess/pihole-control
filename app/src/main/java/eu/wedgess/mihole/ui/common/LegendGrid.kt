@@ -173,13 +173,13 @@ fun LegendGridImpl(legendData: List<LegendData>, modifier: Modifier = Modifier) 
     val defaultTitleText = MaterialTheme.typography.bodySmall.copy(
         fontWeight = FontWeight.Bold,
         fontSize = MiHoleTheme.dimens.fontSize.legendTitle,
-        color = Color.Unspecified,
+        color = MaterialTheme.colorScheme.onSurface
     )
 
     val selectedTitleText = MaterialTheme.typography.bodySmall.copy(
         fontWeight = FontWeight.Bold,
         fontSize = MiHoleTheme.dimens.fontSize.legendTitleSelected,
-        color = selectedItem?.color ?: Color.Unspecified,
+        color = selectedItem?.color ?: MaterialTheme.colorScheme.onSurface
     )
 
     LegendGrid(
@@ -198,7 +198,7 @@ fun LegendGridImpl(legendData: List<LegendData>, modifier: Modifier = Modifier) 
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontWeight = FontWeight.Normal,
                     fontSize = MiHoleTheme.dimens.fontSize.legendSubTitle,
-                    color = Color.Unspecified.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = MiHoleTheme.dimens.weight.secondaryTextAlpha)
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

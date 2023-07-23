@@ -1,6 +1,8 @@
 package eu.wedgess.mihole.ui.dashboard.view
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +29,7 @@ fun DashboardScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
+                .fillMaxSize()
                 .padding(paddingValues)
         ) {
             when (val summary = uiState.summary) {
@@ -35,7 +38,10 @@ fun DashboardScreen(
                     errorMessage = summary.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchSummary) })
 
-                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_statistics))
+                UiResult.Loading -> LoadingContent(
+                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    message = stringResource(R.string.home_fetching_statistics)
+                )
             }
 
             when (val overtime = uiState.queriesOverTime) {
@@ -47,7 +53,10 @@ fun DashboardScreen(
                     errorMessage = overtime.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchQueriesOvertime) })
 
-                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_over_time_data))
+                UiResult.Loading -> LoadingContent(
+                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    message = stringResource(R.string.home_fetching_over_time_data)
+                )
             }
 
             when (val overtime = uiState.clientQueriesOverTime) {
@@ -59,7 +68,10 @@ fun DashboardScreen(
                     errorMessage = overtime.errorMessage.asString(),
                     onRetry = { onEvent(DashboardContract.Event.FetchClientQueriesOvertime) })
 
-                UiResult.Loading -> LoadingContent(message = stringResource(R.string.home_fetching_clients_over_time_data))
+                UiResult.Loading -> LoadingContent(
+                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    message = stringResource(R.string.home_fetching_clients_over_time_data)
+                )
             }
         }
     }

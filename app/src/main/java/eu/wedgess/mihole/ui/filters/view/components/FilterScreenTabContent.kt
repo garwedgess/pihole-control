@@ -25,9 +25,20 @@ fun FilterScreenTabContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (filterList) {
-            is UiResult.Loading -> LoadingContent(message = stringResource(R.string.filters_msg_loading_filters))
-            is UiResult.Error -> ErrorMessage(errorMessage = filterList.errorMessage.asString(), onRetry = {})
-            is UiResult.Success -> FilterListContent(filtersList = filterList.data, searchState, onEvent)
+            is UiResult.Loading -> LoadingContent(
+                message = stringResource(R.string.filters_msg_loading_filters),
+                modifier = Modifier.fillMaxSize()
+            )
+
+            is UiResult.Error -> ErrorMessage(
+                errorMessage = filterList.errorMessage.asString(),
+                onRetry = {})
+
+            is UiResult.Success -> FilterListContent(
+                filtersList = filterList.data,
+                searchState,
+                onEvent
+            )
         }
     }
 }

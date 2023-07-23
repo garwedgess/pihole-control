@@ -1,0 +1,119 @@
+package eu.wedgess.mihole.ui.settings.view.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Api
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Token
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
+
+@Composable
+fun ConnectionInfoContent(
+    miHolesInfo: MiHolesInfo,
+    onEditClicked: () -> Unit,
+    onDeleteClicked: () -> Unit,
+    onSetActiveClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MiHoleTheme.dimens.padding.screenContent),
+        verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
+    ) {
+        ConnectionInfoRow(
+            icon = Icons.Default.Bolt,
+            title = "Status",
+            value = "Connected".takeIf { miHolesInfo.isActive } ?: "Disconnected"
+        )
+        ConnectionInfoRow(
+            icon = Icons.Default.Api,
+            title = "Api Path",
+            value = "Connected".takeIf { miHolesInfo.isActive } ?: "Disconnected"
+        )
+        ConnectionInfoRow(
+            icon = Icons.Default.Token,
+            title = "Token",
+            value = "Set".takeIf { miHolesInfo.token != null } ?: "Not Set"
+        )
+        ConnectionInfoRow(
+            icon = Icons.Default.Lock,
+            title = "Auth Credentials",
+            value = "Set".takeIf { miHolesInfo.authUsername.isNotBlank() && miHolesInfo.authPassword.isNotBlank() }
+                ?: "Not Set"
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(
+                MiHoleTheme.dimens.padding.itemContent,
+                Alignment.End
+            )
+        ) {
+            OutlinedButton(onClick = { onEditClicked() }) {
+                Text(text = "Edit")
+            }
+            OutlinedButton(onClick = { onDeleteClicked() }) {
+                Text(text = "Delete")
+            }
+            OutlinedButton(onClick = { onSetActiveClicked() }) {
+                Text(text = "Set Active")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConnectionInfoRow(
+    icon: ImageVector,
+    title: String,
+    value: String,
+    valueTextColor: Color = Color.Unspecified
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
+    ) {
+        Icon(imageVector = icon, contentDescription = title)
+        Column(verticalArrangement = Arrangement.Center) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+            Text(text = value, style = MaterialTheme.typography.bodySmall, color = valueTextColor)
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun ConnectionInfoContentPreview() {
+    MiHoleTheme {
+        Surface {
+            ConnectionInfoContent(
+                miHolesInfo = MiHolesInfo.default,
+                onEditClicked = {},
+                onDeleteClicked = {},
+                onSetActiveClicked = {}
+            )
+        }
+    }
+}

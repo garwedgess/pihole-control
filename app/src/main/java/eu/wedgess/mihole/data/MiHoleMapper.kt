@@ -14,6 +14,7 @@ fun MiHoles.toMiHoleInfo() = MiHolesInfo(
     authUsername = AuthUserName,
     authPassword = AuthPassword,
     authRealm = AuthRealm,
+    trustAllCerts = TrustAllCerts,
     isActive = Active
 )
 
@@ -29,5 +30,6 @@ fun MiHolesInfo.toMiHole() = MiHoles(
     AuthUserName = authUsername,
     AuthPassword = authPassword,
     AuthRealm = authRealm,
+    TrustAllCerts = trustAllCerts,
     Active = isActive
 )

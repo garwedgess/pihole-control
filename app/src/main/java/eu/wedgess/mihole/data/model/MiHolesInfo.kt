@@ -13,10 +13,10 @@ data class MiHolesInfo(
     val authUsername: String,
     val authPassword: String,
     val authRealm: String,
+    val trustAllCerts: Boolean,
     val isActive: Boolean
 ) {
     companion object {
-
         val default = MiHolesInfo(
             id = -1,
             name = "Default",
@@ -28,6 +28,7 @@ data class MiHolesInfo(
             authUsername = "",
             authPassword = "",
             authRealm = "",
+            trustAllCerts = false,
             isActive = true
         )
     }

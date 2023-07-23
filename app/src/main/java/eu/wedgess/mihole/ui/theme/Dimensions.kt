@@ -54,6 +54,7 @@ class Weight(
     val half: Float,
     val bottomNavUnselectedAlpha: Float,
     val secondaryTextAlpha: Float,
+    val disabledTextAlpha: Float,
 )
 
 class FontSize(
@@ -102,7 +103,8 @@ class AppDimens: Dimensions {
             secondaryTextAlpha = 0.8f,
             full = 1f,
             half = 0.5f,
-            bottomNavUnselectedAlpha = 0.6f
+            bottomNavUnselectedAlpha = 0.6f,
+            disabledTextAlpha = 0.4f
         )
     override val fontSize: FontSize
         get() = FontSize(

@@ -13,10 +13,10 @@ import androidx.navigation.compose.composable
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.base.UiResult
+import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
 import eu.wedgess.mihole.ui.filters.view.components.FilterTopBarActions
-import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.filters.viewmodel.FiltersViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
@@ -32,32 +32,60 @@ fun NavGraphBuilder.FiltersDestination(
             when (initialState.destination.route) {
                 Screens.Dashboard.route,
                 Screens.Statistics.route ->
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
-                else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
             }
         },
         exitTransition = {
             when (targetState.destination.route) {
                 Screens.Dashboard.route,
                 Screens.Statistics.route ->
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
-                else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
             }
         },
         popEnterTransition = {
             when (initialState.destination.route) {
                 Screens.Dashboard.route,
                 Screens.Statistics.route ->
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
-                else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(300)
+                )
             }
         },
         popExitTransition = {
             when (targetState.destination.route) {
                 Screens.Dashboard.route,
                 Screens.Statistics.route ->
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))
-                else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300))
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(300)
+                    )
+
+                else -> slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    animationSpec = tween(300)
+                )
             }
         }
     ) {
@@ -91,8 +119,12 @@ fun NavGraphBuilder.FiltersDestination(
 
         LaunchedEffect(Unit) {
             viewModel.effect.collectLatest { effect ->
-                when(effect) {
-                    is FiltersContract.Effect.Toast -> Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
+                when (effect) {
+                    is FiltersContract.Effect.Toast -> Toast.makeText(
+                        context,
+                        effect.message,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

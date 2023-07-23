@@ -10,6 +10,9 @@
     <string name="nav_title_statistics">Statistics</string>
     <string name="nav_title_filters">Filters</string>
     <string name="nav_title_logs">Logs</string>
+    <string name="nav_title_settings">Settings</string>
+
+    <string name="appbar_title_connections">Connections</string>
 
     <!-- Summary Screen -->
     <string name="summary_title_total_queries">Total Queries</string>
@@ -86,4 +89,22 @@
     <string name="statistics_tab_title_servers">Servers</string>
     <string name="statistics_tab_title_domains">Domains</string>
     <string name="statistics_tab_title_clients">Clients</string>
+
+
+    <string name="modify_connection_label_name">Name</string>
+    <string name="modify_connection_label_host">Host</string>
+    <string name="modify_connection_label_protocol">HTTPS Protocol</string>
+    <string name="modify_connection_label_api_path">API Path</string>
+    <string name="modify_connection_label_api_token">API Token</string>
+    <string name="modify_connection_label_basic_auth_username">Basic Auth Username</string>
+    <string name="modify_connection_label_basic_auth_password">Basic Auth Password</string>
+    <string name="modify_connection_label_basic_auth_realm">Basic Auth Realm</string>
+    <string name="modify_connection_label_show_advanced_settings">Show Advanced Settings</string>
+    <string name="modify_connection_label_port">Port</string>
+    <string name="modify_connection_label_trust_all_certificates">Trust All Certificates</string>
+    <string name="modify_connection_btn_save">Save</string>
+    <string name="modify_connection_btn_update">Update</string>
+    <string name="scanner_dialog_title_scan_token">Scan API Token</string>
+    <string name="scanner_dialog_hint_scan_token"><![CDATA[This can be found at \"Settings > API / Web Interface > Show API token\"]]></string>
+    <string name="error_connection_not_found">Connection Not Found</string>
 </resources>

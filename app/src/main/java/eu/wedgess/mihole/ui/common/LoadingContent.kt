@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
-fun LoadingContent(message: String) {
+fun LoadingContent(message: String, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(
             MiHoleTheme.dimens.padding.itemContent,
             Alignment.CenterVertically

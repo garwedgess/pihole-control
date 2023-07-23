@@ -31,6 +31,7 @@ class MiHolesDao(db: MiHoleDatabase) {
             AuthUserName = AuthUserName,
             AuthPassword = AuthPassword,
             AuthRealm = AuthRealm,
+            TrustAllCerts = TrustAllCerts,
             Active = true
         )
     }
@@ -49,6 +50,7 @@ class MiHolesDao(db: MiHoleDatabase) {
             token = Token,
             username = AuthUserName,
             password = AuthPassword,
+            trustAllCerts = TrustAllCerts,
             realm = AuthRealm
         )
     }

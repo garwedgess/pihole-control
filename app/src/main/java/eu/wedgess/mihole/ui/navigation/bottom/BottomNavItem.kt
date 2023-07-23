@@ -5,6 +5,11 @@ import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalPolice
 import androidx.compose.material.icons.filled.PlaylistAddCheck
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalPolice
+import androidx.compose.material.icons.outlined.PlaylistAddCheck
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.navigation.Screens
@@ -18,28 +23,34 @@ sealed class BottomNavItem(
     object Home : BottomNavItem(
         route = Screens.Dashboard.route,
         UiText.StringResource(R.string.nav_title_home),
-        Icons.Default.Home
+        Icons.Outlined.Home
     )
 
     object Statistics : BottomNavItem(
         route = Screens.Statistics.route,
         UiText.StringResource(R.string.nav_title_statistics),
-        Icons.Default.Analytics
+        Icons.Outlined.Analytics
     )
 
     object Filters : BottomNavItem(
         route = Screens.Filters.route,
         UiText.StringResource(R.string.nav_title_filters),
-        Icons.Default.LocalPolice
+        Icons.Outlined.LocalPolice
     )
 
     object Logs : BottomNavItem(
         route = Screens.Logs.route,
         UiText.StringResource(R.string.nav_title_logs),
-        Icons.Default.PlaylistAddCheck
+        Icons.Outlined.PlaylistAddCheck
+    )
+
+    object Settings : BottomNavItem(
+        route = Screens.Settings.route,
+        UiText.StringResource(R.string.nav_title_settings),
+        Icons.Outlined.Settings
     )
 
     companion object {
-        fun all() = listOf(Home, Statistics, Filters, Logs)
+        fun all() = listOf(Home, Statistics, Filters, Logs, Settings)
     }
 }

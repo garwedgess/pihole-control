@@ -45,7 +45,11 @@ fun LogsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (uiState.logs) {
-                    is UiResult.Loading -> LoadingContent(message = stringResource(R.string.logs_msg_loading_query_logs))
+                    is UiResult.Loading -> LoadingContent(
+                        modifier = Modifier.fillMaxSize(),
+                        message = stringResource(R.string.logs_msg_loading_query_logs)
+                    )
+
                     is UiResult.Error -> ErrorMessage(
                         errorMessage = uiState.logs.errorMessage.asString(),
                         onRetry = {})

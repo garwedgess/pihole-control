@@ -12,6 +12,8 @@ import eu.wedgess.mihole.data.model.PiHoleStatusResponse
 import eu.wedgess.mihole.data.model.PiHoleSummary
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.utils.safeRequest
+import eu.wedgess.mihole.di.annotations.DefaultHttpClient
+import eu.wedgess.mihole.di.annotations.TrustAllCertificatesHttpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.BasicAuthProvider
@@ -22,7 +24,8 @@ import javax.inject.Inject
 import kotlin.time.Duration
 
 class PiHoleApiImpl @Inject constructor(
-    private val httpClient: HttpClient
+    @DefaultHttpClient private val defaultHttpClient: HttpClient,
+    @TrustAllCertificatesHttpClient private val trustAllCertsHttpClient: HttpClient
 ) : PiHoleApi {
 
     private suspend fun HttpRequestBuilder.fetchBaseRequestInfo(activeMiHole: MiHolesInfo): HttpRequestBuilder {
@@ -52,7 +55,8 @@ class PiHoleApiImpl @Inject constructor(
     }
 
     override suspend fun fetchStatusSummary(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleSummary> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["summaryRaw"] = true.toString()
@@ -61,7 +65,8 @@ class PiHoleApiImpl @Inject constructor(
     }
 
     override suspend fun fetchOverTimeData10Minutes(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleOverTimeData> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["overTimeData10mins"] = true.toString()
@@ -70,7 +75,8 @@ class PiHoleApiImpl @Inject constructor(
     }
 
     override suspend fun fetchOverTimeDataClients(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleClientsOverTimeData> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["overTimeDataClients"] = true.toString()
@@ -80,7 +86,8 @@ class PiHoleApiImpl @Inject constructor(
     }
 
     override suspend fun fetchStatistics(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleStatistics> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["getQueryTypes"] = true.toString()
@@ -95,7 +102,8 @@ class PiHoleApiImpl @Inject constructor(
         activeMiHole: MiHolesInfo,
         ruleType: FilterRuleType
     ): PiHoleApiResponse<PiHoleFilterRules> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
@@ -108,7 +116,8 @@ class PiHoleApiImpl @Inject constructor(
         rule: String,
         ruleType: FilterRuleType
     ): PiHoleApiResponse<ModifyFilterRuleResponse> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
@@ -122,7 +131,8 @@ class PiHoleApiImpl @Inject constructor(
         rule: String,
         ruleType: FilterRuleType
     ): PiHoleApiResponse<ModifyFilterRuleResponse> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["list"] = ruleType.toString().lowercase(Locale.ENGLISH)
@@ -131,8 +141,12 @@ class PiHoleApiImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchLogs(activeMiHole: MiHolesInfo, limit: Int): PiHoleApiResponse<PiHoleLogsResponse> {
-        return httpClient.safeRequest {
+    override suspend fun fetchLogs(
+        activeMiHole: MiHolesInfo,
+        limit: Int
+    ): PiHoleApiResponse<PiHoleLogsResponse> {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["getAllQueries"] = limit.toString()
@@ -141,7 +155,8 @@ class PiHoleApiImpl @Inject constructor(
     }
 
     override suspend fun enableAdBlocking(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleStatusResponse> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["enable"] = true.toString()
@@ -153,7 +168,8 @@ class PiHoleApiImpl @Inject constructor(
         activeMiHole: MiHolesInfo,
         duration: Duration
     ): PiHoleApiResponse<PiHoleStatusResponse> {
-        return httpClient.safeRequest {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["disable"] =
