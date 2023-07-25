@@ -20,6 +20,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class PiHoleRepository @Inject constructor(
     private val api: PiHoleApi,
@@ -28,6 +30,10 @@ class PiHoleRepository @Inject constructor(
     private val dispatcherProvider: DispatcherProvider
 ) {
     private val currentPiHole = dao.fetchActive()
+
+    suspend fun fetchStatus() = withContext(dispatcherProvider.io) {
+        api.fetchStatus(currentPiHole.first())
+    }
 
     suspend fun fetchStatusSummary() = withContext(dispatcherProvider.io) {
         api.fetchStatusSummary(currentPiHole.first())
@@ -75,22 +81,40 @@ class PiHoleRepository @Inject constructor(
             api.fetchLogs(currentPiHole.first(), limit)
         }
 
+    suspend fun disableAdBlocking(duration: Long) =
+        withContext(dispatcherProvider.io) {
+            api.disableAdBlocking(
+                currentPiHole.first(),
+                duration.toDuration(DurationUnit.MILLISECONDS)
+            )
+        }
+
+    suspend fun enableAdBlocking() =
+        withContext(dispatcherProvider.io) {
+            api.enableAdBlocking(currentPiHole.first())
+        }
+
     suspend fun insertMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
             dao.insert(miHolesInfo.toMiHole())
         }
     }
 
-    suspend fun setConnectionAsActive(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
-        return@withContext kotlin.runCatching {
-            dao.setActive(miHolesInfo.id)
+    suspend fun setConnectionAsActive(miHolesInfo: MiHolesInfo) =
+        withContext(dispatcherProvider.io) {
+            return@withContext kotlin.runCatching {
+                dao.setActive(miHolesInfo.id)
+            }
         }
-    }
 
     suspend fun fetchAll(): Result<List<MiHolesInfo>> = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
-            dao.fetchAll()
+            dao.fetchAll().firstOrNull() ?: emptyList<MiHolesInfo>()
         }
+    }
+
+    suspend fun fetchAllFlow(): Flow<List<MiHolesInfo>> = withContext(dispatcherProvider.io) {
+        return@withContext dao.fetchAll()
     }
 
     suspend fun fetchById(id: Long): Result<MiHolesInfo?> = withContext(dispatcherProvider.io) {

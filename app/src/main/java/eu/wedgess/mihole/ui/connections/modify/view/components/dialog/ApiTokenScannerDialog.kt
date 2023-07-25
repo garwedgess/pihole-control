@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.connections.all.view.components
+package eu.wedgess.mihole.ui.connections.modify.view.components.dialog
 
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import eu.wedgess.mihole.R
+import eu.wedgess.mihole.ui.connections.all.view.components.Scanner
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @ExperimentalGetImage

@@ -40,6 +40,7 @@ class Size(
     val timeButtonWidth: Dp,
     val listPercentageBarWidth: Dp,
     val statisticsTitleIcon: Dp,
+    val timeInputWidth: Dp,
 ) {
     fun logsBottomSheetHeight(screenHeight: Dp): Dp =
         screenHeight.minus(logsStickyHeaderHeight.plus(topBarHeight).plus(bottomNavHeight.plus(statusBarHeight)))
@@ -92,7 +93,8 @@ class AppDimens: Dimensions {
             statusBarHeight = 32.dp,
             timeButtonWidth = 164.dp,
             listPercentageBarWidth = 100.dp,
-            statisticsTitleIcon = 32.dp
+            statisticsTitleIcon = 32.dp,
+            timeInputWidth = 84.dp
         )
     override val weight: Weight
         get() = Weight(

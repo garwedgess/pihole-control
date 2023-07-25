@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
+import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.app.AppContract
 import eu.wedgess.mihole.utils.UiText
+import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -35,8 +38,54 @@ class AppViewModel @Inject constructor(
 
     override fun onEvent(event: AppContract.Event) {
         when (event) {
-            AppContract.Event.FetchSettings -> fetchSettings()
+            AppContract.Event.FetchSettings -> fetchPreferences()
             AppContract.Event.FetchCurrentConnection -> fetchActiveConnection()
+            AppContract.Event.FetchConnections -> fetchConnections()
+            AppContract.Event.FetchStatus -> fetchStatus()
+            AppContract.Event.DismissStatusDialog -> _uiState.update { it.copy(showStatusDialog = false) }
+            is AppContract.Event.SetDisabledStatus -> _uiState.update { it.copy(showStatusDialog = false) }.also {
+                setDisableAdBlocking(event.duration)
+            }
+            is AppContract.Event.OnConnectionSelected -> setConnectionActive(event.mihHole)
+            AppContract.Event.SetEnabledStatus -> _uiState.update { it.copy(showStatusDialog = false) }.also {
+                setEnableAdBlocking()
+            }
+            AppContract.Event.ShowStatusDialog -> _uiState.update { it.copy(showStatusDialog = true) }
+        }
+    }
+
+    private fun setConnectionActive(mihHole: MiHolesInfo) {
+        viewModelScope.launch {
+            repository.setConnectionAsActive(mihHole)
+        }
+    }
+
+
+    private fun setDisableAdBlocking(long: Long) {
+        _uiState.update { it.copy(showStatusDialog = false) }
+        viewModelScope.launch {
+            when (val response = repository.disableAdBlocking(long)) {
+                is ResponseResult.Success -> {
+                    _uiState.update { it.status(response.data.status) }
+                }
+                is ResponseResult.Error -> {
+
+                }
+            }
+        }
+    }
+
+    private fun setEnableAdBlocking() {
+        _uiState.update { it.copy(showStatusDialog = false) }
+        viewModelScope.launch {
+            when (val response = repository.enableAdBlocking()) {
+                is ResponseResult.Success -> {
+                    _uiState.update { it.status(response.data.status) }
+                }
+                is ResponseResult.Error -> {
+
+                }
+            }
         }
     }
 
@@ -47,9 +96,18 @@ class AppViewModel @Inject constructor(
         _uiState.update { it.connectionError(errorMessage) }
     }
 
-    private fun fetchSettings() {
-        fetchPreferences()
-        fetchActiveConnection()
+    private val connectionsErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.connectionsError(errorMessage) }
+    }
+
+    private val statusErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        val errorMessage = throwable.message?.run {
+            UiText.DynamicString(this)
+        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
+        _uiState.update { it.statusError(errorMessage) }
     }
 
     private fun fetchActiveConnection() {
@@ -60,6 +118,33 @@ class AppViewModel @Inject constructor(
                     Timber.d("New Active connection ${miHoleInfo}")
                     _uiState.update { it.connection(miHoleInfo) }
                 }
+        }
+    }
+
+    private fun fetchConnections() {
+        viewModelScope.launch(connectionsErrorHandler) {
+            repository.fetchAllFlow()
+                .distinctUntilChanged()
+                .collectLatest { connections ->
+                    _uiState.update { it.connections(connections) }
+                }
+        }
+    }
+
+    private fun fetchStatus() {
+        viewModelScope.launch(statusErrorHandler) {
+            when (val response = repository.fetchStatus()) {
+                is ResponseResult.Success -> {
+                    _uiState.update { it.status(response.data.status) }
+                }
+
+                is ResponseResult.Error -> {
+                    statusErrorHandler.handleException(
+                        this@launch.coroutineContext,
+                        response.handleError()
+                    )
+                }
+            }
         }
     }
 

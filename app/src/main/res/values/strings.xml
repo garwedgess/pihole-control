@@ -107,4 +107,10 @@
     <string name="scanner_dialog_title_scan_token">Scan API Token</string>
     <string name="scanner_dialog_hint_scan_token"><![CDATA[This can be found at \"Settings > API / Web Interface > Show API token\"]]></string>
     <string name="error_connection_not_found">Connection Not Found</string>
+    <string name="status_disable_btn_thirty_seconds">30 seconds</string>
+    <string name="status_disable_btn_one_minute">1 minute</string>
+    <string name="status_disable_btn_two_minutes">2 minutes</string>
+    <string name="status_disable_btn_five_minutes">5 minutes</string>
+    <string name="status_disable_btn_indefinite">Indefinitely</string>
+    <string name="status_disable_btn_custom">Custom</string>
 </resources>

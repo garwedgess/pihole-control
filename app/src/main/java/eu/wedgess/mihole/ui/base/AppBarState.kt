@@ -9,6 +9,8 @@ import eu.wedgess.mihole.utils.UiText
 data class AppBarState(
     val title: UiText = UiText.DynamicString(""),
     val currentConnection: MiHolesInfo? = null,
+    val adBlockingEnabled: Boolean = true,
+    val connections: List<MiHolesInfo>? = null,
     val showNavigateBackIcon: Boolean = false,
     val actions: (@Composable RowScope.() -> Unit)? = null,
     val showSearchView: Boolean = false,

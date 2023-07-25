@@ -48,7 +48,7 @@ fun SearchBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary),
+            .background(MaterialTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -62,7 +62,7 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -190,7 +190,7 @@ private fun SearchHint(modifier: Modifier = Modifier) {
             color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.inversePrimary).copy(
                 alpha = MiHoleTheme.dimens.weight.searchHintAlpha
             ),
-            text = "Search a Tag or Description",
+            text = "Search...",
         )
     }
 }

@@ -54,6 +54,16 @@ class PiHoleApiImpl @Inject constructor(
         return this
     }
 
+    override suspend fun fetchStatus(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleStatusResponse> {
+        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.safeRequest {
+            fetchBaseRequestInfo(activeMiHole)
+            url {
+                parameters["status"] = true.toString()
+            }
+        }
+    }
+
     override suspend fun fetchStatusSummary(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleSummary> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.safeRequest {

@@ -16,7 +16,7 @@ import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
-import eu.wedgess.mihole.ui.filters.view.components.FilterTopBarActions
+import eu.wedgess.mihole.ui.filters.view.components.actions.FilterTopBarActions
 import eu.wedgess.mihole.ui.filters.viewmodel.FiltersViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText

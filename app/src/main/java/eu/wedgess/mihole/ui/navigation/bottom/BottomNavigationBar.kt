@@ -16,10 +16,7 @@ fun BottomNavigationBar(
     onNavigateTo: (route: String) -> Unit,
     selectedItemRoute: String? = null
 ) {
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White
-    ) {
+    NavigationBar() {
         BottomNavItem.all().forEach { item ->
             val selected = item.route == (selectedItemRoute ?: Screens.Dashboard.route)
 
@@ -29,11 +26,11 @@ fun BottomNavigationBar(
                 label = { Text(text = item.title.asString()) },
                 icon = { Icon(item.icon, contentDescription = "") },
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
-                    unselectedTextColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = MiHoleTheme.dimens.weight.bottomNavUnselectedAlpha),
                     indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
                     selectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    selectedTextColor = MaterialTheme.colorScheme.onPrimary
+                    selectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }

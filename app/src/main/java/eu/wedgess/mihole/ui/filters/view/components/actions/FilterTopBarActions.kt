@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.filters.view.components
+package eu.wedgess.mihole.ui.filters.view.components.actions
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
@@ -13,7 +13,7 @@ fun FilterTopBarActions(onSearchClicked: () -> Unit) {
         Icon(
             imageVector = Icons.Outlined.Search,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimary,
+            tint = MaterialTheme.colorScheme.onBackground,
         )
     }
 }

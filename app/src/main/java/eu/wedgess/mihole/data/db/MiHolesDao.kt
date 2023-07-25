@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 class MiHolesDao(db: MiHoleDatabase) {
     private val queries = db.miHolesQueries
 
-    fun fetchAll() = queries.selectAll().executeAsList().map { it.toMiHoleInfo() }
+    fun fetchAll() = queries.selectAll().asFlow().map { query -> query.executeAsList() }.map { it.map { miHole -> miHole.toMiHoleInfo() } }
 
     fun fetchById(id: Long) = queries.selectById(id).executeAsOneOrNull()?.toMiHoleInfo()
 

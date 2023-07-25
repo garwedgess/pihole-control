@@ -16,7 +16,7 @@ import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.view.LogsScreen
-import eu.wedgess.mihole.ui.logs.view.components.LogsTopBarActions
+import eu.wedgess.mihole.ui.logs.view.components.actions.LogsTopBarActions
 import eu.wedgess.mihole.ui.logs.viewmodel.LogsViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText

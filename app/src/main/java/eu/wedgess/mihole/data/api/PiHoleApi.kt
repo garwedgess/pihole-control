@@ -15,6 +15,7 @@ import kotlin.time.Duration
 
 interface PiHoleApi {
 
+    suspend fun fetchStatus(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleStatusResponse>
     suspend fun fetchStatusSummary(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleSummary>
     suspend fun fetchOverTimeData10Minutes(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleOverTimeData>
     suspend fun fetchOverTimeDataClients(activeMiHole: MiHolesInfo): PiHoleApiResponse<PiHoleClientsOverTimeData>

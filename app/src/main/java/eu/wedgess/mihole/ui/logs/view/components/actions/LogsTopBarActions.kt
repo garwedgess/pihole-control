@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.logs.view.components
+package eu.wedgess.mihole.ui.logs.view.components.actions
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -28,14 +28,14 @@ fun LogsTopBarActions(
             Icon(
                 imageVector = Icons.Outlined.Sort,
                 contentDescription = "sort",
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onBackground,
             )
         }
         IconButton(onClick = { onSearchClicked() }) {
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = "search",
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onBackground,
             )
         }
         DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = { onSortDismissed() }) {

@@ -7,7 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.mlkit.vision.barcode.BarcodeScanner
-import eu.wedgess.mihole.ui.connections.all.view.components.ApiTokenScannerDialog
+import eu.wedgess.mihole.ui.connections.modify.view.components.dialog.ApiTokenScannerDialog
 import eu.wedgess.mihole.ui.connections.modify.ModifyConnectionsContract
 import eu.wedgess.mihole.ui.connections.modify.view.components.ModifyConnectionContent
 import eu.wedgess.mihole.ui.theme.MiHoleTheme

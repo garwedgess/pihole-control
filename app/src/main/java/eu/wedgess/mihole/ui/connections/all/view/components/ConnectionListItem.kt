@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.settings.view.components.ConnectionInfoContent
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.totalQueriesBackground
@@ -105,7 +106,7 @@ fun ConnectionListItem(
 }
 
 
-@Preview
+@ThemePreview
 @Composable
 fun ConnectionListItemPreview() {
     MiHoleTheme {

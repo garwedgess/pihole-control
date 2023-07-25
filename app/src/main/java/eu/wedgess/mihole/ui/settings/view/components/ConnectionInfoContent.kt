@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
@@ -95,15 +96,15 @@ private fun ConnectionInfoRow(
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
-            Text(text = value, style = MaterialTheme.typography.bodySmall, color = valueTextColor)
+            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = valueTextColor)
         }
     }
 }
 
 
-@Preview
+@ThemePreview
 @Composable
 private fun ConnectionInfoContentPreview() {
     MiHoleTheme {
