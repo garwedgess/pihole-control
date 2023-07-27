@@ -10,6 +10,7 @@ import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
+import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.utils.UiText
@@ -36,7 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FiltersViewModel @Inject constructor(
     private val repository: PiHoleRepository
-) : ViewModel(), FiltersContract {
+) : RefreshableViewModel(repository), FiltersContract {
 
     private val _uiState: MutableStateFlow<FiltersContract.UiState> =
         MutableStateFlow(FiltersContract.UiState.initial())
@@ -53,6 +54,7 @@ class FiltersViewModel @Inject constructor(
             FiltersContract.Event.OnRuleDeselected -> deselectRule()
             FiltersContract.Event.OnShowSearchView -> showSearchView()
             FiltersContract.Event.OnHideShowSearchView -> hideSearchView()
+            FiltersContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
             is FiltersContract.Event.AddRule -> addRule(event.rule, event.isRegex)
             is FiltersContract.Event.RemoveRule -> removeRule(event.rule, event.ruleType)
             is FiltersContract.Event.OnRuleSelected -> ruleSelected(event.rule)
@@ -193,5 +195,9 @@ class FiltersViewModel @Inject constructor(
                 response.handleError()
             )
         }
+    }
+
+    override fun onRefresh() {
+        fetchRulesList()
     }
 }

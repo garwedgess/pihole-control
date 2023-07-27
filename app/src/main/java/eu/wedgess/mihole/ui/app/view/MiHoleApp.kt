@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -61,10 +62,14 @@ fun MiHoleApp(
         viewModel.onEvent(AppContract.Event.FetchSettings)
         viewModel.onEvent(AppContract.Event.FetchCurrentConnection)
         viewModel.onEvent(AppContract.Event.FetchConnections)
-        do {
-            viewModel.onEvent(AppContract.Event.FetchStatus)
-            delay(10_00)
-        } while (true)
+    }
+
+    DisposableEffect(Unit) {
+        val refreshJob = viewModel.autoRefreshData()
+
+        onDispose {
+            refreshJob.cancel()
+        }
     }
 
     val isDarkTheme = when (uiState.currentTheme) {

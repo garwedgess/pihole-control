@@ -22,8 +22,8 @@ fun MainNavigationGraph(
         startDestination = Screens.Dashboard.route,
         modifier = modifier
     ) {
-        DashboardDestination(onComposing)
-        StatisticsDestination(onComposing)
+        DashboardDestination()
+        StatisticsDestination()
         FiltersDestination(onComposing)
         LogsDestination(onComposing)
         SettingsNavigationGraph(navController, onComposing)

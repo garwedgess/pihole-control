@@ -1,11 +1,11 @@
 package eu.wedgess.mihole.ui.dashboard.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
+import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.ui.dashboard.DashboardContract
 import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val repository: PiHoleRepository
-) : ViewModel(), DashboardContract {
+) : RefreshableViewModel(repository), DashboardContract {
 
     private val _uiState: MutableStateFlow<DashboardContract.UiState> =
         MutableStateFlow(DashboardContract.UiState.initial())
@@ -37,6 +37,7 @@ class DashboardViewModel @Inject constructor(
             DashboardContract.Event.FetchSummary -> fetchStatistics()
             DashboardContract.Event.FetchQueriesOvertime -> fetchQueriesOverTime()
             DashboardContract.Event.FetchClientQueriesOvertime -> fetchClientQueriesOverTime()
+            DashboardContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
         }
     }
 
@@ -92,4 +93,10 @@ class DashboardViewModel @Inject constructor(
                 )
             }
         }
+
+    override fun onRefresh() {
+        fetchStatistics()
+        fetchQueriesOverTime()
+        fetchClientQueriesOverTime()
+    }
 }

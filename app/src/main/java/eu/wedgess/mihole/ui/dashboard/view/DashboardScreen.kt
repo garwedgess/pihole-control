@@ -1,5 +1,6 @@
 package eu.wedgess.mihole.ui.dashboard.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import eu.wedgess.mihole.ui.dashboard.DashboardContract
 import eu.wedgess.mihole.ui.dashboard.view.components.ClientQueriesOverTimeSection
 import eu.wedgess.mihole.ui.dashboard.view.components.QueriesOverTimeSection
 import eu.wedgess.mihole.ui.dashboard.view.components.SummarySection
+import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun DashboardScreen(
@@ -30,7 +32,8 @@ fun DashboardScreen(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
         ) {
             when (val summary = uiState.summary) {
                 is UiResult.Success -> SummarySection(summary = summary.data)

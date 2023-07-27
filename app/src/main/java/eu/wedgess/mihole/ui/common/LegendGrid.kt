@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import timber.log.Timber
 
 data class LegendData(
     val title: String,
@@ -102,13 +103,17 @@ private fun LegendGrid(
 
                 val columnWidth = constraints.maxWidth / itemsPerRow
 
-                xPosition = if (currentColumn == 1) {
-                    constraints.maxWidth.minus(
-                        lastColumnLongestWidth.plus(xAxisShapeSpacing).plus(placeable.width)
-                    )
-                } else {
-                    columnWidth.times(currentColumn)
-                }
+                Timber.i("Current Column for $index = $currentColumn")
+
+                xPosition = columnWidth.times(currentColumn)
+
+//                xPosition = if (currentColumn == 1) {
+//                    constraints.maxWidth.minus(
+//                        lastColumnLongestWidth.plus(xAxisShapeSpacing).plus(placeable.width)
+//                    )
+//                } else {
+//                    columnWidth.times(currentColumn)
+//                }
                 yPosition = if (subTitlePlaceables[index].width == 0) {
                     totalHeight.div(rowCount).times(currentRow)
                         .plus(placeable.height.plus(yAxisSpacing))
@@ -125,13 +130,8 @@ private fun LegendGrid(
 
                 val columnWidth = constraints.maxWidth / itemsPerRow
 
-                xPosition = if (currentColumn == 1) {
-                    constraints.maxWidth.minus(lastColumnLongestWidth)
-                } else {
-                    columnWidth.times(currentColumn)
-                        .plus(colorPlaceables.first().width.plus(xAxisShapeSpacing))
-                }
-
+                xPosition = columnWidth.times(currentColumn)
+                    .plus(colorPlaceables.first().width.plus(xAxisShapeSpacing))
 
                 yPosition = if (subTitlePlaceables[index].width == 0) {
                     totalHeight.div(rowCount).times(currentRow)
@@ -148,12 +148,8 @@ private fun LegendGrid(
 
                 val columnWidth = constraints.maxWidth / itemsPerRow
 
-                xPosition = if (currentColumn == 1) {
-                    constraints.maxWidth.minus(lastColumnLongestWidth)
-                } else {
-                    columnWidth.times(currentColumn)
-                        .plus(colorPlaceables.first().width.plus(xAxisShapeSpacing))
-                }
+                xPosition = columnWidth.times(currentColumn)
+                    .plus(colorPlaceables.first().width.plus(xAxisShapeSpacing))
 
                 yPosition = totalHeight.div(rowCount).times(currentRow)
                     .plus(titlePlaceables.first().height).plus(yAxisSpacing.div(2))
@@ -232,7 +228,7 @@ private fun LegendGridPreview() {
                             color = Color.Black
                         ),
                         maxLines = 1,
-                        overflow = TextOverflow.Clip
+                        overflow = TextOverflow.Ellipsis
                     )
                 },
                 subTitle = {
@@ -242,7 +238,9 @@ private fun LegendGridPreview() {
                             fontWeight = FontWeight.Normal,
                             fontSize = MiHoleTheme.dimens.fontSize.legendSubTitle,
                             color = Color.Black
-                        )
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 },
                 shape = {

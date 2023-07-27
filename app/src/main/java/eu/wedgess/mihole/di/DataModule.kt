@@ -37,6 +37,7 @@ object DataModule {
     fun provideDispatcherProvider(): DispatcherProvider =
         DefaultDispatchers()
 
+    @Singleton
     @Provides
     fun provideDao(database: MiHoleDatabase) =
         MiHolesDao(database)

@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
+import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.model.PickerType
@@ -35,7 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     private val repository: PiHoleRepository
-) : ViewModel(), LogsContract {
+) : RefreshableViewModel(repository), LogsContract {
 
     private val _uiState: MutableStateFlow<LogsContract.UiState> =
         MutableStateFlow(LogsContract.UiState.initial())
@@ -53,6 +54,7 @@ class LogsViewModel @Inject constructor(
             LogsContract.Event.OnShowFiltersBottomSheet -> showFiltersBottomSheet()
             LogsContract.Event.OnShowSortingBottomSheet -> _uiState.update { it.showSortingDropdown() }
             LogsContract.Event.OnSortingDismissed -> _uiState.update { it.dismissSortingDropdown() }
+            LogsContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
             is LogsContract.Event.OnSearchQueryChanged -> handleSearchQuery(event.query)
             is LogsContract.Event.OnLogLimitChanged -> _uiState.update { it.logsLimit(event.limit) }
                 .also { fetchLogs() }
@@ -143,5 +145,9 @@ class LogsViewModel @Inject constructor(
                 response.handleError()
             )
         }
+    }
+
+    override fun onRefresh() {
+        fetchLogs()
     }
 }

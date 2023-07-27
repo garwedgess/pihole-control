@@ -15,7 +15,7 @@ interface AppContract :
         val connections: UiResult<List<MiHolesInfo>>,
         val status: UiResult<PiHoleStatus>,
         val currentTheme: Theme,
-        val refreshInterval: Int,
+        val refreshInterval: Long,
         val useDynamicThemeColors: Boolean,
         val showConnectionDropdown: Boolean,
         val showStatusDialog: Boolean
@@ -39,7 +39,7 @@ interface AppContract :
         fun statusError(errorMessage: UiText): UiState =
             this.copy(status = UiResult.Error(errorMessage))
 
-        fun refreshInterval(interval: Int): UiState =
+        fun refreshInterval(interval: Long): UiState =
             this.copy(refreshInterval = interval)
 
         fun theme(theme: Theme): UiState =

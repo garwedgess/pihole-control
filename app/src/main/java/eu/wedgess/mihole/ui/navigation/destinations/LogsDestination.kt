@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -126,10 +127,16 @@ fun NavGraphBuilder.LogsDestination(
         }
 
         LaunchedEffect(uiState.showSearchView) {
-            do {
-                viewModel.onEvent(LogsContract.Event.FetchLogs)
-                delay(10_000)
-            } while (!uiState.showSearchView)
+            viewModel.onEvent(LogsContract.Event.FetchLogs)
+            viewModel.onEvent(LogsContract.Event.ListenForConnectionChanges)
+        }
+
+        DisposableEffect(Unit) {
+            val refreshJob = viewModel.autoRefreshData()
+
+            onDispose {
+                refreshJob.cancel()
+            }
         }
 
         val scaffoldState = rememberBottomSheetScaffoldState()

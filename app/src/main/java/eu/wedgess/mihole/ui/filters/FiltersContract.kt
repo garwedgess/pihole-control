@@ -97,6 +97,7 @@ interface FiltersContract :
         object OnDismissAddRuleDialog : Event
         object OnShowSearchView : Event
         object OnHideShowSearchView : Event
+        object ListenForConnectionChanges : Event
         data class OnSearchQueryChanged(val query: TextFieldValue) : Event
         data class AddRule(val rule: String, val isRegex: Boolean) : Event
         data class RemoveRule(val rule: String, val ruleType: FilterRuleType) : Event

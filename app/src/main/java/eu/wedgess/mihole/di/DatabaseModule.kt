@@ -11,6 +11,7 @@ import eu.wedgess.mihole.MiHoles
 import eu.wedgess.mihole.data.MiHoleDatabase
 import eu.wedgess.mihole.data.utils.sqldelight.portAdapter
 import eu.wedgess.mihole.data.utils.sqldelight.protocolAdapter
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,10 +19,12 @@ object DatabaseModule {
 
     private const val DB_NAME = "miholes.db"
 
+    @Singleton
     @Provides
     fun dbDriver(@ApplicationContext context: Context): AndroidSqliteDriver =
         AndroidSqliteDriver(MiHoleDatabase.Schema, context, DB_NAME)
 
+    @Singleton
     @Provides
     fun provideDb(driver: AndroidSqliteDriver) = MiHoleDatabase(
         driver,

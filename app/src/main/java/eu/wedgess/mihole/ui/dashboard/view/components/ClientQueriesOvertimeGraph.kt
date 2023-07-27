@@ -3,7 +3,6 @@ package eu.wedgess.mihole.ui.dashboard.view.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -55,34 +54,28 @@ fun ClientQueriesOvertimeGraph(
         }.sortedByDescending { chartData -> chartData.data.sumOf { it.second.toInt() } }
     }
 
-    Card(
-        modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
-        ) {
-            LineChart(
-                modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.screenContent),
-                data = clientsEntry,
-                xAxisFormatter = dateFormatter.run {
-                    { value ->
-                        this.format(value)
-                    }
-                }
-            )
 
-            LegendGridImpl(
-                legendData = clientsEntry.map { linesChartData ->
-                    LegendData(
-                        title = linesChartData.label.asString(),
-                        subTitle = stringResource(
-                            id = R.string.home_legend_sub_title_queries_over_time,
-                            linesChartData.data.sumOf { it.second.toInt() }.formatWithThousands()
-                        ),
-                        color = linesChartData.color ?: Color.Unspecified
-                    )
+    Column {
+        LineChart(
+            data = clientsEntry,
+            xAxisFormatter = dateFormatter.run {
+                { value ->
+                    this.format(value)
                 }
-            )
-        }
+            }
+        )
+
+        LegendGridImpl(
+            legendData = clientsEntry.map { linesChartData ->
+                LegendData(
+                    title = linesChartData.label.asString(),
+                    subTitle = stringResource(
+                        id = R.string.home_legend_sub_title_queries_over_time,
+                        linesChartData.data.sumOf { it.second.toInt() }.formatWithThousands()
+                    ),
+                    color = linesChartData.color ?: Color.Unspecified
+                )
+            }
+        )
     }
 }

@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.MiHolesInfo
-import eu.wedgess.mihole.ui.app.view.components.CurrentConnectionStatus
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.common.search.SearchContent

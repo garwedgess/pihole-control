@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.app.view.components
+package eu.wedgess.mihole.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

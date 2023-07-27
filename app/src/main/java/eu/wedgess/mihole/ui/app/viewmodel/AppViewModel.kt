@@ -8,6 +8,7 @@ import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.MiHolesInfo
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.app.AppContract
+import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val repository: PiHoleRepository
-) : ViewModel(), AppContract {
+) : RefreshableViewModel(repository), AppContract {
 
     private val _uiState: MutableStateFlow<AppContract.UiState> =
         MutableStateFlow(AppContract.UiState.initial())
@@ -160,5 +161,9 @@ class AppViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    override fun onRefresh() {
+        fetchStatus()
     }
 }

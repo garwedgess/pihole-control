@@ -156,7 +156,7 @@ class PiHoleRepository @Inject constructor(
         }
     }
 
-    suspend fun updateRefreshInterval(interval: Int) = kotlin.runCatching {
+    suspend fun updateRefreshInterval(interval: Long) = kotlin.runCatching {
         userPreferences.updateData { preferences ->
             preferences.toBuilder().setRefreshTime(interval).build()
         }

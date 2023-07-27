@@ -31,5 +31,6 @@ interface StatisticsContract :
 
     sealed interface Event {
         object FetchStatistics : Event
+        object ListenForConnectionChanges : Event
     }
 }

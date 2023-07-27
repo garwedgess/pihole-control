@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
+import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
 import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.handleError
@@ -23,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val repository: PiHoleRepository
-) : ViewModel(), StatisticsContract {
+) : RefreshableViewModel(repository), StatisticsContract {
 
     private val _uiState: MutableStateFlow<StatisticsContract.UiState> =
         MutableStateFlow(StatisticsContract.UiState.initial())
@@ -35,6 +36,7 @@ class StatisticsViewModel @Inject constructor(
     override fun onEvent(event: StatisticsContract.Event) {
         when (event) {
             StatisticsContract.Event.FetchStatistics -> fetchStatistics()
+            StatisticsContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
         }
     }
 
@@ -54,5 +56,9 @@ class StatisticsViewModel @Inject constructor(
                 response.handleError()
             )
         }
+    }
+
+    override fun onRefresh() {
+        fetchStatistics()
     }
 }

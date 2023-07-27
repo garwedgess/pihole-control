@@ -2,6 +2,7 @@ package eu.wedgess.mihole.ui.navigation.destinations
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,12 +16,9 @@ import eu.wedgess.mihole.ui.dashboard.view.DashboardScreen
 import eu.wedgess.mihole.ui.dashboard.viewmodel.DashboardViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-fun NavGraphBuilder.DashboardDestination(
-    onComposing: (AppBarState) -> Unit
-) {
+fun NavGraphBuilder.DashboardDestination() {
     composable(
         route = Screens.Dashboard.route,
         enterTransition = {
@@ -52,17 +50,18 @@ fun NavGraphBuilder.DashboardDestination(
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            onComposing(
-                AppBarState(
-                    title = UiText.StringResource(id = R.string.nav_title_home)
-                )
-            )
-            do {
-                viewModel.onEvent(DashboardContract.Event.FetchSummary)
-                viewModel.onEvent(DashboardContract.Event.FetchQueriesOvertime)
-                viewModel.onEvent(DashboardContract.Event.FetchClientQueriesOvertime)
-                delay(10_000)
-            } while (true)
+            viewModel.onEvent(DashboardContract.Event.ListenForConnectionChanges)
+            viewModel.onEvent(DashboardContract.Event.FetchSummary)
+            viewModel.onEvent(DashboardContract.Event.FetchQueriesOvertime)
+            viewModel.onEvent(DashboardContract.Event.FetchClientQueriesOvertime)
+        }
+
+        DisposableEffect(Unit) {
+            val refreshJob = viewModel.autoRefreshData()
+
+            onDispose {
+                refreshJob.cancel()
+            }
         }
 
         LaunchedEffect(Unit) {

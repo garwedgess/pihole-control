@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,20 +19,23 @@ import eu.wedgess.mihole.ui.theme.MiHoleTheme
 fun ClientQueriesOverTimeSection(
     overTimeData: PiHoleClientsOverTimeData
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = MiHoleTheme.dimens.padding.itemContentXLarge),
-        verticalArrangement = Arrangement.spacedBy(
-            MiHoleTheme.dimens.padding.itemContentSmall,
-            Alignment.CenterVertically
-        )
+    Card(
+        modifier = Modifier.padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
     ) {
-        Text(
-            modifier = Modifier.padding(start = MiHoleTheme.dimens.padding.itemContent),
-            text = stringResource(R.string.home_title_clients_over_time),
-            style = MaterialTheme.typography.titleLarge
-        )
-        ClientQueriesOvertimeGraph(overTimeData = overTimeData)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MiHoleTheme.dimens.padding.itemContent),
+            verticalArrangement = Arrangement.spacedBy(
+                MiHoleTheme.dimens.padding.itemContentSmall,
+                Alignment.CenterVertically
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.home_title_clients_over_time),
+                style = MaterialTheme.typography.titleMedium
+            )
+            ClientQueriesOvertimeGraph(overTimeData = overTimeData)
+        }
     }
 }

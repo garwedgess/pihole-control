@@ -3,6 +3,7 @@ package eu.wedgess.mihole.ui.navigation.destinations
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -111,10 +112,16 @@ fun NavGraphBuilder.FiltersDestination(
         }
 
         LaunchedEffect(Unit) {
-            do {
-                viewModel.onEvent(FiltersContract.Event.FetchRulesList)
-                delay(10_000)
-            } while (true)
+            viewModel.onEvent(FiltersContract.Event.FetchRulesList)
+            viewModel.onEvent(FiltersContract.Event.ListenForConnectionChanges)
+        }
+
+        DisposableEffect(Unit) {
+            val refreshJob = viewModel.autoRefreshData()
+
+            onDispose {
+                refreshJob.cancel()
+            }
         }
 
         LaunchedEffect(Unit) {

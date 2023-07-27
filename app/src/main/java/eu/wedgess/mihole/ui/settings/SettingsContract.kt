@@ -12,7 +12,7 @@ interface SettingsContract :
     data class UiState(
         val currentConnection: UiResult<MiHolesInfo>,
         val currentTheme: Theme,
-        val refreshInterval: Int,
+        val refreshInterval: Long,
         val useDynamicThemeColors: Boolean
     ) {
 
@@ -22,7 +22,7 @@ interface SettingsContract :
         fun connectionError(errorMessage: UiText): UiState =
             this.copy(currentConnection = UiResult.Error(errorMessage))
 
-        fun refreshInterval(interval: Int): UiState =
+        fun refreshInterval(interval: Long): UiState =
             this.copy(refreshInterval = interval)
 
         fun dynamicColors(useDynamicTheme: Boolean): UiState =

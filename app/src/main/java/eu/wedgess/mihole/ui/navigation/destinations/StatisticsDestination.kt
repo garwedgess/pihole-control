@@ -2,6 +2,7 @@ package eu.wedgess.mihole.ui.navigation.destinations
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,9 +19,7 @@ import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
-fun NavGraphBuilder.StatisticsDestination(
-    onComposing: (AppBarState) -> Unit
-) {
+fun NavGraphBuilder.StatisticsDestination() {
     composable(
         route = Screens.Statistics.route,
         enterTransition = {
@@ -84,15 +83,15 @@ fun NavGraphBuilder.StatisticsDestination(
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
-            onComposing(
-                AppBarState(
-                    title = UiText.StringResource(id = R.string.nav_title_statistics)
-                )
-            )
-            do {
-                viewModel.onEvent(StatisticsContract.Event.FetchStatistics)
-                delay(10_000)
-            } while (true)
+            viewModel.onEvent(StatisticsContract.Event.ListenForConnectionChanges)
+        }
+
+        DisposableEffect(Unit) {
+            val refreshJob = viewModel.autoRefreshData()
+
+            onDispose {
+                refreshJob.cancel()
+            }
         }
 
         LaunchedEffect(Unit) {

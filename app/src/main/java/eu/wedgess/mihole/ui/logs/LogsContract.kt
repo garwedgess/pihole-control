@@ -182,6 +182,7 @@ interface LogsContract :
         object OnToTimeCleared : Event
         object OnSortingDismissed : Event
         object OnLogDetailsDismissed : Event
+        object ListenForConnectionChanges : Event
         data class OnSearchQueryChanged(val query: TextFieldValue) : Event
         data class OnLogLimitChanged(val limit: Int) : Event
         data class OnStatusChanged(val status: LogEntryStatus) : Event

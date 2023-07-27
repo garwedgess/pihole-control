@@ -6,6 +6,7 @@ import eu.wedgess.mihole.data.model.PiHoleSummary
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.utils.UiText
+import kotlinx.coroutines.Job
 
 interface DashboardContract :
     UnidirectionalViewModel<DashboardContract.UiState, DashboardContract.Event, DashboardContract.Effect> {
@@ -38,7 +39,7 @@ interface DashboardContract :
             fun initial() = UiState(
                 summary = UiResult.Loading,
                 queriesOverTime = UiResult.Loading,
-                clientQueriesOverTime = UiResult.Loading,
+                clientQueriesOverTime = UiResult.Loading
             )
         }
     }
@@ -51,5 +52,6 @@ interface DashboardContract :
         object FetchSummary : Event
         object FetchQueriesOvertime : Event
         object FetchClientQueriesOvertime : Event
+        object ListenForConnectionChanges : Event
     }
 }
