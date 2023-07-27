@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "eu.wedgess.mihole.data.model";
+option java_multiple_files = true;
+
+
+message UserPreferences {
+    Theme theme = 1;
+    bool use_dynamic_colors = 2;
+    int64 refresh_time = 3;
+    int32 default_log_entries = 4;
+
+    enum Theme {
+        SYSTEM = 0;
+        LIGHT = 1;
+        DARK = 2;
+    }
+}

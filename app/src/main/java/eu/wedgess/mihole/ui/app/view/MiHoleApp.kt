@@ -28,7 +28,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.data.model.enums.PiHoleStatus
 import eu.wedgess.mihole.ui.app.AppContract
-import eu.wedgess.mihole.ui.app.view.components.dialog.StatusDialog
+import eu.wedgess.mihole.ui.app.view.components.dialog.DisableStatusDialog
+import eu.wedgess.mihole.ui.app.view.components.dialog.EnableStatusDialog
 import eu.wedgess.mihole.ui.app.viewmodel.AppViewModel
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.base.UiResult
@@ -37,7 +38,6 @@ import eu.wedgess.mihole.ui.navigation.MainNavigationGraph
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.ui.navigation.bottom.BottomNavigationBar
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun MiHoleApp(
@@ -62,6 +62,7 @@ fun MiHoleApp(
         viewModel.onEvent(AppContract.Event.FetchSettings)
         viewModel.onEvent(AppContract.Event.FetchCurrentConnection)
         viewModel.onEvent(AppContract.Event.FetchConnections)
+        viewModel.onEvent(AppContract.Event.FetchStatus)
     }
 
     DisposableEffect(Unit) {
@@ -104,7 +105,13 @@ fun MiHoleApp(
                     MainAppBar(
                         appBarState = appBarState,
                         onNavigateBack = { navHostController.navigateUp() },
-                        onStatusClicked = { viewModel.onEvent(AppContract.Event.ShowStatusDialog) },
+                        onStatusClicked = {
+                            if (appBarState.adBlockingEnabled) {
+                                viewModel.onEvent(AppContract.Event.ShowDisabledStatusDialog)
+                            } else {
+                                viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
+                            }
+                        },
                         onConnectionSelected = {
                             viewModel.onEvent(
                                 AppContract.Event.OnConnectionSelected(
@@ -132,13 +139,22 @@ fun MiHoleApp(
                     }
                 },
                 content = { contentPadding ->
-                    AnimatedVisibility(visible = uiState.showStatusDialog) {
-                        StatusDialog(
-                            currentStatus = (uiState.status as? UiResult.Success)?.data
-                                ?: PiHoleStatus.UNKNOWN,
-                            onDisableStatus = { viewModel.onEvent(AppContract.Event.SetDisabledStatus(it))},
+                    AnimatedVisibility(visible = uiState.showDisableStatusDialog) {
+                        DisableStatusDialog(
+                            onDisableStatus = {
+                                viewModel.onEvent(
+                                    AppContract.Event.SetDisabledStatus(
+                                        it
+                                    )
+                                )
+                            },
+                            onDismissDialog = { viewModel.onEvent(AppContract.Event.DismissDisabledStatusDialog) }
+                        )
+                    }
+                    AnimatedVisibility(visible = uiState.showEnableStatusDialog) {
+                        EnableStatusDialog(
                             onEnabledStatus = { viewModel.onEvent(AppContract.Event.SetEnabledStatus) },
-                            onDismissDialog = { viewModel.onEvent(AppContract.Event.DismissStatusDialog) }
+                            onDismissDialog = { viewModel.onEvent(AppContract.Event.DismissEnabledStatusDialog) }
                         )
                     }
                     MainNavigationGraph(

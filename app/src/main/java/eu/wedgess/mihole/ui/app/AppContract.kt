@@ -18,7 +18,8 @@ interface AppContract :
         val refreshInterval: Long,
         val useDynamicThemeColors: Boolean,
         val showConnectionDropdown: Boolean,
-        val showStatusDialog: Boolean
+        val showEnableStatusDialog: Boolean,
+        val showDisableStatusDialog: Boolean
     ) {
 
         fun connection(connection: MiHolesInfo): UiState =
@@ -57,7 +58,8 @@ interface AppContract :
                 useDynamicThemeColors = false,
                 status = UiResult.Loading,
                 showConnectionDropdown = false,
-                showStatusDialog = false
+                showEnableStatusDialog = false,
+                showDisableStatusDialog = false
             )
         }
     }
@@ -70,8 +72,10 @@ interface AppContract :
         object FetchConnections : Event
         object FetchStatus : Event
         object FetchSettings : Event
-        object ShowStatusDialog: Event
-        object DismissStatusDialog: Event
+        object ShowEnabledStatusDialog: Event
+        object DismissEnabledStatusDialog: Event
+        object ShowDisabledStatusDialog: Event
+        object DismissDisabledStatusDialog: Event
         object SetEnabledStatus: Event
         data class OnConnectionSelected(val mihHole: MiHolesInfo): Event
         data class SetDisabledStatus(val duration: Long): Event

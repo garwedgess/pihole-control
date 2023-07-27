@@ -1,6 +1,5 @@
 package eu.wedgess.mihole.ui.app.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
@@ -43,15 +42,13 @@ class AppViewModel @Inject constructor(
             AppContract.Event.FetchCurrentConnection -> fetchActiveConnection()
             AppContract.Event.FetchConnections -> fetchConnections()
             AppContract.Event.FetchStatus -> fetchStatus()
-            AppContract.Event.DismissStatusDialog -> _uiState.update { it.copy(showStatusDialog = false) }
-            is AppContract.Event.SetDisabledStatus -> _uiState.update { it.copy(showStatusDialog = false) }.also {
-                setDisableAdBlocking(event.duration)
-            }
+            AppContract.Event.DismissEnabledStatusDialog -> _uiState.update { it.copy(showEnableStatusDialog = false) }
+            AppContract.Event.DismissDisabledStatusDialog -> _uiState.update { it.copy(showDisableStatusDialog = false) }
+            is AppContract.Event.SetDisabledStatus -> setDisableAdBlocking(event.duration)
             is AppContract.Event.OnConnectionSelected -> setConnectionActive(event.mihHole)
-            AppContract.Event.SetEnabledStatus -> _uiState.update { it.copy(showStatusDialog = false) }.also {
-                setEnableAdBlocking()
-            }
-            AppContract.Event.ShowStatusDialog -> _uiState.update { it.copy(showStatusDialog = true) }
+            AppContract.Event.SetEnabledStatus -> setEnableAdBlocking()
+            AppContract.Event.ShowEnabledStatusDialog -> _uiState.update { it.copy(showEnableStatusDialog = true) }
+            AppContract.Event.ShowDisabledStatusDialog -> _uiState.update { it.copy(showDisableStatusDialog = true) }
         }
     }
 
@@ -63,7 +60,7 @@ class AppViewModel @Inject constructor(
 
 
     private fun setDisableAdBlocking(long: Long) {
-        _uiState.update { it.copy(showStatusDialog = false) }
+        _uiState.update { it.copy(showDisableStatusDialog = false) }
         viewModelScope.launch {
             when (val response = repository.disableAdBlocking(long)) {
                 is ResponseResult.Success -> {
@@ -77,7 +74,7 @@ class AppViewModel @Inject constructor(
     }
 
     private fun setEnableAdBlocking() {
-        _uiState.update { it.copy(showStatusDialog = false) }
+        _uiState.update { it.copy(showEnableStatusDialog = false) }
         viewModelScope.launch {
             when (val response = repository.enableAdBlocking()) {
                 is ResponseResult.Success -> {
