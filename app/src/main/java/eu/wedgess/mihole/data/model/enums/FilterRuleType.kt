@@ -16,3 +16,5 @@ enum class FilterRuleType {
         object Serializer : EnumIntSerializer<FilterRuleType>(FilterRuleType::class, WHITE)
     }
 }
+
+fun FilterRuleType.isRegex() = this == FilterRuleType.REGEX_BLACK || this == FilterRuleType.REGEX_WHITE

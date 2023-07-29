@@ -12,10 +12,9 @@ import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
 import eu.wedgess.mihole.ui.statistics.view.content.QueryTypesContent
-import eu.wedgess.mihole.utils.ColorGenerator
 
 @Composable
-fun QueryTypesScreen(statistics: UiResult<PiHoleStatistics>, colorGenerator: ColorGenerator) {
+fun QueryTypesScreen(statistics: UiResult<PiHoleStatistics>) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -24,8 +23,7 @@ fun QueryTypesScreen(statistics: UiResult<PiHoleStatistics>, colorGenerator: Col
             is UiResult.Loading -> LoadingContent(message = stringResource(R.string.statistics_msg_loading_query_type))
             is UiResult.Error -> ErrorMessage(errorMessage = statistics.errorMessage.asString(), onRetry = {})
             is UiResult.Success -> QueryTypesContent(
-                queryTypes = statistics.data.queryTypes,
-                colorGenerator
+                queryTypes = statistics.data.queryTypes
             )
         }
     }

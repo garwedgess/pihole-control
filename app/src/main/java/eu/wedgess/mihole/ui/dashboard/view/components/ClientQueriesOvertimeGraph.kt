@@ -1,8 +1,9 @@
 package eu.wedgess.mihole.ui.dashboard.view.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,6 +15,7 @@ import eu.wedgess.mihole.ui.common.LegendData
 import eu.wedgess.mihole.ui.common.LegendGridImpl
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import eu.wedgess.mihole.ui.theme.isDark
 import eu.wedgess.mihole.utils.ColorGenerator
 import eu.wedgess.mihole.utils.UiText
 import eu.wedgess.mihole.utils.extensions.formatWithThousands
@@ -24,9 +26,10 @@ fun ClientQueriesOvertimeGraph(
     overTimeData: PiHoleClientsOverTimeData
 ) {
 
-    val darkTheme = isSystemInDarkTheme()
-    val colorGenerator = remember {
-        ColorGenerator(isLightTheme = !darkTheme)
+    val isDarkTheme = MaterialTheme.colorScheme.isDark
+
+    val colorGenerator = remember(isDarkTheme) {
+        ColorGenerator(isLightTheme = !isDarkTheme)
     }
     val dateFormatter = remember {
         DateFormat.getTimeInstance(DateFormat.SHORT)
@@ -57,6 +60,9 @@ fun ClientQueriesOvertimeGraph(
 
     Column {
         LineChart(
+            modifier = Modifier
+                .fillMaxSize()
+                .heightIn(min = MiHoleTheme.dimens.size.lineChartHeight),
             data = clientsEntry,
             xAxisFormatter = dateFormatter.run {
                 { value ->

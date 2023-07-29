@@ -14,7 +14,9 @@ class ColorGenerator(isLightTheme: Boolean = false) {
 
     private var hueRanges: Array<out HueRange> = arrayOf(
         HueRange(min = 20, max = 140),
-        HueRange(min = 130, max = 230)
+        HueRange(min = 200, max = 340),
+        HueRange(min = 80, max = 190),
+        HueRange(min = 120, max = 360)
     )
     private var saturation: DoubleArray = doubleArrayOf(0.5)
     private var lightness: DoubleArray = doubleArrayOf(0.35)
@@ -53,6 +55,8 @@ class ColorGenerator(isLightTheme: Boolean = false) {
     private fun useLightThemeValues() {
         setHueRanges(
             HueRange(min = 40, max = 160),
+            HueRange(min = 200, max = 360),
+            HueRange(min = 100, max = 360),
             HueRange(min = 180, max = 290)
         )
         setSaturation(0.6)

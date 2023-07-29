@@ -1,6 +1,5 @@
 package eu.wedgess.mihole.ui.statistics.view.content
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,18 +25,22 @@ import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.statistics.view.common.PieChart
 import eu.wedgess.mihole.ui.statistics.view.common.PieChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import eu.wedgess.mihole.ui.theme.isDark
 import eu.wedgess.mihole.utils.ColorGenerator
 
 @Composable
 fun ForwardDestinationsContent(
-    forwardDestinations: Map<String, Float>,
-    colorGenerator: ColorGenerator
+    forwardDestinations: Map<String, Float>
 ) {
 
+    val isDarkTheme = MaterialTheme.colorScheme.isDark
+    val colorGenerator = remember(isDarkTheme) {
+        ColorGenerator(isLightTheme = isDarkTheme.not())
+    }
     var selectedIndex by remember {
         mutableIntStateOf(-1)
     }
-    val pieChartData = remember(forwardDestinations) {
+    val pieChartData = remember(forwardDestinations, colorGenerator) {
         forwardDestinations.map { (key, value) ->
             PieChartData(
                 title = key,
@@ -103,9 +106,6 @@ private fun ForwardDestinationContentPreview() {
                 "cached|cached" to 27.5f,
                 "other|other" to 26f,
                 "localhost|127.0.0.1" to 30f
-            ),
-            colorGenerator = ColorGenerator(
-                isSystemInDarkTheme().not()
             )
         )
     }

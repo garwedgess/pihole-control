@@ -3,7 +3,6 @@ package eu.wedgess.mihole.ui.statistics.view.content
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,14 +27,20 @@ import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.statistics.view.common.PieChart
 import eu.wedgess.mihole.ui.statistics.view.common.PieChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import eu.wedgess.mihole.ui.theme.isDark
 import eu.wedgess.mihole.utils.ColorGenerator
 
 @Composable
-fun QueryTypesContent(queryTypes: PiHoleStatistics.QueryTypes, colorGenerator: ColorGenerator) {
+fun QueryTypesContent(queryTypes: PiHoleStatistics.QueryTypes) {
 
     var selectedIndex by remember {
         mutableIntStateOf(-1)
     }
+    val isDarkTheme = MaterialTheme.colorScheme.isDark
+    val colorGenerator = remember(isDarkTheme) {
+        ColorGenerator(isLightTheme = isDarkTheme.not())
+    }
+
     val pieChartData = remember(queryTypes) {
         queryTypes.asList().map {
             PieChartData(
@@ -105,7 +110,7 @@ private fun QueryTypesContentPreview() {
                 DS = 10f,
                 TXT = 10f,
                 HTTPS = 10f
-            ), colorGenerator = ColorGenerator(isSystemInDarkTheme().not())
+            )
         )
     }
 }

@@ -3,6 +3,7 @@ package eu.wedgess.mihole.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -83,14 +84,7 @@ private val DarkColorScheme = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-@Composable
-fun ProvidePadding(
-    dimensions: AppDimens,
-    content: @Composable () -> Unit
-) {
-    val dimensionSet = remember { dimensions }
-    CompositionLocalProvider(LocalAppDimens provides dimensionSet, content = content)
-}
+val ColorScheme.isDark get() = this.toString() == DarkColorScheme.toString()
 
 private val LocalAppDimens = staticCompositionLocalOf {
     appDimens

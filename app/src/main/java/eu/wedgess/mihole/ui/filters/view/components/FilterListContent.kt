@@ -4,8 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,22 +29,26 @@ fun FilterListContent(
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         when (searchState.searchDisplay) {
             SearchStatus.InitialResults -> {
-                items(filtersList, key = { it.id }) { filterRule ->
+                itemsIndexed(filtersList, key = { _, item -> item.id }) { index, filterRule ->
                     FilterRuleItem(
                         rule = filterRule,
                         dateFormat = dateTimeInstance,
                         onItemClicked = { onEvent(FiltersContract.Event.OnRuleSelected(filterRule)) }
                     )
+
+                    if (index < filtersList.lastIndex) Divider()
                 }
             }
 
             SearchStatus.SearchInProgress, SearchStatus.Results -> {
-                items(searchState.searchResults, key = { it.id }) { filterRule ->
+                itemsIndexed(searchState.searchResults, key = { _, item -> item.id }) { index, filterRule ->
                     FilterRuleItem(
                         rule = filterRule,
                         dateFormat = dateTimeInstance,
                         onItemClicked = { onEvent(FiltersContract.Event.OnRuleSelected(filterRule)) }
                     )
+
+                    if (index < filtersList.lastIndex) Divider()
                 }
             }
 

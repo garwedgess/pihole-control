@@ -25,6 +25,7 @@ class Padding(
 
 class Size(
     val pieChart: Dp,
+    val lineChartHeight: Dp,
     val searchBarHeight: Dp,
     val searchProgress: Dp,
     val legendIcon: Dp,
@@ -79,6 +80,7 @@ class AppDimens: Dimensions {
     override val size: Size
         get() = Size(
             pieChart = 250.dp,
+            lineChartHeight = 300.dp,
             searchBarHeight = 56.dp,
             searchProgress = 36.dp,
             legendIcon = 16.dp,

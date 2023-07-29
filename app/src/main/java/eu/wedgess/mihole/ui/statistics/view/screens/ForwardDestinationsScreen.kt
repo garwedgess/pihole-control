@@ -12,12 +12,10 @@ import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
 import eu.wedgess.mihole.ui.statistics.view.content.ForwardDestinationsContent
-import eu.wedgess.mihole.utils.ColorGenerator
 
 @Composable
 fun ForwardDestinationsScreen(
-    statistics: UiResult<PiHoleStatistics>,
-    colorGenerator: ColorGenerator
+    statistics: UiResult<PiHoleStatistics>
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -27,8 +25,7 @@ fun ForwardDestinationsScreen(
             is UiResult.Loading -> LoadingContent(message = stringResource(R.string.statistics_msg_loading_server))
             is UiResult.Error -> ErrorMessage(errorMessage = statistics.errorMessage.asString(), onRetry = {})
             is UiResult.Success -> ForwardDestinationsContent(
-                forwardDestinations = statistics.data.forwardDestinations,
-                colorGenerator
+                forwardDestinations = statistics.data.forwardDestinations
             )
         }
     }

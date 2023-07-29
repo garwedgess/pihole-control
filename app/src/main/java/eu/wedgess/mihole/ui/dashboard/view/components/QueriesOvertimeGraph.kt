@@ -2,14 +2,14 @@ package eu.wedgess.mihole.ui.dashboard.view.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
 import eu.wedgess.mihole.ui.common.LegendData
@@ -50,7 +50,7 @@ fun QueriesOvertimeGraph(
     }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         LineChart(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().heightIn(min = MiHoleTheme.dimens.size.lineChartHeight),
             data = listOf(adsEntry, domainsEntry),
             xAxisFormatter = dateFormatter.run {
                 { value ->

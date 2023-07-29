@@ -83,24 +83,24 @@ val LightDomainsOnAdListBackground = Color(0xFFDD4B39)
 
 val ColorScheme.totalQueriesBackground: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkTotalQueriesBackground else LightTotalQueriesBackground
+    get() = if (isDark) DarkTotalQueriesBackground else LightTotalQueriesBackground
 
 val ColorScheme.queriesBlockedBackground: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkQueriesBlockedBackground else LightQueriesBlockedBackground
+    get() = if (isDark) DarkQueriesBlockedBackground else LightQueriesBlockedBackground
 
 val ColorScheme.percentageBlockedBackground: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkPercentageBlockedBackground else LightPercentageBlockedBackground
+    get() = if (isDark) DarkPercentageBlockedBackground else LightPercentageBlockedBackground
 
 val ColorScheme.domainsOnAdListBackground: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkDomainsOnAdListBackground else LightDomainsOnAdListBackground
+    get() = if (isDark) DarkDomainsOnAdListBackground else LightDomainsOnAdListBackground
 
 val ColorScheme.adBlockingEnabled: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkTotalQueriesBackground else LightTotalQueriesBackground
+    get() = if (isDark) DarkTotalQueriesBackground else LightTotalQueriesBackground
 
 val ColorScheme.adBlockingDisabled: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) DarkDomainsOnAdListBackground else LightDomainsOnAdListBackground
+    get() = if (isDark) DarkDomainsOnAdListBackground else LightDomainsOnAdListBackground

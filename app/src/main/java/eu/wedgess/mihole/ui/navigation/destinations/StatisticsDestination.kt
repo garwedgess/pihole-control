@@ -9,14 +9,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
 import eu.wedgess.mihole.ui.statistics.view.StatisticsScreen
 import eu.wedgess.mihole.ui.statistics.viewmodel.StatisticsViewModel
-import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.StatisticsDestination() {
