@@ -24,8 +24,10 @@ import eu.wedgess.mihole.ui.theme.MiHoleTheme
 @Composable
 fun TimeTextField(
     value: String,
+    onValueChange: (value: String) -> Unit,
     modifier: Modifier = Modifier,
-    onValueChange: (value: String) -> Unit
+    allowedLength: Int = 2,
+    defaultValue: String? = null
 ) {
     var focusState: FocusState? by rememberSaveable { mutableStateOf(null) }
     TextField(
@@ -33,7 +35,7 @@ fun TimeTextField(
         placeholder = {
             if (focusState?.isFocused == false) {
                 Text(
-                    "00",
+                    defaultValue ?: "00",
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center)
                 )
@@ -43,7 +45,7 @@ fun TimeTextField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center),
         onValueChange = {
-            it.takeIf { it.length <= 2 }?.run { onValueChange(this) }
+            it.takeIf { it.length <= allowedLength && (it.toIntOrNull() ?: 0) > 0 }?.run { onValueChange(this) }
         },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,

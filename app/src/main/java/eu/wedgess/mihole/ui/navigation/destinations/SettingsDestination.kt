@@ -101,6 +101,7 @@ fun NavGraphBuilder.SettingsDestination(
                     title = UiText.StringResource(id = R.string.nav_title_settings)
                 )
             )
+            viewModel.onEvent(SettingsContract.Event.FetchSettings)
         }
 
         LaunchedEffect(Unit) {

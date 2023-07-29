@@ -13,7 +13,8 @@ interface SettingsContract :
         val currentConnection: UiResult<MiHolesInfo>,
         val currentTheme: Theme,
         val refreshInterval: Long,
-        val useDynamicThemeColors: Boolean
+        val useDynamicThemeColors: Boolean,
+        val showRefreshIntervalDialog: Boolean
     ) {
 
         fun connection(connection: MiHolesInfo): UiState =
@@ -31,12 +32,16 @@ interface SettingsContract :
         fun theme(theme: Theme): UiState =
             this.copy(currentTheme = theme)
 
+        fun setRefreshInterval(refreshInterval: Long): UiState =
+            this.copy(refreshInterval = refreshInterval, showRefreshIntervalDialog = false)
+
         companion object {
             fun initial() = UiState(
                 currentConnection = UiResult.Loading,
                 currentTheme = Theme.SYSTEM,
                 refreshInterval = 10_000,
-                useDynamicThemeColors = false
+                useDynamicThemeColors = false,
+                showRefreshIntervalDialog = false
             )
         }
     }
@@ -52,7 +57,9 @@ interface SettingsContract :
         object FetchSettings : Event
         data class OnThemeChanged(val theme: Theme) : Event
         data class OnDynamicThemeColorsChanged(val useDynamicTheme: Boolean) : Event
+        data class OnRefreshIntervalChanged(val refreshInterval: Long) : Event
         object OnRefreshIntervalClicked : Event
         object OnServerClicked : Event
+        object OnDismissRefreshIntervalDialog : Event
     }
 }

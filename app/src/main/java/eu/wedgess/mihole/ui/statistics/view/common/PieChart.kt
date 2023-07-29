@@ -245,9 +245,8 @@ private fun PieChartImpl(
     lineStrokeWidth: Float,
     drawText: Boolean
 ) {
-    val separatorColor = MaterialTheme.colorScheme.background
+    val separatorColor = MaterialTheme.colorScheme.surfaceVariant
     Canvas(modifier = modifier) {
-
 
         val width = size.width
         var startAngle = chartStartAngle

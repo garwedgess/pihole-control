@@ -7,11 +7,13 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(
     name = "Light Theme",
     uiMode = UI_MODE_NIGHT_NO,
-    group = "Light Theme"
+    group = "Light Theme",
+    showBackground = true
 )
 @Preview(
     name = "Dark Theme",
     uiMode = UI_MODE_NIGHT_YES,
-    group = "Dark Theme"
+    group = "Dark Theme",
+    showBackground = true
 )
 annotation class ThemePreview

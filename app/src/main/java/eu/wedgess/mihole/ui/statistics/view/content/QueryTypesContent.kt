@@ -1,11 +1,17 @@
 package eu.wedgess.mihole.ui.statistics.view.content
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -13,9 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleStatistics
 import eu.wedgess.mihole.ui.common.LegendData
 import eu.wedgess.mihole.ui.common.LegendGridImpl
+import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.statistics.view.common.PieChart
 import eu.wedgess.mihole.ui.statistics.view.common.PieChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
@@ -48,24 +57,55 @@ fun QueryTypesContent(queryTypes: PiHoleStatistics.QueryTypes, colorGenerator: C
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = MiHoleTheme.dimens.padding.screenContent)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Card(
+        modifier = Modifier.padding(MiHoleTheme.dimens.padding.screenContent)
     ) {
-        PieChart(
-            modifier = Modifier.size(MiHoleTheme.dimens.size.pieChart),
-            data = pieChartData,
-            onClick = { pieItem, index ->
-                selectedIndex = index
-            }
-        )
-        LegendGridImpl(
-            legendData = legendData,
+        Column(
             modifier = Modifier
-                .padding(horizontal = MiHoleTheme.dimens.padding.screenContent)
+                .fillMaxWidth()
+                .padding(MiHoleTheme.dimens.padding.itemContent)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                MiHoleTheme.dimens.padding.itemContentSmall,
+                Alignment.CenterVertically
+            )
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.statistics_query_types_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+            PieChart(
+                modifier = Modifier.size(MiHoleTheme.dimens.size.pieChart),
+                data = pieChartData,
+                onClick = { pieItem, index ->
+                    selectedIndex = index
+                }
+            )
+            LegendGridImpl(
+                legendData = legendData,
+                modifier = Modifier
+                    .padding(horizontal = MiHoleTheme.dimens.padding.screenContent)
+            )
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun QueryTypesContentPreview() {
+    MiHoleTheme {
+        QueryTypesContent(
+            queryTypes = PiHoleStatistics.QueryTypes(
+                AIPv4 = 60f,
+                any = 1f,
+                NAPTR = 5f,
+                PTR = 4f,
+                DS = 10f,
+                TXT = 10f,
+                HTTPS = 10f
+            ), colorGenerator = ColorGenerator(isSystemInDarkTheme().not())
         )
     }
 }

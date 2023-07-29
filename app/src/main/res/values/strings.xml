@@ -113,4 +113,9 @@
     <string name="status_disable_btn_five_minutes">5 minutes</string>
     <string name="status_disable_btn_indefinite">Indefinitely</string>
     <string name="status_disable_btn_custom">Custom</string>
+    <string name="refresh_interval_dialog_title">Refresh Interval</string>
+    <string name="refresh_interval_dialog_label_seconds">Seconds</string>
+    <string name="all_btn_confirm">Confirm</string>
+    <string name="statistics_query_types_title">Query Types</string>
+    <string name="statistics_forward_destinations_title">Forward Destinations</string>
 </resources>

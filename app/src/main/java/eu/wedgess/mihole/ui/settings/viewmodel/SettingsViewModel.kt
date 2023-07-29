@@ -38,10 +38,22 @@ class SettingsViewModel @Inject constructor(
     override fun onEvent(event: SettingsContract.Event) {
         when (event) {
             SettingsContract.Event.FetchSettings -> fetchSettings()
-            SettingsContract.Event.OnRefreshIntervalClicked -> {}
+            SettingsContract.Event.OnRefreshIntervalClicked -> _uiState.update { it.copy(showRefreshIntervalDialog = true) }
             SettingsContract.Event.OnServerClicked -> navigateTo(SettingsContract.Effect.Navigation.Connections)
+            SettingsContract.Event.OnDismissRefreshIntervalDialog -> _uiState.update { it.copy(showRefreshIntervalDialog = false) }
             is SettingsContract.Event.OnThemeChanged -> updateTheme(event.theme)
             is SettingsContract.Event.OnDynamicThemeColorsChanged -> updateDynamicTheme(event.useDynamicTheme)
+            is SettingsContract.Event.OnRefreshIntervalChanged -> updateRefreshInterval(event.refreshInterval)
+        }
+    }
+
+    private fun updateRefreshInterval(refreshInterval: Long) {
+        viewModelScope.launch {
+            repository.updateRefreshInterval(refreshInterval).onFailure {
+                Timber.e("Failed to refresh interval", it)
+                return@launch
+            }
+            _uiState.update { it.setRefreshInterval(refreshInterval = refreshInterval) }
         }
     }
 
