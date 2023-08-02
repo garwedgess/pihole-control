@@ -32,6 +32,7 @@ class Size(
     val cornerRadius: Dp,
     val radioGroupSelectedIcon: Dp,
     val summaryIcon: Dp,
+    val defaultIcon: Dp,
     val dialogTonalElevation: Dp,
     val timeDialogButtonRowHeight: Dp,
     val logsStickyHeaderHeight: Dp,
@@ -53,6 +54,7 @@ class Weight(
     val radioGroupUnSelectedBorderAlpha: Float,
     val minAlpha: Float,
     val full: Float,
+    val point8: Float,
     val half: Float,
     val bottomNavUnselectedAlpha: Float,
     val secondaryTextAlpha: Float,
@@ -96,7 +98,8 @@ class AppDimens: Dimensions {
             timeButtonWidth = 164.dp,
             listPercentageBarWidth = 100.dp,
             statisticsTitleIcon = 32.dp,
-            timeInputWidth = 84.dp
+            timeInputWidth = 84.dp,
+            defaultIcon = 24.dp
         )
     override val weight: Weight
         get() = Weight(
@@ -107,6 +110,7 @@ class AppDimens: Dimensions {
             secondaryTextAlpha = 0.8f,
             full = 1f,
             half = 0.5f,
+            point8 = 0.8f,
             bottomNavUnselectedAlpha = 0.6f,
             disabledTextAlpha = 0.4f
         )

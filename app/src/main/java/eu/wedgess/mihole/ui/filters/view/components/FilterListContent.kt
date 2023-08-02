@@ -6,17 +6,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
 import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.common.search.SearchStatus
 import eu.wedgess.mihole.ui.filters.FiltersContract
-import java.text.DateFormat
 
 @Composable
 fun FilterListContent(
@@ -24,7 +21,6 @@ fun FilterListContent(
     searchState: SearchState<PiHoleFilterRules.PiHoleFilterRule>,
     onEvent: (FiltersContract.Event) -> Unit
 ) {
-    val dateTimeInstance = remember { DateFormat.getDateInstance() }
 
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         when (searchState.searchDisplay) {
@@ -32,23 +28,19 @@ fun FilterListContent(
                 itemsIndexed(filtersList, key = { _, item -> item.id }) { index, filterRule ->
                     FilterRuleItem(
                         rule = filterRule,
-                        dateFormat = dateTimeInstance,
                         onItemClicked = { onEvent(FiltersContract.Event.OnRuleSelected(filterRule)) }
                     )
-
-                    if (index < filtersList.lastIndex) Divider()
                 }
             }
 
             SearchStatus.SearchInProgress, SearchStatus.Results -> {
-                itemsIndexed(searchState.searchResults, key = { _, item -> item.id }) { index, filterRule ->
+                itemsIndexed(
+                    searchState.searchResults,
+                    key = { _, item -> item.id }) { index, filterRule ->
                     FilterRuleItem(
                         rule = filterRule,
-                        dateFormat = dateTimeInstance,
                         onItemClicked = { onEvent(FiltersContract.Event.OnRuleSelected(filterRule)) }
                     )
-
-                    if (index < filtersList.lastIndex) Divider()
                 }
             }
 

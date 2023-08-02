@@ -47,6 +47,22 @@
     <string name="logs_filter_sheet_btn_to_time">To Time</string>
     <string name="logs_filter_sheet_time_divider">-</string>
 
+    <string name="logs_type_label_allow_upstream">OK (Upstream)</string>
+    <string name="logs_type_label_allow_cache">OK (Cache)</string>
+    <string name="logs_type_label_allow_retried">OK (Retried)</string>
+    <string name="logs_type_label_allow_retried_ignored">OK (Retried Ignored)</string>
+    <string name="logs_type_label_allow_already_forwarded">OK (Already Forwarded)</string>
+    <string name="logs_type_label_block_gravity">Blocked (Gravity)</string>
+    <string name="logs_type_label_block_regex">Blocked (Regex)</string>
+    <string name="logs_type_label_block_exact">Blocked (Exact)</string>
+    <string name="logs_type_label_block_external_ip">Blocked (External IP)</string>
+    <string name="logs_type_label_block_external_null">Blocked (External Null)</string>
+    <string name="logs_type_label_block_external_nrxa">Blocked (External NRXA)</string>
+    <string name="logs_type_label_block_gravity_cname">Blocked (Gravity CNAME)</string>
+    <string name="logs_type_label_block_regex_cname">Blocked (Regex CNAME)</string>
+    <string name="logs_type_label_block_exact_cname">Blocked (Exact CNAME)</string>
+    <string name="logs_type_label_unknown">Unknown</string>
+
     <!-- Home Screen -->
     <string name="home_title_clients_over_time">Client Queries Over The Last 24hours</string>
     <string name="home_title_queries_over_time_blocked">Blocked</string>
@@ -77,10 +93,16 @@
     <string name="filters_details_dialog_label_comment">Comment</string>
     <string name="filters_label_regex">Regex</string>
     <string name="filters_msg_loading_filters">Loading filters</string>
+    <string name="filters_label_allowlist">Allow List</string>
+    <string name="filters_label_blocklist">Block List</string>
+    <string name="filters_label_allowlist_regex">Allow List Regex</string>
+    <string name="filters_label_blocklist_regex">Block List Regex</string>
 
 
     <!-- Statistics Screen -->
-    <string name="statistics_title_top_clients">Top clients</string>
+    <string name="statistics_title_top_blocked">Top Blocked</string>
+    <string name="statistics_title_top_permitted">Top Permitted</string>
+    <string name="statistics_title_top_clients">Top Clients</string>
     <string name="statistics_msg_loading_server">Loading server statistics</string>
     <string name="statistics_msg_loading_query_type">Loading query type statistics</string>
     <string name="statistics_msg_loading_top_clients">Loading top clients</string>
@@ -118,4 +140,5 @@
     <string name="all_btn_confirm">Confirm</string>
     <string name="statistics_query_types_title">Query Types</string>
     <string name="statistics_forward_destinations_title">Forward Destinations</string>
+
 </resources>

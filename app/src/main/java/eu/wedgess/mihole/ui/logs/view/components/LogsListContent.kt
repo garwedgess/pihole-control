@@ -36,7 +36,7 @@ fun LogsListContent(
                     )
                 }
                 items(logsList) { log ->
-                    LogItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+                    LogListItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
                 }
             }
 
@@ -49,7 +49,7 @@ fun LogsListContent(
 
                 }
                 items(searchState.searchResults) { log ->
-                    LogItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+                    LogListItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
                 }
             }
 
