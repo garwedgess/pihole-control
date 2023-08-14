@@ -59,7 +59,7 @@ class DashboardViewModel @Inject constructor(
         val errorMessage = throwable.message?.run {
             UiText.DynamicString(this)
         } ?: UiText.StringResource(R.string.all_error_msg_unknown)
-        _uiState.update { it.overtimeError(errorMessage) }
+        _uiState.update { it.clientOvertimeError(errorMessage) }
     }
 
     private fun fetchStatistics() = viewModelScope.launch(statisticsErrorHandler) {

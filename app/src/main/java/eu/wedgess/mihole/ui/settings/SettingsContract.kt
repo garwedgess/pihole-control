@@ -14,7 +14,8 @@ interface SettingsContract :
         val currentTheme: Theme,
         val refreshInterval: Long,
         val useDynamicThemeColors: Boolean,
-        val showRefreshIntervalDialog: Boolean
+        val showRefreshIntervalDialog: Boolean,
+        val changeStatusOnAllConnections: Boolean
     ) {
 
         fun connection(connection: MiHolesInfo): UiState =
@@ -35,13 +36,17 @@ interface SettingsContract :
         fun setRefreshInterval(refreshInterval: Long): UiState =
             this.copy(refreshInterval = refreshInterval, showRefreshIntervalDialog = false)
 
+        fun setChangeStatusOnAllConnections(changeOnAll: Boolean): UiState =
+            this.copy(changeStatusOnAllConnections = changeOnAll)
+
         companion object {
             fun initial() = UiState(
                 currentConnection = UiResult.Loading,
                 currentTheme = Theme.SYSTEM,
                 refreshInterval = 10_000,
                 useDynamicThemeColors = false,
-                showRefreshIntervalDialog = false
+                showRefreshIntervalDialog = false,
+                changeStatusOnAllConnections = false
             )
         }
     }
@@ -58,6 +63,7 @@ interface SettingsContract :
         data class OnThemeChanged(val theme: Theme) : Event
         data class OnDynamicThemeColorsChanged(val useDynamicTheme: Boolean) : Event
         data class OnRefreshIntervalChanged(val refreshInterval: Long) : Event
+        data class OnChangeStatusOnAllConnectionsChanged(val changeOnAll: Boolean) : Event
         object OnRefreshIntervalClicked : Event
         object OnServerClicked : Event
         object OnDismissRefreshIntervalDialog : Event

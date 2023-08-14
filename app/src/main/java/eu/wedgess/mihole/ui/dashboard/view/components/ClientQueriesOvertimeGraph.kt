@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleClientsOverTimeData
-import eu.wedgess.mihole.ui.common.LegendData
-import eu.wedgess.mihole.ui.common.LegendGridImpl
+import eu.wedgess.mihole.ui.common.LegendGrid
+import eu.wedgess.mihole.ui.common.model.LegendData
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.isDark
@@ -71,8 +71,8 @@ fun ClientQueriesOvertimeGraph(
             }
         )
 
-        LegendGridImpl(
-            legendData = clientsEntry.map { linesChartData ->
+        LegendGrid(
+            data = clientsEntry.map { linesChartData ->
                 LegendData(
                     title = linesChartData.label.asString(),
                     subTitle = stringResource(

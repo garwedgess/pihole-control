@@ -1,10 +1,12 @@
 package eu.wedgess.mihole.ui.logs.view.components.dialogs
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Devices
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Publish
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.enums.LogsAnswerCategory
 import eu.wedgess.mihole.data.model.enums.LogsAnswerType
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import java.text.DateFormat
@@ -39,6 +43,8 @@ import java.text.DateFormat
 @Composable
 fun LogDetailsDialog(
     filterRule: PiHoleLog,
+    addToAllowList: (domain: String) -> Unit,
+    addToBlockList: (domain: String) -> Unit,
     onConfirm: (log: PiHoleLog) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -46,6 +52,8 @@ fun LogDetailsDialog(
         LogDetailsDialogContent(
             log = filterRule,
             onConfirmClicked = { onConfirm(filterRule) },
+            addToAllowList = { addToAllowList(it) },
+            addToBlockList = { addToBlockList(it) },
             onCancelClicked = { onDismiss() }
         )
     }
@@ -54,6 +62,8 @@ fun LogDetailsDialog(
 @Composable
 private fun LogDetailsDialogContent(
     log: PiHoleLog,
+    addToAllowList: (domain: String) -> Unit,
+    addToBlockList: (domain: String) -> Unit,
     onConfirmClicked: () -> Unit,
     onCancelClicked: () -> Unit
 ) {
@@ -62,10 +72,13 @@ private fun LogDetailsDialogContent(
     Surface(shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)) {
         Column(
             Modifier.padding(MiHoleTheme.dimens.padding.dialogContent),
-            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
+            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContentLarge)
         ) {
             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-                Text(stringResource(R.string.log_dialog_details_title), style = MaterialTheme.typography.titleLarge)
+                Text(
+                    stringResource(R.string.log_dialog_details_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
             LogDetailsRow(
                 icon = Icons.Default.Link,
@@ -98,6 +111,24 @@ private fun LogDetailsDialogContent(
                 value = "%.1f ms".format(log.responseTime * 0.1)
             )
 
+            AnimatedVisibility(visible = log.answerType.category == LogsAnswerCategory.BLOCK) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { addToAllowList(log.requestedDomain) }) {
+                    Text(text = "Add to Allow List")
+                }
+            }
+            AnimatedVisibility(
+                visible = log.answerType.category == LogsAnswerCategory.ALLOW ||
+                        log.answerType.category == LogsAnswerCategory.CACHE
+            ) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { addToBlockList(log.requestedDomain) }) {
+                    Text(text = "Add to Block List")
+                }
+            }
+
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
@@ -119,15 +150,19 @@ private fun LogDetailsRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
+        horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.screenContent)
     ) {
-        Icon(imageVector = icon, contentDescription = title)
+        Icon(
+            modifier = Modifier.size(MiHoleTheme.dimens.size.defaultIcon),
+            imageVector = icon,
+            contentDescription = title
+        )
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
-            Text(text = value, style = MaterialTheme.typography.bodySmall, color = valueTextColor)
+            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = valueTextColor)
         }
     }
 }
@@ -145,6 +180,8 @@ private fun DisplayFilterRuleDialogPreview() {
                 responseTime = 1000,
                 timestamp = 1689425287
             ),
+            addToAllowList = {},
+            addToBlockList = {},
             onConfirm = {},
             onDismiss = {}
         )

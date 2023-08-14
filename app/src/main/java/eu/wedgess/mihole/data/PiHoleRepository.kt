@@ -5,10 +5,12 @@ import eu.wedgess.mihole.data.api.PiHoleApi
 import eu.wedgess.mihole.data.db.MiHolesDao
 import eu.wedgess.mihole.data.model.MiHolesInfo
 import eu.wedgess.mihole.data.model.PiHoleFilterRules
+import eu.wedgess.mihole.data.model.PiHoleStatusResponse
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.data.model.UserPreferences.Theme
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
+import eu.wedgess.mihole.data.model.enums.PiHoleStatus
 import eu.wedgess.mihole.utils.DispatcherProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -83,16 +85,39 @@ class PiHoleRepository @Inject constructor(
 
     suspend fun disableAdBlocking(duration: Long) =
         withContext(dispatcherProvider.io) {
-            api.disableAdBlocking(
-                currentPiHole.first(),
-                duration.toDuration(DurationUnit.MILLISECONDS)
-            )
+            return@withContext if (userPreferences.data.first().changeStatusOnAllConnection) {
+                fetchAll().onSuccess {
+                    it.forEach { connection ->
+                        disableAdBlocking(connection, duration)
+                    }
+                }
+                ResponseResult.Success(PiHoleStatusResponse(PiHoleStatus.DISABLED))
+            } else {
+                disableAdBlocking(currentPiHole.first(), duration)
+            }
         }
+
+    private suspend fun disableAdBlocking(connection: MiHolesInfo, duration: Long) = withContext(dispatcherProvider.io) {
+        api.disableAdBlocking(connection, duration.toDuration(DurationUnit.MILLISECONDS))
+    }
 
     suspend fun enableAdBlocking() =
         withContext(dispatcherProvider.io) {
-            api.enableAdBlocking(currentPiHole.first())
+            return@withContext if (userPreferences.data.first().changeStatusOnAllConnection) {
+                fetchAll().onSuccess {
+                    it.forEach { connection ->
+                        enableAdBlocking(connection)
+                    }
+                }
+                ResponseResult.Success(PiHoleStatusResponse(PiHoleStatus.ENABLED))
+            } else {
+                enableAdBlocking(currentPiHole.first())
+            }
         }
+
+    private suspend fun enableAdBlocking(connection: MiHolesInfo) = withContext(dispatcherProvider.io) {
+        api.enableAdBlocking(connection)
+    }
 
     suspend fun insertMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
@@ -162,4 +187,9 @@ class PiHoleRepository @Inject constructor(
         }
     }
 
+    suspend fun updateStatusChangeOnAllConnections(applyOnAll: Boolean) = kotlin.runCatching {
+        userPreferences.updateData { preferences ->
+            preferences.toBuilder().setChangeStatusOnAllConnection(applyOnAll).build()
+        }
+    }
 }

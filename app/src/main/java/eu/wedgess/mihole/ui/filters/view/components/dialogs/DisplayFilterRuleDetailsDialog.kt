@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -62,7 +63,7 @@ private fun DisplayFilterRuleDetailsDialogContent(
     Surface(shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)) {
         Column(
             Modifier.padding(MiHoleTheme.dimens.padding.dialogContent),
-            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContent)
+            verticalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.itemContentLarge)
         ) {
             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
                 Text(
@@ -126,13 +127,22 @@ private fun FilterDetailsRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MiHoleTheme.dimens.padding.screenContent)
     ) {
-        Icon(imageVector = icon, contentDescription = title)
-        Column(verticalArrangement = Arrangement.Center) {
+        Icon(
+            modifier = Modifier.size(MiHoleTheme.dimens.size.defaultIcon),
+            imageVector = icon,
+            contentDescription = title
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(
+                MiHoleTheme.dimens.padding.itemContentSmall,
+                Alignment.CenterVertically
+            )
+        ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
-            Text(text = value, style = MaterialTheme.typography.bodySmall)
+            Text(text = value, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

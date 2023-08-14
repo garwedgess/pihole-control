@@ -2,12 +2,12 @@ package eu.wedgess.mihole.ui.logs.viewmodel
 
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.model.ResponseResult
+import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.ui.base.RefreshableViewModel
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.logs.LogsContract
@@ -56,7 +56,9 @@ class LogsViewModel @Inject constructor(
             LogsContract.Event.OnSortingDismissed -> _uiState.update { it.dismissSortingDropdown() }
             LogsContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
             is LogsContract.Event.OnSearchQueryChanged -> handleSearchQuery(event.query)
-            is LogsContract.Event.OnLogLimitChanged -> _uiState.update { it.logsLimit(event.limit) }
+            is LogsContract.Event.OnLogLimitChanged -> _uiState.update {
+                it.logsLimit(event.limit).copy(logs = UiResult.Loading)
+            }
                 .also { fetchLogs() }
 
             is LogsContract.Event.OnStatusChanged -> _uiState.update { it.logEntryStatus(event.status) }
@@ -71,6 +73,7 @@ class LogsViewModel @Inject constructor(
                     it.setToDate(to = event.date)
                 }
             }
+
             is LogsContract.Event.OnTimeConfirmed -> _uiState.update {
                 if (it.showTimePicker == PickerType.FromTime) {
                     it.setFromTime(event.time)
@@ -84,6 +87,29 @@ class LogsViewModel @Inject constructor(
             is LogsContract.Event.OnSortTypeSelected -> _uiState.update { it.setSorting(event.sorting) }
             is LogsContract.Event.OnLogSelected -> _uiState.update { it.copy(selectedLog = event.log) }
             LogsContract.Event.OnLogDetailsDismissed -> _uiState.update { it.copy(selectedLog = null) }
+            is LogsContract.Event.AddToAllowList -> addFilterRule(
+                event.domain,
+                FilterRuleType.WHITE
+            )
+
+            is LogsContract.Event.AddToBlockList -> addFilterRule(
+                event.domain,
+                FilterRuleType.BLACK
+            )
+        }
+    }
+
+    private fun addFilterRule(domain: String, filterRuleType: FilterRuleType) {
+        viewModelScope.launch {
+            repository.addFilterRules(domain, filterRuleType)
+            _uiState.update { it.copy(selectedLog = null) }
+            _effect.send(
+                if (filterRuleType == FilterRuleType.WHITE) {
+                    LogsContract.Effect.Snackbar.DomainAddedToAllowList
+                } else {
+                    LogsContract.Effect.Snackbar.DomainAddedToBlockList
+                }
+            )
         }
     }
 

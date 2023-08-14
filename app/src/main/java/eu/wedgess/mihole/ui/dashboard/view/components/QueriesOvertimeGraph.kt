@@ -9,11 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleOverTimeData
-import eu.wedgess.mihole.ui.common.LegendData
-import eu.wedgess.mihole.ui.common.LegendGridImpl
+import eu.wedgess.mihole.ui.common.LegendGrid
+import eu.wedgess.mihole.ui.common.model.LegendData
 import eu.wedgess.mihole.ui.dashboard.model.LineChartData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
@@ -58,8 +57,8 @@ fun QueriesOvertimeGraph(
                 }
             }
         )
-        LegendGridImpl(
-            legendData = listOf(
+        LegendGrid(
+            data = listOf(
                 LegendData(
                     title = stringResource(id = R.string.home_title_queries_over_time_permitted),
                     subTitle = stringResource(

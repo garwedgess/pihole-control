@@ -19,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.common.LegendData
-import eu.wedgess.mihole.ui.common.LegendGridImpl
+import eu.wedgess.mihole.ui.common.LegendGrid
+import eu.wedgess.mihole.ui.common.model.LegendData
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.statistics.view.common.PieChart
 import eu.wedgess.mihole.ui.statistics.view.common.PieChartData
@@ -87,8 +87,8 @@ fun ForwardDestinationsContent(
                     selectedIndex = index
                 }
             )
-            LegendGridImpl(
-                legendData = legendData,
+            LegendGrid(
+                data = legendData,
                 modifier = Modifier
                     .padding(horizontal = MiHoleTheme.dimens.padding.itemContent)
             )

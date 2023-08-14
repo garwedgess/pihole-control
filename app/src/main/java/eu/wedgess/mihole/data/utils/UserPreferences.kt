@@ -8,3 +8,4 @@ fun UserPreferences.Builder.defaultValues(): UserPreferences.Builder =
         .setDefaultLogEntries(500)
         .setUseDynamicColors(false)
         .setRefreshTime(10_000)
+        .setChangeStatusOnAllConnection(false)

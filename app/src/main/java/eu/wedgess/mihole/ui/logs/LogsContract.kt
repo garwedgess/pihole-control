@@ -1,6 +1,7 @@
 package eu.wedgess.mihole.ui.logs
 
 import androidx.compose.ui.text.input.TextFieldValue
+import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleLog
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
@@ -93,10 +94,18 @@ interface LogsContract :
             this.copy(filterFromTime = from, showTimePicker = showDatePicker, showDatePicker = null)
 
         fun setToTime(to: Long): UiState =
-            this.copy(filterToTime = to.plus(this.filterToTime ?: 0L), showTimePicker = null, showDatePicker = null).filterLogs(allLogs)
+            this.copy(
+                filterToTime = to.plus(this.filterToTime ?: 0L),
+                showTimePicker = null,
+                showDatePicker = null
+            ).filterLogs(allLogs)
 
         fun setFromTime(from: Long): UiState =
-            this.copy(filterFromTime = from.plus(this.filterFromTime ?: 0L), showTimePicker = null, showDatePicker = null).filterLogs(allLogs)
+            this.copy(
+                filterFromTime = from.plus(this.filterFromTime ?: 0L),
+                showTimePicker = null,
+                showDatePicker = null
+            ).filterLogs(allLogs)
 
         fun fromTimeCleared(): UiState =
             this.copy(filterFromTime = null).filterLogs(allLogs)
@@ -124,7 +133,11 @@ interface LogsContract :
             )
 
             fun List<PiHoleLog>.statusFilter(status: LogEntryStatus) =
-                if (status == LogEntryStatus.ALL) this else this.filter { log -> status.categories.contains(log.answerType.category) }
+                if (status == LogEntryStatus.ALL) this else this.filter { log ->
+                    status.categories.contains(
+                        log.answerType.category
+                    )
+                }
 
             fun List<PiHoleLog>.sortBy(sortType: LogSorting) =
                 when (sortType) {
@@ -167,6 +180,13 @@ interface LogsContract :
 
     sealed interface Effect {
         object ShowBottomSheet : Effect
+        sealed class Snackbar(val message: UiText) : Effect {
+            object DomainAddedToAllowList :
+                Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_allow_list))
+
+            object DomainAddedToBlockList :
+                Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_block_list))
+        }
     }
 
     sealed interface Event {
@@ -192,5 +212,7 @@ interface LogsContract :
         data class OnShowTimePicker(val type: PickerType) : Event
         data class OnSortTypeSelected(val sorting: LogSorting) : Event
         data class OnLogSelected(val log: PiHoleLog) : Event
+        data class AddToAllowList(val domain: String) : Event
+        data class AddToBlockList(val domain: String) : Event
     }
 }

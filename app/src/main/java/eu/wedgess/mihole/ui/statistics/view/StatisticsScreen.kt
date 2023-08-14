@@ -8,8 +8,8 @@ import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.common.tabs.AnimatedTabContainer
 import eu.wedgess.mihole.ui.base.TabItem
+import eu.wedgess.mihole.ui.common.tabs.AnimatedTabContainer
 import eu.wedgess.mihole.ui.statistics.StatisticsContract
 import eu.wedgess.mihole.ui.statistics.view.screens.ForwardDestinationsScreen
 import eu.wedgess.mihole.ui.statistics.view.screens.QueryTypesScreen
@@ -27,22 +27,42 @@ fun StatisticsScreen(
             TabItem(
                 title = UiText.StringResource(R.string.statistics_tab_title_queries),
                 icon = Icons.Default.QueryStats,
-                screen = { QueryTypesScreen(uiState.statistics) }
+                screen = {
+                    QueryTypesScreen(
+                        uiState.statistics,
+                        onRetry = { onEvent(StatisticsContract.Event.FetchStatistics) }
+                    )
+                }
             ),
             TabItem(
                 title = UiText.StringResource(R.string.statistics_tab_title_servers),
                 icon = Icons.Default.Dns,
-                screen = { ForwardDestinationsScreen(uiState.statistics) }
+                screen = {
+                    ForwardDestinationsScreen(
+                        uiState.statistics,
+                        onRetry = { onEvent(StatisticsContract.Event.FetchStatistics) }
+                    )
+                }
             ),
             TabItem(
                 title = UiText.StringResource(R.string.statistics_tab_title_domains),
                 icon = Icons.Default.Domain,
-                screen = { TopDomainsScreen(uiState.statistics) }
+                screen = {
+                    TopDomainsScreen(
+                        uiState.statistics,
+                        onRetry = { onEvent(StatisticsContract.Event.FetchStatistics) }
+                    )
+                }
             ),
             TabItem(
                 title = UiText.StringResource(R.string.statistics_tab_title_clients),
                 icon = Icons.Default.Devices,
-                screen = { TopClientsScreen(uiState.statistics) }
+                screen = {
+                    TopClientsScreen(
+                        uiState.statistics,
+                        onRetry = { onEvent(StatisticsContract.Event.FetchStatistics) }
+                    )
+                }
             )
         )
     }

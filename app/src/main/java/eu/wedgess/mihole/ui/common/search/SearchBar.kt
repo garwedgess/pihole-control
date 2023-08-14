@@ -18,6 +18,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,6 +28,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -108,11 +110,11 @@ private fun SearchTextField(
                         end = MiHoleTheme.dimens.padding.itemContentLarge
                     )
             ),
-        color = MaterialTheme.colorScheme.inversePrimary,
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(percent = 50),
     ) {
 
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimaryContainer) {
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
             Box(
                 contentAlignment = Alignment.CenterStart,
                 modifier = modifier
@@ -132,9 +134,10 @@ private fun SearchTextField(
                         value = query,
                         textStyle = LocalTextStyle.current.copy(
                             color = contentColorFor(
-                                backgroundColor = MaterialTheme.colorScheme.inversePrimary
+                                backgroundColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                         onValueChange = onQueryChange,
                         modifier = Modifier
                             .fillMaxHeight()
@@ -166,7 +169,7 @@ private fun SearchTextField(
                                 Icon(
                                     imageVector = Icons.Filled.Cancel,
                                     contentDescription = null,
-                                    tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.inversePrimary)
+                                    tint = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant)
                                 )
                             }
                         }

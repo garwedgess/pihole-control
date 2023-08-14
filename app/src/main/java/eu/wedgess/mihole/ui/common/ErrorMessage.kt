@@ -3,6 +3,7 @@ package eu.wedgess.mihole.ui.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +17,7 @@ import eu.wedgess.mihole.ui.theme.MiHoleTheme
 @Composable
 fun ErrorMessage(errorMessage: String, onRetry: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(MiHoleTheme.dimens.padding.screenContent),
         verticalArrangement = Arrangement.spacedBy(
             MiHoleTheme.dimens.padding.itemContent,
             Alignment.CenterVertically

@@ -13,9 +13,9 @@ fun FilterDialogs(
     displayAddRuleDialog: Boolean,
     onEvent: (FiltersContract.Event) -> Unit
 ) {
-    AnimatedVisibility(visible = selectedRule != null) {
+    if (selectedRule != null) {
         DisplayFilterRuleDetailsDialog(
-            filterRule = selectedRule ?: PiHoleFilterRules.PiHoleFilterRule(),
+            filterRule = selectedRule,
             onDismissRequest = {
                 onEvent(FiltersContract.Event.OnRuleDeselected)
             },

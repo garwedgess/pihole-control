@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
@@ -42,7 +44,7 @@ fun DashboardScreen(
                     onRetry = { onEvent(DashboardContract.Event.FetchSummary) })
 
                 UiResult.Loading -> LoadingContent(
-                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    modifier = Modifier.heightIn(min = MiHoleTheme.dimens.size.homeLoadingHeight),
                     message = stringResource(R.string.home_fetching_statistics)
                 )
             }
@@ -57,7 +59,7 @@ fun DashboardScreen(
                     onRetry = { onEvent(DashboardContract.Event.FetchQueriesOvertime) })
 
                 UiResult.Loading -> LoadingContent(
-                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    modifier = Modifier.heightIn(min = MiHoleTheme.dimens.size.homeLoadingHeight),
                     message = stringResource(R.string.home_fetching_over_time_data)
                 )
             }
@@ -72,7 +74,7 @@ fun DashboardScreen(
                     onRetry = { onEvent(DashboardContract.Event.FetchClientQueriesOvertime) })
 
                 UiResult.Loading -> LoadingContent(
-                    modifier = Modifier.fillMaxHeight(fraction = 0.33f),
+                    modifier = Modifier.heightIn(min = MiHoleTheme.dimens.size.homeLoadingHeight),
                     message = stringResource(R.string.home_fetching_clients_over_time_data)
                 )
             }

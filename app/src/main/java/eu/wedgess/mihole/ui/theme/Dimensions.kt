@@ -25,6 +25,7 @@ class Padding(
 
 class Size(
     val pieChart: Dp,
+    val homeLoadingHeight: Dp,
     val lineChartHeight: Dp,
     val searchBarHeight: Dp,
     val searchProgress: Dp,
@@ -99,7 +100,8 @@ class AppDimens: Dimensions {
             listPercentageBarWidth = 100.dp,
             statisticsTitleIcon = 32.dp,
             timeInputWidth = 84.dp,
-            defaultIcon = 24.dp
+            defaultIcon = 24.dp,
+            homeLoadingHeight = 180.dp
         )
     override val weight: Weight
         get() = Weight(

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
-import eu.wedgess.mihole.data.model.MiHolesInfo
 import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.ui.settings.SettingsContract
 import eu.wedgess.mihole.utils.UiText
@@ -38,12 +37,19 @@ class SettingsViewModel @Inject constructor(
     override fun onEvent(event: SettingsContract.Event) {
         when (event) {
             SettingsContract.Event.FetchSettings -> fetchSettings()
-            SettingsContract.Event.OnRefreshIntervalClicked -> _uiState.update { it.copy(showRefreshIntervalDialog = true) }
-            SettingsContract.Event.OnServerClicked -> navigateTo(SettingsContract.Effect.Navigation.Connections)
-            SettingsContract.Event.OnDismissRefreshIntervalDialog -> _uiState.update { it.copy(showRefreshIntervalDialog = false) }
+            SettingsContract.Event.OnRefreshIntervalClicked ->
+                _uiState.update { it.copy(showRefreshIntervalDialog = true) }
+            SettingsContract.Event.OnServerClicked ->
+                navigateTo(SettingsContract.Effect.Navigation.Connections)
+            SettingsContract.Event.OnDismissRefreshIntervalDialog ->
+                _uiState.update { it.copy(showRefreshIntervalDialog = false) }
             is SettingsContract.Event.OnThemeChanged -> updateTheme(event.theme)
-            is SettingsContract.Event.OnDynamicThemeColorsChanged -> updateDynamicTheme(event.useDynamicTheme)
-            is SettingsContract.Event.OnRefreshIntervalChanged -> updateRefreshInterval(event.refreshInterval)
+            is SettingsContract.Event.OnDynamicThemeColorsChanged ->
+                updateDynamicTheme(event.useDynamicTheme)
+            is SettingsContract.Event.OnRefreshIntervalChanged ->
+                updateRefreshInterval(event.refreshInterval)
+            is SettingsContract.Event.OnChangeStatusOnAllConnectionsChanged ->
+                updateStatusChangeOnAllConnections(event.changeOnAll)
         }
     }
 
@@ -54,6 +60,16 @@ class SettingsViewModel @Inject constructor(
                 return@launch
             }
             _uiState.update { it.setRefreshInterval(refreshInterval = refreshInterval) }
+        }
+    }
+
+    private fun updateStatusChangeOnAllConnections(applyOnAll: Boolean) {
+        viewModelScope.launch {
+            repository.updateStatusChangeOnAllConnections(applyOnAll).onFailure {
+                Timber.e("Failed to refresh interval", it)
+                return@launch
+            }
+            _uiState.update { it.setChangeStatusOnAllConnections(changeOnAll = applyOnAll) }
         }
     }
 
@@ -111,6 +127,7 @@ class SettingsViewModel @Inject constructor(
                         state.theme(preferences.theme)
                             .refreshInterval(preferences.refreshTime)
                             .dynamicColors(preferences.useDynamicColors)
+                            .setChangeStatusOnAllConnections(preferences.changeStatusOnAllConnection)
                     }
                 }
         }

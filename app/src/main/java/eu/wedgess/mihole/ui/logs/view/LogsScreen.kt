@@ -8,7 +8,10 @@ import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,10 +31,12 @@ import eu.wedgess.mihole.ui.logs.view.components.dialogs.LogsTimePickerDialog
 fun LogsScreen(
     uiState: LogsContract.UiState,
     scaffoldState: BottomSheetScaffoldState,
+    snackbarHostState: SnackbarHostState,
     onEvent: (LogsContract.Event) -> Unit
 ) {
 
     BottomSheetScaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         scaffoldState = scaffoldState,
         sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight,
         sheetContent = {
@@ -83,8 +88,10 @@ fun LogsScreen(
                 LogDetailsDialog(
                     filterRule = uiState.selectedLog,
                     onDismiss = { onEvent(LogsContract.Event.OnLogDetailsDismissed) },
+                    addToAllowList = { domain -> onEvent(LogsContract.Event.AddToAllowList(domain)) },
+                    addToBlockList = { domain -> onEvent(LogsContract.Event.AddToBlockList(domain)) },
                     onConfirm = { log ->
-//                        onEvent(LogsContract.Event.OnTimeConfirmed(timeMillis))
+                        onEvent(LogsContract.Event.OnLogDetailsDismissed)
                     }
                 )
             }

@@ -15,15 +15,24 @@ import eu.wedgess.mihole.ui.statistics.view.content.ForwardDestinationsContent
 
 @Composable
 fun ForwardDestinationsScreen(
-    statistics: UiResult<PiHoleStatistics>
+    statistics: UiResult<PiHoleStatistics>,
+    onRetry: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (statistics) {
-            is UiResult.Loading -> LoadingContent(message = stringResource(R.string.statistics_msg_loading_server))
-            is UiResult.Error -> ErrorMessage(errorMessage = statistics.errorMessage.asString(), onRetry = {})
+            is UiResult.Loading -> LoadingContent(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(R.string.statistics_msg_loading_server)
+            )
+
+            is UiResult.Error -> ErrorMessage(
+                errorMessage = statistics.errorMessage.asString(),
+                onRetry = onRetry
+            )
+
             is UiResult.Success -> ForwardDestinationsContent(
                 forwardDestinations = statistics.data.forwardDestinations
             )

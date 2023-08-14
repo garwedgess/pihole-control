@@ -1,6 +1,5 @@
 package eu.wedgess.mihole.ui.statistics.view.content
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleStatistics
-import eu.wedgess.mihole.ui.common.LegendData
-import eu.wedgess.mihole.ui.common.LegendGridImpl
+import eu.wedgess.mihole.ui.common.LegendGrid
+import eu.wedgess.mihole.ui.common.model.LegendData
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.statistics.view.common.PieChart
 import eu.wedgess.mihole.ui.statistics.view.common.PieChartData
@@ -88,8 +87,8 @@ fun QueryTypesContent(queryTypes: PiHoleStatistics.QueryTypes) {
                     selectedIndex = index
                 }
             )
-            LegendGridImpl(
-                legendData = legendData,
+            LegendGrid(
+                data = legendData,
                 modifier = Modifier
                     .padding(horizontal = MiHoleTheme.dimens.padding.screenContent)
             )

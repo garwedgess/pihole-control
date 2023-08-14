@@ -14,16 +14,29 @@ import eu.wedgess.mihole.ui.common.LoadingContent
 import eu.wedgess.mihole.ui.statistics.view.content.TopDomainsContent
 
 @Composable
-fun TopDomainsScreen(statistics: UiResult<PiHoleStatistics>) {
+fun TopDomainsScreen(statistics: UiResult<PiHoleStatistics>, onRetry: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (statistics) {
-            is UiResult.Loading -> LoadingContent(message = stringResource(R.string.statistics_msg_loading_top_domains))
-            is UiResult.Error -> ErrorMessage(errorMessage = statistics.errorMessage.asString(), onRetry = {})
+            is UiResult.Loading -> LoadingContent(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(R.string.statistics_msg_loading_top_domains)
+            )
+
+            is UiResult.Error -> ErrorMessage(
+                errorMessage = statistics.errorMessage.asString(),
+                onRetry = onRetry
+            )
+
             is UiResult.Success -> TopDomainsContent(
-                topPermittedDomains = statistics.data.topQueries.map { (key, value) -> Pair(key, value) },
+                topPermittedDomains = statistics.data.topQueries.map { (key, value) ->
+                    Pair(
+                        key,
+                        value
+                    )
+                },
                 topBlockedDomains = statistics.data.topAds.map { (key, value) -> Pair(key, value) }
             )
         }

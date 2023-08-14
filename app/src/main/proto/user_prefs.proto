@@ -9,6 +9,7 @@ message UserPreferences {
     bool use_dynamic_colors = 2;
     int64 refresh_time = 3;
     int32 default_log_entries = 4;
+    bool change_status_on_all_connection = 5;
 
     enum Theme {
         SYSTEM = 0;

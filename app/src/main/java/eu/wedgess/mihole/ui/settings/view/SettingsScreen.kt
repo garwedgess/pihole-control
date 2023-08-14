@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Devices
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.Lan
 import androidx.compose.material.icons.outlined.Palette
@@ -74,6 +75,17 @@ fun SettingsScreen(
                 )
             } seconds",
             onClick = { onEvent(SettingsContract.Event.OnRefreshIntervalClicked) }
+        )
+
+        SwitchPreference(
+            title = "Multi-status Change",
+            subtitle = "Apply status changes to all connections",
+            icon = Icons.Outlined.Devices,
+            checked = uiState.changeStatusOnAllConnections,
+            onCheckedChange = {
+                Timber.d("Dynamic Colors firing checked changes")
+                onEvent(SettingsContract.Event.OnChangeStatusOnAllConnectionsChanged(it))
+            }
         )
 
         AnimatedVisibility(visible = uiState.showRefreshIntervalDialog) {
