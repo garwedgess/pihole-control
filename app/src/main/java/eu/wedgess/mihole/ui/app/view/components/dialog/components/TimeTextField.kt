@@ -17,21 +17,21 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun TimeTextField(
-    value: String,
-    onValueChange: (value: String) -> Unit,
+    type: TimePickerType,
+    value: TextFieldValue,
+    onValueChange: (value: TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
-    allowedLength: Int = 2,
     defaultValue: String? = null
 ) {
     var focusState: FocusState? by rememberSaveable { mutableStateOf(null) }
     TextField(
-        value,
+        value = value,
         placeholder = {
             if (focusState?.isFocused == false) {
                 Text(
@@ -44,8 +44,13 @@ fun TimeTextField(
         maxLines = 1,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center),
-        onValueChange = {
-            it.takeIf { it.length <= allowedLength && (it.toIntOrNull() ?: 0) > 0 }?.run { onValueChange(this) }
+        onValueChange = { time ->
+            timeInputOnChange(
+                value = time,
+                prevValue = value,
+                max = type.max,
+                onNewValue = onValueChange
+            )
         },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -58,4 +63,47 @@ fun TimeTextField(
             .width(MiHoleTheme.dimens.size.timeInputWidth)
             .onFocusChanged { focusState = it },
     )
+}
+
+private fun timeInputOnChange(
+    value: TextFieldValue,
+    prevValue: TextFieldValue,
+    max: Int,
+    onNewValue: (value: TextFieldValue) -> Unit
+) {
+    if (value.text == prevValue.text) {
+        // just selection change
+        onNewValue(value)
+        return
+    }
+
+    if (value.text.isEmpty()) {
+        onNewValue(value.copy(text = ""))
+        return
+    }
+
+    try {
+        val newValue = if (value.text.length == 3 && value.selection.start == 1) {
+            value.text[0].digitToInt()
+        } else {
+            value.text.toInt()
+        }
+
+        if (newValue <= max) {
+            onNewValue(
+                if (value.text.length <= 2) {
+                    value.copy(text = value.text)
+                } else {
+                    value.copy(text = value.text[0].toString())
+                }
+            )
+        }
+    } catch (_: NumberFormatException) {
+    } catch (_: IllegalArgumentException) {
+        // do nothing no state update
+    }
+}
+
+enum class TimePickerType(val max: Int) {
+    Hours(99), Minutes(60), Seconds(60)
 }

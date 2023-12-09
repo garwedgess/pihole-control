@@ -20,9 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.R
+import eu.wedgess.mihole.ui.app.view.components.dialog.components.TimePickerType
 import eu.wedgess.mihole.ui.app.view.components.dialog.components.TimeTextField
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
@@ -35,7 +38,14 @@ fun RefreshIntervalDialog(
     onDismiss: () -> Unit
 ) {
     var currentSeconds by remember {
-        mutableStateOf(TimeUnit.MILLISECONDS.toSeconds(currentRefreshTime).toString())
+        mutableStateOf(
+            TimeUnit.MILLISECONDS.toSeconds(currentRefreshTime).toString().run {
+                TextFieldValue(
+                    text = this,
+                    selection = TextRange(this.length)
+                )
+            }
+        )
     }
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(shape = RoundedCornerShape(MiHoleTheme.dimens.size.cornerRadius)) {
@@ -59,8 +69,8 @@ fun RefreshIntervalDialog(
                         fontWeight = FontWeight.Normal
                     )
                     TimeTextField(
+                        type = TimePickerType.Seconds,
                         value = currentSeconds,
-                        allowedLength = 3,
                         onValueChange = {
                             currentSeconds = it
                         }
@@ -79,7 +89,7 @@ fun RefreshIntervalDialog(
                         Text(text = stringResource(R.string.all_btn_cancel))
                     }
                     TextButton(onClick = {
-                        onRefreshIntervalConfirmed(TimeUnit.SECONDS.toMillis(currentSeconds.toLong()))
+                        onRefreshIntervalConfirmed(TimeUnit.SECONDS.toMillis(currentSeconds.text.toLong()))
                     }) {
                         Text(text = stringResource(R.string.all_btn_confirm))
                     }

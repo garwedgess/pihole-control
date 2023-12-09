@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
@@ -36,10 +37,10 @@ fun DisableStatusDialogContent(
         mutableLongStateOf(0L)
     }
     var customTimeHours by remember {
-        mutableStateOf("00")
+        mutableStateOf(TextFieldValue())
     }
     var customTimeMinutes by remember {
-        mutableStateOf("00")
+        mutableStateOf(TextFieldValue())
     }
 
     Column(
@@ -114,9 +115,9 @@ fun DisableStatusDialogContent(
                 Text(text = "Cancel")
             }
             TextButton(onClick = {
-                val disableDuration = if (customTimeHours != "00" || customTimeMinutes != "00") {
-                    TimeUnit.HOURS.toMillis(customTimeHours.toLong()).plus(
-                        TimeUnit.MINUTES.toMillis(customTimeMinutes.toLong())
+                val disableDuration = if (customTimeHours.text.isNotBlank() || customTimeMinutes.text.isNotBlank()) {
+                    TimeUnit.HOURS.toMillis(customTimeHours.text.ifBlank { "00" }.toLong()).plus(
+                        TimeUnit.MINUTES.toMillis(customTimeMinutes.text.ifBlank { "00" }.toLong())
                     )
                 } else {
                     disableTimeMillis

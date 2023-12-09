@@ -17,16 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun CustomTimePicker(
-    currentHours: String,
-    currentMinutes: String,
-    onHoursChanged: (hours: String) -> Unit,
-    onMinutesChanged: (minutes: String) -> Unit
+    currentHours: TextFieldValue,
+    currentMinutes: TextFieldValue,
+    onHoursChanged: (hours: TextFieldValue) -> Unit,
+    onMinutesChanged: (minutes: TextFieldValue) -> Unit
 ) {
 
     Column(
@@ -51,6 +52,7 @@ fun CustomTimePicker(
                     fontWeight = FontWeight.Normal
                 )
                 TimeTextField(
+                    type = TimePickerType.Hours,
                     value = currentHours,
                     onValueChange = {
                         onHoursChanged(it)
@@ -71,6 +73,7 @@ fun CustomTimePicker(
                     fontWeight = FontWeight.Normal
                 )
                 TimeTextField(
+                    type = TimePickerType.Minutes,
                     value = currentMinutes,
                     onValueChange = {
                         onMinutesChanged(it)
