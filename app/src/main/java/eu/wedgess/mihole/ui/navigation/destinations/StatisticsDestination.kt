@@ -78,10 +78,6 @@ fun NavGraphBuilder.StatisticsDestination() {
         val viewModel: StatisticsViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        LaunchedEffect(Unit) {
-            viewModel.onEvent(StatisticsContract.Event.ListenForConnectionChanges)
-        }
-
         DisposableEffect(Unit) {
             val refreshJob = viewModel.autoRefreshData()
 
@@ -91,6 +87,7 @@ fun NavGraphBuilder.StatisticsDestination() {
         }
 
         LaunchedEffect(Unit) {
+            viewModel.onEvent(StatisticsContract.Event.ListenForConnectionChanges)
             viewModel.effect.collectLatest { effect ->
 
             }

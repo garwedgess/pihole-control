@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
@@ -16,7 +17,7 @@ fun BottomNavigationBar(
     onNavigateTo: (route: String) -> Unit,
     selectedItemRoute: String? = null
 ) {
-    NavigationBar() {
+    NavigationBar {
         BottomNavItem.all().forEach { item ->
             val selected = item.route == (selectedItemRoute ?: Screens.Dashboard.route)
 

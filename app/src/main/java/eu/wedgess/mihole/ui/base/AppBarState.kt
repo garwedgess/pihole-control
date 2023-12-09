@@ -14,7 +14,8 @@ data class AppBarState(
     val showNavigateBackIcon: Boolean = false,
     val actions: (@Composable RowScope.() -> Unit)? = null,
     val showSearchView: Boolean = false,
-    val searchContent: (@Composable () -> Unit)? = null
+    val searchContent: (@Composable () -> Unit)? = null,
+    val bottomBarVisible: Boolean = true
 ) {
     val displayConnection: Boolean
         get() {

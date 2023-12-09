@@ -88,7 +88,8 @@ fun NavGraphBuilder.ConnectionsDestination(
             onComposing(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.appbar_title_connections),
-                    showNavigateBackIcon = true
+                    showNavigateBackIcon = true,
+                    bottomBarVisible = false
                 )
             )
             viewModel.onEvent(ConnectionsContract.Event.FetchConnections)
