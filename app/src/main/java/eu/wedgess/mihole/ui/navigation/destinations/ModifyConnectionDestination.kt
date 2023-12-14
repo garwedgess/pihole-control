@@ -107,7 +107,7 @@ fun NavGraphBuilder.ModifyConnectionDestination(
                 )
             )
             currentConnectionId?.run {
-                viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection(this))
+                viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection)
             }
         }
 

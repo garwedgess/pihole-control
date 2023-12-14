@@ -55,7 +55,7 @@ SET Active = 1
 WHERE Id = :id;
 
 CREATE TRIGGER IF NOT EXISTS change_to_not_active
-AFTER UPDATE OF Active ON MiHoles
+BEFORE UPDATE OF Active ON MiHoles
 BEGIN
   UPDATE MiHoles
   SET Active = 0

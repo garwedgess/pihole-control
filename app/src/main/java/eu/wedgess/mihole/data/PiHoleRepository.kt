@@ -125,6 +125,12 @@ class PiHoleRepository @Inject constructor(
         }
     }
 
+    suspend fun updateMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
+        return@withContext kotlin.runCatching {
+            dao.update(miHolesInfo.toMiHole())
+        }
+    }
+
     suspend fun setConnectionAsActive(miHolesInfo: MiHolesInfo) =
         withContext(dispatcherProvider.io) {
             return@withContext kotlin.runCatching {

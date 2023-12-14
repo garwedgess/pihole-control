@@ -29,12 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +55,7 @@ import eu.wedgess.mihole.ui.common.MainAppBar
 import eu.wedgess.mihole.ui.navigation.MainNavigationGraph
 import eu.wedgess.mihole.ui.navigation.bottom.BottomNavigationBar
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
+import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -84,10 +87,8 @@ fun MiHoleApp(
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                Timber.i("POSTSCROLL ${available.y}")
                 val delta = available.y
                 val newOffset = bottomBarOffsetHeightPx.value + delta
                 bottomBarOffsetHeightPx.value =
@@ -177,11 +178,8 @@ fun MiHoleApp(
                         BottomAppBar(
                             modifier = Modifier
                                 .height(bottomBarHeight)
-                                .offset {
-                                    IntOffset(
-                                        x = 0,
-                                        y = -bottomBarOffsetHeightPx.value.roundToInt()
-                                    )
+                                .graphicsLayer {
+                                    translationY = -bottomBarOffsetHeightPx.value
                                 }
                         ) {
                             BottomNavigationBar(

@@ -28,17 +28,30 @@ interface ModifyConnectionsContract :
 
         fun connection(connection: MiHolesInfo?): UiState =
             this.copy(
-                currentConnection = if (connection != null) {
-                    UiResult.Success(connection)
-                } else {
-                    UiResult.Error(
-                        UiText.StringResource(
-                            R.string.error_connection_not_found
-                        )
+                currentConnection = connection?.run {
+                    UiResult.Success(this)
+                } ?: UiResult.Error(UiText.StringResource(R.string.error_connection_not_found)),
+                showAdvancedSettings = connection?.run {
+                    this.authUsername.isNotBlank() || this.authPassword.isNotBlank()
+                } ?: false
+            ).also {
+                return if (connection != null) {
+                    this.copy(
+                        name = connection.name,
+                        host = connection.host,
+                        port = connection.port,
+                        protocol = connection.protocol,
+                        apiPath = connection.apiPath,
+                        apiToken = connection.apiPath,
+                        authUsername = this.authUsername,
+                        authPassword = this.authPassword,
+                        authRealm = this.authRealm,
+                        trustAllCerts = this.trustAllCerts
                     )
-                },
-                showAdvancedSettings = connection != null && (connection.authUsername.isNotBlank() || connection.authPassword.isNotBlank())
-            )
+                } else {
+                    this
+                }
+            }
 
         fun connectionError(errorMessage: UiText): UiState =
             this.copy(currentConnection = UiResult.Error(errorMessage))
@@ -88,18 +101,18 @@ interface ModifyConnectionsContract :
     }
 
     sealed interface Event {
-        data class FetchCurrentConnection(val id: Long) : Event
-        data class OnNameChanged(val name: String): Event
-        data class OnHostChanged(val host: String): Event
-        data class OnPortChanged(val port: Int): Event
-        data class OnProtocolChanged(val protocol: URLProtocol): Event
-        data class OnApiPathChanged(val apiPath: String): Event
-        data class OnApiTokenChanged(val apiToken: String): Event
-        data class OnAuthUsernameChanged(val authUsername: String): Event
-        data class OnAuthPasswordChanged(val authPassword: String): Event
-        data class OnAuthRealmChanged(val authRealm: String): Event
-        data class OnTrustAllCertsChanged(val trustAllCerts: Boolean): Event
-        data class OnShowAdvancedSettingsChanged(val showAdvancedSettings: Boolean): Event
+        object FetchCurrentConnection : Event
+        data class OnNameChanged(val name: String) : Event
+        data class OnHostChanged(val host: String) : Event
+        data class OnPortChanged(val port: Int) : Event
+        data class OnProtocolChanged(val protocol: URLProtocol) : Event
+        data class OnApiPathChanged(val apiPath: String) : Event
+        data class OnApiTokenChanged(val apiToken: String) : Event
+        data class OnAuthUsernameChanged(val authUsername: String) : Event
+        data class OnAuthPasswordChanged(val authPassword: String) : Event
+        data class OnAuthRealmChanged(val authRealm: String) : Event
+        data class OnTrustAllCertsChanged(val trustAllCerts: Boolean) : Event
+        data class OnShowAdvancedSettingsChanged(val showAdvancedSettings: Boolean) : Event
         object OnOpenBarcodeScanner : Event
         object OnDismissBarcodeScanner : Event
         object SaveConnection : Event
