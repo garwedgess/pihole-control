@@ -55,6 +55,8 @@ class AppViewModel @Inject constructor(
     private fun setConnectionActive(mihHole: MiHolesInfo) {
         viewModelScope.launch {
             repository.setConnectionAsActive(mihHole)
+                .onSuccess { _uiState.update { it.connection(mihHole) } }
+                .onFailure { Timber.e("Failed to change active connection", it) }
         }
     }
 

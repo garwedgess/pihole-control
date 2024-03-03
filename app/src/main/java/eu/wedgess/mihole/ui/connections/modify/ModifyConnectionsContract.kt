@@ -42,7 +42,7 @@ interface ModifyConnectionsContract :
                         port = connection.port,
                         protocol = connection.protocol,
                         apiPath = connection.apiPath,
-                        apiToken = connection.apiPath,
+                        apiToken = connection.token,
                         authUsername = this.authUsername,
                         authPassword = this.authPassword,
                         authRealm = this.authRealm,

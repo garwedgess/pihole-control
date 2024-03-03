@@ -19,10 +19,6 @@ abstract class RefreshableViewModel(
 
     protected abstract fun onRefresh()
 
-    init {
-
-    }
-
     private suspend fun refresh() {
         refreshJob?.cancel()
         refreshJob = viewModelScope.launch { onRefresh() }
@@ -31,10 +27,10 @@ abstract class RefreshableViewModel(
 
     protected fun listenForConnectionChange() {
         viewModelScope.launch {
-//            repository.fetchActiveFlow()
-//                .collectLatest {
-//                    refresh()
-//                }
+            repository.fetchActiveFlow()
+                .collectLatest {
+                    refresh()
+                }
         }
     }
 
