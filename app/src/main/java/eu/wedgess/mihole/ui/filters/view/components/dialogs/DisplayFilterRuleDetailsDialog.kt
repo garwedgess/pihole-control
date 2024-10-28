@@ -32,7 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleFilterRules
+import eu.wedgess.mihole.data.model.responses.PiHoleFilterRules
+import eu.wedgess.mihole.ui.filters.model.ModifyFilterRule
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.extensions.toBoolean
 import java.text.DateFormat
@@ -40,13 +41,13 @@ import java.text.DateFormat
 @Composable
 fun DisplayFilterRuleDetailsDialog(
     filterRule: PiHoleFilterRules.PiHoleFilterRule,
-    onDelete: (filterRule: PiHoleFilterRules.PiHoleFilterRule) -> Unit,
+    onDelete: (ModifyFilterRule.Delete) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DisplayFilterRuleDetailsDialogContent(
             filterRule = filterRule,
-            onDeleteClicked = { onDelete(filterRule) },
+            onDeleteClicked = onDelete,
             onCancelClicked = { onDismissRequest() }
         )
     }
@@ -55,7 +56,7 @@ fun DisplayFilterRuleDetailsDialog(
 @Composable
 private fun DisplayFilterRuleDetailsDialogContent(
     filterRule: PiHoleFilterRules.PiHoleFilterRule,
-    onDeleteClicked: () -> Unit,
+    onDeleteClicked: (ModifyFilterRule.Delete) -> Unit,
     onCancelClicked: () -> Unit
 ) {
     val dateTimeInstance = remember { DateFormat.getDateInstance() }
@@ -110,7 +111,14 @@ private fun DisplayFilterRuleDetailsDialogContent(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onCancelClicked) { Text(stringResource(id = R.string.all_btn_cancel)) }
-                TextButton(onClick = onDeleteClicked) { Text("DELETE") }
+                TextButton(onClick = {
+                    onDeleteClicked(
+                        ModifyFilterRule.Delete(
+                            filterRule.domain,
+                            filterRule.type
+                        )
+                    )
+                }) { Text("Delete") }
             }
 
         }

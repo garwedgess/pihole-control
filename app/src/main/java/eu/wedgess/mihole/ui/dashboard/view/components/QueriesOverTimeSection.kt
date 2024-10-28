@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleOverTimeData
+import eu.wedgess.mihole.data.model.responses.PiHoleOverTimeData
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable

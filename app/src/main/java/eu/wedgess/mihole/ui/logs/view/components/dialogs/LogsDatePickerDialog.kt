@@ -44,9 +44,9 @@ fun LogsDatePickerDialog(onDismiss: () -> Unit, onConfirm: (date: Long) -> Unit)
     ) {
         DatePicker(
             state = datePickerState,
-            dateValidator = {
-                it in (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2))..System.currentTimeMillis()
-            }
+//            dateValidator = {
+//                it in (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2))..System.currentTimeMillis()
+//            }
         )
     }
 }

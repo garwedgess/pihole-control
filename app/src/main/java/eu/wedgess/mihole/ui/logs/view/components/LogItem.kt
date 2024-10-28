@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.responses.PiHoleLog
 import eu.wedgess.mihole.data.model.enums.LogsAnswerType
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme

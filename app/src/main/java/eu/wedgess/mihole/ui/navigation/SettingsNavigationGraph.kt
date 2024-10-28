@@ -14,7 +14,7 @@ fun NavGraphBuilder.SettingsNavigationGraph(
 ) {
     navigation(
         route = Graphs.Settings.route,
-        startDestination = Screens.Settings.route
+        startDestination = Screens.Settings.route,
     ) {
         SettingsDestination(
             onComposing,

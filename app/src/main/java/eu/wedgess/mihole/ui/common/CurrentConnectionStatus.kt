@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.adBlockingDisabled
@@ -38,10 +38,10 @@ import eu.wedgess.mihole.ui.theme.adBlockingEnabled
 @Composable
 fun CurrentConnectionStatus(
     modifier: Modifier,
-    currentConnection: MiHolesInfo,
+    currentConnection: PiHoleInfo,
     adBlockingEnabled: Boolean,
-    connections: List<MiHolesInfo>,
-    onConnectionSelected: (MiHolesInfo) -> Unit,
+    connections: List<PiHoleInfo>,
+    onConnectionSelected: (PiHoleInfo) -> Unit,
     onStatusClicked: () -> Unit
 ) {
     var showConnectionsDropdown by remember {
@@ -117,8 +117,8 @@ private fun CurrentConnectionStatusPreview() {
     MiHoleTheme {
         CurrentConnectionStatus(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            currentConnection = MiHolesInfo.default,
-            connections = listOf(MiHolesInfo.default),
+            currentConnection = PiHoleInfo.default,
+            connections = listOf(PiHoleInfo.default),
             adBlockingEnabled = true,
             onConnectionSelected = {},
             onStatusClicked = {}

@@ -18,8 +18,8 @@ CREATE TABLE MiHoles(
 );
 
 insert:
-INSERT OR FAIL INTO MiHoles
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR FAIL INTO MiHoles (Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, Active)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 selectAll:
 SELECT * FROM MiHoles;

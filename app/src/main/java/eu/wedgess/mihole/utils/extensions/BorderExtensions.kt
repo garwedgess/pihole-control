@@ -23,17 +23,17 @@ fun Modifier.border(
     bottom: Border? = null,
 ) =
     drawBehind {
-        start?.let {
-            drawStartBorder(it, shareTop = top != null, shareBottom = bottom != null)
+        start?.run {
+            drawStartBorder(border = this, shareTop = top != null, shareBottom = bottom != null)
         }
-        top?.let {
-            drawTopBorder(it, shareStart = start != null, shareEnd = end != null)
+        top?.run {
+            drawTopBorder(border = this, shareStart = start != null, shareEnd = end != null)
         }
-        end?.let {
-            drawEndBorder(it, shareTop = top != null, shareBottom = bottom != null)
+        end?.run {
+            drawEndBorder(border = this, shareTop = top != null, shareBottom = bottom != null)
         }
-        bottom?.let {
-            drawBottomBorder(border = it, shareStart = start != null, shareEnd = end != null)
+        bottom?.run {
+            drawBottomBorder(border = this, shareStart = start != null, shareEnd = end != null)
         }
     }
 

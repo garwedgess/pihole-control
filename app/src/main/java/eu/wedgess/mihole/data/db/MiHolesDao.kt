@@ -1,27 +1,33 @@
 package eu.wedgess.mihole.data.db
 
 import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import eu.wedgess.mihole.MiHoles
 import eu.wedgess.mihole.data.MiHoleDatabase
-import eu.wedgess.mihole.data.model.MiHolesInfo
 import eu.wedgess.mihole.data.toMiHoleInfo
-import kotlinx.coroutines.flow.map
+import eu.wedgess.mihole.utils.DispatcherProvider
+import javax.inject.Inject
 
-class MiHolesDao(db: MiHoleDatabase) {
+class MiHolesDao @Inject constructor(
+    db: MiHoleDatabase,
+    private val dispatcherProvider: DispatcherProvider
+) {
     private val queries = db.miHolesQueries
 
-    fun fetchAll() = queries.selectAll().asFlow().map { query -> query.executeAsList() }.map { it.map { miHole -> miHole.toMiHoleInfo() } }
+    fun fetchAll() = queries.selectAll().asFlow().mapToList(dispatcherProvider.io)
 
     fun fetchById(id: Long) = queries.selectById(id).executeAsOneOrNull()?.toMiHoleInfo()
 
-    fun fetchActive() = queries.selectActive().asFlow()
-        .map { query -> query.executeAsOneOrNull() }.map { it?.toMiHoleInfo() ?: MiHolesInfo.default }
+    fun fetchActive() = queries.selectActive().executeAsOne()
+
+    fun fetchActiveFlow() = queries.selectActive().asFlow()
+        .mapToOneOrNull(dispatcherProvider.io)
 
     fun delete(id: Long) = queries.delete(id)
 
     fun insert(miHole: MiHoles) = with(miHole) {
         queries.insert(
-            Id = null,
             Name = Name,
             Protocol = Protocol,
             Host = Host,

@@ -39,8 +39,8 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: MiHoleDatabase) =
-        MiHolesDao(database)
+    fun provideDao(database: MiHoleDatabase, dispatcherProvider: DispatcherProvider) =
+        MiHolesDao(database, dispatcherProvider)
 
     @Provides
     fun provideApi(

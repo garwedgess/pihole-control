@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleSummary
+import eu.wedgess.mihole.data.model.responses.PiHoleSummary
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.domainsOnAdListBackground
 import eu.wedgess.mihole.ui.theme.percentageBlockedBackground

@@ -1,6 +1,6 @@
 package eu.wedgess.mihole.ui.settings
 
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.UserPreferences.Theme
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
@@ -10,7 +10,7 @@ interface SettingsContract :
     UnidirectionalViewModel<SettingsContract.UiState, SettingsContract.Event, SettingsContract.Effect> {
 
     data class UiState(
-        val currentConnection: UiResult<MiHolesInfo>,
+        val currentConnection: UiResult<PiHoleInfo>,
         val currentTheme: Theme,
         val refreshInterval: Long,
         val useDynamicThemeColors: Boolean,
@@ -18,7 +18,7 @@ interface SettingsContract :
         val changeStatusOnAllConnections: Boolean
     ) {
 
-        fun connection(connection: MiHolesInfo): UiState =
+        fun connection(connection: PiHoleInfo): UiState =
             this.copy(currentConnection = UiResult.Success(connection))
 
         fun connectionError(errorMessage: UiText): UiState =

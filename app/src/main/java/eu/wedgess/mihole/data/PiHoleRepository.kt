@@ -3,21 +3,23 @@ package eu.wedgess.mihole.data
 import androidx.datastore.core.DataStore
 import eu.wedgess.mihole.data.api.PiHoleApi
 import eu.wedgess.mihole.data.db.MiHolesDao
-import eu.wedgess.mihole.data.model.MiHolesInfo
-import eu.wedgess.mihole.data.model.PiHoleFilterRules
-import eu.wedgess.mihole.data.model.PiHoleStatusResponse
+import eu.wedgess.mihole.data.model.PiHoleInfo
+import eu.wedgess.mihole.data.model.responses.PiHoleFilterRules
+import eu.wedgess.mihole.data.model.responses.PiHoleStatusResponse
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.data.model.UserPreferences.Theme
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.model.enums.PiHoleStatus
 import eu.wedgess.mihole.utils.DispatcherProvider
+import eu.wedgess.mihole.utils.extensions.resultOf
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
@@ -31,31 +33,15 @@ class PiHoleRepository @Inject constructor(
     private val userPreferences: DataStore<UserPreferences>,
     private val dispatcherProvider: DispatcherProvider
 ) {
-    private val currentPiHole = dao.fetchActive()
+    private val currentPiHole = dao.fetchActiveFlow().map { it?.toMiHoleInfo() ?: PiHoleInfo.default }
 
     suspend fun fetchStatus() = withContext(dispatcherProvider.io) {
         api.fetchStatus(currentPiHole.first())
     }
 
-    suspend fun fetchStatusSummary() = withContext(dispatcherProvider.io) {
-        api.fetchStatusSummary(currentPiHole.first())
-    }
-
-    suspend fun fetchOverTimeData() = withContext(dispatcherProvider.io) {
-        api.fetchOverTimeData10Minutes(currentPiHole.first())
-    }
-
-    suspend fun fetchOverTimeDataClients() = withContext(dispatcherProvider.io) {
-        api.fetchOverTimeDataClients(currentPiHole.first())
-    }
-
-    suspend fun fetchStatistics() = withContext(dispatcherProvider.io) {
-        api.fetchStatistics(currentPiHole.first())
-    }
-
     suspend fun fetchFilterRules() =
         withContext(dispatcherProvider.io) {
-            val result = FilterRuleType.values().map {
+            val result = FilterRuleType.entries.map {
                 async { api.fetchFilterRules(currentPiHole.first(), it) }
             }.awaitAll()
 
@@ -97,7 +83,7 @@ class PiHoleRepository @Inject constructor(
             }
         }
 
-    private suspend fun disableAdBlocking(connection: MiHolesInfo, duration: Long) = withContext(dispatcherProvider.io) {
+    private suspend fun disableAdBlocking(connection: PiHoleInfo, duration: Long) = withContext(dispatcherProvider.io) {
         api.disableAdBlocking(connection, duration.toDuration(DurationUnit.MILLISECONDS))
     }
 
@@ -115,53 +101,53 @@ class PiHoleRepository @Inject constructor(
             }
         }
 
-    private suspend fun enableAdBlocking(connection: MiHolesInfo) = withContext(dispatcherProvider.io) {
+    private suspend fun enableAdBlocking(connection: PiHoleInfo) = withContext(dispatcherProvider.io) {
         api.enableAdBlocking(connection)
     }
 
-    suspend fun insertMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
+    suspend fun insertMiHole(miHolesInfo: PiHoleInfo) = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
             dao.insert(miHolesInfo.toMiHole())
         }
     }
 
-    suspend fun updateMiHole(miHolesInfo: MiHolesInfo) = withContext(dispatcherProvider.io) {
+    suspend fun updateMiHole(miHolesInfo: PiHoleInfo) = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
             dao.update(miHolesInfo.toMiHole())
         }
     }
 
-    suspend fun setConnectionAsActive(miHolesInfo: MiHolesInfo) =
+    suspend fun setConnectionAsActive(miHolesInfo: PiHoleInfo) =
         withContext(dispatcherProvider.io) {
             return@withContext kotlin.runCatching {
                 dao.setActive(miHolesInfo.id)
             }
         }
 
-    suspend fun fetchAll(): Result<List<MiHolesInfo>> = withContext(dispatcherProvider.io) {
-        return@withContext kotlin.runCatching {
-            dao.fetchAll().firstOrNull() ?: emptyList<MiHolesInfo>()
+    suspend fun fetchAll(): Result<List<PiHoleInfo>> = withContext(dispatcherProvider.io) {
+        resultOf {
+            dao.fetchAll().firstOrNull()?.map { it.toMiHoleInfo() } ?: emptyList()
         }
     }
 
-    suspend fun fetchAllFlow(): Flow<List<MiHolesInfo>> = withContext(dispatcherProvider.io) {
-        return@withContext dao.fetchAll()
+    suspend fun fetchAllFlow(): Flow<List<PiHoleInfo>> = withContext(dispatcherProvider.io) {
+        return@withContext dao.fetchAll().map { list -> list.map { it.toMiHoleInfo() } }
     }
 
-    suspend fun fetchById(id: Long): Result<MiHolesInfo?> = withContext(dispatcherProvider.io) {
+    suspend fun fetchById(id: Long): Result<PiHoleInfo?> = withContext(dispatcherProvider.io) {
         return@withContext kotlin.runCatching {
             dao.fetchById(id)
         }
     }
 
-    suspend fun fetchActive(): Result<MiHolesInfo> = withContext(dispatcherProvider.io) {
-        return@withContext kotlin.runCatching {
-            dao.fetchActive().firstOrNull() ?: MiHolesInfo.default
+    suspend fun fetchActive(): Result<PiHoleInfo> = withContext(dispatcherProvider.io) {
+        return@withContext resultOf {
+            dao.fetchActiveFlow().firstOrNull()?.toMiHoleInfo() ?: PiHoleInfo.default
         }
     }
 
-    suspend fun fetchActiveFlow(): Flow<MiHolesInfo> = withContext(dispatcherProvider.io) {
-        return@withContext dao.fetchActive()
+    suspend fun fetchActiveFlow(): Flow<PiHoleInfo> = withContext(dispatcherProvider.io) {
+        return@withContext dao.fetchActiveFlow().map { it?.toMiHoleInfo() ?: PiHoleInfo.default }
     }
 
     fun fetchUserPreferences() = userPreferences.data

@@ -1,6 +1,6 @@
 package eu.wedgess.mihole.ui.app
 
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.UserPreferences.Theme
 import eu.wedgess.mihole.data.model.enums.PiHoleStatus
 import eu.wedgess.mihole.ui.base.UiResult
@@ -11,8 +11,8 @@ interface AppContract :
     UnidirectionalViewModel<AppContract.UiState, AppContract.Event, AppContract.Effect> {
 
     data class UiState(
-        val currentConnection: UiResult<MiHolesInfo>,
-        val connections: UiResult<List<MiHolesInfo>>,
+        val currentConnection: UiResult<PiHoleInfo>,
+        val connections: UiResult<List<PiHoleInfo>>,
         val status: UiResult<PiHoleStatus>,
         val currentTheme: Theme,
         val refreshInterval: Long,
@@ -22,13 +22,13 @@ interface AppContract :
         val showDisableStatusDialog: Boolean
     ) {
 
-        fun connection(connection: MiHolesInfo): UiState =
+        fun connection(connection: PiHoleInfo): UiState =
             this.copy(currentConnection = UiResult.Success(connection))
 
         fun connectionError(errorMessage: UiText): UiState =
             this.copy(currentConnection = UiResult.Error(errorMessage))
 
-        fun connections(connection: List<MiHolesInfo>): UiState =
+        fun connections(connection: List<PiHoleInfo>): UiState =
             this.copy(connections = UiResult.Success(connection))
 
         fun connectionsError(errorMessage: UiText): UiState =
@@ -77,7 +77,7 @@ interface AppContract :
         object ShowDisabledStatusDialog: Event
         object DismissDisabledStatusDialog: Event
         object SetEnabledStatus: Event
-        data class OnConnectionSelected(val mihHole: MiHolesInfo): Event
+        data class OnConnectionSelected(val mihHole: PiHoleInfo): Event
         data class SetDisabledStatus(val duration: Long): Event
     }
 }

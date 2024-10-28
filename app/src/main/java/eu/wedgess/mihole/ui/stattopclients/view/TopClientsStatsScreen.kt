@@ -1,0 +1,32 @@
+package eu.wedgess.mihole.ui.stattopclients.view
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import eu.wedgess.mihole.data.model.responses.PiHoleTopQueries
+import eu.wedgess.mihole.ui.compose.Compose
+import eu.wedgess.mihole.ui.compose.ErrorScreen
+import eu.wedgess.mihole.ui.compose.LoadingScreen
+import eu.wedgess.mihole.ui.compose.UIResult
+import eu.wedgess.mihole.ui.stattopdomains.view.TopDomainsContent
+
+@Composable
+fun TopQueriesScreen(statistics: UIResult<PiHoleTopQueries>) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        statistics.Compose(
+            onLoading = { LoadingScreen(modifier = Modifier.fillMaxSize(), it) },
+            onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) },
+            onLoaded = {
+                TopDomainsContent(
+                    topPermittedDomains = it.topQueries,
+                    topBlockedDomains = it.topAds
+                )
+            }
+        )
+    }
+}

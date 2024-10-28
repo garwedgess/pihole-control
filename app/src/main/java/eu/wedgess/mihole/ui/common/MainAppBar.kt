@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.base.AppBarState
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.common.search.SearchContent
@@ -34,7 +34,7 @@ fun MainAppBar(
     appBarState: AppBarState,
     onNavigateBack: () -> Unit,
     onStatusClicked: () -> Unit,
-    onConnectionSelected: (MiHolesInfo) -> Unit
+    onConnectionSelected: (PiHoleInfo) -> Unit
 ) {
     val titleAlpha: Float by animateFloatAsState(
         targetValue = if (!appBarState.showSearchView) 1f else 0f,
@@ -104,33 +104,33 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = MiHolesInfo.default,
+            currentConnection = PiHoleInfo.default,
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
-            connections = listOf(MiHolesInfo.default),
+            connections = listOf(PiHoleInfo.default),
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = MiHolesInfo.default,
+            currentConnection = PiHoleInfo.default,
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
-            connections = listOf(MiHolesInfo.default),
+            connections = listOf(PiHoleInfo.default),
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_logs),
-            currentConnection = MiHolesInfo.default,
+            currentConnection = PiHoleInfo.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = {
                 SearchContent(
-                    state = SearchState<List<MiHolesInfo>>(),
+                    state = SearchState<List<PiHoleInfo>>(),
                     onQueryChanged = { },
                     onClosed = { }
                 )

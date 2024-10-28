@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.ui.app.AppContract
 import eu.wedgess.mihole.ui.base.RefreshableViewModel
@@ -52,7 +52,7 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    private fun setConnectionActive(mihHole: MiHolesInfo) {
+    private fun setConnectionActive(mihHole: PiHoleInfo) {
         viewModelScope.launch {
             repository.setConnectionAsActive(mihHole)
                 .onSuccess { _uiState.update { it.connection(mihHole) } }
@@ -133,18 +133,16 @@ class AppViewModel @Inject constructor(
 
     private fun fetchStatus() {
         viewModelScope.launch(statusErrorHandler) {
-            when (val response = repository.fetchStatus()) {
-                is ResponseResult.Success -> {
-                    _uiState.update { it.status(response.data.status) }
+            repository.fetchStatus()
+                .onSuccess { response ->
+                    _uiState.update { it.status(response.status) }
                 }
-
-                is ResponseResult.Error -> {
+                .onFailure {
                     statusErrorHandler.handleException(
                         this@launch.coroutineContext,
-                        response.handleError()
+                        it
                     )
                 }
-            }
         }
     }
 

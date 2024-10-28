@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.responses.PiHoleLog
 import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.common.search.SearchStatus
 import eu.wedgess.mihole.ui.logs.LogsContract

@@ -13,6 +13,7 @@ import eu.wedgess.mihole.di.annotations.TrustAllCertificatesHttpClient
 import io.ktor.client.*
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -59,6 +60,7 @@ object NetworkModule {
             }
             installContentNegotiation()
             installLogging()
+            installRedirect()
         }
     }
 
@@ -90,10 +92,11 @@ object NetworkModule {
             }
             installContentNegotiation()
             installLogging()
+            installRedirect()
         }
     }
 
-    private fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
+    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
@@ -102,7 +105,7 @@ object NetworkModule {
             })
         }
 
-    private fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installLogging() = // custom logger set to use Timber
+    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installLogging() = // custom logger set to use Timber
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
@@ -110,6 +113,11 @@ object NetworkModule {
                 }
             }
             level = LogLevel.ALL
+        }
+
+    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installRedirect() = // custom logger set to use Timber
+        install(HttpRedirect) {
+            checkHttpMethod = false
         }
 
 

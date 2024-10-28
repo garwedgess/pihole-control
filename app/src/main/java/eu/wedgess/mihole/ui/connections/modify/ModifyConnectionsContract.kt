@@ -1,7 +1,7 @@
 package eu.wedgess.mihole.ui.connections.modify
 
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.utils.UiText
@@ -11,7 +11,7 @@ interface ModifyConnectionsContract :
     UnidirectionalViewModel<ModifyConnectionsContract.UiState, ModifyConnectionsContract.Event, ModifyConnectionsContract.Effect> {
 
     data class UiState(
-        val currentConnection: UiResult<MiHolesInfo>,
+        val currentConnection: UiResult<PiHoleInfo>,
         val name: String,
         val host: String,
         val port: Int,
@@ -26,7 +26,7 @@ interface ModifyConnectionsContract :
         val showAdvancedSettings: Boolean
     ) {
 
-        fun connection(connection: MiHolesInfo?): UiState =
+        fun connection(connection: PiHoleInfo?): UiState =
             this.copy(
                 currentConnection = connection?.run {
                     UiResult.Success(this)
@@ -56,8 +56,8 @@ interface ModifyConnectionsContract :
         fun connectionError(errorMessage: UiText): UiState =
             this.copy(currentConnection = UiResult.Error(errorMessage))
 
-        fun toMiHoleInfo(id: Long? = null): MiHolesInfo =
-            MiHolesInfo(
+        fun toMiHoleInfo(id: Long? = null): PiHoleInfo =
+            PiHoleInfo(
                 id = id ?: -1,
                 name = this.name,
                 host = this.host,
@@ -73,7 +73,7 @@ interface ModifyConnectionsContract :
             )
 
         companion object {
-            private val DEFAULT_INFO = MiHolesInfo.default
+            private val DEFAULT_INFO = PiHoleInfo.default
 
             fun initial() = UiState(
                 currentConnection = UiResult.Loading,

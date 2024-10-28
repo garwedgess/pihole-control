@@ -14,7 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.settings.SettingsContract
 import eu.wedgess.mihole.ui.settings.model.AppTheme
@@ -61,7 +61,7 @@ fun SettingsScreen(
         RegularPreference(
             title = "Connections",
             icon = Icons.Outlined.Lan,
-            subtitle = (uiState.currentConnection as? UiResult.Success)?.data?.name ?: MiHolesInfo.default.name,
+            subtitle = (uiState.currentConnection as? UiResult.Success)?.data?.name ?: PiHoleInfo.default.name,
             onClick = {
                 onEvent(SettingsContract.Event.OnServerClicked)
             })

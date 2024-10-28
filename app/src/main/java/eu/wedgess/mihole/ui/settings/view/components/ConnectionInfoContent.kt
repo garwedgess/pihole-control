@@ -21,14 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun ConnectionInfoContent(
-    miHolesInfo: MiHolesInfo,
+    miHolesInfo: PiHoleInfo,
     onEditClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSetActiveClicked: () -> Unit
@@ -110,7 +109,7 @@ private fun ConnectionInfoContentPreview() {
     MiHoleTheme {
         Surface {
             ConnectionInfoContent(
-                miHolesInfo = MiHolesInfo.default,
+                miHolesInfo = PiHoleInfo.default,
                 onEditClicked = {},
                 onDeleteClicked = {},
                 onSetActiveClicked = {}

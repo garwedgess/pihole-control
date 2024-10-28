@@ -33,66 +33,6 @@ fun NavGraphBuilder.ModifyConnectionDestination(
                 type = NavType.StringType
                 nullable = true
             }),
-        enterTransition = {
-            when (initialState.destination.route) {
-                Screens.Connections.route,
-                Screens.Settings.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        exitTransition = {
-            when (targetState.destination.route) {
-                Screens.Connections.route,
-                Screens.Settings.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popEnterTransition = {
-            when (initialState.destination.route) {
-                Screens.Connections.route,
-                Screens.Settings.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popExitTransition = {
-            when (targetState.destination.route) {
-                Screens.Connections.route,
-                Screens.Settings.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        }
     ) {
         val viewModel: ModifyConnectionViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

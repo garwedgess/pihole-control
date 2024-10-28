@@ -35,14 +35,11 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.data.model.enums.PiHoleStatus
 import eu.wedgess.mihole.ui.app.AppContract
@@ -57,7 +54,6 @@ import eu.wedgess.mihole.ui.navigation.bottom.BottomNavigationBar
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import timber.log.Timber
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 @Composable
 fun MiHoleApp(
@@ -65,7 +61,6 @@ fun MiHoleApp(
 ) {
     val navHostController = rememberNavController()
     val backStackEntry = navHostController.currentBackStackEntryAsState()
-    val systemUiController = rememberSystemUiController()
     val localDensity = LocalDensity.current
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -111,13 +106,13 @@ fun MiHoleApp(
         viewModel.onEvent(AppContract.Event.FetchStatus)
     }
 
-    DisposableEffect(Unit) {
-        val refreshJob = viewModel.autoRefreshData()
-
-        onDispose {
-            refreshJob.cancel()
-        }
-    }
+//    DisposableEffect(Unit) {
+//        val refreshJob = viewModel.autoRefreshData()
+//
+//        onDispose {
+//            refreshJob.cancel()
+//        }
+//    }
 
     val isDarkTheme = when (uiState.currentTheme) {
         UserPreferences.Theme.DARK -> true
@@ -129,18 +124,18 @@ fun MiHoleApp(
         darkTheme = isDarkTheme,
         dynamicColor = uiState.useDynamicThemeColors
     ) {
-        MaterialTheme.colorScheme.run {
-            SideEffect {
-                systemUiController.apply {
-                    setStatusBarColor(this@run.background)
-                    setNavigationBarColor(
-                        this@run.surfaceColorAtElevation(
-                            NavigationBarDefaults.Elevation
-                        )
-                    )
-                }
-            }
-        }
+//        MaterialTheme.colorScheme.run {
+//            SideEffect {
+//                systemUiController.apply {
+//                    setStatusBarColor(this@run.background)
+//                    setNavigationBarColor(
+//                        this@run.surfaceColorAtElevation(
+//                            NavigationBarDefaults.Elevation
+//                        )
+//                    )
+//                }
+//            }
+//        }
 
         Surface(
             modifier = Modifier.fillMaxSize(),

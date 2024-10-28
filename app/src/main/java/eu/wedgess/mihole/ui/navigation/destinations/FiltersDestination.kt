@@ -1,9 +1,14 @@
 package eu.wedgess.mihole.ui.navigation.destinations
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -13,115 +18,88 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.AppBarState
-import eu.wedgess.mihole.ui.base.UiResult
-import eu.wedgess.mihole.ui.common.search.SearchContent
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.view.FiltersScreen
 import eu.wedgess.mihole.ui.filters.view.components.actions.FilterTopBarActions
 import eu.wedgess.mihole.ui.filters.viewmodel.FiltersViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.FiltersDestination(
     onComposing: (AppBarState) -> Unit
 ) {
     composable(
-        route = Screens.Filters.route,
-        enterTransition = {
-            when (initialState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        exitTransition = {
-            when (targetState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popEnterTransition = {
-            when (initialState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popExitTransition = {
-            when (targetState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        }
+        route = Screens.Filters.route
     ) {
         val viewModel: FiltersViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val context = LocalContext.current
 
-        LaunchedEffect(uiState.showSearchView, uiState.allowList, uiState.blockList) {
+        LaunchedEffect(uiState.showSearchView) {
             onComposing(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.nav_title_filters),
-                    actions = { FilterTopBarActions(onSearchClicked = { viewModel.onEvent(FiltersContract.Event.OnShowSearchView) }) },
-                    showSearchView = uiState.allowList is UiResult.Success && uiState.blockList is UiResult.Success && uiState.showSearchView,
+                    actions = {
+                        FilterTopBarActions(onSearchClicked = {
+                            viewModel.onEvent(
+                                FiltersContract.Event.OnShowSearchView
+                            )
+                        })
+                    },
+                    showSearchView = uiState.showSearchView,
                     searchContent = {
-                        SearchContent(
-                            state = uiState.searchState,
-                            onQueryChanged = { viewModel.onEvent(FiltersContract.Event.OnSearchQueryChanged(it)) },
-                            onClosed = { viewModel.onEvent(FiltersContract.Event.OnHideShowSearchView) }
-                        )
+                        androidx.compose.material3.SearchBar(
+                            inputField = {
+                                SearchBarDefaults.InputField(
+                                    onSearch = {
+                                        viewModel.onEvent(FiltersContract.Event.OnSearchClick)
+                                    },
+                                    query = uiState.searchQuery,
+                                    onQueryChange = {
+                                        viewModel.onEvent(
+                                            FiltersContract.Event.OnSearchQueryChanged(
+                                                it
+                                            )
+                                        )
+                                    },
+                                    expanded = uiState.showSearchView,
+                                    onExpandedChange = {
+                                        viewModel.onEvent(
+                                            FiltersContract.Event.OnSearchExpandedChanged(
+                                                it
+                                            )
+                                        )
+                                    },
+                                    placeholder = { Text("Search for filter...") },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Search,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    trailingIcon = {
+                                        IconButton(onClick = {
+                                            viewModel.onEvent(
+                                                FiltersContract.Event.OnClearSearchQuery(
+                                                    uiState.searchQuery
+                                                )
+                                            )
+                                        }) {
+                                            Icon(Icons.Default.Close, contentDescription = null)
+                                        }
+                                    },
+                                )
+                            },
+                            expanded = uiState.showSearchView,
+                            onExpandedChange = {
+                                viewModel.onEvent(FiltersContract.Event.OnSearchExpandedChanged(it))
+                            }
+                        ) { }
                     }
                 )
             )
-        }
-
-        LaunchedEffect(Unit) {
-            viewModel.onEvent(FiltersContract.Event.FetchRulesList)
-            viewModel.onEvent(FiltersContract.Event.ListenForConnectionChanges)
-        }
-
-        DisposableEffect(Unit) {
-            val refreshJob = viewModel.autoRefreshData()
-
-            onDispose {
-                refreshJob.cancel()
-            }
         }
 
         LaunchedEffect(Unit) {
@@ -129,16 +107,13 @@ fun NavGraphBuilder.FiltersDestination(
                 when (effect) {
                     is FiltersContract.Effect.Toast -> Toast.makeText(
                         context,
-                        effect.message,
+                        effect.message.asString(context),
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
         }
 
-        FiltersScreen(
-            uiState,
-            viewModel::onEvent
-        )
+        FiltersScreen(uiState, viewModel::onEvent)
     }
 }

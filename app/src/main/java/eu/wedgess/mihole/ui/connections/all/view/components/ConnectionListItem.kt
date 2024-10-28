@@ -26,9 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
 import eu.wedgess.mihole.ui.settings.view.components.ConnectionInfoContent
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
@@ -36,7 +35,7 @@ import eu.wedgess.mihole.ui.theme.totalQueriesBackground
 
 @Composable
 fun ConnectionListItem(
-    miHolesInfo: MiHolesInfo,
+    miHolesInfo: PiHoleInfo,
     onEditClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSetActiveClicked: () -> Unit
@@ -112,7 +111,7 @@ fun ConnectionListItemPreview() {
     MiHoleTheme {
         Surface {
             ConnectionListItem(
-                MiHolesInfo.default,
+                PiHoleInfo.default,
                 onEditClicked = {},
                 onSetActiveClicked = {},
                 onDeleteClicked = {}

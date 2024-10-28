@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.responses.PiHoleLog
 import eu.wedgess.mihole.data.model.enums.LogsAnswerCategory
 import eu.wedgess.mihole.data.model.enums.LogsAnswerType
 import eu.wedgess.mihole.ui.theme.MiHoleTheme

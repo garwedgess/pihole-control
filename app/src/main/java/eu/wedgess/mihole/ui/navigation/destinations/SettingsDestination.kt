@@ -22,75 +22,7 @@ fun NavGraphBuilder.SettingsDestination(
     onNavigateToConnections: () -> Unit
 ) {
     composable(
-        route = Screens.Settings.route,
-        enterTransition = {
-            when (initialState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route,
-                Screens.Filters.route,
-                Screens.Logs.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        exitTransition = {
-            when (targetState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route,
-                Screens.Filters.route,
-                Screens.Logs.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popEnterTransition = {
-            when (initialState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route,
-                Screens.Filters.route,
-                Screens.Logs.route ->
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End,
-                    animationSpec = tween(300)
-                )
-            }
-        },
-        popExitTransition = {
-            when (targetState.destination.route) {
-                Screens.Dashboard.route,
-                Screens.Statistics.route,
-                Screens.Filters.route,
-                Screens.Logs.route ->
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(300)
-                    )
-
-                else -> slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start,
-                    animationSpec = tween(300)
-                )
-            }
-        }
+        route = Screens.Settings.route
     ) {
         val viewModel: SettingsViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()

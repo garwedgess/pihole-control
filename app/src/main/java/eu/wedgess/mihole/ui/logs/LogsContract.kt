@@ -2,7 +2,7 @@ package eu.wedgess.mihole.ui.logs
 
 import androidx.compose.ui.text.input.TextFieldValue
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.responses.PiHoleLog
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.ui.common.search.SearchState

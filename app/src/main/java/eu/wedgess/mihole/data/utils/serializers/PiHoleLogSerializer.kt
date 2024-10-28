@@ -1,6 +1,6 @@
 package eu.wedgess.mihole.data.utils.serializers
 
-import eu.wedgess.mihole.data.model.PiHoleLog
+import eu.wedgess.mihole.data.model.responses.PiHoleLog
 import eu.wedgess.mihole.data.model.enums.LogsAnswerType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor

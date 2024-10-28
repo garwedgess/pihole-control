@@ -1,43 +1,27 @@
 package eu.wedgess.mihole.ui.filters.viewmodel
 
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.PiHoleRepository
-import eu.wedgess.mihole.data.model.PiHoleFilterRules
-import eu.wedgess.mihole.data.model.ResponseResult
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
-import eu.wedgess.mihole.ui.base.RefreshableViewModel
-import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.filters.FiltersContract
-import eu.wedgess.mihole.utils.UiText
-import eu.wedgess.mihole.utils.extensions.handleError
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import eu.wedgess.mihole.ui.filters.controller.FiltersController
+import eu.wedgess.mihole.ui.filters.model.FilterDialogType
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class FiltersViewModel @Inject constructor(
-    private val repository: PiHoleRepository
-) : RefreshableViewModel(repository), FiltersContract {
+    private val controller: FiltersController
+) : ViewModel(), FiltersContract {
 
     private val _uiState: MutableStateFlow<FiltersContract.UiState> =
         MutableStateFlow(FiltersContract.UiState.initial())
@@ -46,158 +30,99 @@ class FiltersViewModel @Inject constructor(
     private val _effect: Channel<FiltersContract.Effect> = Channel(Channel.UNLIMITED)
     override val effect: Flow<FiltersContract.Effect> = _effect.receiveAsFlow()
 
+    private var currentFilterRuleType: FilterRuleType = FilterRuleType.ALLOW
+
     override fun onEvent(event: FiltersContract.Event) {
         when (event) {
-            FiltersContract.Event.OnAddRuleClick -> displayAddRuleDialog()
-            FiltersContract.Event.OnDismissAddRuleDialog -> dismissAddRuleDialog()
-            FiltersContract.Event.FetchRulesList -> fetchRulesList()
-            FiltersContract.Event.OnRuleDeselected -> deselectRule()
-            FiltersContract.Event.OnShowSearchView -> showSearchView()
-            FiltersContract.Event.OnHideShowSearchView -> hideSearchView()
-            FiltersContract.Event.ListenForConnectionChanges -> listenForConnectionChange()
-            is FiltersContract.Event.AddRule -> addRule(event.rule, event.isRegex)
-            is FiltersContract.Event.RemoveRule -> removeRule(event.rule, event.ruleType)
-            is FiltersContract.Event.OnRuleSelected -> ruleSelected(event.rule)
-            is FiltersContract.Event.OnTabIndexChanged -> setCurrentFilterType(event.tabIndex)
-            is FiltersContract.Event.OnSearchQueryChanged -> handleSearchQuery(event.query)
-        }
-    }
+            is FiltersContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private fun handleSearchQuery(query: TextFieldValue) = viewModelScope.launch {
-        _uiState.update { it.setSearchStateQuery(query = query) }
-        snapshotFlow { query }
-            .distinctUntilChanged()
-            .filter { query: TextFieldValue ->
-                query.text.isNotEmpty() && ! _uiState.value.searchState.sameAsPreviousQuery()
+            FiltersContract.Event.OnSearchClick -> _uiState.update {
+                it.copy(showSearchView = false)
             }
-            .map { query: TextFieldValue ->
-                _uiState.update { it.setSearchStateAsInProgress() }
-                query
+
+            is FiltersContract.Event.OnSearchExpandedChanged -> _uiState.update {
+                it.copy(showSearchView = event.expanded)
             }
-            .debounce(0)
-            .mapLatest { query: TextFieldValue ->
-                delay(300)
-                val list = if (_uiState.value.currentFilterRuleType == FilterRuleType.WHITE) {
-                    (_uiState.value.allowList as UiResult.Success).data
-                } else {
-                    (_uiState.value.blockList as UiResult.Success).data
-                }
-                list.filter { it.domain.lowercase().contains(query.text.lowercase()) }
+
+            is FiltersContract.Event.OnSearchQueryChanged -> _uiState.update {
+                it.copy(searchQuery = event.query)
             }
-            .collect { results ->
-                _uiState.update { it.setSearchResults(results) }
+
+            FiltersContract.Event.OnShowSearchView -> _uiState.update {
+                it.copy(showSearchView = true)
             }
-    }
 
-    private fun showSearchView() {
-        _uiState.update { it.showSearchView() }
-    }
-
-    private fun hideSearchView() {
-        _uiState.update { it.hideSearchView() }
-    }
-
-    private fun setCurrentFilterType(tabIndex: Int) =
-        _uiState.update { it.filterRuleType(tabIndex) }
-
-    private fun displayAddRuleDialog() = _uiState.update { it.showAddRuleDialog() }
-    private fun dismissAddRuleDialog() = _uiState.update { it.dismissAddRuleDialog() }
-
-    private fun deselectRule() = _uiState.update { it.ruleDeselected() }
-    private fun ruleSelected(
-        rule: PiHoleFilterRules.PiHoleFilterRule
-    ) =
-        _uiState.update { it.selectedRule(rule) }
-
-    private val fetchRulesListErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        val errorMessage = throwable.message?.run {
-            UiText.DynamicString(this)
-        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
-        _uiState.update { it.filterListError(errorMessage) }
-    }
-
-    private val addRuleErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        viewModelScope.launch {
-            _effect.send(FiltersContract.Effect.Toast.RuleAddFailed)
-        }
-    }
-
-    private val removeRuleErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        viewModelScope.launch {
-            _effect.send(FiltersContract.Effect.Toast.RuleRemovalFailed)
-        }
-    }
-
-    private fun fetchRulesList() = viewModelScope.launch(fetchRulesListErrorHandler) {
-        when (val response = repository.fetchFilterRules()) {
-            is ResponseResult.Success -> sortListAndSendToUi(response.data)
-
-            is ResponseResult.Error -> fetchRulesListErrorHandler.handleException(
-                this@launch.coroutineContext,
-                response.handleError()
+            is FiltersContract.Event.OnAddFilterRule -> handleAddFilterRule(
+                rule = event.rule.domain,
+                type = event.rule.type
             )
+
+            is FiltersContract.Event.OnDeleteFilterRule -> handleRemoveFilterRule(
+                rule = event.rule.domain,
+                type = event.rule.type
+            )
+
+            FiltersContract.Event.OnDismissDialog -> _uiState.update {
+                it.copy(dialogType = FilterDialogType.None)
+            }
+
+            is FiltersContract.Event.OnFilterRuleItemClick -> _uiState.update {
+                it.copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
+            }
+
+            FiltersContract.Event.AddFilterRuleClick -> _uiState.update {
+                it.copy(dialogType = FilterDialogType.AddFilterRule(type = currentFilterRuleType))
+            }
+
+            is FiltersContract.Event.OnFilterTabChanged -> currentFilterRuleType = event.type
         }
     }
 
-    private fun sortListAndSendToUi(data: List<PiHoleFilterRules.PiHoleFilterRule>) {
-        val allowList =
-            data.filter { it.type == FilterRuleType.WHITE || it.type == FilterRuleType.REGEX_WHITE }
-        val blockList =
-            data.filter { it.type == FilterRuleType.BLACK || it.type == FilterRuleType.REGEX_BLACK }
-        _uiState.update { it.allowList(allowList).blockList(blockList) }
+    private fun handleAddFilterRule(rule: String, type: FilterRuleType) {
+        viewModelScope.launch {
+            controller.addFilterRule(rule, type)
+                .onFailure {
+                    Timber.e(
+                        "Failed to insert filter rule $rule for type: $type",
+                        it
+                    )
+                    _effect.send(FiltersContract.Effect.Toast.RuleAddFailed).also {
+                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    }
+                }
+                .onSuccess {
+                    _effect.send(FiltersContract.Effect.Toast.RuleAdded).also {
+                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    }
+                }
+        }
     }
 
-    private fun addRule(
-        rule: String,
-        isRegex: Boolean
-    ) = viewModelScope.launch(addRuleErrorHandler) {
-        val ruleType = if (_uiState.value.currentFilterRuleType == FilterRuleType.WHITE) {
-            if (isRegex) FilterRuleType.REGEX_WHITE else FilterRuleType.WHITE
+    private fun handleRemoveFilterRule(rule: String, type: FilterRuleType) {
+        viewModelScope.launch {
+            controller.removeFilterRule(rule, type)
+                .onFailure {
+                    Timber.e(
+                        "Failed to remove filter rule $rule for type: $type",
+                        it
+                    )
+                    _effect.send(FiltersContract.Effect.Toast.RuleRemovalFailed).also {
+                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    }
+                }
+                .onSuccess {
+                    _effect.send(FiltersContract.Effect.Toast.RuleRemoved).also {
+                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    }
+                }
+        }
+    }
+
+    private fun handleClearSearchQuery(query: String) {
+        if (query.isEmpty()) {
+            _uiState.update { it.copy(showSearchView = false) }
         } else {
-            if (isRegex) FilterRuleType.REGEX_BLACK else FilterRuleType.BLACK
+            _uiState.update { it.copy(searchQuery = "") }
         }
-        when (val response = repository.addFilterRules(rule, ruleType)) {
-            is ResponseResult.Success -> {
-                _uiState.update { it.dismissAddRuleDialog() }
-                _effect.send(FiltersContract.Effect.Toast.RuleAdded)
-                fetchRulesList()
-                if (_uiState.value.searchState.query.text.isNotEmpty()) {
-                    _uiState.value.searchState.clearPreviousQueryText()
-                    handleSearchQuery(_uiState.value.searchState.query)
-                }
-            }
-
-            is ResponseResult.Error -> addRuleErrorHandler.handleException(
-                this@launch.coroutineContext,
-                response.handleError()
-            )
-        }
-    }
-
-    private fun removeRule(
-        rule: String,
-        filterRuleType: FilterRuleType
-    ) = viewModelScope.launch(removeRuleErrorHandler) {
-        when (val response = repository.removeFilterRules(rule, filterRuleType)) {
-            is ResponseResult.Success -> {
-                _uiState.update { it.ruleDeselected() }
-                _effect.send(FiltersContract.Effect.Toast.RuleRemoved)
-                fetchRulesList()
-                if (_uiState.value.searchState.query.text.isNotEmpty()) {
-                    _uiState.value.searchState.clearPreviousQueryText()
-                    handleSearchQuery(_uiState.value.searchState.query)
-                }
-            }
-
-            is ResponseResult.Error -> removeRuleErrorHandler.handleException(
-                this@launch.coroutineContext,
-                response.handleError()
-            )
-        }
-    }
-
-    override fun onRefresh() {
-        fetchRulesList()
     }
 }

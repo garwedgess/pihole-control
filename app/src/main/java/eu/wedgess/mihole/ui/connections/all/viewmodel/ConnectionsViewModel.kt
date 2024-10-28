@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.PiHoleRepository
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.connections.all.ConnectionsContract
 import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -52,7 +52,7 @@ class ConnectionsViewModel @Inject constructor(
         _uiState.update { it.connectionsError(errorMessage) }
     }
 
-    private fun setConnectionAsActive(connection: MiHolesInfo) {
+    private fun setConnectionAsActive(connection: PiHoleInfo) {
         viewModelScope.launch {
             repository.setConnectionAsActive(connection).getOrThrow()
             fetchConnections()
@@ -64,7 +64,7 @@ class ConnectionsViewModel @Inject constructor(
             val connections = repository.fetchAll().getOrThrow()
             _uiState.update {
                 it.connections(connections.takeIf { connections.isNotEmpty() } ?: listOf(
-                    MiHolesInfo.default
+                    PiHoleInfo.default
                 ))
             }
         }

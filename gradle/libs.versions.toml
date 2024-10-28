@@ -1,7 +1,7 @@
 [versions]
 agp = "8.7.1"
-ksp = "1.9.0-1.0.13"
-kotlin = "1.9.0"
+ksp = "1.9.23-1.0.19"
+kotlin = "1.9.25"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -9,6 +9,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.10.00"
+composeAnimations = "1.7.4"
 hilt = "2.49"
 timber = "5.0.1"
 sqldelight = "2.0.2"
@@ -18,11 +19,13 @@ protobufPlugin = "0.9.4"
 protobufJavaLite = "3.23.3"
 datastore = "1.1.1"
 splashscreen = "1.0.1"
+#noinspection GradleDependency
 kotlinxSerializationJson = "1.5.1"
-ktorClient = "2.3.1"
+#noinspection GradleDependency
+ktorClient = "2.3.12"
 androidXCamera = "1.3.4"
 mlkitBarcodeScanning = "17.3.0"
-vicoComposeM3 = "1.6.5"
+vicoComposeM3 = "1.15.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +45,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidxCompose" }
+androidx-compose-animations = { group = "androidx.compose.animation", name = "animation", version.ref = "composeAnimations" }
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -60,6 +64,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorClient" }
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktorClient" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktorClient" }
 ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktorClient" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorClient" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorClient" }
@@ -73,10 +78,16 @@ androidx-camera-view = { group = "androidx.camera", name = "camera-view", versio
 androidx-camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "androidXCamera" }
 mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcodeScanning" }
 
+vicoCompose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vicoComposeM3" }
+vicoCore = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vicoComposeM3" }
 vicoM3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vicoComposeM3" }
 android-date-backport = { group = "com.jakewharton.threetenabp", name = "threetenabp", version = "1.4.7" }
 
+mockk = { module = "io.mockk:mockk", version = "1.13.13" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.9.0" }
+
 [bundles]
+vico = ["vicoCompose", "vicoCore", "vicoM3"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines-extensions", "sqldelight-primitive-adapters"]
 ktor = ["ktor-client-core", "ktor-client-android", "ktor-client-serialization", "ktor-client-logging", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json", "ktor-client-okhttp", "ktor-client-auth"]
 camera = ["androidx-camera-camera2", "androidx-camera-lifecycle", "androidx-camera-view", "androidx-camera-extensions"]

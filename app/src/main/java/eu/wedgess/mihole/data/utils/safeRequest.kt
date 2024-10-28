@@ -37,7 +37,7 @@ internal suspend inline fun <reified T, reified E> HttpClient.safeRequest(
         ResponseResult.Error.Unknown(e)
     }
 
-suspend inline fun <reified T, reified E> HttpResponse.handleResponse(): ResponseResult<T, E> {
+private suspend inline fun <reified T, reified E> HttpResponse.handleResponse(): ResponseResult<T, E> {
     when (val statusCode = this.status.value) {
         in HttpStatusCode.MultipleChoices.value..HttpStatusCode.PermanentRedirect.value -> throw RedirectResponseException(
             this,
@@ -76,7 +76,7 @@ suspend inline fun <reified T, reified E> HttpResponse.handleResponse(): Respons
  * @param E - Type of the error class
  * @return - nullable error class
  */
-suspend inline fun <reified E> ResponseException.errorBody(): E? =
+private suspend inline fun <reified E> ResponseException.errorBody(): E? =
     try {
         response.body()
     } catch (e: SerializationException) {

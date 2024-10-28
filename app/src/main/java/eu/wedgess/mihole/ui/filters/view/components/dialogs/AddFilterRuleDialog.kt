@@ -30,14 +30,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.mihole.R
+import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.model.enums.WILDCARD_REGEX_PREFIX
 import eu.wedgess.mihole.data.model.enums.WILDCARD_REGEX_SUFFIX
+import eu.wedgess.mihole.ui.filters.model.ModifyFilterRule
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
 @Composable
 fun AddFilterRuleDialog(
+    filterRuleType: FilterRuleType,
     onDismissRequest: () -> Unit,
-    onConfirmClick: (rule: String, isWildCard: Boolean) -> Unit
+    onConfirmClick: (ModifyFilterRule.Add) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -47,6 +50,7 @@ fun AddFilterRuleDialog(
 
     Dialog(onDismissRequest = onDismissRequest) {
         AddFilterRuleDialogContent(
+            filterRuleType = filterRuleType,
             focusRequester = focusRequester,
             onConfirmClick = onConfirmClick,
             onCancelClick = onDismissRequest
@@ -56,8 +60,9 @@ fun AddFilterRuleDialog(
 
 @Composable
 private fun AddFilterRuleDialogContent(
+    filterRuleType: FilterRuleType,
     focusRequester: FocusRequester = remember { FocusRequester() },
-    onConfirmClick: (rule: String, isWildCard: Boolean) -> Unit,
+    onConfirmClick: (ModifyFilterRule.Add) -> Unit,
     onCancelClick: () -> Unit
 ) {
     var isWildcardChecked by remember {
@@ -118,7 +123,20 @@ private fun AddFilterRuleDialogContent(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onCancelClick) { Text(stringResource(R.string.all_btn_cancel)) }
-                TextButton(onClick = { onConfirmClick(value, isWildcardChecked) }) {
+                TextButton(
+                    onClick = {
+                        val type = if (isWildcardChecked) {
+                            if (filterRuleType == FilterRuleType.ALLOW) {
+                                FilterRuleType.REGEX_ALLOW
+                            } else {
+                                FilterRuleType.REGEX_BLOCK
+                            }
+                        } else {
+                            filterRuleType
+                        }
+                        onConfirmClick(ModifyFilterRule.Add(value, type))
+                    }
+                ) {
                     Text(
                         stringResource(R.string.filters_add_rule_dialog_btn_add)
                     )
@@ -132,6 +150,9 @@ private fun AddFilterRuleDialogContent(
 @Preview
 fun AddFilterRuleCardPreview() {
     AddFilterRuleDialogContent(
-        onConfirmClick = { _, _ -> },
-        onCancelClick = {})
+        filterRuleType = FilterRuleType.ALLOW,
+        focusRequester = FocusRequester(),
+        onConfirmClick = { },
+        onCancelClick = { }
+    )
 }

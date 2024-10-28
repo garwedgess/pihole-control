@@ -89,12 +89,12 @@ class LogsViewModel @Inject constructor(
             LogsContract.Event.OnLogDetailsDismissed -> _uiState.update { it.copy(selectedLog = null) }
             is LogsContract.Event.AddToAllowList -> addFilterRule(
                 event.domain,
-                FilterRuleType.WHITE
+                FilterRuleType.ALLOW
             )
 
             is LogsContract.Event.AddToBlockList -> addFilterRule(
                 event.domain,
-                FilterRuleType.BLACK
+                FilterRuleType.BLOCK
             )
         }
     }
@@ -104,7 +104,7 @@ class LogsViewModel @Inject constructor(
             repository.addFilterRules(domain, filterRuleType)
             _uiState.update { it.copy(selectedLog = null) }
             _effect.send(
-                if (filterRuleType == FilterRuleType.WHITE) {
+                if (filterRuleType == FilterRuleType.ALLOW) {
                     LogsContract.Effect.Snackbar.DomainAddedToAllowList
                 } else {
                     LogsContract.Effect.Snackbar.DomainAddedToBlockList

@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.mihole.data.model.MiHolesInfo
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.common.ErrorMessage
 import eu.wedgess.mihole.ui.common.LoadingContent
@@ -16,7 +16,7 @@ import eu.wedgess.mihole.ui.connections.all.ConnectionsContract
 
 @Composable
 fun ConnectionsContent(
-    connections: UiResult<List<MiHolesInfo>>,
+    connections: UiResult<List<PiHoleInfo>>,
     paddingValues: PaddingValues,
     onEvent: (ConnectionsContract.Event) -> Unit
 ) {

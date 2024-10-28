@@ -1,6 +1,5 @@
 package eu.wedgess.mihole.ui.common.tabs
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -10,23 +9,27 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import eu.wedgess.mihole.ui.base.TabItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnimatedTabContainer(
-    tabItems: List<TabItem>,
+fun <T : TabItem> AnimatedTabContainer(
+    tabItems: List<T>,
     modifier: Modifier = Modifier,
-    onTabIndexChanged: ((index: Int) -> Unit)? = null
+    onTabIndexChanged: ((index: Int) -> Unit)? = null,
+    onTabSelected: @Composable (T) -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = {
         tabItems.size
     })
+    LaunchedEffect(key1 = pagerState.settledPage) {
+        onTabIndexChanged?.invoke(pagerState.settledPage)
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         TabRow(
@@ -37,7 +40,6 @@ fun AnimatedTabContainer(
                     selected = index == pagerState.currentPage,
                     onClick = {
                         scope.launch { pagerState.animateScrollToPage(index) }
-                        onTabIndexChanged?.invoke(index)
                     },
                     text = { Text(tab.title.asString()) },
                     icon = {
@@ -50,7 +52,7 @@ fun AnimatedTabContainer(
             }
         }
         HorizontalPager(state = pagerState) { page ->
-            tabItems[page].screen()
+            onTabSelected(tabItems[page])
         }
     }
 }
