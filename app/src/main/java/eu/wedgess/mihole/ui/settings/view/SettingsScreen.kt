@@ -1,7 +1,6 @@
 package eu.wedgess.mihole.ui.settings.view
 
 import android.os.Build
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -14,8 +13,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import eu.wedgess.mihole.data.model.PiHoleInfo
-import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.settings.SettingsContract
 import eu.wedgess.mihole.ui.settings.model.AppTheme
 import eu.wedgess.mihole.ui.settings.model.mapToAppTheme
@@ -23,7 +20,7 @@ import eu.wedgess.mihole.ui.settings.view.components.DropDownPreference
 import eu.wedgess.mihole.ui.settings.view.components.PreferenceCategory
 import eu.wedgess.mihole.ui.settings.view.components.RegularPreference
 import eu.wedgess.mihole.ui.settings.view.components.SwitchPreference
-import eu.wedgess.mihole.ui.settings.view.components.dialogs.RefreshIntervalDialog
+import eu.wedgess.mihole.ui.settings.view.components.dialogs.SettingsDialog
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -38,7 +35,7 @@ fun SettingsScreen(
         DropDownPreference(
             title = "Theme",
             icon = Icons.Outlined.Palette,
-            items = AppTheme.values().toList().map { Pair(it, it.label.asString()) },
+            items = AppTheme.entries.map { Pair(it, it.label.asString()) },
             selectedItem = uiState.currentTheme.mapToAppTheme(),
             onItemSelected = {
                 onEvent(SettingsContract.Event.OnThemeChanged(it.theme))
@@ -51,7 +48,6 @@ fun SettingsScreen(
                 icon = Icons.Outlined.FormatColorFill,
                 checked = uiState.useDynamicThemeColors,
                 onCheckedChange = {
-                    Timber.d("Dynamic Colors firing checked changes")
                     onEvent(SettingsContract.Event.OnDynamicThemeColorsChanged(it))
                 }
             )
@@ -61,7 +57,7 @@ fun SettingsScreen(
         RegularPreference(
             title = "Connections",
             icon = Icons.Outlined.Lan,
-            subtitle = (uiState.currentConnection as? UiResult.Success)?.data?.name ?: PiHoleInfo.default.name,
+            subtitle = uiState.currentConnection.name,
             onClick = {
                 onEvent(SettingsContract.Event.OnServerClicked)
             })
@@ -88,13 +84,7 @@ fun SettingsScreen(
             }
         )
 
-        AnimatedVisibility(visible = uiState.showRefreshIntervalDialog) {
-            RefreshIntervalDialog(
-                currentRefreshTime = uiState.refreshInterval,
-                onDismiss = { onEvent(SettingsContract.Event.OnDismissRefreshIntervalDialog) },
-                onRefreshIntervalConfirmed = { onEvent(SettingsContract.Event.OnRefreshIntervalChanged(it)) }
-            )
-        }
+        SettingsDialog(uiState.dialogType, onEvent)
     }
 }
 

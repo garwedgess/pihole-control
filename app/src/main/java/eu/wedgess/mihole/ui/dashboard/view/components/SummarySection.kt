@@ -65,13 +65,12 @@ fun SummarySection(summary: PiHoleSummary) {
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SummaryItem.NumberWithCaption(
                 modifier = Modifier.weight(1f),
@@ -90,10 +89,8 @@ fun SummarySection(summary: PiHoleSummary) {
             )
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             SummaryItem.Percentage(
                 modifier = Modifier.weight(1f),

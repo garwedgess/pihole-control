@@ -30,7 +30,7 @@ interface PiHoleApi {
     suspend fun addFilterRule(activeMiHole: PiHoleInfo, rule: String, ruleType: FilterRuleType): Result<ModifyFilterRuleResponse>
     suspend fun removeFilterRule(activeMiHole: PiHoleInfo, rule: String, ruleType: FilterRuleType): Result<ModifyFilterRuleResponse>
     suspend fun fetchLogs(activeMiHole: PiHoleInfo, limit: Int): Result<PiHoleLogsResponse>
-    suspend fun enableAdBlocking(activeMiHole: PiHoleInfo): PiHoleApiResponse<PiHoleStatusResponse>
-    suspend fun disableAdBlocking(activeMiHole: PiHoleInfo, duration: Duration): PiHoleApiResponse<PiHoleStatusResponse>
+    suspend fun enableAdBlocking(activeMiHole: PiHoleInfo): Result<PiHoleStatusResponse>
+    suspend fun disableAdBlocking(activeMiHole: PiHoleInfo, duration: Duration): Result<PiHoleStatusResponse>
 
 }

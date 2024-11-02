@@ -1,7 +1,6 @@
 package eu.wedgess.mihole.data.api
 
 import androidx.annotation.VisibleForTesting
-import eu.wedgess.mihole.data.model.PiHoleApiResponse
 import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.model.responses.ModifyFilterRuleResponse
@@ -16,7 +15,6 @@ import eu.wedgess.mihole.data.model.responses.PiHoleSummary
 import eu.wedgess.mihole.data.model.responses.PiHoleTopClients
 import eu.wedgess.mihole.data.model.responses.PiHoleTopQueries
 import eu.wedgess.mihole.data.utils.requestResult
-import eu.wedgess.mihole.data.utils.safeRequest
 import eu.wedgess.mihole.di.annotations.DefaultHttpClient
 import eu.wedgess.mihole.di.annotations.TrustAllCertificatesHttpClient
 import io.ktor.client.HttpClient
@@ -198,9 +196,9 @@ class PiHoleApiImpl @Inject constructor(
         }
     }
 
-    override suspend fun enableAdBlocking(activeMiHole: PiHoleInfo): PiHoleApiResponse<PiHoleStatusResponse> {
+    override suspend fun enableAdBlocking(activeMiHole: PiHoleInfo): Result<PiHoleStatusResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.safeRequest {
+        return client.requestResult<PiHoleStatusResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["enable"] = true.toString()
@@ -211,9 +209,9 @@ class PiHoleApiImpl @Inject constructor(
     override suspend fun disableAdBlocking(
         activeMiHole: PiHoleInfo,
         duration: Duration
-    ): PiHoleApiResponse<PiHoleStatusResponse> {
+    ): Result<PiHoleStatusResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.safeRequest {
+        return client.requestResult<PiHoleStatusResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["disable"] =

@@ -2,7 +2,6 @@ package eu.wedgess.mihole.ui.statistics.view.common
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -41,13 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import eu.wedgess.mihole.utils.extensions.degreeToRadian
-import java.util.concurrent.CancellationException
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun PieChart(
     modifier: Modifier,
@@ -60,7 +58,6 @@ fun PieChart(
     drawText: Boolean = true,
     onClick: ((data: PieChartData, index: Int) -> Unit)? = null
 ) {
-
     BoxWithConstraints(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -84,30 +81,16 @@ fun PieChart(
 
         // Start angle of chart. Top center is -90, right center 0,
         // bottom center 90, left center 180
-//        val chartStartAngle = startAngle
+        val chartStartAngle = startAngle
         val animatableInitialSweepAngle = remember {
-            Animatable(startAngle)
+            Animatable(chartStartAngle)
         }
 
-        val chartEndAngle = 360f + startAngle
+        val chartEndAngle = 360f + chartStartAngle
 
-        LaunchedEffect(key1 = animatableInitialSweepAngle) {
-            animatableInitialSweepAngle.animateTo(
-                targetValue = chartEndAngle,
-                animationSpec = tween(
-                    delayMillis = 400,
-                    durationMillis = 500,
-                    easing = LinearEasing
-                )
-            )
-        }
-
-
-        val sum = remember(data) {
-            data.sumOf {
-                it.percentage.toDouble()
-            }.toFloat()
-        }
+        val sum = data.sumOf {
+            it.percentage.toDouble()
+        }.toFloat()
 
         val coEfficient = 360f / sum
         var currentAngle = 0f
@@ -115,10 +98,9 @@ fun PieChart(
 
         val chartDataList = remember(data) {
             data.map {
-
-                val chartData = it
-                val range = currentAngle..currentAngle + chartData.percentage * coEfficient
-                currentAngle += chartData.percentage * coEfficient
+                val chartData = it.percentage
+                val range = currentAngle..currentAngle + chartData * coEfficient
+                currentAngle += chartData * coEfficient
 
                 AnimatedChartData(
                     title = it.title,
@@ -130,21 +112,25 @@ fun PieChart(
             }
         }
 
-        chartDataList.forEach {
-            LaunchedEffect(key1 = it.isSelected) {
+        chartDataList.forEach { chartData ->
+            LaunchedEffect(chartData.isSelected) {
+                // Instantly snap to the current state to prevent overlap
+                chartData.animatable.snapTo(if (chartData.isSelected) 1f else width / 2 / radius)
 
-                // This is for scaling radius
-                val targetValue = (if (it.isSelected) width / 2 else radius) / radius
-
-                // This is for increasing outer ring
-//                val targetValue = if (it.isSelected) outerStrokeWidthPx + width / 2 - radius
-//                else outerStrokeWidthPx
-                try {
-                    it.animatable.animateTo(targetValue, animationSpec = tween(500))
-                } catch (e: CancellationException) {
-                    // ignore
-                }
+                // Animate to the target value
+                val targetValue = if (chartData.isSelected) width / 2 / radius else 1f
+                chartData.animatable.animateTo(targetValue, animationSpec = tween(500))
             }
+        }
+
+        LaunchedEffect(key1 = animatableInitialSweepAngle) {
+            animatableInitialSweepAngle.animateTo(
+                targetValue = chartEndAngle,
+                animationSpec = tween(
+                    delayMillis = 1000,
+                    durationMillis = 1500
+                )
+            )
         }
 
         val textMeasurer = rememberTextMeasurer()
@@ -154,7 +140,7 @@ fun PieChart(
                     textMeasurer.measure(text = "")
                 } else {
                     textMeasurer.measure(
-                        text = "${it.percentage.toInt()}%",
+                        text = "${it.percentage.roundToInt()}%",
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
@@ -177,7 +163,7 @@ fun PieChart(
 
                         if (isTouched) {
                             var touchAngle =
-                                (-startAngle + 180f + atan2(
+                                (-chartStartAngle + 180f + atan2(
                                     yPos,
                                     xPos
                                 ) * 180 / Math.PI) % 360f
@@ -191,7 +177,6 @@ fun PieChart(
                                 val range = chartData.range
 
                                 val isTouchInArcSegment = touchAngle in range
-
                                 if (chartData.isSelected) {
                                     chartData.isSelected = false
                                 } else {
@@ -217,7 +202,7 @@ fun PieChart(
             chartDataList = chartDataList,
             textMeasureResults = textMeasureResults,
             currentSweepAngle = currentSweepAngle,
-            chartStartAngle = startAngle,
+            chartStartAngle = chartStartAngle,
             chartEndAngle = chartEndAngle,
             outerRadius = radius,
             outerStrokeWidth = outerStrokeWidthPx,
@@ -229,7 +214,6 @@ fun PieChart(
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun PieChartImpl(
     modifier: Modifier = Modifier,
@@ -245,7 +229,7 @@ private fun PieChartImpl(
     lineStrokeWidth: Float,
     drawText: Boolean
 ) {
-    val separatorColor = MaterialTheme.colorScheme.surfaceVariant
+    val separatorColor = Color.Transparent
     Canvas(modifier = modifier) {
 
         val width = size.width
@@ -380,12 +364,13 @@ private fun PieChartImpl(
     }
 }
 
+
 @Immutable
 internal class AnimatedChartData(
     val color: Color,
     val percentage: Float,
     val title: String,
-    selected: Boolean = false,
+    val selected: Boolean = false,
     val range: ClosedFloatingPointRange<Float>,
     val animatable: Animatable<Float, AnimationVector1D> = Animatable(1f)
 ) {

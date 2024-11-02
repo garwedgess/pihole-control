@@ -28,6 +28,6 @@ class ServerStatsController @Inject constructor(
         }
 
 
-    override suspend fun fetchData(activePiHoleInfo: PiHoleInfo): PiHoleForwardDestinations =
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): PiHoleForwardDestinations =
         fetchForwardDestinations(activePiHoleInfo).getOrThrow()
 }

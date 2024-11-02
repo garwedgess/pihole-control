@@ -1,102 +1,84 @@
 package eu.wedgess.mihole.ui.logs.view.components.dialogs
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.theme.MiHoleTheme
-import org.threeten.bp.OffsetDateTime
-import java.util.concurrent.TimeUnit
+import eu.wedgess.mihole.ui.logs.model.PickerType
+import org.threeten.bp.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsTimePickerDialog(
-    onConfirm: (Long) -> Unit,
+    initialHour: Int = LocalDateTime.now().hour,
+    initialMinutes: Int = LocalDateTime.now().minute,
+    onTimeConfirmed: (Int, Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val state = rememberTimePickerState()
-
-    TimePickerDialog(
-        onCancel = { onDismiss() },
-        onConfirm = {
-            val timeMillis = TimeUnit.HOURS.toSeconds(state.hour.toLong())
-                .plus(TimeUnit.MINUTES.toSeconds(state.minute.toLong()))
-                .minus(OffsetDateTime.now().offset.totalSeconds)
-            onConfirm(timeMillis)
-        },
+    val state = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinutes,
+        is24Hour = true
+    )
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        ),
     ) {
-        TimePicker(state = state)
-    }
-}
-
-@Composable
-private fun TimePickerDialog(
-    title: String = stringResource(R.string.logs_dialog_time_picker_title_select_time),
-    onCancel: () -> Unit,
-    onConfirm: () -> Unit,
-    toggle: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
-) = Dialog(
-    onDismissRequest = onCancel,
-    properties = DialogProperties(
-        usePlatformDefaultWidth = false
-    ),
-) {
-    Surface(
-        shape = MaterialTheme.shapes.extraLarge,
-        tonalElevation = MiHoleTheme.dimens.size.dialogTonalElevation,
-        modifier = Modifier
-            .width(IntrinsicSize.Min)
-            .height(IntrinsicSize.Min)
-            .background(
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surface
-            ),
-    ) {
-        toggle()
-        Column(
-            modifier = Modifier.padding(MiHoleTheme.dimens.padding.itemContentXLarge),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Surface(
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight(),
+            shape = MaterialTheme.shapes.large,
+            tonalElevation = AlertDialogDefaults.TonalElevation
         ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = MiHoleTheme.dimens.padding.screenContent),
-                text = title,
-                style = MaterialTheme.typography.labelMedium
-            )
-            content()
-            Row(
-                modifier = Modifier
-                    .height(MiHoleTheme.dimens.size.timeDialogButtonRowHeight)
-                    .fillMaxWidth()
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Spacer(modifier = Modifier.weight(MiHoleTheme.dimens.weight.full))
-                TextButton(
-                    onClick = onCancel
-                ) { Text("Cancel") }
-                TextButton(
-                    onClick = onConfirm
-                ) { Text("OK") }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    text = "Select Time",
+                    style = MaterialTheme.typography.labelMedium
+                )
+                TimePicker(state = state)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)
+                ) {
+                    Button(onClick = onDismiss) {
+                        Text("Cancel")
+                    }
+
+                    Button(
+                        onClick = {
+                            onTimeConfirmed(state.hour, state.minute)
+                        }
+                    ) {
+                        Text("Confirm")
+                    }
+                }
             }
         }
     }

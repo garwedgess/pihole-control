@@ -29,6 +29,6 @@ class QueryTypesController @Inject constructor(
         }
 
 
-    override suspend fun fetchData(activePiHoleInfo: PiHoleInfo): QueryTypes =
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): QueryTypes =
         fetchQueryTypes(activePiHoleInfo).getOrThrow().queryTypes
 }

@@ -21,7 +21,8 @@ import eu.wedgess.mihole.ui.navigation.FilterTab
 @Composable
 fun FiltersScreen(
     uiState: FiltersContract.UiState,
-    onEvent: (FiltersContract.Event) -> Unit
+    onEvent: (FiltersContract.Event) -> Unit,
+    triggerRefreshEvent: (() -> Unit) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
@@ -41,7 +42,8 @@ fun FiltersScreen(
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
-                            }
+                            },
+                            onRefreshFilters = triggerRefreshEvent
                         )
 
                         FilterTab.BlockList -> FilterTabScreenRoot(
@@ -49,7 +51,8 @@ fun FiltersScreen(
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
-                            }
+                            },
+                            onRefreshFilters = triggerRefreshEvent
                         )
                     }
                 }

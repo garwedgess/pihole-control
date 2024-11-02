@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import eu.wedgess.mihole.data.db.MiHolesDao
 import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.UserPreferences
-import eu.wedgess.mihole.data.toMiHoleInfo
+import eu.wedgess.mihole.data.toPiHoleInfo
 import eu.wedgess.mihole.utils.extensions.resultOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -23,13 +23,13 @@ abstract class RefreshableController<T>(
 
     private val refreshFlow = RefreshFlow()
 
-    abstract suspend fun fetchData(activePiHoleInfo: PiHoleInfo): T
+    abstract suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): T
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun listenToDataChanges(overrideDelayMillis: Long? = null): Flow<Result<T>> =
         refreshFlow.flatMapLatest {
             combine(
-                dao.fetchActiveFlow().map { it?.toMiHoleInfo() ?: PiHoleInfo.default },
+                dao.fetchActiveFlow().map { it?.toPiHoleInfo() ?: PiHoleInfo.default },
                 userPreferences.data.map { it.refreshTime }
             ) { piHole, refreshDelay ->
                 piHole to refreshDelay
@@ -38,7 +38,7 @@ abstract class RefreshableController<T>(
             flow {
                 while (true) {
                     Timber.d("Autorefresh")
-                    emit(fetchData(piHole))
+                    emit(fetchRefreshableData(piHole))
                     delay(overrideDelayMillis ?: refreshDelay)
                 }
             }

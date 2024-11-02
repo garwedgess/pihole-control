@@ -1,17 +1,12 @@
 package eu.wedgess.mihole.ui.connections.modify
 
-import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleInfo
-import eu.wedgess.mihole.ui.base.UiResult
-import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
-import eu.wedgess.mihole.utils.UiText
 import io.ktor.http.URLProtocol
 
-interface ModifyConnectionsContract :
-    UnidirectionalViewModel<ModifyConnectionsContract.UiState, ModifyConnectionsContract.Event, ModifyConnectionsContract.Effect> {
+interface ModifyConnectionsContract {
 
     data class UiState(
-        val currentConnection: UiResult<PiHoleInfo>,
+        val currentConnection: PiHoleInfo,
         val name: String,
         val host: String,
         val port: Int,
@@ -25,36 +20,6 @@ interface ModifyConnectionsContract :
         val showBarcodeScanner: Boolean,
         val showAdvancedSettings: Boolean
     ) {
-
-        fun connection(connection: PiHoleInfo?): UiState =
-            this.copy(
-                currentConnection = connection?.run {
-                    UiResult.Success(this)
-                } ?: UiResult.Error(UiText.StringResource(R.string.error_connection_not_found)),
-                showAdvancedSettings = connection?.run {
-                    this.authUsername.isNotBlank() || this.authPassword.isNotBlank()
-                } ?: false
-            ).also {
-                return if (connection != null) {
-                    this.copy(
-                        name = connection.name,
-                        host = connection.host,
-                        port = connection.port,
-                        protocol = connection.protocol,
-                        apiPath = connection.apiPath,
-                        apiToken = connection.token,
-                        authUsername = this.authUsername,
-                        authPassword = this.authPassword,
-                        authRealm = this.authRealm,
-                        trustAllCerts = this.trustAllCerts
-                    )
-                } else {
-                    this
-                }
-            }
-
-        fun connectionError(errorMessage: UiText): UiState =
-            this.copy(currentConnection = UiResult.Error(errorMessage))
 
         fun toMiHoleInfo(id: Long? = null): PiHoleInfo =
             PiHoleInfo(
@@ -76,7 +41,7 @@ interface ModifyConnectionsContract :
             private val DEFAULT_INFO = PiHoleInfo.default
 
             fun initial() = UiState(
-                currentConnection = UiResult.Loading,
+                currentConnection = DEFAULT_INFO,
                 showBarcodeScanner = false,
                 showAdvancedSettings = false,
                 name = DEFAULT_INFO.name,
@@ -101,7 +66,7 @@ interface ModifyConnectionsContract :
     }
 
     sealed interface Event {
-        object FetchCurrentConnection : Event
+        data object FetchCurrentConnection : Event
         data class OnNameChanged(val name: String) : Event
         data class OnHostChanged(val host: String) : Event
         data class OnPortChanged(val port: Int) : Event
@@ -113,8 +78,8 @@ interface ModifyConnectionsContract :
         data class OnAuthRealmChanged(val authRealm: String) : Event
         data class OnTrustAllCertsChanged(val trustAllCerts: Boolean) : Event
         data class OnShowAdvancedSettingsChanged(val showAdvancedSettings: Boolean) : Event
-        object OnOpenBarcodeScanner : Event
-        object OnDismissBarcodeScanner : Event
-        object SaveConnection : Event
+        data object OnOpenBarcodeScanner : Event
+        data object OnDismissBarcodeScanner : Event
+        data object SaveConnection : Event
     }
 }

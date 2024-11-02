@@ -25,7 +25,7 @@ import eu.wedgess.mihole.utils.extensions.Border
 import eu.wedgess.mihole.utils.extensions.border
 
 @Composable
-fun LogsListStickyHeader(listSize: Int, onFilterButtonClicked: () -> Unit) {
+fun LogsListStickyHeader(listSize: Int) {
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -46,14 +46,6 @@ fun LogsListStickyHeader(listSize: Int, onFilterButtonClicked: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Results: $listSize", color = MaterialTheme.colorScheme.onSurface)
-
-            IconButton(onClick = { onFilterButtonClicked() }) {
-                Icon(
-                    imageVector = Icons.Default.FilterList,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
         }
     }
 }
@@ -61,8 +53,8 @@ fun LogsListStickyHeader(listSize: Int, onFilterButtonClicked: () -> Unit) {
 
 @Preview
 @Composable
-private fun LogsListStickyHeader() {
+private fun LogsListStickyHeaderPreview() {
     MiHoleTheme {
-        LogsListStickyHeader(listSize = 100, onFilterButtonClicked = {})
+        LogsListStickyHeader(listSize = 100)
     }
 }

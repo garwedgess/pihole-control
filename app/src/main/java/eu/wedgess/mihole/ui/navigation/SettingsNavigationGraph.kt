@@ -1,13 +1,15 @@
 package eu.wedgess.mihole.ui.navigation
 
+import androidx.camera.core.ExperimentalGetImage
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import eu.wedgess.mihole.ui.base.AppBarState
+import eu.wedgess.mihole.ui.app.model.AppBarState
 import eu.wedgess.mihole.ui.navigation.destinations.ConnectionsDestination
 import eu.wedgess.mihole.ui.navigation.destinations.ModifyConnectionDestination
 import eu.wedgess.mihole.ui.navigation.destinations.SettingsDestination
 
+@ExperimentalGetImage
 fun NavGraphBuilder.SettingsNavigationGraph(
     navHostController: NavHostController,
     onComposing: (AppBarState) -> Unit,

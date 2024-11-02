@@ -38,7 +38,7 @@ class FilterTabController @Inject constructor(
             api.fetchFilterRules(activePiHoleInfo, type)
         }
 
-    override suspend fun fetchData(activePiHoleInfo: PiHoleInfo): FilterRulesResult =
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): FilterRulesResult =
         supervisorScope {
             val (rule, regexRule) = filterScreenType.toFilterTypePair()
             val deferredRuleType = async { fetchFilterRule(activePiHoleInfo, rule) }

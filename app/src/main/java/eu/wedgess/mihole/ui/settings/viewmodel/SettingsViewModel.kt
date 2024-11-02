@@ -3,20 +3,21 @@ package eu.wedgess.mihole.ui.settings.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.PiHoleRepository
+import eu.wedgess.mihole.data.model.PiHoleInfo
 import eu.wedgess.mihole.data.model.UserPreferences
+import eu.wedgess.mihole.data.toPiHoleInfo
+import eu.wedgess.mihole.ui.base.EventDrivenViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModelImpl
+import eu.wedgess.mihole.ui.compose.ResultType
+import eu.wedgess.mihole.ui.compose.UIResult
 import eu.wedgess.mihole.ui.settings.SettingsContract
-import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
+import eu.wedgess.mihole.ui.settings.controller.SettingsController
+import eu.wedgess.mihole.ui.settings.model.SettingsDialogType
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -24,30 +25,53 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repository: PiHoleRepository
-) : ViewModel(), SettingsContract {
+    private val controller: SettingsController
+) : ViewModel(),
+    EventDrivenViewModel<SettingsContract.Event>,
+    SideEffectViewModel<SettingsContract.Effect> by SideEffectViewModelImpl() {
 
-    private val _uiState: MutableStateFlow<SettingsContract.UiState> =
-        MutableStateFlow(SettingsContract.UiState.initial())
-    override val uiState: StateFlow<SettingsContract.UiState> = _uiState.asStateFlow()
+    private val uiState = MutableStateFlow(SettingsContract.UiState.initial())
 
-    private val _effect: Channel<SettingsContract.Effect> = Channel(Channel.UNLIMITED)
-    override val effect: Flow<SettingsContract.Effect> = _effect.receiveAsFlow()
+    val uiResult = combine(
+        controller.fetchActiveConnection(),
+        controller.fetchUserPreferences(),
+        uiState
+    ) { connection, preferences, uiState ->
+        UIResult.Loaded(
+            uiState.copy(
+                currentConnection = connection?.toPiHoleInfo() ?: PiHoleInfo.default,
+                currentTheme = preferences.theme,
+                refreshInterval = preferences.refreshTime,
+                useDynamicThemeColors = preferences.useDynamicColors
+            )
+        )
+    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            UIResult.Loading(ResultType.Loading.WithTitle())
+        )
 
     override fun onEvent(event: SettingsContract.Event) {
         when (event) {
-            SettingsContract.Event.FetchSettings -> fetchSettings()
-            SettingsContract.Event.OnRefreshIntervalClicked ->
-                _uiState.update { it.copy(showRefreshIntervalDialog = true) }
+            SettingsContract.Event.OnRefreshIntervalClicked -> uiState.update {
+                it.copy(dialogType = SettingsDialogType.RefreshInterval(it.refreshInterval))
+            }
+
             SettingsContract.Event.OnServerClicked ->
                 navigateTo(SettingsContract.Effect.Navigation.Connections)
-            SettingsContract.Event.OnDismissRefreshIntervalDialog ->
-                _uiState.update { it.copy(showRefreshIntervalDialog = false) }
+
+            SettingsContract.Event.OnDismissDialog -> uiState.update {
+                it.copy(dialogType = SettingsDialogType.None)
+            }
+
             is SettingsContract.Event.OnThemeChanged -> updateTheme(event.theme)
             is SettingsContract.Event.OnDynamicThemeColorsChanged ->
                 updateDynamicTheme(event.useDynamicTheme)
+
             is SettingsContract.Event.OnRefreshIntervalChanged ->
                 updateRefreshInterval(event.refreshInterval)
+
             is SettingsContract.Event.OnChangeStatusOnAllConnectionsChanged ->
                 updateStatusChangeOnAllConnections(event.changeOnAll)
         }
@@ -55,81 +79,46 @@ class SettingsViewModel @Inject constructor(
 
     private fun updateRefreshInterval(refreshInterval: Long) {
         viewModelScope.launch {
-            repository.updateRefreshInterval(refreshInterval).onFailure {
+            controller.updateRefreshInterval(refreshInterval).onFailure {
                 Timber.e("Failed to refresh interval", it)
                 return@launch
             }
-            _uiState.update { it.setRefreshInterval(refreshInterval = refreshInterval) }
+            uiState.update { it.copy(refreshInterval = refreshInterval) }
         }
     }
 
     private fun updateStatusChangeOnAllConnections(applyOnAll: Boolean) {
         viewModelScope.launch {
-            repository.updateStatusChangeOnAllConnections(applyOnAll).onFailure {
+            controller.updateStatusChangeOnAllConnections(applyOnAll).onFailure {
                 Timber.e("Failed to refresh interval", it)
                 return@launch
             }
-            _uiState.update { it.setChangeStatusOnAllConnections(changeOnAll = applyOnAll) }
+            uiState.update { it.copy(changeStatusOnAllConnections = applyOnAll) }
         }
     }
 
     private fun navigateTo(destination: SettingsContract.Effect.Navigation) {
-        viewModelScope.launch { _effect.send(destination) }
+        viewModelScope.emitSideEffect(destination)
     }
 
     private fun updateTheme(theme: UserPreferences.Theme) {
         viewModelScope.launch {
-            repository.updateSelectedTheme(theme).onFailure {
+            controller.updateSelectedTheme(theme).onFailure {
                 Timber.e("Failed to update theme", it)
                 return@launch
             }
-            _uiState.update { it.copy(currentTheme = theme) }
+            uiState.update { it.copy(currentTheme = theme) }
         }
     }
 
     private fun updateDynamicTheme(useDynamicTheme: Boolean) {
         viewModelScope.launch {
-            repository.updateDynamicTheme(useDynamicTheme).onFailure {
+            controller.updateDynamicTheme(useDynamicTheme).onFailure {
                 Timber.e("Failed to set dynamic theme to $useDynamicTheme", it)
                 it.printStackTrace()
                 return@launch
             }
-            _uiState.update { it.copy(useDynamicThemeColors = useDynamicTheme) }
-        }
-    }
-
-    private val connectionErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        val errorMessage = throwable.message?.run {
-            UiText.DynamicString(this)
-        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
-        _uiState.update { it.connectionError(errorMessage) }
-    }
-
-    private fun fetchSettings() {
-        fetchConnections()
-        fetchPreferences()
-    }
-
-    private fun fetchConnections() {
-        viewModelScope.launch(connectionErrorHandler) {
-            val connection = repository.fetchActive().getOrThrow()
-            _uiState.update { it.connection(connection) }
-        }
-    }
-
-    private fun fetchPreferences() {
-        viewModelScope.launch {
-            repository.fetchUserPreferences()
-                .distinctUntilChanged()
-                .collectLatest { preferences ->
-                    Timber.d("Preferences: $preferences")
-                    _uiState.update { state ->
-                        state.theme(preferences.theme)
-                            .refreshInterval(preferences.refreshTime)
-                            .dynamicColors(preferences.useDynamicColors)
-                            .setChangeStatusOnAllConnections(preferences.changeStatusOnAllConnection)
-                    }
-                }
+            uiState.update { it.copy(useDynamicThemeColors = useDynamicTheme) }
         }
     }
 }

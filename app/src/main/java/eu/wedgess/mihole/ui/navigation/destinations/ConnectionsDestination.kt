@@ -1,7 +1,5 @@
 package eu.wedgess.mihole.ui.navigation.destinations
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,13 +7,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.base.AppBarState
-import eu.wedgess.mihole.ui.connections.all.ConnectionsContract
-import eu.wedgess.mihole.ui.connections.all.view.ConnectionsScreen
-import eu.wedgess.mihole.ui.connections.all.viewmodel.ConnectionsViewModel
+import eu.wedgess.mihole.ui.app.model.AppBarState
+import eu.wedgess.mihole.ui.compose.CollectSideEffect
+import eu.wedgess.mihole.ui.connections.list.ConnectionsContract
+import eu.wedgess.mihole.ui.connections.list.view.ConnectionsScreen
+import eu.wedgess.mihole.ui.connections.list.viewmodel.ConnectionsViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.ConnectionsDestination(
     onComposing: (AppBarState) -> Unit,
@@ -26,7 +24,7 @@ fun NavGraphBuilder.ConnectionsDestination(
         route = Screens.Connections.route
     ) {
         val viewModel: ConnectionsViewModel = hiltViewModel()
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             onComposing(
@@ -36,26 +34,20 @@ fun NavGraphBuilder.ConnectionsDestination(
                     bottomBarVisible = false
                 )
             )
-            viewModel.onEvent(ConnectionsContract.Event.FetchConnections)
         }
 
-        LaunchedEffect(viewModel.effect) {
-            viewModel.effect.collectLatest { effect ->
-                when (effect) {
-                    is ConnectionsContract.Effect.Navigation -> {
-                        if (effect is ConnectionsContract.Effect.Navigation.Edit) {
-                            navigateToModifyConnection(effect.id)
-                        } else {
-                            navigateToCreateConnection()
-                        }
+        CollectSideEffect(viewModel.sideEffect) { effect ->
+            when (effect) {
+                is ConnectionsContract.Effect.Navigation -> {
+                    if (effect is ConnectionsContract.Effect.Navigation.Edit) {
+                        navigateToModifyConnection(effect.id)
+                    } else {
+                        navigateToCreateConnection()
                     }
                 }
             }
         }
 
-        ConnectionsScreen(
-            uiState,
-            viewModel::onEvent
-        )
+        ConnectionsScreen(uiResult = uiResult, onEvent = viewModel::onEvent)
     }
 }

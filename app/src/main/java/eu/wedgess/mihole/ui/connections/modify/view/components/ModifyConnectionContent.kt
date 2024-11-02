@@ -43,7 +43,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.base.UiResult
 import eu.wedgess.mihole.ui.connections.modify.ModifyConnectionsContract
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 
@@ -197,7 +196,7 @@ fun ModifyConnectionContent(
                 onEvent(ModifyConnectionsContract.Event.SaveConnection)
             }
         ) {
-            val resourceString = if (uiState.currentConnection is UiResult.Success) {
+            val resourceString = if (uiState.currentConnection != null) {
                 R.string.modify_connection_btn_update
             } else {
                 R.string.modify_connection_btn_save

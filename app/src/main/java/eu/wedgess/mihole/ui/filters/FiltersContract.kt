@@ -2,15 +2,13 @@ package eu.wedgess.mihole.ui.filters
 
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
 import eu.wedgess.mihole.data.model.responses.PiHoleFilterRules
-import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.ui.filters.model.FilterDialogType
 import eu.wedgess.mihole.ui.filters.model.FilterScreenTabType
 import eu.wedgess.mihole.ui.filters.model.ModifyFilterRule
 import eu.wedgess.mihole.utils.UiText
 
 
-interface FiltersContract :
-    UnidirectionalViewModel<FiltersContract.UiState, FiltersContract.Event, FiltersContract.Effect> {
+interface FiltersContract {
 
     data class UiState(
         val dialogType: FilterDialogType,

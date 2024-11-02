@@ -5,7 +5,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import eu.wedgess.mihole.MiHoles
 import eu.wedgess.mihole.data.MiHoleDatabase
-import eu.wedgess.mihole.data.toMiHoleInfo
 import eu.wedgess.mihole.utils.DispatcherProvider
 import javax.inject.Inject
 
@@ -15,9 +14,10 @@ class MiHolesDao @Inject constructor(
 ) {
     private val queries = db.miHolesQueries
 
-    fun fetchAll() = queries.selectAll().asFlow().mapToList(dispatcherProvider.io)
+    fun fetchAllAsFlow() = queries.selectAll().asFlow().mapToList(dispatcherProvider.io)
+    fun fetchAll() = queries.selectAll().executeAsList()
 
-    fun fetchById(id: Long) = queries.selectById(id).executeAsOneOrNull()?.toMiHoleInfo()
+    fun fetchById(id: Long) = queries.selectById(id).executeAsOneOrNull()
 
     fun fetchActive() = queries.selectActive().executeAsOne()
 
@@ -42,8 +42,7 @@ class MiHolesDao @Inject constructor(
         )
     }
 
-    fun setActive(id: Long) =
-        queries.updateAsActive(id)
+    fun setActive(id: Long) = queries.updateAsActive(id)
 
     fun update(miHole: MiHoles) = with(miHole) {
         queries.update(

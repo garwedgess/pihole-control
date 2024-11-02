@@ -3,7 +3,7 @@ package eu.wedgess.mihole.data
 import eu.wedgess.mihole.MiHoles
 import eu.wedgess.mihole.data.model.PiHoleInfo
 
-fun MiHoles.toMiHoleInfo() = PiHoleInfo(
+fun MiHoles.toPiHoleInfo() = PiHoleInfo(
     id = Id,
     name = Name,
     protocol = Protocol,
@@ -19,7 +19,7 @@ fun MiHoles.toMiHoleInfo() = PiHoleInfo(
 )
 
 
-fun PiHoleInfo.toMiHole() = MiHoles(
+fun PiHoleInfo.toPiHole() = MiHoles(
     Id = id,
     Name = name,
     Protocol = protocol,

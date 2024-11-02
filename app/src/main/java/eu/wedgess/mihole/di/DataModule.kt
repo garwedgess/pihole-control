@@ -14,7 +14,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.mihole.data.MiHoleDatabase
-import eu.wedgess.mihole.data.PiHoleRepository
 import eu.wedgess.mihole.data.api.PiHoleApi
 import eu.wedgess.mihole.data.api.PiHoleApiImpl
 import eu.wedgess.mihole.data.db.MiHolesDao
@@ -49,14 +48,6 @@ object DataModule {
     ): PiHoleApi =
         PiHoleApiImpl(defaultHttpClient, trustAllCertsHttpClient)
 
-    @Provides
-    fun provideRepository(
-        api: PiHoleApi,
-        dao: MiHolesDao,
-        dataStore: DataStore<UserPreferences>,
-        dispatcherProvider: DispatcherProvider
-    ) =
-        PiHoleRepository(api, dao, dataStore, dispatcherProvider)
 
     @Provides
     @Singleton

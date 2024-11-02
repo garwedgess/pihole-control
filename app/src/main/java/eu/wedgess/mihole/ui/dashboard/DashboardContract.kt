@@ -3,11 +3,9 @@ package eu.wedgess.mihole.ui.dashboard
 import eu.wedgess.mihole.data.model.responses.PiHoleClientsOverTimeData
 import eu.wedgess.mihole.data.model.responses.PiHoleOverTimeData
 import eu.wedgess.mihole.data.model.responses.PiHoleSummary
-import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
 import eu.wedgess.mihole.utils.UiText
 
-interface DashboardContract :
-    UnidirectionalViewModel<DashboardContract.UiState, DashboardContract.Event, DashboardContract.Effect> {
+interface DashboardContract {
 
     data class UiState(
         val summary: PiHoleSummary?,

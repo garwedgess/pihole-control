@@ -42,19 +42,17 @@ import java.text.DateFormat
 
 @Composable
 fun LogDetailsDialog(
-    filterRule: PiHoleLog,
+    piHoleLog: PiHoleLog,
     addToAllowList: (domain: String) -> Unit,
     addToBlockList: (domain: String) -> Unit,
-    onConfirm: (log: PiHoleLog) -> Unit,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         LogDetailsDialogContent(
-            log = filterRule,
-            onConfirmClicked = { onConfirm(filterRule) },
+            log = piHoleLog,
             addToAllowList = { addToAllowList(it) },
             addToBlockList = { addToBlockList(it) },
-            onCancelClicked = { onDismiss() }
+            onDismiss = onDismiss
         )
     }
 }
@@ -64,8 +62,7 @@ private fun LogDetailsDialogContent(
     log: PiHoleLog,
     addToAllowList: (domain: String) -> Unit,
     addToBlockList: (domain: String) -> Unit,
-    onConfirmClicked: () -> Unit,
-    onCancelClicked: () -> Unit
+    onDismiss: () -> Unit
 ) {
     val dateTimeInstance = remember { DateFormat.getTimeInstance() }
 
@@ -133,8 +130,7 @@ private fun LogDetailsDialogContent(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClicked) { Text("CANCEL") }
-                TextButton(onClick = onConfirmClicked) { Text("OK") }
+                TextButton(onClick = onDismiss) { Text("Dismiss") }
             }
 
         }
@@ -172,7 +168,7 @@ private fun LogDetailsRow(
 private fun DisplayFilterRuleDialogPreview() {
     MiHoleTheme {
         LogDetailsDialog(
-            filterRule = PiHoleLog(
+            piHoleLog = PiHoleLog(
                 answerType = LogsAnswerType.LOCAL_CACHE,
                 queryType = "A",
                 requestedDomain = "www.google.com",
@@ -182,7 +178,6 @@ private fun DisplayFilterRuleDialogPreview() {
             ),
             addToAllowList = {},
             addToBlockList = {},
-            onConfirm = {},
             onDismiss = {}
         )
     }

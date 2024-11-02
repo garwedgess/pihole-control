@@ -6,105 +6,80 @@ import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.data.PiHoleRepository
+import eu.wedgess.mihole.ui.base.EventDrivenViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModelImpl
+import eu.wedgess.mihole.ui.base.UiStateViewModel
+import eu.wedgess.mihole.ui.base.UiStateViewModelImpl
 import eu.wedgess.mihole.ui.connections.modify.ModifyConnectionsContract
+import eu.wedgess.mihole.ui.connections.modify.controller.ModifyConnectionController
 import eu.wedgess.mihole.ui.navigation.KEY_ARG_ID
 import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class ModifyConnectionViewModel @Inject constructor(
-    private val repository: PiHoleRepository,
+    private val controller: ModifyConnectionController,
     val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle
-) : ViewModel(), ModifyConnectionsContract {
+) : ViewModel(),
+    EventDrivenViewModel<ModifyConnectionsContract.Event>,
+    SideEffectViewModel<ModifyConnectionsContract.Effect> by SideEffectViewModelImpl(),
+    UiStateViewModel<ModifyConnectionsContract.UiState> by UiStateViewModelImpl(
+        ModifyConnectionsContract.UiState.initial()
+    ) {
 
     private val existingConnectionId: Long? = savedStateHandle.get<String?>(KEY_ARG_ID)?.toLong()
-
-    private val _uiState: MutableStateFlow<ModifyConnectionsContract.UiState> =
-        MutableStateFlow(ModifyConnectionsContract.UiState.initial())
-    override val uiState: StateFlow<ModifyConnectionsContract.UiState> = _uiState.asStateFlow()
-
-    private val _effect: Channel<ModifyConnectionsContract.Effect> = Channel(Channel.UNLIMITED)
-    override val effect: Flow<ModifyConnectionsContract.Effect> = _effect.receiveAsFlow()
-
-    private val connectionErrorHandler = CoroutineExceptionHandler { _, throwable ->
-        val errorMessage = throwable.message?.run {
-            UiText.DynamicString(this)
-        } ?: UiText.StringResource(R.string.all_error_msg_unknown)
-        _uiState.update { it.connectionError(errorMessage) }
-    }
 
     override fun onEvent(event: ModifyConnectionsContract.Event) {
         when (event) {
             ModifyConnectionsContract.Event.FetchCurrentConnection -> fetchConnection()
             ModifyConnectionsContract.Event.SaveConnection -> saveConnection()
-            ModifyConnectionsContract.Event.OnOpenBarcodeScanner -> _uiState.update {
-                it.copy(
-                    showBarcodeScanner = true
-                )
+            ModifyConnectionsContract.Event.OnOpenBarcodeScanner -> updateUiState {
+                copy(showBarcodeScanner = true)
             }
 
-            ModifyConnectionsContract.Event.OnDismissBarcodeScanner -> _uiState.update {
-                it.copy(
-                    showBarcodeScanner = false
-                )
+            ModifyConnectionsContract.Event.OnDismissBarcodeScanner -> updateUiState {
+                copy(showBarcodeScanner = false)
             }
 
-            is ModifyConnectionsContract.Event.OnApiPathChanged -> _uiState.update { it.copy(apiPath = event.apiPath) }
-            is ModifyConnectionsContract.Event.OnApiTokenChanged -> _uiState.update {
-                it.copy(
+            is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState { copy(apiPath = event.apiPath) }
+            is ModifyConnectionsContract.Event.OnApiTokenChanged -> updateUiState {
+                copy(
                     apiToken = event.apiToken,
                     showBarcodeScanner = false
                 )
             }
 
-            is ModifyConnectionsContract.Event.OnAuthUsernameChanged -> _uiState.update {
-                it.copy(
-                    authUsername = event.authUsername
-                )
+            is ModifyConnectionsContract.Event.OnAuthUsernameChanged -> updateUiState {
+                copy(authUsername = event.authUsername)
             }
 
-            is ModifyConnectionsContract.Event.OnAuthPasswordChanged -> _uiState.update {
-                it.copy(
-                    authPassword = event.authPassword
-                )
+            is ModifyConnectionsContract.Event.OnAuthPasswordChanged -> updateUiState {
+                copy(authPassword = event.authPassword)
             }
 
-            is ModifyConnectionsContract.Event.OnAuthRealmChanged -> _uiState.update {
-                it.copy(
-                    authRealm = event.authRealm
-                )
+            is ModifyConnectionsContract.Event.OnAuthRealmChanged -> updateUiState {
+                copy(authRealm = event.authRealm)
             }
 
-            is ModifyConnectionsContract.Event.OnTrustAllCertsChanged -> _uiState.update {
-                it.copy(
-                    trustAllCerts = event.trustAllCerts
-                )
+            is ModifyConnectionsContract.Event.OnTrustAllCertsChanged -> updateUiState {
+                copy(trustAllCerts = event.trustAllCerts)
             }
 
-            is ModifyConnectionsContract.Event.OnShowAdvancedSettingsChanged -> _uiState.update {
-                it.copy(
-                    showAdvancedSettings = event.showAdvancedSettings
-                )
+            is ModifyConnectionsContract.Event.OnShowAdvancedSettingsChanged -> updateUiState {
+                copy(showAdvancedSettings = event.showAdvancedSettings)
             }
 
-            is ModifyConnectionsContract.Event.OnHostChanged -> _uiState.update { it.copy(host = event.host) }
-            is ModifyConnectionsContract.Event.OnNameChanged -> _uiState.update { it.copy(name = event.name) }
-            is ModifyConnectionsContract.Event.OnPortChanged -> _uiState.update { it.copy(port = event.port) }
+            is ModifyConnectionsContract.Event.OnHostChanged -> updateUiState { copy(host = event.host) }
+            is ModifyConnectionsContract.Event.OnNameChanged -> updateUiState { copy(name = event.name) }
+            is ModifyConnectionsContract.Event.OnPortChanged -> updateUiState { copy(port = event.port) }
             is ModifyConnectionsContract.Event.OnProtocolChanged -> {
-                _uiState.update {
-                    it.copy(
+                updateUiState {
+                    copy(
                         protocol = event.protocol,
                         port = event.protocol.defaultPort
                     )
@@ -116,11 +91,11 @@ class ModifyConnectionViewModel @Inject constructor(
     private fun saveConnection() {
         viewModelScope.launch {
             if (existingConnectionId != null) {
-                repository.updateMiHole(_uiState.value.toMiHoleInfo(id = existingConnectionId))
+                controller.updateConnection(uiState.value.toMiHoleInfo(id = existingConnectionId))
                     .onFailure { Timber.e("Updated connection failed ${it.message}", it) }
                     .onSuccess { navigateTo(ModifyConnectionsContract.Effect.Navigation.Back) }
             } else {
-                repository.insertMiHole(_uiState.value.toMiHoleInfo())
+                controller.saveConnection(uiState.value.toMiHoleInfo())
                     .onFailure { Timber.e("Save connection failed ${it.message}", it) }
                     .onSuccess { navigateTo(ModifyConnectionsContract.Effect.Navigation.Back) }
             }
@@ -128,16 +103,14 @@ class ModifyConnectionViewModel @Inject constructor(
     }
 
     private fun navigateTo(destination: ModifyConnectionsContract.Effect.Navigation) {
-        viewModelScope.launch { _effect.send(destination) }
+        viewModelScope.emitSideEffect(destination)
     }
 
     private fun fetchConnection() {
         existingConnectionId?.run {
-            viewModelScope.launch(connectionErrorHandler) {
-                val connection = repository.fetchById(this@run).getOrThrow()
-                _uiState.update {
-                    it.connection(connection)
-                }
+            viewModelScope.launch {
+                val connection = requireNotNull(controller.fetchConnection(this@run).getOrThrow())
+                updateUiState { copy(currentConnection = connection) }
             }
         }
     }

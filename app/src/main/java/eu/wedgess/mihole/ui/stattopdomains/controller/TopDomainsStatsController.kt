@@ -27,6 +27,6 @@ class TopDomainsStatsController @Inject constructor(
             api.fetchTopQueries(activePiHoleInfo)
         }
 
-    override suspend fun fetchData(activePiHoleInfo: PiHoleInfo): PiHoleTopQueries =
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): PiHoleTopQueries =
         fetchTopQueries(activePiHoleInfo).getOrThrow()
 }

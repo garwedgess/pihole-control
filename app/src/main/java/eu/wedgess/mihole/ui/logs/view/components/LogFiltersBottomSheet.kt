@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ fun LogFiltersBottomSheet(
                 selectedItem = uiState.logsLimit,
                 onLogLimitSelected = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
             )
-            Divider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
+            HorizontalDivider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
             Text(
                 text = stringResource(R.string.logs_filter_sheet_title_status), modifier = Modifier
                     .fillMaxWidth()
@@ -64,7 +65,7 @@ fun LogFiltersBottomSheet(
                 selectedItem = uiState.selectedLogEntryStatus,
                 onLogEntryStatusSelected = { onEvent(LogsContract.Event.OnStatusChanged(it)) }
             )
-            Divider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
+            HorizontalDivider(modifier = Modifier.padding(vertical = MiHoleTheme.dimens.padding.itemContentLarge))
             Text(
                 text = stringResource(R.string.logs_filter_sheet_title_time), modifier = Modifier
                     .fillMaxWidth()

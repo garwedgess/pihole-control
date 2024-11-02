@@ -1,8 +1,6 @@
 package eu.wedgess.mihole.ui.navigation.destinations
 
 import androidx.camera.core.ExperimentalGetImage
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,14 +10,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.base.AppBarState
+import eu.wedgess.mihole.ui.app.model.AppBarState
+import eu.wedgess.mihole.ui.compose.CollectSideEffect
 import eu.wedgess.mihole.ui.connections.modify.ModifyConnectionsContract
 import eu.wedgess.mihole.ui.connections.modify.view.ModifyConnectionScreen
 import eu.wedgess.mihole.ui.connections.modify.viewmodel.ModifyConnectionViewModel
 import eu.wedgess.mihole.ui.navigation.KEY_ARG_ID
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalGetImage
 fun NavGraphBuilder.ModifyConnectionDestination(
@@ -42,7 +40,7 @@ fun NavGraphBuilder.ModifyConnectionDestination(
         LaunchedEffect(Unit) {
             onComposing(
                 AppBarState(
-                    title = UiText.StringResource(id = R.string.appbar_title_connections),
+                    title = UiText.StringResource(id = R.string.appbar_title_connection),
                     showNavigateBackIcon = true
                 )
             )
@@ -51,11 +49,9 @@ fun NavGraphBuilder.ModifyConnectionDestination(
             }
         }
 
-        LaunchedEffect(viewModel.effect) {
-            viewModel.effect.collectLatest { effect ->
-                when (effect) {
-                    is ModifyConnectionsContract.Effect.Navigation.Back -> onNavigateBack()
-                }
+        CollectSideEffect(viewModel.sideEffect) { effect ->
+            when (effect) {
+                is ModifyConnectionsContract.Effect.Navigation.Back -> onNavigateBack()
             }
         }
 

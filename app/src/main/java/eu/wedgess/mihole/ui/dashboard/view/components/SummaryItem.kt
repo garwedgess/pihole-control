@@ -68,16 +68,18 @@ object SummaryItem {
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold
                         )
-                        if (caption != null) {
+                       caption?.run {
                             Text(
-                                modifier = Modifier.padding(start = MiHoleTheme.dimens.padding.itemContentSmall),
+                                modifier = Modifier.padding(
+                                    start = MiHoleTheme.dimens.padding.itemContentSmall
+                                ),
                                 text = stringResource(id = R.string.home_caption_clients, caption),
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                                 maxLines = 1,
-                                color = Color.White,
+                                color = Color.White.copy(alpha = 0.6f),
                                 overflow = TextOverflow.Ellipsis
                             )
-                        }
+                       }
                     }
                     Text(
                         modifier = Modifier.fillMaxWidth(),
@@ -125,7 +127,6 @@ object SummaryItem {
     ) {
         SummaryItem(title, value.formatWithThousands(), caption = caption, imageVector, backgroundColor, modifier)
     }
-
 }
 
 

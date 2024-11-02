@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.connections.all.view.components
+package eu.wedgess.mihole.ui.connections.list.view.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement

@@ -39,7 +39,7 @@ fun LogsTopBarActions(
             )
         }
         DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = { onSortDismissed() }) {
-            LogSorting.values().forEach {
+            LogSorting.entries.forEach {
                 DropdownMenuItem(
                     trailingIcon = {
                         RadioButton(

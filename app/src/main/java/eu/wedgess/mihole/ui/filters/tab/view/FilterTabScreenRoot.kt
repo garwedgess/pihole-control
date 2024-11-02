@@ -20,6 +20,7 @@ import eu.wedgess.mihole.ui.filters.tab.viewmodel.FilterTabViewModel
 fun FilterTabScreenRoot(
     filterScreenTabType: FilterScreenTabType,
     onFilterRuleClick: (PiHoleFilterRules.PiHoleFilterRule) -> Unit,
+    onRefreshFilters: (() -> Unit) -> Unit,
     searchQuery: String? = null
 ) {
     val viewModel: FilterTabViewModel = hiltViewModel(
@@ -33,6 +34,12 @@ fun FilterTabScreenRoot(
 
     LaunchedEffect(searchQuery) {
         viewModel.setSearchQuery(searchQuery)
+    }
+
+    LaunchedEffect(Unit) {
+        onRefreshFilters {
+            viewModel.onRefreshData()
+        }
     }
 
     uiResult.Compose(

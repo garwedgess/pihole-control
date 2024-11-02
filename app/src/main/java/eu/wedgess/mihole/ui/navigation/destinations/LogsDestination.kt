@@ -1,12 +1,9 @@
 package eu.wedgess.mihole.ui.navigation.destinations
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -16,16 +13,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.mihole.R
-import eu.wedgess.mihole.ui.base.AppBarState
-import eu.wedgess.mihole.ui.base.UiResult
-import eu.wedgess.mihole.ui.common.search.SearchContent
+import eu.wedgess.mihole.ui.app.model.AppBarState
+import eu.wedgess.mihole.ui.common.SearchContent
+import eu.wedgess.mihole.ui.compose.CollectSideEffect
+import eu.wedgess.mihole.ui.compose.UIResult
 import eu.wedgess.mihole.ui.logs.LogsContract
 import eu.wedgess.mihole.ui.logs.view.LogsScreen
 import eu.wedgess.mihole.ui.logs.view.components.actions.LogsTopBarActions
 import eu.wedgess.mihole.ui.logs.viewmodel.LogsViewModel
 import eu.wedgess.mihole.ui.navigation.Screens
 import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.LogsDestination(
@@ -35,75 +32,97 @@ fun NavGraphBuilder.LogsDestination(
         route = Screens.Logs.route,
     ) {
         val viewModel: LogsViewModel = hiltViewModel()
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
+        val sideEffect = viewModel.sideEffect
         val context = LocalContext.current
 
-        LaunchedEffect(uiState.showSearchView, uiState.logs) {
+        LaunchedEffect(
+            key1 = (uiResult as? UIResult.Loaded)?.data?.showSearchView,
+            key2 = (uiResult as? UIResult.Loaded)?.data?.logs
+        ) {
             onComposing(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.nav_title_logs),
                     actions = {
-                        LogsTopBarActions(
-                            onSearchClicked = { viewModel.onEvent(LogsContract.Event.OnShowSearchView) },
-                            onSortClicked = { viewModel.onEvent(LogsContract.Event.OnShowSortingBottomSheet) },
-                            onSortItemSelected = {
-                                viewModel.onEvent(
-                                    LogsContract.Event.OnSortTypeSelected(
-                                        it
+                        (uiResult as? UIResult.Loaded)?.data?.run {
+                            LogsTopBarActions(
+                                onSearchClicked = { viewModel.onEvent(LogsContract.Event.OnShowSearchView) },
+                                onSortClicked = { viewModel.onEvent(LogsContract.Event.OnShowSortingMenu) },
+                                onSortItemSelected = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnSortTypeSelected(
+                                            it
+                                        )
                                     )
-                                )
-                            },
-                            onSortDismissed = { viewModel.onEvent(LogsContract.Event.OnSortingDismissed) },
-                            isSortingMenuVisible = uiState.showSortingDropdownMenu,
-                            selectedSorting = uiState.sorting
-                        )
+                                },
+                                onSortDismissed = { viewModel.onEvent(LogsContract.Event.OnSortingDismissed) },
+                                isSortingMenuVisible = this.showSortingDropdownMenu,
+                                selectedSorting = this.sorting
+                            )
+                        }
                     },
-                    showSearchView = uiState.logs is UiResult.Success && uiState.showSearchView,
+                    showSearchView = (uiResult as? UIResult.Loaded)?.data?.showSearchView == true,
                     searchContent = {
-                        SearchContent(
-                            state = uiState.searchState,
-                            onQueryChanged = {
-                                viewModel.onEvent(LogsContract.Event.OnSearchQueryChanged(it))
-                            },
-                            onClosed = { viewModel.onEvent(LogsContract.Event.OnHideShowSearchView) }
-                        )
+                        (uiResult as? UIResult.Loaded)?.data?.run {
+                            SearchContent(
+                                placeHolderText = "Search for logs...",
+                                searchQuery = this.searchQuery,
+                                showSearchView = this.showSearchView,
+                                onExpandedChange = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnSearchExpandedChanged(
+                                            it
+                                        )
+                                    )
+                                },
+                                onSearch = { viewModel.onEvent(LogsContract.Event.OnSearchClick) },
+                                onQueryChange = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnSearchQueryChanged(
+                                            it
+                                        )
+                                    )
+                                },
+                                onClearSearchQuery = {
+                                    viewModel.onEvent(LogsContract.Event.OnClearSearchQuery(it))
+                                }
+                            )
+                        }
                     }
                 )
             )
         }
 
-        LaunchedEffect(uiState.showSearchView) {
-            viewModel.onEvent(LogsContract.Event.FetchLogs)
-            viewModel.onEvent(LogsContract.Event.ListenForConnectionChanges)
-        }
-
-//        DisposableEffect(Unit) {
-//            val refreshJob = viewModel.autoRefreshData()
-//
-//            onDispose {
-//                refreshJob.cancel()
-//            }
-//        }
-
         val scaffoldState = rememberBottomSheetScaffoldState()
         val snackbarHostState = remember { SnackbarHostState() }
 
-        LaunchedEffect(Unit) {
-            viewModel.effect.collectLatest { effect ->
-                when (effect) {
-                    is LogsContract.Effect.ShowBottomSheet -> scaffoldState.bottomSheetState.expand()
-                    is LogsContract.Effect.Snackbar -> {
-                        snackbarHostState.showSnackbar(
-                            message = effect.message.asString(context),
-                            duration = SnackbarDuration.Short
-                        )
-                    }
+        CollectSideEffect(sideEffect = sideEffect) {
+            when (it) {
+                is LogsContract.Effect.Snackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = it.message.asString(context),
+                        duration = SnackbarDuration.Short
+                    )
                 }
             }
         }
 
+//        LaunchedEffect(Unit) {
+//            viewModel.effect.collectLatest { effect ->
+//                when (effect) {
+//                    is LogsContract.Effect.ShowBottomSheet -> scaffoldState.bottomSheetState.expand()
+//                    is LogsContract.Effect.Snackbar -> {
+//                        snackbarHostState.showSnackbar(
+//                            message = effect.message.asString(context),
+//                            duration = SnackbarDuration.Short
+//                        )
+//                    }
+//                }
+//            }
+//        }
+
         LogsScreen(
-            uiState = uiState,
+            uiResult = uiResult,
             scaffoldState = scaffoldState,
             snackbarHostState = snackbarHostState,
             onEvent = viewModel::onEvent

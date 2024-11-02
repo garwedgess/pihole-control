@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,10 +21,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.mihole.R
 import eu.wedgess.mihole.data.model.PiHoleInfo
-import eu.wedgess.mihole.ui.base.AppBarState
+import eu.wedgess.mihole.ui.app.model.AppBarState
 import eu.wedgess.mihole.ui.common.previews.ThemePreview
-import eu.wedgess.mihole.ui.common.search.SearchContent
-import eu.wedgess.mihole.ui.common.search.SearchState
 import eu.wedgess.mihole.ui.filters.view.components.actions.FilterTopBarActions
 import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.utils.UiText
@@ -37,13 +36,14 @@ fun MainAppBar(
     onConnectionSelected: (PiHoleInfo) -> Unit
 ) {
     val titleAlpha: Float by animateFloatAsState(
-        targetValue = if (!appBarState.showSearchView) 1f else 0f,
+        targetValue = if (appBarState.showSearchView) 0f else 01f,
         animationSpec = tween(
-            durationMillis = if (!appBarState.showSearchView) 300 else 20,
+            durationMillis = if (appBarState.showSearchView) 20 else 300,
             easing = LinearEasing,
-        )
+        ),
+        label = "title animation"
     )
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
             appBarState.currentConnection?.takeIf { appBarState.displayConnection }?.run {
                 CurrentConnectionStatus(
@@ -64,7 +64,7 @@ fun MainAppBar(
                 appBarState.searchContent?.invoke()
             }
             AnimatedVisibility(visible = !appBarState.showSearchView) {
-                appBarState.actions?.invoke(this@TopAppBar)
+                appBarState.actions?.invoke(this@CenterAlignedTopAppBar)
             }
         },
         navigationIcon = {
@@ -130,9 +130,13 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = {
                 SearchContent(
-                    state = SearchState<List<PiHoleInfo>>(),
-                    onQueryChanged = { },
-                    onClosed = { }
+                    placeHolderText = "Search for filter...",
+                    searchQuery = "",
+                    showSearchView = true,
+                    onSearch = {},
+                    onClearSearchQuery = {},
+                    onQueryChange = {},
+                    onExpandedChange = {}
                 )
             },
             showSearchView = true

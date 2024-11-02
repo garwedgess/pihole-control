@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.ui.compose.Compose
 import eu.wedgess.mihole.ui.compose.LoadingScreen
 import eu.wedgess.mihole.ui.compose.ResultType
@@ -31,7 +32,7 @@ fun DashboardScreen(uiResult: UIResult<DashboardContract.UiState>) {
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(paddingValues),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
         ) {
             uiResult.Compose(
                 onLoading = { LoadingScreen(modifier = Modifier.fillMaxSize(), it) },

@@ -27,6 +27,6 @@ class TopClientsStatsController @Inject constructor(
             api.fetchTopClients(activePiHoleInfo)
         }
 
-    override suspend fun fetchData(activePiHoleInfo: PiHoleInfo): PiHoleTopClients =
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): PiHoleTopClients =
         fetchTopClients(activePiHoleInfo).getOrThrow()
 }

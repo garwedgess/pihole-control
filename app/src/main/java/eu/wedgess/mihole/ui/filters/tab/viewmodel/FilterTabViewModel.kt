@@ -10,6 +10,7 @@ import eu.wedgess.mihole.ui.compose.ResultType
 import eu.wedgess.mihole.ui.compose.UIResult
 import eu.wedgess.mihole.ui.filters.model.FilterScreenTabType
 import eu.wedgess.mihole.ui.filters.tab.controller.FilterTabController
+import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -18,24 +19,18 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = FilterTabViewModelFactory::class)
 class FilterTabViewModel @AssistedInject constructor(
-    controller: FilterTabController,
+    private val controller: FilterTabController,
     @Assisted val filterRuleType: FilterScreenTabType
 ) : ViewModel() {
 
-    private
-    val searchQuery = MutableStateFlow("")
-
-    fun setSearchQuery(query: String?) {
-        viewModelScope.launch { searchQuery.emit(query ?: "") }
-    }
-
+    private val searchQuery = MutableStateFlow("")
 
     val uiResult = controller.filterRulesResult(filterRuleType)
         .combine(searchQuery) { filterRules, query ->
             filterRules.getOrElse {
                 return@combine UIResult.Error(
                     ResultType.Error.WithTitle(
-                        eu.wedgess.mihole.utils.UiText.DynamicString(
+                        UiText.DynamicString(
                             "Failed to fetch rules"
                         )
                     )
@@ -49,4 +44,10 @@ class FilterTabViewModel @AssistedInject constructor(
             SharingStarted.WhileSubscribed(5_000),
             UIResult.Loading(ResultType.Loading.WithTitle())
         )
+
+    fun setSearchQuery(query: String?) {
+        viewModelScope.launch { searchQuery.emit(query ?: "") }
+    }
+
+    fun onRefreshData() = controller.triggerRefresh()
 }

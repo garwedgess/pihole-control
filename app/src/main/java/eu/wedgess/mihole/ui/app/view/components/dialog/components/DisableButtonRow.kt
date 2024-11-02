@@ -36,7 +36,7 @@ fun DisableButtonRow(
             border = if (selectedTime == leftValue) {
                 BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             } else {
-                ButtonDefaults.outlinedButtonBorder
+                ButtonDefaults.outlinedButtonBorder(enabled = true)
             },
             onClick = { onTimeSelected(leftValue) }
         ) {
@@ -47,7 +47,7 @@ fun DisableButtonRow(
             border = if (selectedTime == rightValue) {
                 BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             } else {
-                ButtonDefaults.outlinedButtonBorder
+                ButtonDefaults.outlinedButtonBorder(enabled = true)
             },
             onClick = { onTimeSelected(rightValue) }) {
             Text(text = stringResource(id = rightButtonTextResId))

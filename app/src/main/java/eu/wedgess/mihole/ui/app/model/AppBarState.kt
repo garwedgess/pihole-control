@@ -1,4 +1,4 @@
-package eu.wedgess.mihole.ui.base
+package eu.wedgess.mihole.ui.app.model
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable

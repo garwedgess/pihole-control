@@ -1,65 +1,28 @@
 package eu.wedgess.mihole.ui.app
 
 import eu.wedgess.mihole.data.model.PiHoleInfo
-import eu.wedgess.mihole.data.model.UserPreferences.Theme
 import eu.wedgess.mihole.data.model.enums.PiHoleStatus
-import eu.wedgess.mihole.ui.base.UiResult
-import eu.wedgess.mihole.ui.base.UnidirectionalViewModel
-import eu.wedgess.mihole.utils.UiText
+import eu.wedgess.mihole.ui.app.model.AppBarState
+import eu.wedgess.mihole.ui.app.model.AppDialogType
+import eu.wedgess.mihole.ui.app.model.PiHoleAppInfo
 
-interface AppContract :
-    UnidirectionalViewModel<AppContract.UiState, AppContract.Event, AppContract.Effect> {
+interface AppContract {
 
     data class UiState(
-        val currentConnection: UiResult<PiHoleInfo>,
-        val connections: UiResult<List<PiHoleInfo>>,
-        val status: UiResult<PiHoleStatus>,
-        val currentTheme: Theme,
-        val refreshInterval: Long,
-        val useDynamicThemeColors: Boolean,
+        val appInfo: PiHoleAppInfo,
+        val appBarState: AppBarState,
         val showConnectionDropdown: Boolean,
-        val showEnableStatusDialog: Boolean,
-        val showDisableStatusDialog: Boolean
+        val dialogType: AppDialogType
     ) {
 
-        fun connection(connection: PiHoleInfo): UiState =
-            this.copy(currentConnection = UiResult.Success(connection))
-
-        fun connectionError(errorMessage: UiText): UiState =
-            this.copy(currentConnection = UiResult.Error(errorMessage))
-
-        fun connections(connection: List<PiHoleInfo>): UiState =
-            this.copy(connections = UiResult.Success(connection))
-
-        fun connectionsError(errorMessage: UiText): UiState =
-            this.copy(connections = UiResult.Error(errorMessage))
-
-        fun status(status: PiHoleStatus): UiState =
-            this.copy(status = UiResult.Success(status))
-
-        fun statusError(errorMessage: UiText): UiState =
-            this.copy(status = UiResult.Error(errorMessage))
-
-        fun refreshInterval(interval: Long): UiState =
-            this.copy(refreshInterval = interval)
-
-        fun theme(theme: Theme): UiState =
-            this.copy(currentTheme = theme)
-
-        fun dynamicColors(useDynamicTheme: Boolean): AppContract.UiState =
-            this.copy(useDynamicThemeColors = useDynamicTheme)
+        val adBlockingEnabled: Boolean get() = appInfo.status == PiHoleStatus.ENABLED
 
         companion object {
             fun initial() = UiState(
-                currentConnection = UiResult.Loading,
-                connections = UiResult.Loading,
-                currentTheme = Theme.SYSTEM,
-                refreshInterval = 10_000,
-                useDynamicThemeColors = false,
-                status = UiResult.Loading,
+                appInfo = PiHoleAppInfo.initial(),
                 showConnectionDropdown = false,
-                showEnableStatusDialog = false,
-                showDisableStatusDialog = false
+                appBarState = AppBarState(),
+                dialogType = AppDialogType.None
             )
         }
     }
@@ -68,16 +31,12 @@ interface AppContract :
     }
 
     sealed interface Event {
-        object FetchCurrentConnection : Event
-        object FetchConnections : Event
-        object FetchStatus : Event
-        object FetchSettings : Event
-        object ShowEnabledStatusDialog: Event
-        object DismissEnabledStatusDialog: Event
-        object ShowDisabledStatusDialog: Event
-        object DismissDisabledStatusDialog: Event
-        object SetEnabledStatus: Event
-        data class OnConnectionSelected(val mihHole: PiHoleInfo): Event
-        data class SetDisabledStatus(val duration: Long): Event
+        data object ShowEnabledStatusDialog : Event
+        data object DismissDialog : Event
+        data object ShowDisabledStatusDialog : Event
+        data object SetEnabledStatus : Event
+        data class OnConnectionSelected(val mihHole: PiHoleInfo) : Event
+        data class SetDisabledStatus(val duration: Long) : Event
+        data class UpdateAppBarState(val updateState: AppBarState) : Event
     }
 }

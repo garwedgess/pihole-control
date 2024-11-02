@@ -4,16 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.mihole.data.model.enums.FilterRuleType
+import eu.wedgess.mihole.ui.base.EventDrivenViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModel
+import eu.wedgess.mihole.ui.base.SideEffectViewModelImpl
+import eu.wedgess.mihole.ui.base.UiStateViewModel
+import eu.wedgess.mihole.ui.base.UiStateViewModelImpl
 import eu.wedgess.mihole.ui.filters.FiltersContract
 import eu.wedgess.mihole.ui.filters.controller.FiltersController
 import eu.wedgess.mihole.ui.filters.model.FilterDialogType
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,14 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class FiltersViewModel @Inject constructor(
     private val controller: FiltersController
-) : ViewModel(), FiltersContract {
-
-    private val _uiState: MutableStateFlow<FiltersContract.UiState> =
-        MutableStateFlow(FiltersContract.UiState.initial())
-    override val uiState: StateFlow<FiltersContract.UiState> = _uiState.asStateFlow()
-
-    private val _effect: Channel<FiltersContract.Effect> = Channel(Channel.UNLIMITED)
-    override val effect: Flow<FiltersContract.Effect> = _effect.receiveAsFlow()
+) : ViewModel(),
+    EventDrivenViewModel<FiltersContract.Event>,
+    SideEffectViewModel<FiltersContract.Effect> by SideEffectViewModelImpl(),
+    UiStateViewModel<FiltersContract.UiState> by UiStateViewModelImpl(
+        FiltersContract.UiState.initial()
+    ) {
 
     private var currentFilterRuleType: FilterRuleType = FilterRuleType.ALLOW
 
@@ -36,21 +32,17 @@ class FiltersViewModel @Inject constructor(
         when (event) {
             is FiltersContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
 
-            FiltersContract.Event.OnSearchClick -> _uiState.update {
-                it.copy(showSearchView = false)
+            FiltersContract.Event.OnSearchClick -> updateUiState { copy(showSearchView = false) }
+
+            is FiltersContract.Event.OnSearchExpandedChanged -> updateUiState {
+                copy(showSearchView = event.expanded)
             }
 
-            is FiltersContract.Event.OnSearchExpandedChanged -> _uiState.update {
-                it.copy(showSearchView = event.expanded)
+            is FiltersContract.Event.OnSearchQueryChanged -> updateUiState {
+                copy(searchQuery = event.query)
             }
 
-            is FiltersContract.Event.OnSearchQueryChanged -> _uiState.update {
-                it.copy(searchQuery = event.query)
-            }
-
-            FiltersContract.Event.OnShowSearchView -> _uiState.update {
-                it.copy(showSearchView = true)
-            }
+            FiltersContract.Event.OnShowSearchView -> updateUiState { copy(showSearchView = true) }
 
             is FiltersContract.Event.OnAddFilterRule -> handleAddFilterRule(
                 rule = event.rule.domain,
@@ -62,16 +54,16 @@ class FiltersViewModel @Inject constructor(
                 type = event.rule.type
             )
 
-            FiltersContract.Event.OnDismissDialog -> _uiState.update {
-                it.copy(dialogType = FilterDialogType.None)
+            FiltersContract.Event.OnDismissDialog -> updateUiState {
+                copy(dialogType = FilterDialogType.None)
             }
 
-            is FiltersContract.Event.OnFilterRuleItemClick -> _uiState.update {
-                it.copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
+            is FiltersContract.Event.OnFilterRuleItemClick -> updateUiState {
+                copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
             }
 
-            FiltersContract.Event.AddFilterRuleClick -> _uiState.update {
-                it.copy(dialogType = FilterDialogType.AddFilterRule(type = currentFilterRuleType))
+            FiltersContract.Event.AddFilterRuleClick -> updateUiState {
+                copy(dialogType = FilterDialogType.AddFilterRule(type = currentFilterRuleType))
             }
 
             is FiltersContract.Event.OnFilterTabChanged -> currentFilterRuleType = event.type
@@ -86,13 +78,13 @@ class FiltersViewModel @Inject constructor(
                         "Failed to insert filter rule $rule for type: $type",
                         it
                     )
-                    _effect.send(FiltersContract.Effect.Toast.RuleAddFailed).also {
-                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    emitSideEffect(FiltersContract.Effect.Toast.RuleAddFailed).also {
+                        updateUiState { copy(dialogType = FilterDialogType.None) }
                     }
                 }
                 .onSuccess {
-                    _effect.send(FiltersContract.Effect.Toast.RuleAdded).also {
-                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    emitSideEffect(FiltersContract.Effect.Toast.RuleAdded).also {
+                        updateUiState { copy(dialogType = FilterDialogType.None) }
                     }
                 }
         }
@@ -106,13 +98,13 @@ class FiltersViewModel @Inject constructor(
                         "Failed to remove filter rule $rule for type: $type",
                         it
                     )
-                    _effect.send(FiltersContract.Effect.Toast.RuleRemovalFailed).also {
-                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    emitSideEffect(FiltersContract.Effect.Toast.RuleRemovalFailed).also {
+                        updateUiState { copy(dialogType = FilterDialogType.None) }
                     }
                 }
                 .onSuccess {
-                    _effect.send(FiltersContract.Effect.Toast.RuleRemoved).also {
-                        _uiState.update { state -> state.copy(dialogType = FilterDialogType.None) }
+                    emitSideEffect(FiltersContract.Effect.Toast.RuleRemoved).also {
+                        updateUiState { copy(dialogType = FilterDialogType.None) }
                     }
                 }
         }
@@ -120,9 +112,9 @@ class FiltersViewModel @Inject constructor(
 
     private fun handleClearSearchQuery(query: String) {
         if (query.isEmpty()) {
-            _uiState.update { it.copy(showSearchView = false) }
+            updateUiState { copy(showSearchView = false) }
         } else {
-            _uiState.update { it.copy(searchQuery = "") }
+            updateUiState { copy(searchQuery = "") }
         }
     }
 }
