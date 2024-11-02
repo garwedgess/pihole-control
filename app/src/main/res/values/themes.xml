@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.MiHole" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MiHole.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.MiHole</item>
+    </style>
 </resources>

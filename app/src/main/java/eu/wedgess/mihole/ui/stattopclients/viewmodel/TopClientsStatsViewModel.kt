@@ -20,7 +20,10 @@ class TopClientsStatsViewModel @Inject constructor(
     val uiResult = controller.topClients()
         .map { result ->
             result.getOrElse {
-                return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch top queries")))
+                return@map UIResult.Error(ResultType.Error.WithTitleAndSubTitle(
+                    UiText.DynamicString("Failed to fetch top clients"),
+                    UiText.DynamicString(it.message ?: "Unknown error"))
+                )
             }.run {
                 return@map UIResult.Loaded(this)
             }

@@ -10,6 +10,7 @@ import eu.wedgess.mihole.utils.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +20,14 @@ class DashboardViewModel @Inject constructor(
 
     val uiResult = controller.dashboardInfo()
         .map { result ->
-            result.getOrElse {
-                return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch dashboard info")))
+            result.getOrElse { throwable ->
+                Timber.e("Failed to fetch dashboard info", throwable)
+                return@map UIResult.Error(
+                    ResultType.Error.WithTitleAndSubTitle(
+                        title = UiText.DynamicString("Failed to fetch dashboard info"),
+                        subTitle = UiText.DynamicString(throwable.message?.takeIf { it.isNotBlank() } ?: "Unknown error")
+                    )
+                )
             }.run {
                 return@map this.toUiResult()
             }

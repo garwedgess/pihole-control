@@ -41,7 +41,8 @@ fun NavGraphBuilder.ModifyConnectionDestination(
             onComposing(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.appbar_title_connection),
-                    showNavigateBackIcon = true
+                    showNavigateBackIcon = true,
+                    bottomBarVisible = false
                 )
             )
             currentConnectionId?.run {
@@ -57,7 +58,6 @@ fun NavGraphBuilder.ModifyConnectionDestination(
 
         ModifyConnectionScreen(
             uiState,
-            viewModel.barcodeScanner,
             viewModel::onEvent
         )
     }

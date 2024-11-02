@@ -30,9 +30,7 @@ import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import eu.wedgess.mihole.ui.theme.queriesBlockedBackground
 
 @Composable
-fun TopClientsContent(
-    topClients: Map<String, Int>
-) {
+fun TopClientsContent(topClients: Map<String, Int>) {
 
     val sumAllClients by remember {
         mutableIntStateOf(topClients.values.sum())

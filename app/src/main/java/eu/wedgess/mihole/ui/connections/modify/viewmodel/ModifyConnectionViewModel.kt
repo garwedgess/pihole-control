@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.mihole.R
 import eu.wedgess.mihole.ui.base.EventDrivenViewModel
 import eu.wedgess.mihole.ui.base.SideEffectViewModel
 import eu.wedgess.mihole.ui.base.SideEffectViewModelImpl
@@ -13,9 +12,8 @@ import eu.wedgess.mihole.ui.base.UiStateViewModel
 import eu.wedgess.mihole.ui.base.UiStateViewModelImpl
 import eu.wedgess.mihole.ui.connections.modify.ModifyConnectionsContract
 import eu.wedgess.mihole.ui.connections.modify.controller.ModifyConnectionController
+import eu.wedgess.mihole.ui.connections.modify.model.ModifyConnectionDialogType
 import eu.wedgess.mihole.ui.navigation.KEY_ARG_ID
-import eu.wedgess.mihole.utils.UiText
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ModifyConnectionViewModel @Inject constructor(
     private val controller: ModifyConnectionController,
-    val barcodeScanner: BarcodeScanner,
+    private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
     EventDrivenViewModel<ModifyConnectionsContract.Event>,
@@ -39,18 +37,18 @@ class ModifyConnectionViewModel @Inject constructor(
             ModifyConnectionsContract.Event.FetchCurrentConnection -> fetchConnection()
             ModifyConnectionsContract.Event.SaveConnection -> saveConnection()
             ModifyConnectionsContract.Event.OnOpenBarcodeScanner -> updateUiState {
-                copy(showBarcodeScanner = true)
+                copy(dialogType = ModifyConnectionDialogType.ApiTokenScanner(barcodeScanner))
             }
 
-            ModifyConnectionsContract.Event.OnDismissBarcodeScanner -> updateUiState {
-                copy(showBarcodeScanner = false)
+            ModifyConnectionsContract.Event.OnDismissDialog -> updateUiState {
+                copy(dialogType = ModifyConnectionDialogType.None)
             }
 
             is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState { copy(apiPath = event.apiPath) }
             is ModifyConnectionsContract.Event.OnApiTokenChanged -> updateUiState {
                 copy(
                     apiToken = event.apiToken,
-                    showBarcodeScanner = false
+                    dialogType = ModifyConnectionDialogType.None
                 )
             }
 
@@ -70,7 +68,7 @@ class ModifyConnectionViewModel @Inject constructor(
                 copy(trustAllCerts = event.trustAllCerts)
             }
 
-            is ModifyConnectionsContract.Event.OnShowAdvancedSettingsChanged -> updateUiState {
+            is ModifyConnectionsContract.Event.OnToggleAdvancedSettingsChanged -> updateUiState {
                 copy(showAdvancedSettings = event.showAdvancedSettings)
             }
 
@@ -110,7 +108,23 @@ class ModifyConnectionViewModel @Inject constructor(
         existingConnectionId?.run {
             viewModelScope.launch {
                 val connection = requireNotNull(controller.fetchConnection(this@run).getOrThrow())
-                updateUiState { copy(currentConnection = connection) }
+                updateUiState {
+                    with(connection) {
+                        copy(
+                            currentConnection = this,
+                            name = this.name,
+                            host = this.host,
+                            port = this.port,
+                            protocol = this.protocol,
+                            apiPath = this.apiPath,
+                            apiToken = this.token,
+                            authUsername = this.authUsername,
+                            authPassword = this.authPassword,
+                            authRealm = this.authRealm,
+                            trustAllCerts = this.trustAllCerts
+                        )
+                    }
+                }
             }
         }
     }

@@ -21,7 +21,10 @@ class QueryTypesViewModel @Inject constructor(
     val uiResult = controller.queryTypes()
         .map { result ->
             result.getOrElse {
-                return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch query types")))
+                return@map UIResult.Error(ResultType.Error.WithTitleAndSubTitle(
+                    UiText.DynamicString("Failed to fetch query types"),
+                    UiText.DynamicString(it.message ?: "Unknown error"))
+                )
             }.run {
                 return@map UIResult.Loaded(this)
             }

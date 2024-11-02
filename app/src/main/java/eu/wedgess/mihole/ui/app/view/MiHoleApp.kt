@@ -18,9 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
@@ -38,7 +36,6 @@ import eu.wedgess.mihole.data.model.UserPreferences
 import eu.wedgess.mihole.ui.app.AppContract
 import eu.wedgess.mihole.ui.app.view.components.dialog.AppDialogs
 import eu.wedgess.mihole.ui.app.viewmodel.AppViewModel
-import eu.wedgess.mihole.ui.app.model.AppBarState
 import eu.wedgess.mihole.ui.common.MainAppBar
 import eu.wedgess.mihole.ui.navigation.MainNavigationGraph
 import eu.wedgess.mihole.ui.navigation.bottom.BottomNavigationBar
@@ -46,9 +43,14 @@ import eu.wedgess.mihole.ui.theme.MiHoleTheme
 import timber.log.Timber
 import kotlin.math.abs
 
+// Implement spash screen for setting the theme
+// https://medium.com/@hardikkubavat/implementing-a-splash-screen-in-jetpack-compose-using-the-splashscreen-api-f1ff6d8f63c5
+
 @Composable
 fun MiHoleApp(
-    viewModel: AppViewModel = hiltViewModel()
+    viewModel: AppViewModel = hiltViewModel(),
+    isDarkTheme: Boolean,
+    useDynamicColors: Boolean
 ) {
     val navHostController = rememberNavController()
     val backStackEntry = navHostController.currentBackStackEntryAsState()
@@ -82,15 +84,9 @@ fun MiHoleApp(
         }
     }
 
-    val isDarkTheme = when (uiState.appInfo.currentTheme) {
-        UserPreferences.Theme.DARK -> true
-        UserPreferences.Theme.LIGHT -> false
-        else -> isSystemInDarkTheme()
-    }
-
     MiHoleTheme(
         darkTheme = isDarkTheme,
-        dynamicColor = uiState.appInfo.useDynamicThemeColors
+        dynamicColor = useDynamicColors
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),

@@ -43,7 +43,7 @@ class DashboardController @Inject constructor(
         }
 
 
-    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo)= supervisorScope {
+    override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo) = supervisorScope {
         val deferredSummary = async { fetchSummary(activePiHoleInfo) }
         val deferredOverTimeData = async { fetchOverTimeData(activePiHoleInfo) }
         val deferredClientsOverTimeData = async { fetchOverTimeDataClients(activePiHoleInfo) }

@@ -37,7 +37,6 @@ abstract class RefreshableController<T>(
         }.flatMapLatest { (piHole, refreshDelay) ->
             flow {
                 while (true) {
-                    Timber.d("Autorefresh")
                     emit(fetchRefreshableData(piHole))
                     delay(overrideDelayMillis ?: refreshDelay)
                 }

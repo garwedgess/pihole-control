@@ -21,7 +21,10 @@ class ServerStatsViewModel @Inject constructor(
     val uiResult = controller.forwardDestinations()
         .map { result ->
             result.getOrElse {
-                return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch forward destinations")))
+                return@map UIResult.Error(ResultType.Error.WithTitleAndSubTitle(
+                    UiText.DynamicString("Failed to fetch forward destinations"),
+                    UiText.DynamicString(it.message ?: "Unknown error"))
+                )
             }.run {
                 return@map UIResult.Loaded(this)
             }

@@ -39,10 +39,9 @@ class LogsViewModel @Inject constructor(
     val uiResult = controller.logs().combine(_uiState) { logsResult, uiState ->
         logsResult.getOrElse {
             return@combine UIResult.Error(
-                ResultType.Error.WithTitle(
-                    UiText.DynamicString(
-                        "Failed to fetch rules"
-                    )
+                ResultType.Error.WithTitleAndSubTitle(
+                    UiText.DynamicString("Failed to fetch logs"),
+                    UiText.DynamicString(it.message ?: "Unknown error")
                 )
             )
         }.run {

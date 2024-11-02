@@ -20,8 +20,9 @@ data class DashboardInfo(
                     queriesOverTimeResult.isFailure &&
                     clientQueriesOverTimeResult.isFailure -> {
                 UIResult.Error(
-                    ResultType.Error.WithTitle(
-                        UiText.DynamicString("Failed to fetch dashboard info")
+                    ResultType.Error.WithTitleAndSubTitle(
+                        title = UiText.DynamicString("Failed to fetch dashboard info"),
+                        subTitle = UiText.DynamicString(summaryResult.exceptionOrNull()?.message ?: "Unknown error")
                     )
                 )
             }

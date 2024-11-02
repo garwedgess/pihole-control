@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.wedgess.mihole.ui.compose.Compose
+import eu.wedgess.mihole.ui.compose.ErrorScreen
 import eu.wedgess.mihole.ui.compose.LoadingScreen
 import eu.wedgess.mihole.ui.stattopclients.view.TopClientsContent
 import eu.wedgess.mihole.ui.stattopclients.viewmodel.TopClientsStatsViewModel
@@ -15,9 +16,9 @@ import eu.wedgess.mihole.ui.stattopclients.viewmodel.TopClientsStatsViewModel
 fun TopClientsScreenRoot(viewModel: TopClientsStatsViewModel = hiltViewModel()) {
     val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 
-
     uiResult.Compose(
         onLoading = { LoadingScreen(modifier = Modifier.fillMaxSize(), it) },
-        onLoaded = { TopClientsContent(it.topSources) }
+        onLoaded = { TopClientsContent(it.topSources) },
+        onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) }
     )
 }

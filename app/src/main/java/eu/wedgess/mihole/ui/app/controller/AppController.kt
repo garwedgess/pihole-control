@@ -30,7 +30,9 @@ class AppController @Inject constructor(
 
     override suspend fun fetchRefreshableData(activePiHoleInfo: PiHoleInfo): PiHoleStatusResponse {
         return api.fetchStatus(activePiHoleInfo).onFailure {
-            Timber.e("Failed to check active connection blocking status", it)
+            Timber.e(
+                "Failed to check the active connections blocking status, defaulting to unknown", it
+            )
         }.getOrNull() ?: PiHoleStatusResponse(PiHoleStatus.UNKNOWN)
     }
 
@@ -46,9 +48,7 @@ class AppController @Inject constructor(
             currentConnection = activePiHole,
             connections = allConnections.map { it.toPiHoleInfo() },
             status = status.getOrNull()?.status ?: PiHoleStatus.UNKNOWN,
-            currentTheme = preferences.theme,
-            refreshInterval = preferences.refreshTime,
-            useDynamicThemeColors = preferences.useDynamicColors
+            refreshInterval = preferences.refreshTime
         )
     }
 

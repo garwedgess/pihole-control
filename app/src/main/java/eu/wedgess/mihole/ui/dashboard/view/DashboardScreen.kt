@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import eu.wedgess.mihole.ui.compose.Compose
+import eu.wedgess.mihole.ui.compose.ErrorScreen
 import eu.wedgess.mihole.ui.compose.LoadingScreen
 import eu.wedgess.mihole.ui.compose.ResultType
 import eu.wedgess.mihole.ui.compose.UIResult
@@ -42,6 +43,9 @@ fun DashboardScreen(uiResult: UIResult<DashboardContract.UiState>) {
                     it.clientQueriesOverTime?.run {
                         ClientQueriesOverTimeSection(overTimeData = this@run)
                     }
+                },
+                onError = {
+                    ErrorScreen(modifier = Modifier.fillMaxSize(), it)
                 }
             )
         }

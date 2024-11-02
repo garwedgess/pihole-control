@@ -1,12 +1,13 @@
 package eu.wedgess.mihole.ui.connections.modify
 
 import eu.wedgess.mihole.data.model.PiHoleInfo
+import eu.wedgess.mihole.ui.connections.modify.model.ModifyConnectionDialogType
 import io.ktor.http.URLProtocol
 
 interface ModifyConnectionsContract {
 
     data class UiState(
-        val currentConnection: PiHoleInfo,
+        val currentConnection: PiHoleInfo?,
         val name: String,
         val host: String,
         val port: Int,
@@ -17,7 +18,7 @@ interface ModifyConnectionsContract {
         val authPassword: String,
         val authRealm: String,
         val trustAllCerts: Boolean,
-        val showBarcodeScanner: Boolean,
+        val dialogType: ModifyConnectionDialogType,
         val showAdvancedSettings: Boolean
     ) {
 
@@ -41,15 +42,15 @@ interface ModifyConnectionsContract {
             private val DEFAULT_INFO = PiHoleInfo.default
 
             fun initial() = UiState(
-                currentConnection = DEFAULT_INFO,
-                showBarcodeScanner = false,
+                currentConnection = null,
+                dialogType = ModifyConnectionDialogType.None,
                 showAdvancedSettings = false,
                 name = DEFAULT_INFO.name,
                 host = DEFAULT_INFO.host,
                 port = DEFAULT_INFO.port,
                 protocol = DEFAULT_INFO.protocol,
                 apiPath = DEFAULT_INFO.apiPath,
-                apiToken = DEFAULT_INFO.token ?: "",
+                apiToken = DEFAULT_INFO.token,
                 authUsername = DEFAULT_INFO.authUsername,
                 authPassword = DEFAULT_INFO.authPassword,
                 trustAllCerts = DEFAULT_INFO.trustAllCerts,
@@ -60,7 +61,7 @@ interface ModifyConnectionsContract {
 
     sealed interface Effect {
         sealed interface Navigation : Effect {
-            object Back : Navigation
+           data  object Back : Navigation
         }
 
     }
@@ -77,9 +78,9 @@ interface ModifyConnectionsContract {
         data class OnAuthPasswordChanged(val authPassword: String) : Event
         data class OnAuthRealmChanged(val authRealm: String) : Event
         data class OnTrustAllCertsChanged(val trustAllCerts: Boolean) : Event
-        data class OnShowAdvancedSettingsChanged(val showAdvancedSettings: Boolean) : Event
+        data class OnToggleAdvancedSettingsChanged(val showAdvancedSettings: Boolean) : Event
         data object OnOpenBarcodeScanner : Event
-        data object OnDismissBarcodeScanner : Event
+        data object OnDismissDialog : Event
         data object SaveConnection : Event
     }
 }

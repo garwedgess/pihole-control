@@ -32,7 +32,14 @@ class ConnectionsViewModel @Inject constructor(
             result.getOrElse {
                 return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch connections")))
             }.run {
-                return@map UIResult.Loaded(ConnectionsContract.UiState(map { it.toPiHoleInfo() }))
+                return@map if (isEmpty()) {
+                    UIResult.Empty(ResultType.Empty.WithTitleAndSubTitle(
+                        UiText.DynamicString("No connections"),
+                        UiText.DynamicString("Add a connection to get started")
+                    ))
+                    } else {
+                        UIResult.Loaded(ConnectionsContract.UiState(map { it.toPiHoleInfo() }))
+                    }
             }
         }
         .stateIn(

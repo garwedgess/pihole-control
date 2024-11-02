@@ -29,10 +29,9 @@ class FilterTabViewModel @AssistedInject constructor(
         .combine(searchQuery) { filterRules, query ->
             filterRules.getOrElse {
                 return@combine UIResult.Error(
-                    ResultType.Error.WithTitle(
-                        UiText.DynamicString(
-                            "Failed to fetch rules"
-                        )
+                    ResultType.Error.WithTitleAndSubTitle(
+                        UiText.DynamicString("Failed to fetch filter rules"),
+                        UiText.DynamicString(it.message ?: "Unknown error")
                     )
                 )
             }.run {

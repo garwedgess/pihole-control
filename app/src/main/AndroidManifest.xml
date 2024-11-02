@@ -23,7 +23,7 @@
         android:theme="@style/Theme.MiHole"
         tools:targetApi="31">
         <activity
-            android:name=".MiHoleEntryPointActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.MiHole">
             <intent-filter>
