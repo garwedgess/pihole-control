@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MiHole"
+rootProject.name = "PiHole Control"
 include(":app")

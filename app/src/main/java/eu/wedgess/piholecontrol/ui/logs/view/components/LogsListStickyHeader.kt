@@ -1,0 +1,55 @@
+package eu.wedgess.piholecontrol.ui.logs.view.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import eu.wedgess.piholecontrol.ui.theme.PiHoleControlTheme
+import eu.wedgess.piholecontrol.utils.extensions.Border
+import eu.wedgess.piholecontrol.utils.extensions.border
+
+@Composable
+fun LogsListStickyHeader(listSize: Int) {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth()
+            .height(PiHoleControlTheme.dimens.size.logsStickyHeaderHeight)
+            .border(
+                bottom = Border(
+                    DividerDefaults.Thickness,
+                    DividerDefaults.color
+                )
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = PiHoleControlTheme.dimens.padding.itemContentLarge),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Results: $listSize", color = MaterialTheme.colorScheme.onSurface)
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun LogsListStickyHeaderPreview() {
+    PiHoleControlTheme {
+        LogsListStickyHeader(listSize = 100)
+    }
+}

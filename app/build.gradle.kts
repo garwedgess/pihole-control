@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace  = "eu.wedgess.mihole"
+    namespace  = "eu.wedgess.piholecontrol"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "eu.wedgess.mihole"
+        applicationId = "eu.wedgess.piholecontrol"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -53,8 +53,8 @@ android {
 
 sqldelight {
     databases {
-        create("MiHoleDatabase") {
-            packageName.set("eu.wedgess.mihole.data")
+        create("PiHoleControlDatabase") {
+            packageName.set("eu.wedgess.piholecontrol.data")
         }
     }
 }

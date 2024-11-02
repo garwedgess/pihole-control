@@ -1,0 +1,41 @@
+package eu.wedgess.piholecontrol.ui.dashboard.view.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.piholecontrol.R
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleOverTimeData
+import eu.wedgess.piholecontrol.ui.theme.PiHoleControlTheme
+
+@Composable
+fun QueriesOverTimeSection(
+    overTimeData: PiHoleOverTimeData
+) {
+    Card(
+        modifier = Modifier.padding(horizontal = PiHoleControlTheme.dimens.padding.itemContent)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(PiHoleControlTheme.dimens.padding.itemContent),
+            verticalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContentSmall,
+                Alignment.CenterVertically
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.home_title_queries_over_time),
+                style = MaterialTheme.typography.titleMedium
+            )
+            QueriesOvertimeGraph(overTimeData = overTimeData)
+        }
+    }
+}
