@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.ui.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.ui.theme.PiHoleControlTheme
 
@@ -30,8 +32,13 @@ fun AnimatedLinearProgressIndicator(indicatorProgress: Float) {
 
     LinearProgressIndicator(
         modifier = Modifier.widthIn(max = PiHoleControlTheme.dimens.size.listPercentageBarWidth),
-        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = PiHoleControlTheme.dimens.weight.minAlpha),
-        progress = animatedProgress
+        strokeCap = StrokeCap.Round,
+        gapSize = 0.dp,
+        trackColor = MaterialTheme.colorScheme.primary.copy(
+            alpha = PiHoleControlTheme.dimens.weight.minAlpha
+        ),
+        progress = { animatedProgress },
+        drawStopIndicator = {}
     )
 
     LaunchedEffect(indicatorProgress) {
