@@ -1,17 +1,24 @@
 package eu.wedgess.piholecontrol.ui.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.ui.common.model.LegendData
 import eu.wedgess.piholecontrol.ui.common.previews.ThemePreview
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LegendGrid(data: List<LegendData>, modifier: Modifier = Modifier) {
-    FlowRow(maxItemsInEachRow = 2, modifier = modifier) {
+    FlowRow(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        maxItemsInEachRow = 2,
+        modifier = modifier.padding(top = 12.dp)
+    ) {
         data.forEach { legend ->
             LegendItem(legendData = legend)
         }

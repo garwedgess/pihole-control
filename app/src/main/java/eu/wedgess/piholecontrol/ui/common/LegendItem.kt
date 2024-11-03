@@ -32,7 +32,7 @@ fun RowScope.LegendItem(legendData: LegendData) {
 
     val selectedTitleText = MaterialTheme.typography.bodySmall.copy(
         fontWeight = FontWeight.Bold,
-        fontSize = PiHoleControlTheme.dimens.fontSize.legendTitleSelected,
+        fontSize = PiHoleControlTheme.dimens.fontSize.legendTitle,
         color = legendData.color
     )
 

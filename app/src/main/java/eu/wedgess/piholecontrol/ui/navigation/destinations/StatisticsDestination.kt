@@ -7,10 +7,10 @@ import eu.wedgess.piholecontrol.ui.app.model.AppBarState
 import eu.wedgess.piholecontrol.ui.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.ui.navigation.Screens
 import eu.wedgess.piholecontrol.ui.navigation.StatisticsTab
-import eu.wedgess.piholecontrol.ui.statquerytypes.navigation.QueryTypesRoot
-import eu.wedgess.piholecontrol.ui.statserver.navigation.ServersRoot
-import eu.wedgess.piholecontrol.ui.stattopclients.navigation.TopClientsScreenRoot
-import eu.wedgess.piholecontrol.ui.stattopdomains.navigation.TopDomainsRoot
+import eu.wedgess.piholecontrol.ui.statistics.tabs.querytypes.navigation.QueryTypesRoot
+import eu.wedgess.piholecontrol.ui.statistics.tabs.server.navigation.ServersRoot
+import eu.wedgess.piholecontrol.ui.statistics.tabs.topclients.navigation.TopClientsScreenRoot
+import eu.wedgess.piholecontrol.ui.statistics.tabs.topdomains.navigation.TopDomainsRoot
 
 fun NavGraphBuilder.StatisticsDestination(onComposing: (AppBarState) -> Unit) {
     composable(
