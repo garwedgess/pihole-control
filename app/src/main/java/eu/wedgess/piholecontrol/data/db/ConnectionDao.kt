@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import app.cash.sqldelight.coroutines.mapToOneOrNull
+import app.cash.sqldelight.coroutines.mapToOne
 import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -15,14 +15,17 @@ class ConnectionDao @Inject constructor(
     private val queries = db.connectionQueries
 
     fun fetchAllAsFlow() = queries.selectAll().asFlow().mapToList(dispatcherProvider.io)
+
     fun fetchAll() = queries.selectAll().executeAsList()
 
-    fun fetchById(id: Long) = queries.selectById(id).executeAsOneOrNull()
+    fun fetchById(id: Long) = queries.selectById(id).executeAsOne()
 
     fun fetchActive() = queries.selectActive().executeAsOne()
 
     fun fetchActiveFlow() = queries.selectActive().asFlow()
-        .mapToOneOrNull(dispatcherProvider.io)
+        .mapToOne(dispatcherProvider.io)
+
+    fun checkNotEmpty(): Boolean = queries.checkNotEmpty().executeAsOne()
 
     fun delete(id: Long) = queries.delete(id)
 

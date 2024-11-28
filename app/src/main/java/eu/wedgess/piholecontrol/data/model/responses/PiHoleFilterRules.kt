@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.model.responses
 
-import eu.wedgess.piholecontrol.data.model.enums.FilterRuleType
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -26,6 +26,6 @@ data class PiHoleFilterRules(
         @SerialName("id")
         val id: Int = 0,
         @SerialName("type")
-        val type: FilterRuleType = FilterRuleType.REGEX_ALLOW
+        val type: PiHoleFilterRuleType = PiHoleFilterRuleType.REGEX_ALLOW
     )
 }

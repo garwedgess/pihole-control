@@ -4,6 +4,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Like [runCatching], but with proper coroutines cancellation handling.
@@ -29,4 +30,21 @@ fun <T> Flow<T>.resultOf() = flow<Result<T>> {
     catch {
         emit(Result.failure(it))
     }.collect { emit(Result.success(it)) }
+}
+
+fun <T, R> Flow<Result<T>>.mapResult(transform: (T) -> R): Flow<Result<R>> {
+    return this.map { result ->
+        result.map { data ->
+            transform(data)
+        }
+    }
+}
+
+suspend fun <T> runWithErrorHandling(operation: suspend () -> T): Result<Unit> {
+    return try {
+        operation()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

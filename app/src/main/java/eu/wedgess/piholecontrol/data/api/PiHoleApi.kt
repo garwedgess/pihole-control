@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import eu.wedgess.piholecontrol.data.model.ConnectionInfo
-import eu.wedgess.piholecontrol.data.model.responses.ModifyFilterRuleResponse
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleModifyFilterRuleResponse
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleClientsOverTimeData
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
@@ -12,7 +12,7 @@ import eu.wedgess.piholecontrol.data.model.responses.PiHoleStatusResponse
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleSummary
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopClients
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopQueries
-import eu.wedgess.piholecontrol.data.model.enums.FilterRuleType
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import kotlin.time.Duration
 
 interface PiHoleApi {
@@ -25,9 +25,9 @@ interface PiHoleApi {
     suspend fun fetchForwardDestinations(activeMiHole: ConnectionInfo): Result<PiHoleForwardDestinations>
     suspend fun fetchTopQueries(activeMiHole: ConnectionInfo): Result<PiHoleTopQueries>
     suspend fun fetchTopClients(activeMiHole: ConnectionInfo): Result<PiHoleTopClients>
-    suspend fun fetchFilterRules(activeMiHole: ConnectionInfo, ruleType: FilterRuleType): Result<PiHoleFilterRules>
-    suspend fun addFilterRule(activeMiHole: ConnectionInfo, rule: String, ruleType: FilterRuleType): Result<ModifyFilterRuleResponse>
-    suspend fun removeFilterRule(activeMiHole: ConnectionInfo, rule: String, ruleType: FilterRuleType): Result<ModifyFilterRuleResponse>
+    suspend fun fetchFilterRules(activeMiHole: ConnectionInfo, ruleType: PiHoleFilterRuleType): Result<PiHoleFilterRules>
+    suspend fun addFilterRule(activeMiHole: ConnectionInfo, rule: String, ruleType: PiHoleFilterRuleType): Result<PiHoleModifyFilterRuleResponse>
+    suspend fun removeFilterRule(activeMiHole: ConnectionInfo, rule: String, ruleType: PiHoleFilterRuleType): Result<PiHoleModifyFilterRuleResponse>
     suspend fun fetchLogs(activeMiHole: ConnectionInfo, limit: Int): Result<PiHoleLogsResponse>
     suspend fun enableAdBlocking(activeMiHole: ConnectionInfo): Result<PiHoleStatusResponse>
     suspend fun disableAdBlocking(activeMiHole: ConnectionInfo, duration: Duration): Result<PiHoleStatusResponse>

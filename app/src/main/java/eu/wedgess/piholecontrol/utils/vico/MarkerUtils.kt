@@ -29,7 +29,7 @@ import com.patrykandpatrick.vico.core.extension.copyColor
 import com.patrykandpatrick.vico.core.extension.transformToSpannable
 import com.patrykandpatrick.vico.core.marker.Marker
 import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
-import eu.wedgess.piholecontrol.ui.dashboard.model.Entry
+import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartEntry
 import java.text.DecimalFormat
 
 @Composable
@@ -100,7 +100,7 @@ fun rememberMarker(): Marker {
                 ): CharSequence {
                     return markedEntries.transformToSpannable(
                         prefix = when (val entry = markedEntries.firstOrNull()?.entry) {
-                            is Entry -> entry.xDisplayValue ?: PATTERN.format(entry.x)
+                            is LineChartEntry -> entry.xDisplayValue ?: PATTERN.format(entry.x)
                             null -> ""
                             else -> PATTERN.format(entry.x)
                         } + if (markedEntries.size > 1) " (" else " ",
@@ -109,7 +109,7 @@ fun rememberMarker(): Marker {
                     ) { model ->
                         appendCompat(
                             when (val entry = model.entry) {
-                                is Entry -> PATTERN.format(model.entry.y) + (entry.yLabel?.let { " $it" }
+                                is LineChartEntry -> PATTERN.format(model.entry.y) + (entry.yLabel?.let { " $it" }
                                     ?: "")
 
                                 else -> PATTERN.format(model.entry.y)

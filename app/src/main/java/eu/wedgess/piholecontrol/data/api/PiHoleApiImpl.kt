@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.data.api
 
 import androidx.annotation.VisibleForTesting
 import eu.wedgess.piholecontrol.data.model.ConnectionInfo
-import eu.wedgess.piholecontrol.data.model.enums.FilterRuleType
-import eu.wedgess.piholecontrol.data.model.responses.ModifyFilterRuleResponse
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleModifyFilterRuleResponse
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleClientsOverTimeData
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
@@ -142,7 +142,7 @@ class PiHoleApiImpl @Inject constructor(
 
     override suspend fun fetchFilterRules(
         activeMiHole: ConnectionInfo,
-        ruleType: FilterRuleType
+        ruleType: PiHoleFilterRuleType
     ): Result<PiHoleFilterRules> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleFilterRules, String> {
@@ -156,10 +156,10 @@ class PiHoleApiImpl @Inject constructor(
     override suspend fun addFilterRule(
         activeMiHole: ConnectionInfo,
         rule: String,
-        ruleType: FilterRuleType
-    ): Result<ModifyFilterRuleResponse> {
+        ruleType: PiHoleFilterRuleType
+    ): Result<PiHoleModifyFilterRuleResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.requestResult<ModifyFilterRuleResponse, String> {
+        return client.requestResult<PiHoleModifyFilterRuleResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["list"] = ruleType.value
@@ -171,10 +171,10 @@ class PiHoleApiImpl @Inject constructor(
     override suspend fun removeFilterRule(
         activeMiHole: ConnectionInfo,
         rule: String,
-        ruleType: FilterRuleType
-    ): Result<ModifyFilterRuleResponse> {
+        ruleType: PiHoleFilterRuleType
+    ): Result<PiHoleModifyFilterRuleResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.requestResult<ModifyFilterRuleResponse, String> {
+        return client.requestResult<PiHoleModifyFilterRuleResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
             url {
                 parameters["list"] = ruleType.value

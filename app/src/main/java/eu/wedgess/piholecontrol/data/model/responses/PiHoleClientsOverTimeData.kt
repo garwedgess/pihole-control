@@ -7,7 +7,7 @@ import kotlinx.serialization.Transient
 @Serializable
 data class PiHoleClientsOverTimeData(
     @SerialName("clients") val clients: List<ClientData>,
-    @SerialName("over_time") val clientsOverTime: Map<Float, List<Int>>
+    @SerialName("over_time") val clientsOverTime: Map<Long, List<Int>>
 ) {
     @Serializable
     data class ClientData(

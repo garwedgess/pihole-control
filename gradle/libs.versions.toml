@@ -19,9 +19,7 @@ protobufPlugin = "0.9.4"
 protobufJavaLite = "3.23.3"
 datastore = "1.1.1"
 splashscreen = "1.0.1"
-#noinspection GradleDependency
 kotlinxSerializationJson = "1.5.1"
-#noinspection GradleDependency
 ktorClient = "2.3.12"
 androidXCamera = "1.3.4"
 mlkitBarcodeScanning = "17.3.0"

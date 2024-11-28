@@ -21,6 +21,9 @@ insert:
 INSERT OR FAIL INTO Connection (Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, Active)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
+checkNotEmpty:
+SELECT COUNT(*) != 0 FROM Connection;
+
 selectAll:
 SELECT * FROM Connection;
 
