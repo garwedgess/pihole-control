@@ -1,0 +1,17 @@
+{
+  "top_queries": {
+    "google.com": 16977,
+    "authentik.somedomain.com": 8601,
+    "1.172.30.172.in-addr.arpa": 4451,
+    "production.tile-api.com": 3608,
+    "clients3.google.com": 3565,
+    "dns.msftncsi.com": 3534,
+    "some.tv": 3459,
+    "play.googleapis.com": 3225,
+    "www.gstatic.com": 2938,
+    "traefik.somedomain.com": 2888
+  },
+  "top_ads": {
+    "koi.cst2.marketingautomation.services": 1
+  }
+}

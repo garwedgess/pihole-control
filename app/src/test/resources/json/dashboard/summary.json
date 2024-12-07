@@ -1,0 +1,38 @@
+{
+  "domains_being_blocked": "1,660,887",
+  "dns_queries_today": "161,601",
+  "ads_blocked_today": "1",
+  "ads_percentage_today": "0.0",
+  "unique_domains": "8,437",
+  "queries_forwarded": "101,241",
+  "queries_cached": "59,984",
+  "clients_ever_seen": "35",
+  "unique_clients": "32",
+  "dns_queries_all_types": "161,601",
+  "reply_UNKNOWN": "555",
+  "reply_NODATA": "25,803",
+  "reply_NXDOMAIN": "15,618",
+  "reply_CNAME": "34,087",
+  "reply_IP": "81,272",
+  "reply_DOMAIN": "975",
+  "reply_RRNAME": "48",
+  "reply_SERVFAIL": "229",
+  "reply_REFUSED": "47",
+  "reply_NOTIMP": "0",
+  "reply_OTHER": "0",
+  "reply_DNSSEC": "2",
+  "reply_NONE": "0",
+  "reply_BLOB": "2,965",
+  "dns_queries_all_replies": "161,601",
+  "privacy_level": "0",
+  "status": "disabled",
+  "gravity_last_updated": {
+    "file_exists": true,
+    "absolute": 1732422874,
+    "relative": {
+      "days": 5,
+      "hours": 17,
+      "minutes": 51
+    }
+  }
+}

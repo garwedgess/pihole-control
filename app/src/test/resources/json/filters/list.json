@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "id": 2,
+      "type": 1,
+      "domain": "speedtest.virginmedia.ie.prod.hosts.ooklaserver.net",
+      "enabled": 1,
+      "date_added": 1591900894,
+      "date_modified": 1657913605,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "type": 1,
+      "domain": "speedtest.ripplecom.net.prod.hosts.ooklaserver.net",
+      "enabled": 1,
+      "date_added": 1591900899,
+      "date_modified": 1657913605,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "type": 1,
+      "domain": "speedtest1.blacknight.ie.prod.hosts.ooklaserver.net",
+      "enabled": 1,
+      "date_added": 1591900905,
+      "date_modified": 1657913605,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "id": 5,
+      "type": 1,
+      "domain": "speedtester.airspeed.ie.prod.hosts.ooklaserver.net",
+      "enabled": 1,
+      "date_added": 1591900909,
+      "date_modified": 1657913605,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "id": 577,
+      "type": 1,
+      "domain": "dlg.io.mi.com",
+      "enabled": 1,
+      "date_added": 1658046032,
+      "date_modified": 1658046032,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    },
+    {
+      "id": 579,
+      "type": 1,
+      "domain": "ot.io.mi.com",
+      "enabled": 1,
+      "date_added": 1658046097,
+      "date_modified": 1658046097,
+      "comment": "",
+      "groups": [
+        2
+      ]
+    }
+  ]
+}

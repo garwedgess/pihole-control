@@ -1,0 +1,8 @@
+{
+  "forward_destinations": {
+    "blocked|blocked": 0,
+    "cached|cached": 37.26,
+    "other|other": 0.23,
+    "localhost#5335|127.0.0.1#5335": 62.51
+  }
+}
