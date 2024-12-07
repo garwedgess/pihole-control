@@ -2,14 +2,14 @@ package eu.wedgess.piholecontrol.presentation.app.model
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.utils.UiText
 
 data class AppBarState(
     val title: UiText = UiText.DynamicString(""),
-    val currentConnection: ConnectionInfo? = null,
+    val currentConnection: ConnectionEntity? = null,
     val adBlockingEnabled: Boolean = true,
-    val connections: List<ConnectionInfo>? = null,
+    val connections: List<ConnectionEntity>? = null,
     val showNavigateBackIcon: Boolean = false,
     val actions: (@Composable RowScope.() -> Unit)? = null,
     val showSearchView: Boolean = false,

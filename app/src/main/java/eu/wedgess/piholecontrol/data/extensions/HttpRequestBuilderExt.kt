@@ -1,13 +1,13 @@
 package eu.wedgess.piholecontrol.data.extensions
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
 import io.ktor.client.plugins.auth.providers.BasicAuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.encodedPath
 
 suspend fun HttpRequestBuilder.fetchBaseRequestInfo(
-    activePiHole: ConnectionInfo
+    activePiHole: ConnectionEntity
 ): HttpRequestBuilder {
     url {
         protocol = activePiHole.protocol

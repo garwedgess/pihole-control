@@ -6,12 +6,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.connections.list.ConnectionsContract
 
 @Composable
 fun ConnectionsList(
-    connections: List<ConnectionInfo>,
+    connections: List<ConnectionEntity>,
     onEvent: (ConnectionsContract.Event) -> Unit
 ) {
     LazyColumn(

@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.presentation.theme.adBlockingDisabled
@@ -38,10 +38,10 @@ import eu.wedgess.piholecontrol.presentation.theme.adBlockingEnabled
 @Composable
 fun CurrentConnectionStatus(
     modifier: Modifier,
-    currentConnection: ConnectionInfo,
+    currentConnection: ConnectionEntity,
     adBlockingEnabled: Boolean,
-    connections: List<ConnectionInfo>,
-    onConnectionSelected: (ConnectionInfo) -> Unit,
+    connections: List<ConnectionEntity>,
+    onConnectionSelected: (ConnectionEntity) -> Unit,
     onStatusClicked: () -> Unit
 ) {
     var showConnectionsDropdown by remember {
@@ -117,8 +117,8 @@ private fun CurrentConnectionStatusPreview() {
     PiHoleControlTheme {
         CurrentConnectionStatus(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            currentConnection = ConnectionInfo.default,
-            connections = listOf(ConnectionInfo.default),
+            currentConnection = ConnectionEntity.default,
+            connections = listOf(ConnectionEntity.default),
             adBlockingEnabled = true,
             onConnectionSelected = {},
             onStatusClicked = {}

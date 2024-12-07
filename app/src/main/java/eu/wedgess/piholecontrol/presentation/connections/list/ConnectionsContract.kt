@@ -1,10 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.connections.list
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 
 interface ConnectionsContract {
 
-    data class UiState(val connections: List<ConnectionInfo>) {
+    data class UiState(val connections: List<ConnectionEntity>) {
         companion object {
             fun initial() = UiState(
                 connections = emptyList()
@@ -23,7 +23,7 @@ interface ConnectionsContract {
     sealed interface Event {
         data object AddConnection : Event
         data class EditConnection(val connectionId: Long) : Event
-        data class DeleteConnection(val connection: ConnectionInfo) : Event
-        data class SetActive(val connection: ConnectionInfo) : Event
+        data class DeleteConnection(val connection: ConnectionEntity) : Event
+        data class SetActive(val connection: ConnectionEntity) : Event
     }
 }

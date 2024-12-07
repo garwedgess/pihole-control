@@ -5,17 +5,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.data.ConnectionRepositoryImpl
-import eu.wedgess.piholecontrol.data.DashboardRepositoryImpl
-import eu.wedgess.piholecontrol.data.FilterRulesRepositoryImpl
-import eu.wedgess.piholecontrol.data.LogsRepositoryImpl
-import eu.wedgess.piholecontrol.data.SettingsRepositoryImpl
-import eu.wedgess.piholecontrol.data.StatisticsRepositoryImpl
-import eu.wedgess.piholecontrol.data.StatusRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.LogsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.SettingsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.StatisticsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.StatusRepositoryImpl
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.LogsApiService
-import eu.wedgess.piholecontrol.data.api.LogsApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.StatisticsApiService
 import eu.wedgess.piholecontrol.data.api.StatusApiService
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
@@ -27,12 +26,6 @@ import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
-import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
-import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
-import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchClientsOverallTimeDataUseCase
-import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchDashboardInfoUseCase
-import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchOverallTimeDataUseCase
-import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchStatusSummaryUseCase
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
 import javax.inject.Singleton
 

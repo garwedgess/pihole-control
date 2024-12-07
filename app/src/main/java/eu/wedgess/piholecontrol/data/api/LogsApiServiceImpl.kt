@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleLogsResponse
 import eu.wedgess.piholecontrol.data.utils.requestResult
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
@@ -15,7 +15,7 @@ class LogsApiServiceImpl @Inject constructor(
 ) : LogsApiService {
 
     override suspend fun fetchLogs(
-        activeMiHole: ConnectionInfo,
+        activeMiHole: ConnectionEntity,
         limit: Int
     ): Result<PiHoleLogsResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient

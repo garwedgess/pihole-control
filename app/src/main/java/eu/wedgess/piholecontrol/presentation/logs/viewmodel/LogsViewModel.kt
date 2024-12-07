@@ -103,7 +103,7 @@ class LogsViewModel @Inject constructor(
             is LogsContract.Event.OnLogLimitChanged -> _uiState.update {
                 it.copy(logsLimit = event.limit)
             }.also {
-                fetchLogsUseCase.setLimit(event.limit)
+                fetchLogsUseCase.setLogLimit(event.limit)
             }
 
             is LogsContract.Event.OnLogSelected -> _uiState.update {
@@ -184,7 +184,7 @@ class LogsViewModel @Inject constructor(
     }
 
     private fun handleStatusFilterChanged(status: LogEntryStatus) {
-        fetchLogsUseCase.setStatusFilter(status)
+        fetchLogsUseCase.setLogStatusFilter(status)
         _uiState.update { it.copy(selectedLogEntryStatus = status) }
     }
 

@@ -21,13 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun ConnectionInfoContent(
-    connection: ConnectionInfo,
+    connection: ConnectionEntity,
     onEditClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSetActiveClicked: () -> Unit
@@ -109,7 +109,7 @@ private fun ConnectionInfoContentPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionInfoContent(
-                connection = ConnectionInfo.default,
+                connection = ConnectionEntity.default,
                 onEditClicked = {},
                 onDeleteClicked = {},
                 onSetActiveClicked = {}

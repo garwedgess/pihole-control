@@ -1,7 +1,5 @@
 package eu.wedgess.piholecontrol.domain.usecases.filters
 
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
-import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRulesResult

@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.domain.usecases.app
 
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleStatus
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase

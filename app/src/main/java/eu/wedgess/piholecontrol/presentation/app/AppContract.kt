@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.app
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
@@ -35,7 +35,7 @@ interface AppContract {
         data object DismissDialog : Event
         data object ShowDisabledStatusDialog : Event
         data object SetEnabledStatus : Event
-        data class OnConnectionSelected(val mihHole: ConnectionInfo) : Event
+        data class OnConnectionSelected(val mihHole: ConnectionEntity) : Event
         data class SetDisabledStatus(val duration: Long) : Event
         data class UpdateAppBarState(val updateState: AppBarState) : Event
     }

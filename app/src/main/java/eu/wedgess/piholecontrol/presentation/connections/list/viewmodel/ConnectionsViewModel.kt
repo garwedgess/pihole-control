@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.presentation.connections.list.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.usecases.connections.DeleteConnectionUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
@@ -78,7 +78,7 @@ class ConnectionsViewModel @Inject constructor(
         viewModelScope.emitSideEffect(destination)
     }
 
-    private fun setConnectionAsActive(connection: ConnectionInfo) {
+    private fun setConnectionAsActive(connection: ConnectionEntity) {
         viewModelScope.launch {
             setConnectionAsActiveUseCase(connection.id)
                 .onFailure {

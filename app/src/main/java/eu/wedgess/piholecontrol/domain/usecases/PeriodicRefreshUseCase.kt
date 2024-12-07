@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecases
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.presentation.base.RefreshFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +17,7 @@ class PeriodicRefreshUseCase(
     private val refreshFlow = RefreshFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun <T> invoke(fetchData: suspend (ConnectionInfo) -> T): Flow<T> {
+    operator fun <T> invoke(fetchData: suspend (ConnectionEntity) -> T): Flow<T> {
         val delayFlow = settingsRepository.getRefreshInterval()
 
         return refreshFlow.flatMapLatest {

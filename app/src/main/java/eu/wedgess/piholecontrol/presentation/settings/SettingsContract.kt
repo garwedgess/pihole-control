@@ -1,13 +1,13 @@
 package eu.wedgess.piholecontrol.presentation.settings
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.settings.model.AppThemePres
 import eu.wedgess.piholecontrol.presentation.settings.model.SettingsDialogType
 
 interface SettingsContract {
 
     data class UiState(
-        val currentConnection: ConnectionInfo,
+        val currentConnection: ConnectionEntity,
         val currentTheme: AppThemePres,
         val refreshInterval: Long,
         val useDynamicThemeColors: Boolean,
@@ -17,7 +17,7 @@ interface SettingsContract {
 
         companion object {
             fun initial() = UiState(
-                currentConnection = ConnectionInfo.default,
+                currentConnection = ConnectionEntity.default,
                 currentTheme = AppThemePres.System,
                 refreshInterval = 10_000,
                 useDynamicThemeColors = false,

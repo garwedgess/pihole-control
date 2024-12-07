@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.filters.view.components.actions.FilterTopBarActions
@@ -32,7 +32,7 @@ fun MainAppBar(
     appBarState: AppBarState,
     onNavigateBack: () -> Unit,
     onStatusClicked: () -> Unit,
-    onConnectionSelected: (ConnectionInfo) -> Unit
+    onConnectionSelected: (ConnectionEntity) -> Unit
 ) {
     val titleAlpha: Float by animateFloatAsState(
         targetValue = if (appBarState.showSearchView) 0f else 01f,
@@ -103,27 +103,27 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionInfo.default,
+            currentConnection = ConnectionEntity.default,
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionInfo.default),
+            connections = listOf(ConnectionEntity.default),
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionInfo.default,
+            currentConnection = ConnectionEntity.default,
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionInfo.default),
+            connections = listOf(ConnectionEntity.default),
             actions = { FilterTopBarActions(onSearchClicked = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_logs),
-            currentConnection = ConnectionInfo.default,
+            currentConnection = ConnectionEntity.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
             actions = { FilterTopBarActions(onSearchClicked = {}) },

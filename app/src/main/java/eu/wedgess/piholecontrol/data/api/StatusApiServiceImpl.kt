@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleStatusResponse
 import eu.wedgess.piholecontrol.data.utils.requestResult
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
@@ -15,7 +15,7 @@ class StatusApiServiceImpl @Inject constructor(
     @TrustAllCertificatesHttpClient private val trustAllCertsHttpClient: HttpClient
 ) : StatusApiService {
 
-    override suspend fun fetchStatus(activeMiHole: ConnectionInfo): Result<PiHoleStatusResponse> {
+    override suspend fun fetchStatus(activeMiHole: ConnectionEntity): Result<PiHoleStatusResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleStatusResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
@@ -25,7 +25,7 @@ class StatusApiServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun enableAdBlocking(activeMiHole: ConnectionInfo): Result<PiHoleStatusResponse> {
+    override suspend fun enableAdBlocking(activeMiHole: ConnectionEntity): Result<PiHoleStatusResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleStatusResponse, String> {
             fetchBaseRequestInfo(activeMiHole)
@@ -36,7 +36,7 @@ class StatusApiServiceImpl @Inject constructor(
     }
 
     override suspend fun disableAdBlocking(
-        activeMiHole: ConnectionInfo,
+        activeMiHole: ConnectionEntity,
         duration: Duration
     ): Result<PiHoleStatusResponse> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient

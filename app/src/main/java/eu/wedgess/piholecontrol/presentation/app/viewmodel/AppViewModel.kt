@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.presentation.app.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase
@@ -76,7 +76,7 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    private fun setConnectionActive(mihHole: ConnectionInfo) {
+    private fun setConnectionActive(mihHole: ConnectionEntity) {
         viewModelScope.launch {
             setConnectionAsActiveUseCase(mihHole.id)
                 .onFailure { Timber.e("Failed to change active connection", it) }

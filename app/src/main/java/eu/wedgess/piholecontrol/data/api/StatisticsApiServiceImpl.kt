@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleQueryTypes
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopClients
@@ -17,7 +17,7 @@ class StatisticsApiServiceImpl @Inject constructor(
     @TrustAllCertificatesHttpClient private val trustAllCertsHttpClient: HttpClient
 ) : StatisticsApiService {
 
-    override suspend fun fetchQueryTypes(activeMiHole: ConnectionInfo): Result<PiHoleQueryTypes> {
+    override suspend fun fetchQueryTypes(activeMiHole: ConnectionEntity): Result<PiHoleQueryTypes> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleQueryTypes, String> {
             fetchBaseRequestInfo(activeMiHole)
@@ -27,7 +27,7 @@ class StatisticsApiServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchForwardDestinations(activeMiHole: ConnectionInfo): Result<PiHoleForwardDestinations> {
+    override suspend fun fetchForwardDestinations(activeMiHole: ConnectionEntity): Result<PiHoleForwardDestinations> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleForwardDestinations, String> {
             fetchBaseRequestInfo(activeMiHole)
@@ -37,7 +37,7 @@ class StatisticsApiServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchTopQueries(activeMiHole: ConnectionInfo): Result<PiHoleTopQueries> {
+    override suspend fun fetchTopQueries(activeMiHole: ConnectionEntity): Result<PiHoleTopQueries> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleTopQueries, String> {
             fetchBaseRequestInfo(activeMiHole)
@@ -47,7 +47,7 @@ class StatisticsApiServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchTopClients(activeMiHole: ConnectionInfo): Result<PiHoleTopClients> {
+    override suspend fun fetchTopClients(activeMiHole: ConnectionEntity): Result<PiHoleTopClients> {
         val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleTopClients, String> {
             fetchBaseRequestInfo(activeMiHole)

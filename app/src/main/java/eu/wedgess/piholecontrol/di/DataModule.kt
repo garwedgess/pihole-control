@@ -14,16 +14,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
-import eu.wedgess.piholecontrol.data.api.PiHoleApi
-import eu.wedgess.piholecontrol.data.api.PiHoleApiImpl
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
 import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.utils.serializers.UserPreferencesSerializer
-import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
-import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
 import eu.wedgess.piholecontrol.utils.DefaultDispatchers
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
-import io.ktor.client.HttpClient
 import javax.inject.Singleton
 
 private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
@@ -40,14 +35,6 @@ object DataModule {
     @Provides
     fun provideDao(database: PiHoleControlDatabase, dispatcherProvider: DispatcherProvider) =
         ConnectionDao(database, dispatcherProvider)
-
-    @Provides
-    fun provideApi(
-        @DefaultHttpClient defaultHttpClient: HttpClient,
-        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): PiHoleApi =
-        PiHoleApiImpl(defaultHttpClient, trustAllCertsHttpClient)
-
 
     @Provides
     @Singleton

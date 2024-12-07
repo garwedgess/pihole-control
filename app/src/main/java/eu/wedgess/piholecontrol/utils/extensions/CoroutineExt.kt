@@ -44,6 +44,8 @@ suspend fun <T> runWithErrorHandling(operation: suspend () -> T): Result<Unit> {
     return try {
         operation()
         Result.success(Unit)
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         Result.failure(e)
     }

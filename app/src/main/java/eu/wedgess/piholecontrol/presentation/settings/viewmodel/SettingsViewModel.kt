@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.presentation.settings.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.settings.FetchAppPreferencesUseCase
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateDynamicThemeUseCase
@@ -50,7 +50,7 @@ class SettingsViewModel @Inject constructor(
     ) { connection, preferences, uiState ->
         UIResult.Loaded(
             uiState.copy(
-                currentConnection = connection.getOrNull() ?: ConnectionInfo.default,
+                currentConnection = connection.getOrNull() ?: ConnectionEntity.default,
                 currentTheme = preferences.theme.mapToAppThemePres(),
                 refreshInterval = preferences.refreshInterval,
                 useDynamicThemeColors = preferences.useDynamicColors,

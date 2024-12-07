@@ -1,13 +1,13 @@
 package eu.wedgess.piholecontrol.presentation.connections.modify
 
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
 import io.ktor.http.URLProtocol
 
 interface ModifyConnectionsContract {
 
     data class UiState(
-        val currentConnection: ConnectionInfo?,
+        val currentConnection: ConnectionEntity?,
         val name: String,
         val host: String,
         val port: Int,
@@ -22,8 +22,8 @@ interface ModifyConnectionsContract {
         val showAdvancedSettings: Boolean
     ) {
 
-        fun toMiHoleInfo(id: Long? = null): ConnectionInfo =
-            ConnectionInfo(
+        fun toMiHoleInfo(id: Long? = null): ConnectionEntity =
+            ConnectionEntity(
                 id = id ?: -1,
                 name = this.name,
                 host = this.host,
@@ -39,7 +39,7 @@ interface ModifyConnectionsContract {
             )
 
         companion object {
-            private val DEFAULT_INFO = ConnectionInfo.default
+            private val DEFAULT_INFO = ConnectionEntity.default
 
             fun initial() = UiState(
                 currentConnection = null,

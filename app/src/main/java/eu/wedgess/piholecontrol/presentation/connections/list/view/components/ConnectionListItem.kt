@@ -27,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.settings.view.components.ConnectionInfoContent
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -35,7 +35,7 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 
 @Composable
 fun ConnectionListItem(
-    connectionInfo: ConnectionInfo,
+    connectionInfo: ConnectionEntity,
     onEditClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onSetActiveClicked: () -> Unit
@@ -111,7 +111,7 @@ fun ConnectionListItemPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionListItem(
-                ConnectionInfo.default,
+                ConnectionEntity.default,
                 onEditClicked = {},
                 onSetActiveClicked = {},
                 onDeleteClicked = {}

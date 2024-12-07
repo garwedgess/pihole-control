@@ -1,0 +1,20 @@
+{
+  "querytypes": {
+    "A (IPv4)": 57.08,
+    "AAAA (IPv6)": 20.86,
+    "ANY": 0,
+    "SRV": 0.35,
+    "SOA": 0.03,
+    "PTR": 7.83,
+    "TXT": 0.01,
+    "NAPTR": 0,
+    "MX": 0,
+    "DS": 2.58,
+    "RRSIG": 0,
+    "DNSKEY": 0.59,
+    "NS": 0.01,
+    "OTHER": 0.05,
+    "SVCB": 0.12,
+    "HTTPS": 10.51
+  }
+}

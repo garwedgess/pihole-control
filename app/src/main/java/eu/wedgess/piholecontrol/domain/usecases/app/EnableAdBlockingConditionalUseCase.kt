@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.domain.usecases.app
 
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleStatusResponse
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
@@ -35,11 +34,7 @@ class EnableAdBlockingConditionalUseCase(
                 .first()
                 .fold(
                     onSuccess = { activeConnection ->
-                        if (activeConnection != null) {
-                            enableAdBlockingUseCase(activeConnection)
-                        } else {
-                            Result.failure(IllegalStateException("No active connection found"))
-                        }
+                        enableAdBlockingUseCase(activeConnection)
                     },
                     onFailure = { Result.failure(it) }
                 )

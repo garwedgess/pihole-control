@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo
-import eu.wedgess.piholecontrol.data.model.ConnectionInfo
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleModifyFilterRuleResponse
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
@@ -17,12 +17,12 @@ class FilterRulesApiServiceImpl @Inject constructor(
 ) : FilterRulesApiService {
 
     override suspend fun fetchFilterRules(
-        activeMiHole: ConnectionInfo,
+        connection: ConnectionEntity,
         ruleType: PiHoleFilterRuleType
     ): Result<PiHoleFilterRules> {
-        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleFilterRules, String> {
-            fetchBaseRequestInfo(activeMiHole)
+            fetchBaseRequestInfo(connection)
             url {
                 parameters["list"] = ruleType.value
             }
@@ -30,13 +30,13 @@ class FilterRulesApiServiceImpl @Inject constructor(
     }
 
     override suspend fun addFilterRule(
-        activeMiHole: ConnectionInfo,
+        connection: ConnectionEntity,
         rule: String,
         ruleType: PiHoleFilterRuleType
     ): Result<PiHoleModifyFilterRuleResponse> {
-        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleModifyFilterRuleResponse, String> {
-            fetchBaseRequestInfo(activeMiHole)
+            fetchBaseRequestInfo(connection)
             url {
                 parameters["list"] = ruleType.value
                 parameters["add"] = rule
@@ -45,13 +45,13 @@ class FilterRulesApiServiceImpl @Inject constructor(
     }
 
     override suspend fun removeFilterRule(
-        activeMiHole: ConnectionInfo,
+        connection: ConnectionEntity,
         rule: String,
         ruleType: PiHoleFilterRuleType
     ): Result<PiHoleModifyFilterRuleResponse> {
-        val client = if (activeMiHole.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult<PiHoleModifyFilterRuleResponse, String> {
-            fetchBaseRequestInfo(activeMiHole)
+            fetchBaseRequestInfo(connection)
             url {
                 parameters["list"] = ruleType.value
                 parameters["sub"] = rule
