@@ -18,7 +18,7 @@ pipelines:
               - chmod +x ./gradlew
               - ./gradlew assembleDebug
             artifacts:
-              - app/build/outputs/** 
+              - app/build/outputs/**
         - step:           # step to run lint (Android code scanning tool)
             name: Lint
             caches:
@@ -35,3 +35,9 @@ pipelines:
             script:
               - chmod +x ./gradlew
               - ./gradlew testDebugUnitTest
+
+definitions:
+  caches:
+    gradle: gradle
+  variables:
+    JAVA_OPTS: "-Xmx2048m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
