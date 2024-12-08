@@ -1,11 +1,10 @@
-package eu.wedgess.piholecontrol.presentation.navigation
+package eu.wedgess.piholecontrol.presentation.navigation.tabs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.base.TabItem
 import eu.wedgess.piholecontrol.utils.UiText

@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.connections.modify.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.domain.usecases.connections.AddConnectionUseCase
@@ -15,7 +16,7 @@ import eu.wedgess.piholecontrol.presentation.base.UiStateViewModel
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
-import eu.wedgess.piholecontrol.presentation.navigation.KEY_ARG_ID
+import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,7 +35,8 @@ class ModifyConnectionViewModel @Inject constructor(
         ModifyConnectionsContract.UiState.initial()
     ) {
 
-    private val existingConnectionId: Long? = savedStateHandle.get<String?>(KEY_ARG_ID)?.toLong()
+    private val existingConnectionId: Long? =
+        savedStateHandle.toRoute<Screens.ModifyConnection>().connectionId
 
     override fun onEvent(event: ModifyConnectionsContract.Event) {
         when (event) {
@@ -48,7 +50,9 @@ class ModifyConnectionViewModel @Inject constructor(
                 copy(dialogType = ModifyConnectionDialogType.None)
             }
 
-            is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState { copy(apiPath = event.apiPath) }
+            is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState {
+                copy(apiPath = event.apiPath)
+            }
             is ModifyConnectionsContract.Event.OnApiTokenChanged -> updateUiState {
                 copy(
                     apiToken = event.apiToken,
@@ -76,9 +80,15 @@ class ModifyConnectionViewModel @Inject constructor(
                 copy(showAdvancedSettings = event.showAdvancedSettings)
             }
 
-            is ModifyConnectionsContract.Event.OnHostChanged -> updateUiState { copy(host = event.host) }
-            is ModifyConnectionsContract.Event.OnNameChanged -> updateUiState { copy(name = event.name) }
-            is ModifyConnectionsContract.Event.OnPortChanged -> updateUiState { copy(port = event.port) }
+            is ModifyConnectionsContract.Event.OnHostChanged -> updateUiState {
+                copy(host = event.host)
+            }
+            is ModifyConnectionsContract.Event.OnNameChanged -> updateUiState {
+                copy(name = event.name)
+            }
+            is ModifyConnectionsContract.Event.OnPortChanged -> updateUiState {
+                copy(port = event.port)
+            }
             is ModifyConnectionsContract.Event.OnProtocolChanged -> {
                 updateUiState {
                     copy(

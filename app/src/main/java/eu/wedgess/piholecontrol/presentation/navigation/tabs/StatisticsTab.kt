@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation
+package eu.wedgess.piholecontrol.presentation.navigation.tabs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Devices

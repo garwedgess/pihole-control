@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.dashboard.navigation
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,10 +11,8 @@ import eu.wedgess.piholecontrol.presentation.dashboard.view.DashboardScreen
 import eu.wedgess.piholecontrol.presentation.dashboard.viewmodel.DashboardViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 
-fun NavGraphBuilder.DashboardDestination(onComposing: (AppBarState) -> Unit) {
-    composable(
-        route = Screens.Dashboard.route
-    ) {
+fun NavGraphBuilder.dashboardRoot(onComposing: (AppBarState) -> Unit) {
+    composable<Screens.Dashboard> {
         val viewModel: DashboardViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 

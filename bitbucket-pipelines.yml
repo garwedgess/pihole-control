@@ -9,26 +9,29 @@ image: androidsdk/android-30
 
 pipelines:
   default:                # pipeline definition for all branches
-    - parallel:           # running a set of steps at the same time https://support.atlassian.com/bitbucket-cloud/docs/set-up-or-run-parallel-steps/
+    - parallel:
         - step:           # step to build Android debug application
             name: Android Debug Application
-            caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+            caches:
               - gradle
             script:
+              - chmod +x ./gradlew
               - ./gradlew assembleDebug
             artifacts:
-              - app/build/outputs/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+              - app/build/outputs/** 
         - step:           # step to run lint (Android code scanning tool)
             name: Lint
-            caches:       # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+            caches:
               - gradle
             script:
+              - chmod +x ./gradlew
               - ./gradlew lint
             artifacts:
-              - app/build/reports/**        # artifacts are files that are produced by a step https://support.atlassian.com/bitbucket-cloud/docs/use-artifacts-in-steps/
+              - app/build/reports/**
         - step:           # step to run unit tests
             name: Unit Tests
             caches:
-              - gradle    # caching speed up subsequent execution https://support.atlassian.com/bitbucket-cloud/docs/cache-dependencies/
+              - gradle
             script:
-              - ./gradlew testDebugUnitTest # test reporting is automatically enabled https://support.atlassian.com/bitbucket-cloud/docs/test-reporting-in-pipelines/
+              - chmod +x ./gradlew
+              - ./gradlew testDebugUnitTest

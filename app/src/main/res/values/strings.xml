@@ -143,5 +143,7 @@
     <string name="statistics_forward_destinations_title">Forward Destinations</string>
     <string name="logs_domain_added_to_allow_list">Domain added to allow list</string>
     <string name="logs_domain_added_to_block_list">Domain added to block list</string>
+    <string name="filter_search_placeholder">Search for filter...</string>
+    <string name="logs_search_placeholder">Search for logs...</string>
 
 </resources>

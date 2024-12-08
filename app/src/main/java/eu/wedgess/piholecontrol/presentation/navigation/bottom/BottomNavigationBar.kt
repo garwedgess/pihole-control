@@ -12,12 +12,12 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun BottomNavigationBar(
-    onNavigateTo: (route: String) -> Unit,
+    onNavigateTo: (route: Screens) -> Unit,
     selectedItemRoute: String? = null
 ) {
     NavigationBar {
         BottomNavItem.all().forEach { item ->
-            val selected = item.route == (selectedItemRoute ?: Screens.Dashboard.route)
+            val selected = item.route == (selectedItemRoute ?: Screens.Dashboard)
 
             NavigationBarItem(
                 selected = selected,
