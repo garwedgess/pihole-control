@@ -5,7 +5,7 @@
 
 # Docker for Android SDK 30 with pre-installed build tools and emulator image.
 # Note: This docker image is created and maintained by a non official third party. For more details see: https://hub.docker.com/r/androidsdk/android-30
-image: androidsdk/android-30
+image: alvrme/alpine-android:android-34-jdk17
 
 pipelines:
   default:                # pipeline definition for all branches
