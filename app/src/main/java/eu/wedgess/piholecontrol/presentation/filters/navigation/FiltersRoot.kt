@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.filters.navigation
 
 import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
@@ -19,12 +19,10 @@ import eu.wedgess.piholecontrol.presentation.filters.viewmodel.FiltersViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 
-fun NavGraphBuilder.FiltersDestination(
+fun NavGraphBuilder.filtersRoot(
     onComposing: (AppBarState) -> Unit
 ) {
-    composable(
-        route = Screens.Filters.route
-    ) {
+    composable<Screens.Filters> {
         val viewModel: FiltersViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val context = LocalContext.current
@@ -44,22 +42,18 @@ fun NavGraphBuilder.FiltersDestination(
                     showSearchView = uiState.showSearchView,
                     searchContent = {
                         SearchContent(
-                            placeHolderText = "Search for filter...",
+                            placeHolderText = context.getString(R.string.filter_search_placeholder),
                             searchQuery = uiState.searchQuery,
                             showSearchView = uiState.showSearchView,
                             onExpandedChange = {
                                 viewModel.onEvent(
-                                    FiltersContract.Event.OnSearchExpandedChanged(
-                                        it
-                                    )
+                                    FiltersContract.Event.OnSearchExpandedChanged(it)
                                 )
                             },
                             onSearch = { viewModel.onEvent(FiltersContract.Event.OnSearchClick) },
                             onQueryChange = {
                                 viewModel.onEvent(
-                                    FiltersContract.Event.OnSearchQueryChanged(
-                                        it
-                                    )
+                                    FiltersContract.Event.OnSearchQueryChanged(it)
                                 )
                             },
                             onClearSearchQuery = {
@@ -84,8 +78,10 @@ fun NavGraphBuilder.FiltersDestination(
             }
         }
 
-        FiltersScreen(uiState, viewModel::onEvent, triggerRefreshEvent = {
-            refreshTrigger = it
-        })
+        FiltersScreen(
+            uiState = uiState,
+            onEvent = viewModel::onEvent,
+            triggerRefreshEvent = { refreshTrigger = it }
+        )
     }
 }

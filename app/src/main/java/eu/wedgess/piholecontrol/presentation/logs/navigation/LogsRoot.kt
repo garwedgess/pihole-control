@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.logs.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
@@ -25,12 +25,10 @@ import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
-fun NavGraphBuilder.LogsDestination(
+fun NavGraphBuilder.logsRoot(
     onComposing: (AppBarState) -> Unit
 ) {
-    composable(
-        route = Screens.Logs.route,
-    ) {
+    composable<Screens.Logs> {
         val viewModel: LogsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
         val sideEffect = viewModel.sideEffect
@@ -46,8 +44,12 @@ fun NavGraphBuilder.LogsDestination(
                     actions = {
                         (uiResult as? UIResult.Loaded)?.data?.run {
                             LogsTopBarActions(
-                                onSearchClicked = { viewModel.onEvent(LogsContract.Event.OnShowSearchView) },
-                                onSortClicked = { viewModel.onEvent(LogsContract.Event.OnShowSortingMenu) },
+                                onSearchClicked = {
+                                    viewModel.onEvent(LogsContract.Event.OnShowSearchView)
+                                },
+                                onSortClicked = {
+                                    viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
+                                },
                                 onSortItemSelected = {
                                     viewModel.onEvent(
                                         LogsContract.Event.OnSortTypeSelected(
@@ -55,7 +57,9 @@ fun NavGraphBuilder.LogsDestination(
                                         )
                                     )
                                 },
-                                onSortDismissed = { viewModel.onEvent(LogsContract.Event.OnSortingDismissed) },
+                                onSortDismissed = {
+                                    viewModel.onEvent(LogsContract.Event.OnSortingDismissed)
+                                },
                                 isSortingMenuVisible = this.showSortingDropdownMenu,
                                 selectedSorting = this.sorting
                             )
@@ -65,7 +69,7 @@ fun NavGraphBuilder.LogsDestination(
                     searchContent = {
                         (uiResult as? UIResult.Loaded)?.data?.run {
                             SearchContent(
-                                placeHolderText = "Search for logs...",
+                                placeHolderText = context.getString(R.string.logs_search_placeholder),
                                 searchQuery = this.searchQuery,
                                 showSearchView = this.showSearchView,
                                 onExpandedChange = {
@@ -106,20 +110,6 @@ fun NavGraphBuilder.LogsDestination(
                 }
             }
         }
-
-//        LaunchedEffect(Unit) {
-//            viewModel.effect.collectLatest { effect ->
-//                when (effect) {
-//                    is LogsContract.Effect.ShowBottomSheet -> scaffoldState.bottomSheetState.expand()
-//                    is LogsContract.Effect.Snackbar -> {
-//                        snackbarHostState.showSnackbar(
-//                            message = effect.message.asString(context),
-//                            duration = SnackbarDuration.Short
-//                        )
-//                    }
-//                }
-//            }
-//        }
 
         LogsScreen(
             uiResult = uiResult,

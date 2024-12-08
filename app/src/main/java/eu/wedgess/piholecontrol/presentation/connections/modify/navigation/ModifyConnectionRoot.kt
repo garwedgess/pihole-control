@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.connections.modify.navigation
 
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.runtime.LaunchedEffect
@@ -6,36 +6,27 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
 import eu.wedgess.piholecontrol.presentation.connections.modify.view.ModifyConnectionScreen
 import eu.wedgess.piholecontrol.presentation.connections.modify.viewmodel.ModifyConnectionViewModel
-import eu.wedgess.piholecontrol.presentation.navigation.KEY_ARG_ID
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 
 @ExperimentalGetImage
-fun NavGraphBuilder.ModifyConnectionDestination(
+fun NavGraphBuilder.modifyConnectionRoot(
     onComposing: (AppBarState) -> Unit,
     onNavigateBack: () -> Boolean
 ) {
-    composable(
-        route = Screens.ModifyConnection.route,
-        arguments = listOf(
-            navArgument(KEY_ARG_ID) {
-                type = NavType.StringType
-                nullable = true
-            }),
-    ) {
+    composable<Screens.ModifyConnection> { backStackEntry ->
         val viewModel: ModifyConnectionViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val currentConnectionId = it.arguments?.getString(KEY_ARG_ID)?.toLong()
+        val connectionId = backStackEntry.toRoute<Screens.ModifyConnection>().connectionId
 
         LaunchedEffect(Unit) {
             onComposing(
@@ -45,7 +36,7 @@ fun NavGraphBuilder.ModifyConnectionDestination(
                     bottomBarVisible = false
                 )
             )
-            currentConnectionId?.run {
+            connectionId?.run {
                 viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection)
             }
         }

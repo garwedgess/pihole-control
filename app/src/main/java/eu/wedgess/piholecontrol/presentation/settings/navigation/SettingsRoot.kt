@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.settings.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
@@ -19,13 +19,11 @@ import eu.wedgess.piholecontrol.presentation.settings.view.SettingsScreen
 import eu.wedgess.piholecontrol.presentation.settings.viewmodel.SettingsViewModel
 import eu.wedgess.piholecontrol.utils.UiText
 
-fun NavGraphBuilder.SettingsDestination(
+fun NavGraphBuilder.settingsRoot(
     onComposing: (AppBarState) -> Unit,
     onNavigateToConnections: () -> Unit
 ) {
-    composable(
-        route = Screens.Settings.route
-    ) {
+    composable<Screens.Settings> {
         val viewModel: SettingsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 

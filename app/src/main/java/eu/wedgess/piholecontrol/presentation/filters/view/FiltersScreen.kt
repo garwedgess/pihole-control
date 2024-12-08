@@ -15,7 +15,7 @@ import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.view.FilterTabScreenRoot
 import eu.wedgess.piholecontrol.presentation.filters.view.components.FilterDialogs
-import eu.wedgess.piholecontrol.presentation.navigation.FilterTab
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

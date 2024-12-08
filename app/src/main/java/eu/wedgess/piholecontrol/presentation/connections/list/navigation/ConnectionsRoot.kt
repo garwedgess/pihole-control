@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.navigation.destinations
+package eu.wedgess.piholecontrol.presentation.connections.list.navigation
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,14 +15,12 @@ import eu.wedgess.piholecontrol.presentation.connections.list.viewmodel.Connecti
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 
-fun NavGraphBuilder.ConnectionsDestination(
+fun NavGraphBuilder.connectionsRoot(
     onComposing: (AppBarState) -> Unit,
     navigateToModifyConnection: (id: Long?) -> Unit,
     navigateToCreateConnection: () -> Unit
 ) {
-    composable(
-        route = Screens.Connections.route
-    ) {
+    composable<Screens.Connections> {
         val viewModel: ConnectionsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 
