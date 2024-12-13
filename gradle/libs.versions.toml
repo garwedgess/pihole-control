@@ -1,34 +1,35 @@
 [versions]
 agp = "8.7.3"
-ksp = "1.9.23-1.0.19"
-kotlin = "1.9.25"
-coreKtx = "1.13.1"
+ksp = "2.1.0-1.0.29"
+kotlin = "2.1.0"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.6"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00"
-composeAnimations = "1.7.4"
-hilt = "2.49"
+composeBom = "2024.12.01"
+composeAnimations = "1.7.6"
+hilt = "2.53.1"
+navigationCompose = "2.8.5"
 timber = "5.0.1"
 sqldelight = "2.0.2"
 hiltNavigationCompose = "1.2.0"
-androidxCompose = "1.7.4"
+androidxCompose = "1.7.6"
 protobufPlugin = "0.9.4"
-protobufJavaLite = "3.23.3"
+protobufJavaLite = "4.29.1"
 datastore = "1.1.1"
 splashscreen = "1.0.1"
-kotlinxSerializationJson = "1.5.1"
-ktorClient = "2.3.12"
-androidXCamera = "1.3.4"
+kotlinxSerializationJson = "1.7.3"
+ktorClient = "3.0.2"
+androidXCamera = "1.4.1"
 mlkitBarcodeScanning = "17.3.0"
-truth = "1.1.5"
+truth = "1.4.4"
 turbine = "1.2.0"
-vicoComposeM3 = "1.15.0"
+vicoComposeM3 = "1.16.0"
 jacoco = "0.8.12"
 detekt = "1.23.7"
-detektCompose = "0.4.19"
+detektCompose = "0.4.22"
 
 [libraries]
 jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
@@ -39,6 +40,7 @@ jetbrains-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotli
 android-tools-build-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -93,7 +95,7 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 vicoCompose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vicoComposeM3" }
 vicoCore = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vicoComposeM3" }
 vicoM3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vicoComposeM3" }
-android-date-backport = { group = "com.jakewharton.threetenabp", name = "threetenabp", version = "1.4.7" }
+android-date-backport = { group = "com.jakewharton.threetenabp", name = "threetenabp", version = "1.4.8" }
 
 mockk = { module = "io.mockk:mockk", version = "1.13.13" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.9.0" }
@@ -112,4 +114,5 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

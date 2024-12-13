@@ -5,19 +5,20 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.kotlin.serialization)
-    kotlin("kapt")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
     id("android-jacoco-convention")
     id("android-detekt-convention")
 }
 
 android {
     namespace  = "eu.wedgess.piholecontrol"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "eu.wedgess.piholecontrol"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -76,14 +77,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.navigation:navigation-compose:2.8.4")
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.bundles.sqldelight)
 
     implementation(libs.timber)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.javalite)
@@ -115,7 +116,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.20.0"
+        artifact = "com.google.protobuf:protoc:4.29.1"
     }
     generateProtoTasks {
         all().forEach { task ->
