@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.protobuf)
     alias(libs.plugins.kotlin.serialization)
     kotlin("kapt")
+    id("android-jacoco-convention")
+    id("android-detekt-convention")
 }
 
 android {
@@ -26,6 +28,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -44,7 +50,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

@@ -1,0 +1,84 @@
+package eu.wedgess.jacoco
+
+import com.android.build.api.variant.AndroidComponentsExtension
+import eu.wedgess.config.libs
+import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.withType
+import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.util.Locale
+
+private val coverageExclusions = listOf(
+    "**/R.class",
+    "**/R\$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*_Hilt*.class",
+    "**/Hilt_*.class",
+    "**/presentation/**",
+    "**/utils/extensions/**",
+    "**/utils/vico/**",
+)
+
+private fun String.capitalize() = replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+}
+
+internal fun Project.configureJacoco() {
+    val androidComponentsExtension = extensions.getByType(AndroidComponentsExtension::class.java)
+
+    configure<JacocoPluginExtension> {
+        toolVersion = this@configureJacoco.libs.findVersion("jacoco").get().toString()
+    }
+    val jacocoTestReport = tasks.create("jacocoTestReport") {
+        group = "reporting"
+    }
+
+    androidComponentsExtension.onVariants { variant ->
+        val testTaskName = "test${variant.name.capitalize()}UnitTest"
+        val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class.java) {
+            group = "reporting"
+            dependsOn(testTaskName)
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+
+            val filesFilters = layout.buildDirectory.dir("tmp/kotlin-classes/${variant.name}").get().asFileTree.matching {
+                exclude(coverageExclusions)
+            }
+            classDirectories.setFrom(filesFilters)
+            sourceDirectories.setFrom(
+                files(
+                    "$projectDir/src/main/java",
+                    "$projectDir/src/main/kotlin"
+                )
+            )
+            executionData.setFrom(
+                layout.buildDirectory.dir("/outputs/unit_test_code_coverage/${variant.name}UnitTest").get().asFileTree
+                    .matching { include("**/${testTaskName}.exec") },
+
+                layout.buildDirectory.dir("/outputs/code_coverage/${variant.name}AndroidTest").get().asFileTree
+                    .matching { include("**/*.ec") },
+            )
+        }
+
+        jacocoTestReport.dependsOn(reportTask)
+    }
+
+    tasks.withType<Test>().configureEach {
+        configure<JacocoTaskExtension> {
+            // Required for JaCoCo + Robolectric
+            // https://github.com/robolectric/robolectric/issues/2230
+            // Consider removing if not we don't add Robolectric
+            isIncludeNoLocationClasses = true
+
+            // Required for JDK 11 with the above
+            // https://github.com/gradle/gradle/issues/5184#issuecomment-391982009
+            excludes = listOf("jdk.internal.*")
+        }
+    }
+}
