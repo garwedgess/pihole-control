@@ -1,0 +1,17 @@
+{
+  "prCreation": "immediate",
+  "groupName": "all dependencies",
+  "groupSlug": "all",
+  "separateMajorMinor": false,
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "packageRules": [
+    {
+      "groupName": "all dependencies",
+      "groupSlug": "all",
+      "matchPackageNames": ["*"]
+    }
+  ],
+  "versioning": "auto"
+}
