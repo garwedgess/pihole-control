@@ -34,9 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
-import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerCategory
-import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType
 import eu.wedgess.piholecontrol.domain.model.LogAnswerCategoryEntity
 import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
@@ -114,7 +111,8 @@ private fun LogDetailsDialogContent(
             AnimatedVisibility(visible = log.answerType.category == LogAnswerCategoryEntity.BLOCK) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { addToAllowList(log.requestedDomain) }) {
+                    onClick = { addToAllowList(log.requestedDomain) }
+                ) {
                     Text(text = "Add to Allow List")
                 }
             }
@@ -124,13 +122,14 @@ private fun LogDetailsDialogContent(
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { addToBlockList(log.requestedDomain) }) {
+                    onClick = { addToBlockList(log.requestedDomain) }
+                ) {
                     Text(text = "Add to Block List")
                 }
             }
 
             Row(
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onDismiss) { Text("Dismiss") }

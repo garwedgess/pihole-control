@@ -27,8 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
-import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType
 import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
@@ -142,7 +140,9 @@ fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
                 horizontal = PiHoleControlTheme.dimens.padding.screenContent,
                 vertical = PiHoleControlTheme.dimens.padding.screenContent
             ),
-        verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentSmall)
+        verticalArrangement = Arrangement.spacedBy(
+            PiHoleControlTheme.dimens.padding.itemContentSmall
+        )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -171,7 +171,8 @@ fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
                 Text(text = log.requestedDomain, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
                     text = log.client,
-                    maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Normal,
                         color = LocalContentColor.current.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)

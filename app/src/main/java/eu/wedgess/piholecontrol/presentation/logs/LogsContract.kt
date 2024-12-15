@@ -1,7 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.logs
 
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting

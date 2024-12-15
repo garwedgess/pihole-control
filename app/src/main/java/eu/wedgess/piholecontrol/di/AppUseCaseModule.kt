@@ -8,7 +8,6 @@ import eu.wedgess.piholecontrol.data.api.StatusApiService
 import eu.wedgess.piholecontrol.data.api.StatusApiServiceImpl
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
-import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
@@ -17,11 +16,10 @@ import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditional
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingUseCase
-import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchShouldChangeStatusOnAllConnectionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchStatusUseCase
-import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
+import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
 import io.ktor.client.HttpClient
 import javax.inject.Singleton
 

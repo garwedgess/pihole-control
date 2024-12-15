@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType

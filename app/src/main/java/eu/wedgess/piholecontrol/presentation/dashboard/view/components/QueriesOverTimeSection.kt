@@ -12,9 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleOverTimeData
-import eu.wedgess.piholecontrol.domain.model.QueriesOverTimeEntity
-import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
 import eu.wedgess.piholecontrol.presentation.dashboard.model.OverTimeLineChartInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
