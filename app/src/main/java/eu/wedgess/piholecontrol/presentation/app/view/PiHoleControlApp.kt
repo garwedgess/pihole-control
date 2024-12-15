@@ -7,23 +7,34 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
@@ -35,9 +46,11 @@ import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs
 import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel
 import eu.wedgess.piholecontrol.presentation.common.MainAppBar
-import eu.wedgess.piholecontrol.presentation.navigation.graphs.MainNavigationGraph
 import eu.wedgess.piholecontrol.presentation.navigation.bottom.BottomNavigationBar
+import eu.wedgess.piholecontrol.presentation.navigation.graphs.MainNavigationGraph
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.abs
 
@@ -47,12 +60,24 @@ fun PiHoleControlApp(
     isDarkTheme: Boolean,
     useDynamicColors: Boolean
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
     val navHostController = rememberNavController()
     val backStackEntry = navHostController.currentBackStackEntryAsState()
     val localDensity = LocalDensity.current
     val currentLayoutDirection = LocalLayoutDirection.current
+    val localContext = LocalContext.current
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val dismissSnackbarState = rememberSwipeToDismissBoxState(confirmValueChange = { value ->
+        if (value != SwipeToDismissBoxValue.Settled) {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            true
+        } else {
+            false
+        }
+    })
 
     val bottomBarHeight = 80.dp
     val bottomBarHeightPx = with(localDensity) {
@@ -83,12 +108,25 @@ fun PiHoleControlApp(
         darkTheme = isDarkTheme,
         dynamicColor = useDynamicColors
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
+        Surface(modifier = Modifier.fillMaxSize()) {
             Scaffold(
                 modifier = Modifier.nestedScroll(nestedScrollConnection),
+                snackbarHost = {
+                    SnackbarHost(snackbarHostState) { data ->
+                        SwipeToDismissBox(
+                            state = dismissSnackbarState,
+                            backgroundContent = {},
+                            content = {
+                                Snackbar(
+                                    snackbarData = data,
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                    contentColor = MaterialTheme.colorScheme.onBackground
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
                 topBar = {
                     MainAppBar(
                         appBarState = uiState.appBarState,
@@ -152,6 +190,18 @@ fun PiHoleControlApp(
                         onComposing = { updateState ->
                             Timber.d("UpdatedState: $updateState")
                             viewModel.onEvent(AppContract.Event.UpdateAppBarState(updateState))
+                        },
+                        showSnackbarMessage = { msg ->
+                            localCoroutineScope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = msg.asString(context = localContext),
+                                    duration = SnackbarDuration.Indefinite
+                                )
+                                if (result == SnackbarResult.Dismissed) {
+                                    delay(500)
+                                    dismissSnackbarState.reset()
+                                }
+                            }
                         }
                     )
                     AppDialogs(uiState.dialogType, onEvent = viewModel::onEvent)

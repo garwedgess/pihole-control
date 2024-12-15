@@ -1,7 +1,5 @@
 package eu.wedgess.piholecontrol.presentation.filters
 
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType

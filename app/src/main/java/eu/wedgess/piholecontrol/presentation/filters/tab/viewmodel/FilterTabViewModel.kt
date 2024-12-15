@@ -5,11 +5,17 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
+import eu.wedgess.piholecontrol.domain.model.FilterRulesResultEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRulesUseCase
+import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
+import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.filters.extensions.toFilterRulesResult
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
+import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,9 +27,11 @@ import kotlinx.coroutines.launch
 class FilterTabViewModel @AssistedInject constructor(
     private val filterRulesUseCase: FetchFilterRulesUseCase,
     @Assisted val filterRuleType: FilterScreenTabType
-) : ViewModel() {
+) : ViewModel(),
+    SideEffectViewModel<FilterTabContract.Effect> by SideEffectViewModelImpl() {
 
     private val searchQuery = MutableStateFlow("")
+    private var showErrorMessage: Boolean = true
 
     val uiResult = filterRulesUseCase(filterRuleType.toFilterTypePair().first)
         .combine(searchQuery) { filterRules, query ->
@@ -35,7 +43,11 @@ class FilterTabViewModel @AssistedInject constructor(
                     )
                 )
             }.run {
-                return@combine this@run.toUiResult(query)
+                return@combine this@run.toFilterRulesResult().toUiResult(query).also {
+                    if (it !is UIResult.Error && showErrorMessage) {
+                        handleCombinedErrors(this)
+                    }
+                }
             }
         }
         .stateIn(
@@ -49,4 +61,30 @@ class FilterTabViewModel @AssistedInject constructor(
     }
 
     fun onRefreshData() = filterRulesUseCase.refreshRules()
+
+    private fun handleCombinedErrors(rulesEntity: FilterRulesResultEntity) {
+        val failures = mutableListOf<UiText.StringResource>()
+        rulesEntity.rules.onFailure {
+            failures.add(
+                UiText.StringResource(
+                    R.string.filter_rules_error,
+                    listOf(it.message ?: "")
+                )
+            )
+        }
+        rulesEntity.regexRules.onFailure {
+            failures.add(
+                UiText.StringResource(
+                    R.string.filter_regex_rules_error,
+                    listOf(it.message ?: "")
+                )
+            )
+        }
+        if (failures.isNotEmpty()) {
+            showErrorMessage = false
+            viewModelScope.emitSideEffect(
+                FilterTabContract.Effect.ShowErrorSnackbar(failures)
+            )
+        }
+    }
 }

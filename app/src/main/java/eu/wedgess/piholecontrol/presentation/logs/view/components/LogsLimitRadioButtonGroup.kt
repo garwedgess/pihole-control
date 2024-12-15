@@ -28,8 +28,8 @@ fun LogsLimitRadioButtonGroup(
 private fun LogsLimitRadioButtonGroupPreview() {
     PiHoleControlTheme {
         LogsLimitRadioButtonGroup(
-            itemsList = LogsContract.UiState.availableLogLimits,
-            selectedItem = LogsContract.UiState.availableLogLimits.last(),
+            itemsList = LogsContract.BottomSheetUiState.availableLogLimits,
+            selectedItem = LogsContract.BottomSheetUiState.availableLogLimits.last(),
             onLogLimitSelected = {}
         )
     }

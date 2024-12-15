@@ -7,7 +7,8 @@ import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleQueryTypes
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopClients
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopQueries
-import eu.wedgess.piholecontrol.domain.model.*
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.TopQueriesEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
 import io.mockk.MockKAnnotations

@@ -14,7 +14,6 @@
     <ID>ArgumentListWrapping:ConnectionsViewModel.kt$ConnectionsViewModel$(UiText.DynamicString("Failed to fetch connections"))</ID>
     <ID>ArgumentListWrapping:CurrentConnectionStatus.kt$( text = { ListItem( leadingContent = { RadioButton( selected = connection.id == currentConnection.id, onClick = null ) }, headlineContent = { Text(connection.name) }, supportingContent = { Text(connection.host) } ) }, onClick = { onConnectionSelected(connection) showConnectionsDropdown = false } )</ID>
     <ID>ArgumentListWrapping:CurrentConnectionStatus.kt$(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)</ID>
-    <ID>ArgumentListWrapping:DashboardInfo.kt$DashboardInfo$( summary, queriesOverTime, clientQueriesOverTime )</ID>
     <ID>ArgumentListWrapping:DashboardViewModel.kt$DashboardViewModel$(throwable.message?.takeIf { it.isNotBlank() } ?: "Unknown error")</ID>
     <ID>ArgumentListWrapping:DisableButtonRow.kt$( modifier = Modifier.weight(PiHoleControlTheme.dimens.weight.full), border = if (selectedTime == rightValue) { BorderStroke(2.dp, MaterialTheme.colorScheme.primary) } else { ButtonDefaults.outlinedButtonBorder(enabled = true) }, onClick = { onTimeSelected(rightValue) })</ID>
     <ID>ArgumentListWrapping:DisplayFilterRuleDetailsDialog.kt$(R.string.filters_details_dialog_value_enabled)</ID>
@@ -366,7 +365,6 @@
     <ID>FinalNewline:TopDomainsStatsViewModel.kt$eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.viewmodel.TopDomainsStatsViewModel.kt</ID>
     <ID>FinalNewline:Type.kt$eu.wedgess.piholecontrol.presentation.theme.Type.kt</ID>
     <ID>FinalNewline:UIResult.kt$eu.wedgess.piholecontrol.presentation.compose.UIResult.kt</ID>
-    <ID>FinalNewline:UiState.kt$eu.wedgess.piholecontrol.presentation.filters.model.UiState.kt</ID>
     <ID>FinalNewline:UiStateViewModel.kt$eu.wedgess.piholecontrol.presentation.base.UiStateViewModel.kt</ID>
     <ID>FinalNewline:UiStateViewModelImpl.kt$eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl.kt</ID>
     <ID>FinalNewline:UiText.kt$eu.wedgess.piholecontrol.utils.UiText.kt</ID>
@@ -380,147 +378,6 @@
     <ID>FinalNewline:Utils.kt$eu.wedgess.piholecontrol.data.api.fakes.Utils.kt</ID>
     <ID>FinalNewline:safeRequest.kt$eu.wedgess.piholecontrol.data.utils.safeRequest.kt</ID>
     <ID>FinalNewline:topQueriesStatsScreen.kt$eu.wedgess.piholecontrol.presentation.statistics.tabs.server.view.topQueriesStatsScreen.kt</ID>
-    <ID>FunctionNaming:AddFilterRuleDialog.kt$@Composable @Preview fun AddFilterRuleCardPreview()</ID>
-    <ID>FunctionNaming:AddFilterRuleDialog.kt$@Composable fun AddFilterRuleDialog( filterRuleType: FilterRuleTypeEntity, onDismissRequest: () -&gt; Unit, onConfirmClick: (ModifyFilterRule.Add) -&gt; Unit )</ID>
-    <ID>FunctionNaming:AddFilterRuleDialog.kt$@Composable private fun AddFilterRuleDialogContent( filterRuleType: FilterRuleTypeEntity, focusRequester: FocusRequester = remember { FocusRequester() }, onConfirmClick: (ModifyFilterRule.Add) -&gt; Unit, onCancelClick: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:AnimatedIntText.kt$@Composable fun AnimatedIntText(value: Int)</ID>
-    <ID>FunctionNaming:AnimatedIntText.kt$@ThemePreview @Composable private fun AnimatedIntTextPreview()</ID>
-    <ID>FunctionNaming:AnimatedLinearProgressIndicator.kt$@Composable fun AnimatedLinearProgressIndicator(indicatorProgress: Float)</ID>
-    <ID>FunctionNaming:AnimatedLinearProgressIndicator.kt$@ThemePreview @Composable private fun AnimatedLinearProgressIndicatorPreview()</ID>
-    <ID>FunctionNaming:AnimatedTabContainer.kt$@Composable fun &lt;T : TabItem&gt; AnimatedTabContainer( tabItems: List&lt;T&gt;, modifier: Modifier = Modifier, onTabIndexChanged: ((index: Int) -&gt; Unit)? = null, onTabSelected: @Composable (T) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ApiTokenInput.kt$@Composable fun ApiTokenInput( apiToken: String, showAdvancedSettings: Boolean, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ApiTokenScannerDialog.kt$@ExperimentalGetImage @Composable fun ApiTokenScannerDialog( barcodeScanner: BarcodeScanner, onDismiss: () -&gt; Unit, onApiTokenScanFailed: () -&gt; Unit, onApiTokenScanned: (String) -&gt; Unit )</ID>
-    <ID>FunctionNaming:AppDialogs.kt$@Composable fun AppDialogs(dialogType: AppDialogType, onEvent: (AppContract.Event) -&gt; Unit)</ID>
-    <ID>FunctionNaming:BottomNavigationBar.kt$@Composable fun BottomNavigationBar( onNavigateTo: (route: Screens) -&gt; Unit, selectedItemRoute: String? = null )</ID>
-    <ID>FunctionNaming:ClientQueriesOverTimeSection.kt$@Composable fun ClientQueriesOverTimeSection( overTimeData: List&lt;LineChartInfo.ClientsOverLineChart&gt; )</ID>
-    <ID>FunctionNaming:ClientQueriesOvertimeGraph.kt$@Composable fun ClientQueriesOvertimeGraph(clientsOvertimeChartInfo: List&lt;LineChartInfo.ClientsOverLineChart&gt;)</ID>
-    <ID>FunctionNaming:CollectSideEffect.kt$@Composable fun &lt;SideEffect&gt; CollectSideEffect( sideEffect: Flow&lt;SideEffect&gt;, onSideEffect: suspend CoroutineScope.(effect: SideEffect) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ConnectionInfoContent.kt$@Composable fun ConnectionInfoContent( connection: ConnectionEntity, onEditClicked: () -&gt; Unit, onDeleteClicked: () -&gt; Unit, onSetActiveClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:ConnectionInfoContent.kt$@Composable private fun ConnectionInfoRow( icon: ImageVector, title: String, value: String, valueTextColor: Color = Color.Unspecified )</ID>
-    <ID>FunctionNaming:ConnectionInfoContent.kt$@ThemePreview @Composable private fun ConnectionInfoContentPreview()</ID>
-    <ID>FunctionNaming:ConnectionListItem.kt$@Composable fun ConnectionListItem( connectionInfo: ConnectionEntity, onEditClicked: () -&gt; Unit, onDeleteClicked: () -&gt; Unit, onSetActiveClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:ConnectionListItem.kt$@ThemePreview @Composable fun ConnectionListItemPreview()</ID>
-    <ID>FunctionNaming:ConnectionsList.kt$@Composable fun ConnectionsList( connections: List&lt;ConnectionEntity&gt;, onEvent: (ConnectionsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ConnectionsScreen.kt$@Composable fun ConnectionsScreen( uiResult: UIResult&lt;ConnectionsContract.UiState&gt;, onEvent: (ConnectionsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:CurrentConnectionStatus.kt$@Composable fun CurrentConnectionStatus( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionSelected: (ConnectionEntity) -&gt; Unit, onStatusClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:CurrentConnectionStatus.kt$@ThemePreview @Composable private fun CurrentConnectionStatusPreview()</ID>
-    <ID>FunctionNaming:CustomTimePicker.kt$@Composable fun CustomTimePicker( currentHours: TextFieldValue, currentMinutes: TextFieldValue, onHoursChanged: (hours: TextFieldValue) -&gt; Unit, onMinutesChanged: (minutes: TextFieldValue) -&gt; Unit )</ID>
-    <ID>FunctionNaming:DashboardScreen.kt$@Composable fun DashboardScreen(uiResult: UIResult&lt;DashboardContract.UiState&gt;)</ID>
-    <ID>FunctionNaming:DashboardScreen.kt$@ThemePreview @Composable private fun DashboardScreenPreview()</ID>
-    <ID>FunctionNaming:DisableButtonRow.kt$@Composable fun DisableButtonRow( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeSelected: (Long) -&gt; Unit )</ID>
-    <ID>FunctionNaming:DisableStatusDialog.kt$@Composable fun DisableStatusDialog( onDisableStatus: (duration: Long) -&gt; Unit, onDismissDialog: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:DisableStatusDialog.kt$@ThemePreview @Composable private fun DisableStatusDialogPreview()</ID>
-    <ID>FunctionNaming:DisableStatusDialogContent.kt$@Composable fun DisableStatusDialogContent( onDisableStatus: (duration: Long) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:DisableStatusDialogContent.kt$@ThemePreview @Composable private fun DisableStatusDialogContentPreview()</ID>
-    <ID>FunctionNaming:DisplayFilterRuleDetailsDialog.kt$@Composable fun DisplayFilterRuleDetailsDialog( filterRule: FilterRuleEntity, onDelete: (ModifyFilterRule.Delete) -&gt; Unit, onDismissRequest: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:DisplayFilterRuleDetailsDialog.kt$@Composable private fun DisplayFilterRuleDetailsDialogContent( filterRule: FilterRuleEntity, onDeleteClicked: (ModifyFilterRule.Delete) -&gt; Unit, onCancelClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:DisplayFilterRuleDetailsDialog.kt$@Composable private fun FilterDetailsRow( icon: ImageVector, title: String, value: String )</ID>
-    <ID>FunctionNaming:DisplayFilterRuleDetailsDialog.kt$@Preview @Composable private fun DisplayFilterRuleDetailsDialogPreview()</ID>
-    <ID>FunctionNaming:DonutChart.kt$@Composable fun DonutChart( modifier: Modifier = Modifier, chartSize: Dp = 350.dp, data: DonutChartDataCollection, minDisplayPercentage: Float = 5f, gapPercentage: Float = 0.00f, onIndexSelected: (Int) -&gt; Unit, )</ID>
-    <ID>FunctionNaming:DonutChart.kt$@Preview(showBackground = true) @Composable fun DonutChartPreview()</ID>
-    <ID>FunctionNaming:DropDownPreference.kt$@Composable fun &lt;T&gt; DropDownPreference( title: String, items: List&lt;Pair&lt;T, String&gt;&gt;, selectedItem: T, onItemSelected: (T) -&gt; Unit, icon: ImageVector? = null, modifier: Modifier = Modifier, enabled: Boolean = true, )</ID>
-    <ID>FunctionNaming:DropDownPreference.kt$@Preview(showBackground = true) @Composable private fun DropDownPreferencePreview()</ID>
-    <ID>FunctionNaming:EmptyContent.kt$@Composable fun EmptyContent( title: String, modifier: Modifier = Modifier, subTitle: String? = null )</ID>
-    <ID>FunctionNaming:EmptyContent.kt$@ThemePreview @Composable private fun EmptyContentPreview()</ID>
-    <ID>FunctionNaming:EmptyScreen.kt$@Composable fun EmptyScreen(modifier: Modifier, emptyType: ResultType.Empty)</ID>
-    <ID>FunctionNaming:EnableStatusDialog.kt$@Composable fun EnableStatusDialog( onEnabledStatus: () -&gt; Unit, onDismissDialog: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:EnableStatusDialog.kt$@ThemePreview @Composable private fun StatusDialogPreview()</ID>
-    <ID>FunctionNaming:EnableStatusDialogContent.kt$@Composable fun EnableStatusDialogContent( onEnable: () -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:EnableStatusDialogContent.kt$@ThemePreview @Composable private fun EnableStatusDialogContentPreview()</ID>
-    <ID>FunctionNaming:ErrorContent.kt$@Composable fun ErrorContent( title: String, modifier: Modifier = Modifier, subTitle: String? = null )</ID>
-    <ID>FunctionNaming:ErrorContent.kt$@ThemePreview @Composable private fun ErrorContentPreview()</ID>
-    <ID>FunctionNaming:ErrorScreen.kt$@Composable fun ErrorScreen(modifier: Modifier, errorType: ResultType.Error)</ID>
-    <ID>FunctionNaming:FilterDialogs.kt$@Composable fun FilterDialogs( dialogType: FilterDialogType, onAddRuleClick: (ModifyFilterRule.Add) -&gt; Unit, onDeleteRuleClick: (ModifyFilterRule.Delete) -&gt; Unit, onDismissDialogClick: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:FilterRuleItem.kt$@Composable fun FilterRuleItem( rule: FilterRuleEntity, onItemClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:FilterRuleItem.kt$@ThemePreview @Composable private fun FilterRuleItemPreview( @PreviewParameter(FilterListItemPreviewParameterProvider::class) filter: FilterRuleEntity )</ID>
-    <ID>FunctionNaming:FilterTabContent.kt$@Composable fun FilterListContent( filtersList: List&lt;FilterRuleEntity&gt;, onFilterRuleClick: (FilterRuleEntity) -&gt; Unit )</ID>
-    <ID>FunctionNaming:FilterTabScreenRoot.kt$@Composable fun FilterTabScreenRoot( filterScreenTabType: FilterScreenTabType, onFilterRuleClick: (FilterRuleEntity) -&gt; Unit, onRefreshFilters: (() -&gt; Unit) -&gt; Unit, searchQuery: String? = null )</ID>
-    <ID>FunctionNaming:FilterTopBarActions.kt$@Composable fun FilterTopBarActions(onSearchClicked: () -&gt; Unit)</ID>
-    <ID>FunctionNaming:FiltersScreen.kt$@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter") @Composable fun FiltersScreen( uiState: FiltersContract.UiState, onEvent: (FiltersContract.Event) -&gt; Unit, triggerRefreshEvent: (() -&gt; Unit) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ForwardDestinationsContent.kt$@Composable fun ForwardDestinationsContent( forwardDestinations: List&lt;ForwardDestinationEntity&gt; )</ID>
-    <ID>FunctionNaming:ForwardDestinationsContent.kt$@ThemePreview @Composable private fun ForwardDestinationContentPreview()</ID>
-    <ID>FunctionNaming:LegendGrid.kt$@OptIn(ExperimentalLayoutApi::class) @Composable fun LegendGrid(data: List&lt;LegendData&gt;, modifier: Modifier = Modifier)</ID>
-    <ID>FunctionNaming:LegendGrid.kt$@ThemePreview @Composable private fun LegendGridPreview()</ID>
-    <ID>FunctionNaming:LegendItem.kt$@Composable fun RowScope.LegendItem(legendData: LegendData)</ID>
-    <ID>FunctionNaming:LegendItem.kt$@ThemePreview @Composable private fun LegendItemPreview()</ID>
-    <ID>FunctionNaming:LineChart.kt$@Composable fun LineChart( modifier: Modifier = Modifier, data: Iterable&lt;LineChartInfo&gt; )</ID>
-    <ID>FunctionNaming:LineChart.kt$@ThemePreview @Composable fun LineChartPreview()</ID>
-    <ID>FunctionNaming:LoadingContent.kt$@Composable fun LoadingContent( title: String, modifier: Modifier = Modifier, subTitle: String? = null )</ID>
-    <ID>FunctionNaming:LoadingContent.kt$@ThemePreview @Composable private fun LoadingContentPreview()</ID>
-    <ID>FunctionNaming:LoadingScreen.kt$@Composable fun LoadingScreen(modifier: Modifier, loadingType: ResultType.Loading)</ID>
-    <ID>FunctionNaming:LogDetailsDialog.kt$@Composable fun LogDetailsDialog( piHoleLog: LogEntryEntity, addToAllowList: (domain: String) -&gt; Unit, addToBlockList: (domain: String) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogDetailsDialog.kt$@Composable private fun LogDetailsDialogContent( log: LogEntryEntity, addToAllowList: (domain: String) -&gt; Unit, addToBlockList: (domain: String) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogDetailsDialog.kt$@Composable private fun LogDetailsRow( icon: ImageVector, title: String, value: String, valueTextColor: Color = Color.Unspecified )</ID>
-    <ID>FunctionNaming:LogDetailsDialog.kt$@Preview @Composable private fun DisplayFilterRuleDialogPreview()</ID>
-    <ID>FunctionNaming:LogFiltersBottomSheet.kt$@Composable fun LogFiltersBottomSheet( uiState: LogsContract.UiState, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClicked: () -&gt; Unit)</ID>
-    <ID>FunctionNaming:LogItem.kt$@ThemePreview @Composable private fun LogListItemPreview()</ID>
-    <ID>FunctionNaming:LogsDatePickerDialog.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun LogsDatePickerDialog( selectedDate: LocalDate? = null, onDismiss: () -&gt; Unit, onConfirm: (date: LocalDate) -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogsDialogs.kt$@Composable fun LogsDialogs(dialogType: LogsDialogType, onEvent: (LogsContract.Event) -&gt; Unit)</ID>
-    <ID>FunctionNaming:LogsEntryRadioButtonGroup.kt$@Composable fun LogsEntryRadioButtonGroup( itemsList: Array&lt;LogEntryStatus&gt;, selectedItem: LogEntryStatus, onLogEntryStatusSelected: (LogEntryStatus) -&gt; Unit, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:LogsEntryRadioButtonGroup.kt$@Preview @Composable private fun LogsEntryRadioButtonGroupPreview()</ID>
-    <ID>FunctionNaming:LogsLimitRadioButtonGroup.kt$@Composable fun LogsLimitRadioButtonGroup( itemsList: List&lt;Int&gt;, selectedItem: Int, onLogLimitSelected: (Int) -&gt; Unit, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:LogsLimitRadioButtonGroup.kt$@Preview @Composable private fun LogsLimitRadioButtonGroupPreview()</ID>
-    <ID>FunctionNaming:LogsListContent.kt$@OptIn(ExperimentalFoundationApi::class) @Composable fun LogsListContent( logsList: List&lt;LogEntryEntity&gt;, dialogType: LogsDialogType, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogsListStickyHeader.kt$@Composable fun LogsListStickyHeader(listSize: Int)</ID>
-    <ID>FunctionNaming:LogsListStickyHeader.kt$@Preview @Composable private fun LogsListStickyHeaderPreview()</ID>
-    <ID>FunctionNaming:LogsScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun LogsScreen( uiResult: UIResult&lt;LogsContract.UiState&gt;, scaffoldState: BottomSheetScaffoldState, snackbarHostState: SnackbarHostState, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogsTimePickerDialog.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun LogsTimePickerDialog( initialHour: Int = LocalDateTime.now().hour, initialMinutes: Int = LocalDateTime.now().minute, onTimeConfirmed: (Int, Int) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:LogsTopBarActions.kt$@Composable fun LogsTopBarActions( onSearchClicked: () -&gt; Unit, onSortClicked: () -&gt; Unit, onSortDismissed: () -&gt; Unit, onSortItemSelected: (LogSorting) -&gt; Unit, selectedSorting: LogSorting, isSortingMenuVisible: Boolean )</ID>
-    <ID>FunctionNaming:MainAppBar.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun MainAppBar( appBarState: AppBarState, onNavigateBack: () -&gt; Unit, onStatusClicked: () -&gt; Unit, onConnectionSelected: (ConnectionEntity) -&gt; Unit )</ID>
-    <ID>FunctionNaming:MainAppBar.kt$@ThemePreview @Composable fun MainAppBarPreview( @PreviewParameter(MainAppBarPreviewParameterProvider::class) appbarState: AppBarState )</ID>
-    <ID>FunctionNaming:MainNavigationGraph.kt$@OptIn(ExperimentalGetImage::class) @Composable fun MainNavigationGraph( navController: NavHostController, onComposing: (AppBarState) -&gt; Unit, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:ModifyConnectionAdvancedSettings.kt$@Composable fun ModifyConnectionAdvancedSettings( uiState: ModifyConnectionsContract.UiState, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit, hideKeyboard: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:ModifyConnectionContent.kt$@Composable fun ModifyConnectionContent( uiState: ModifyConnectionsContract.UiState, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit, paddingValues: PaddingValues )</ID>
-    <ID>FunctionNaming:ModifyConnectionDialogs.kt$@OptIn(ExperimentalGetImage::class) @Composable fun ModifyConnectionDialogs( dialogType: ModifyConnectionDialogType, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:ModifyConnectionScreen.kt$@ExperimentalGetImage @Composable fun ModifyConnectionScreen( uiState: ModifyConnectionsContract.UiState, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:PiHoleControlApp.kt$@Composable fun PiHoleControlApp( viewModel: AppViewModel = hiltViewModel(), isDarkTheme: Boolean, useDynamicColors: Boolean )</ID>
-    <ID>FunctionNaming:PreferenceCategory.kt$@Composable fun PreferenceCategory( title: String, modifier: Modifier = Modifier, )</ID>
-    <ID>FunctionNaming:PreferenceCategory.kt$@Preview(showBackground = true) @Composable private fun PreferenceCategoryPreview()</ID>
-    <ID>FunctionNaming:QueriesOverTimeSection.kt$@Composable fun QueriesOverTimeSection(overTimeData: OverTimeLineChartInfo)</ID>
-    <ID>FunctionNaming:QueriesOvertimeGraph.kt$@Composable fun QueriesOvertimeGraph(overTimeData: OverTimeLineChartInfo)</ID>
-    <ID>FunctionNaming:QueryTypesContent.kt$@Composable fun QueryTypesContent(queryTypes: DonutChartDataCollection)</ID>
-    <ID>FunctionNaming:QueryTypesRoot.kt$@Composable fun QueryTypesRoot(viewModel: QueryTypesViewModel = hiltViewModel())</ID>
-    <ID>FunctionNaming:QueryTypesScreen.kt$@Composable fun QueryTypesScreen(uiResult: UIResult&lt;DonutChartDataCollection&gt;)</ID>
-    <ID>FunctionNaming:RadioGroup.kt$@Composable fun &lt;T&gt; RadioGroup( itemsList: List&lt;T&gt;, selectedItem: T, labelFormatter: @Composable (T) -&gt; String, onItemSelected: (T) -&gt; Unit, modifier: Modifier = Modifier, horizontalArrangement: Arrangement.Horizontal = Arrangement.Center, )</ID>
-    <ID>FunctionNaming:RadioGroup.kt$@Preview @Composable private fun RadioGroupPreview()</ID>
-    <ID>FunctionNaming:RefreshIntervalDialog.kt$@Composable fun RefreshIntervalDialog( currentRefreshTime: Long, onRefreshIntervalConfirmed: (Long) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:RefreshIntervalDialog.kt$@ThemePreview @Composable private fun RefreshIntervalDialogPreview()</ID>
-    <ID>FunctionNaming:RegularPreference.kt$@Composable fun RegularPreference( modifier: Modifier = Modifier, title: String, onClick: () -&gt; Unit, icon: ImageVector? = null, subtitle: String? = null, enabled: Boolean = true, )</ID>
-    <ID>FunctionNaming:RegularPreference.kt$@Composable private fun RegularPreferenceImpl( modifier: Modifier = Modifier, title: String, onClick: () -&gt; Unit, subtitleAnnotatedString: AnnotatedString? = null, icon: ImageVector? = null, enabled: Boolean = true, )</ID>
-    <ID>FunctionNaming:RegularPreference.kt$@Preview(showBackground = true) @Composable private fun RegularPreferencePreview()</ID>
-    <ID>FunctionNaming:Scanner.kt$@ExperimentalGetImage @Composable fun Scanner( modifier: Modifier = Modifier, barcodeScanner: BarcodeScanner, onBarcodeScanSuccess: (Iterable&lt;Barcode&gt;) -&gt; Unit )</ID>
-    <ID>FunctionNaming:SearchContent.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun SearchContent( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
-    <ID>FunctionNaming:ServersDestination.kt$@Composable fun ServersRoot(viewModel: ServerStatsViewModel = hiltViewModel())</ID>
-    <ID>FunctionNaming:SettingsDialog.kt$@Composable fun SettingsDialog(dialogType: SettingsDialogType, onEvent: (SettingsContract.Event) -&gt; Unit)</ID>
-    <ID>FunctionNaming:SettingsScreen.kt$@Composable fun SettingsScreen( uiState: SettingsContract.UiState, onEvent: (SettingsContract.Event) -&gt; Unit )</ID>
-    <ID>FunctionNaming:SettingsScreen.kt$@Preview @Composable private fun SettingsScreenPreview()</ID>
-    <ID>FunctionNaming:StatisticsListItem.kt$@Composable fun StatisticsListItem( domain: String, hits: Int, progress: Float )</ID>
-    <ID>FunctionNaming:StatisticsListItem.kt$@ThemePreview @Composable private fun StatisticsListItemPreview()</ID>
-    <ID>FunctionNaming:SummaryItem.kt$@Preview @Composable fun SummaryItemPreview()</ID>
-    <ID>FunctionNaming:SummaryItem.kt$SummaryItem$@Composable fun Number( title: String, value: Int, imageVector: ImageVector, backgroundColor: Color, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:SummaryItem.kt$SummaryItem$@Composable fun NumberWithCaption( title: String, value: Int, caption: String, imageVector: ImageVector, backgroundColor: Color, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:SummaryItem.kt$SummaryItem$@Composable fun Percentage( title: String, value: Float, imageVector: ImageVector, backgroundColor: Color, modifier: Modifier = Modifier )</ID>
-    <ID>FunctionNaming:SummarySection.kt$@Composable fun SummarySection(summary: SummaryEntity)</ID>
-    <ID>FunctionNaming:SummarySection.kt$@Preview @Composable private fun SummarySectionPreview()</ID>
-    <ID>FunctionNaming:SwitchPreference.kt$@Composable fun SwitchPreference( modifier: Modifier = Modifier, title: String, subtitle: String? = null, icon: ImageVector? = null, checked: Boolean, onCheckedChange: (Boolean) -&gt; Unit, enabled: Boolean = true, )</ID>
-    <ID>FunctionNaming:SwitchPreference.kt$@Composable private fun SwitchPreferenceImpl( title: String, annotatedSubtitle: AnnotatedString?, icon: ImageVector? = null, checked: Boolean, onCheckedChange: (Boolean) -&gt; Unit, modifier: Modifier = Modifier, enabled: Boolean = true, )</ID>
-    <ID>FunctionNaming:SwitchPreference.kt$@Preview(showBackground = true) @Composable private fun SwitchPreferencePreview()</ID>
-    <ID>FunctionNaming:Theme.kt$@Composable fun PiHoleControlTheme( darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ dynamicColor: Boolean = false, content: @Composable () -&gt; Unit )</ID>
-    <ID>FunctionNaming:TimeButton.kt$@Composable fun TimeButton( title: String, subTitle: String?, onClick: () -&gt; Unit, onClearClicked: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:TimeButton.kt$@Preview @Composable private fun TimeButtonPreview()</ID>
-    <ID>FunctionNaming:TimePickerLayout.kt$@Composable fun TimePickerLayout( fromTime: Long? = null, toTime: Long? = null, onFromTimeClicked: () -&gt; Unit, onToTimeClicked: () -&gt; Unit, onFromTimeCleared: () -&gt; Unit, onToTimeCleared: () -&gt; Unit )</ID>
-    <ID>FunctionNaming:TimePickerLayout.kt$@Preview @Composable private fun TimePickerLayoutPreview()</ID>
-    <ID>FunctionNaming:TimeTextField.kt$@Composable fun TimeTextField( type: TimePickerType, value: TextFieldValue, onValueChange: (value: TextFieldValue) -&gt; Unit, modifier: Modifier = Modifier, defaultValue: String? = null )</ID>
-    <ID>FunctionNaming:TopClientsContent.kt$@Composable fun TopClientsContent(topClients: List&lt;TopClientEntity&gt;)</ID>
-    <ID>FunctionNaming:TopClientsContent.kt$@ThemePreview @Composable private fun TopClientsContentPreview()</ID>
-    <ID>FunctionNaming:TopClientsStatsDestination.kt$@Composable fun TopClientsScreenRoot(viewModel: TopClientsStatsViewModel = hiltViewModel())</ID>
-    <ID>FunctionNaming:TopDomainsContent.kt$@Composable fun TopDomainsContent( topPermittedDomains: List&lt;TopDomainEntity&gt;, topBlockedDomains: List&lt;TopDomainEntity&gt; )</ID>
-    <ID>FunctionNaming:TopDomainsContent.kt$@ThemePreview @Composable private fun TopDomainsContentPreview()</ID>
-    <ID>FunctionNaming:TopDomainsStatsDestination.kt$@Composable fun TopDomainsRoot(viewModel: TopDomainsStatsViewModel = hiltViewModel())</ID>
-    <ID>FunctionNaming:TopDomainsStatsScreen.kt$@Composable fun TopDomainsScreen(statistics: UIResult&lt;TopQueriesEntity&gt;)</ID>
-    <ID>FunctionNaming:UIResult.kt$@Composable fun &lt;T&gt; UIResult&lt;T&gt;.Compose( onLoaded: @Composable (T) -&gt; Unit, onLoading: (@Composable (ResultType.Loading) -&gt; Unit)? = null, onError: (@Composable (ResultType.Error) -&gt; Unit)? = null, onEmpty: (@Composable (ResultType.Empty) -&gt; Unit)? = null )</ID>
-    <ID>FunctionNaming:topQueriesStatsScreen.kt$@Composable fun ServersScreen(statistics: UIResult&lt;List&lt;ForwardDestinationEntity&gt;&gt;)</ID>
     <ID>FunctionStartOfBodySpacing:FetchAllConnectionsUseCase.kt$FetchAllConnectionsUseCase$operator fun invoke(): Flow&lt;Result&lt;List&lt;ConnectionEntity&gt;&gt;&gt;</ID>
     <ID>ImportOrdering:AppUseCaseModule.kt$import dagger.Module import dagger.Provides import dagger.hilt.InstallIn import dagger.hilt.components.SingletonComponent import eu.wedgess.piholecontrol.data.api.StatusApiService import eu.wedgess.piholecontrol.data.api.StatusApiServiceImpl import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository import eu.wedgess.piholecontrol.domain.repository.SettingsRepository import eu.wedgess.piholecontrol.domain.repository.StatusRepository import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingUseCase import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchShouldChangeStatusOnAllConnectionsUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchStatusUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase import io.ktor.client.HttpClient import javax.inject.Singleton</ID>
     <ID>ImportOrdering:ConnectionsUseCaseModule.kt$import dagger.Module import dagger.Provides import dagger.hilt.InstallIn import dagger.hilt.components.SingletonComponent import eu.wedgess.piholecontrol.data.api.StatusApiService import eu.wedgess.piholecontrol.data.api.StatusApiServiceImpl import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository import eu.wedgess.piholecontrol.domain.repository.SettingsRepository import eu.wedgess.piholecontrol.domain.repository.StatusRepository import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingUseCase import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchShouldChangeStatusOnAllConnectionsUseCase import eu.wedgess.piholecontrol.domain.usecases.app.FetchStatusUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.AddConnectionUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.DeleteConnectionUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.FetchConnectionByIdUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase import eu.wedgess.piholecontrol.domain.usecases.connections.UpdateConnectionUseCase import io.ktor.client.HttpClient import javax.inject.Singleton</ID>
@@ -537,7 +394,6 @@
     <ID>ImportOrdering:LogsApiService.kt$import eu.wedgess.piholecontrol.domain.model.ConnectionEntity import eu.wedgess.piholecontrol.data.model.responses.PiHoleLogsResponse</ID>
     <ID>ImportOrdering:LogsApiServiceImpl.kt$import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo import eu.wedgess.piholecontrol.domain.model.ConnectionEntity import eu.wedgess.piholecontrol.data.model.responses.PiHoleLogsResponse import eu.wedgess.piholecontrol.data.utils.requestResult import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient import io.ktor.client.HttpClient import javax.inject.Inject</ID>
     <ID>ImportOrdering:LogsRepositoryImpl.kt$import eu.wedgess.piholecontrol.data.api.LogsApiService import eu.wedgess.piholecontrol.domain.model.ConnectionEntity import eu.wedgess.piholecontrol.domain.mappers.toLogEntryEntity import eu.wedgess.piholecontrol.domain.model.LogEntryEntity import eu.wedgess.piholecontrol.domain.repository.LogsRepository import eu.wedgess.piholecontrol.utils.DispatcherProvider import kotlinx.coroutines.withContext</ID>
-    <ID>ImportOrdering:PiHoleControlApp.kt$import androidx.compose.animation.AnimatedVisibility import androidx.compose.animation.slideInHorizontally import androidx.compose.animation.slideOutHorizontally import androidx.compose.foundation.layout.PaddingValues import androidx.compose.foundation.layout.calculateEndPadding import androidx.compose.foundation.layout.calculateStartPadding import androidx.compose.foundation.layout.fillMaxSize import androidx.compose.foundation.layout.height import androidx.compose.foundation.layout.padding import androidx.compose.material3.BottomAppBar import androidx.compose.material3.MaterialTheme import androidx.compose.material3.Scaffold import androidx.compose.material3.Surface import androidx.compose.runtime.Composable import androidx.compose.runtime.derivedStateOf import androidx.compose.runtime.getValue import androidx.compose.runtime.mutableFloatStateOf import androidx.compose.runtime.remember import androidx.compose.ui.Modifier import androidx.compose.ui.geometry.Offset import androidx.compose.ui.graphics.graphicsLayer import androidx.compose.ui.input.nestedscroll.NestedScrollConnection import androidx.compose.ui.input.nestedscroll.NestedScrollSource import androidx.compose.ui.input.nestedscroll.nestedScroll import androidx.compose.ui.platform.LocalDensity import androidx.compose.ui.platform.LocalLayoutDirection import androidx.compose.ui.unit.dp import androidx.hilt.navigation.compose.hiltViewModel import androidx.lifecycle.compose.collectAsStateWithLifecycle import androidx.navigation.compose.currentBackStackEntryAsState import androidx.navigation.compose.rememberNavController import eu.wedgess.piholecontrol.presentation.app.AppContract import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel import eu.wedgess.piholecontrol.presentation.common.MainAppBar import eu.wedgess.piholecontrol.presentation.navigation.graphs.MainNavigationGraph import eu.wedgess.piholecontrol.presentation.navigation.bottom.BottomNavigationBar import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme import timber.log.Timber import kotlin.math.abs</ID>
     <ID>ImportOrdering:PiHoleLogSerializer.kt$import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType import kotlinx.serialization.KSerializer import kotlinx.serialization.descriptors.SerialDescriptor import kotlinx.serialization.descriptors.buildClassSerialDescriptor import kotlinx.serialization.descriptors.element import kotlinx.serialization.encoding.Decoder import kotlinx.serialization.encoding.Encoder import kotlinx.serialization.json.JsonDecoder import kotlinx.serialization.json.int import kotlinx.serialization.json.jsonArray import kotlinx.serialization.json.jsonPrimitive import kotlinx.serialization.json.long</ID>
     <ID>ImportOrdering:RepositoryModule.kt$import androidx.datastore.core.DataStore import dagger.Module import dagger.Provides import dagger.hilt.InstallIn import dagger.hilt.components.SingletonComponent import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl import eu.wedgess.piholecontrol.data.repository.LogsRepositoryImpl import eu.wedgess.piholecontrol.data.repository.SettingsRepositoryImpl import eu.wedgess.piholecontrol.data.repository.StatisticsRepositoryImpl import eu.wedgess.piholecontrol.data.repository.StatusRepositoryImpl import eu.wedgess.piholecontrol.data.api.DashboardApiService import eu.wedgess.piholecontrol.data.api.FilterRulesApiService import eu.wedgess.piholecontrol.data.api.LogsApiService import eu.wedgess.piholecontrol.data.api.StatisticsApiService import eu.wedgess.piholecontrol.data.api.StatusApiService import eu.wedgess.piholecontrol.data.db.ConnectionDao import eu.wedgess.piholecontrol.data.model.UserPreferences import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository import eu.wedgess.piholecontrol.domain.repository.DashboardRepository import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository import eu.wedgess.piholecontrol.domain.repository.LogsRepository import eu.wedgess.piholecontrol.domain.repository.SettingsRepository import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository import eu.wedgess.piholecontrol.domain.repository.StatusRepository import eu.wedgess.piholecontrol.utils.DispatcherProvider import javax.inject.Singleton</ID>
     <ID>ImportOrdering:SettingsRepositoryImplTest.kt$import TestDispatcherProvider import androidx.datastore.core.DataStore import app.cash.turbine.test import com.google.common.truth.Truth.assertThat import eu.wedgess.piholecontrol.data.model.UserPreferences import eu.wedgess.piholecontrol.domain.model.AppThemeEntity import eu.wedgess.piholecontrol.domain.repository.SettingsRepository import eu.wedgess.piholecontrol.utils.DispatcherProvider import io.mockk.MockKAnnotations import io.mockk.coEvery import io.mockk.coVerify import io.mockk.impl.annotations.MockK import kotlinx.coroutines.test.runTest import kotlinx.coroutines.flow.MutableStateFlow import org.junit.Before import org.junit.Test</ID>
@@ -563,28 +419,7 @@
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
-    <ID>LongMethod:AddFilterRuleDialog.kt$@Composable private fun AddFilterRuleDialogContent( filterRuleType: FilterRuleTypeEntity, focusRequester: FocusRequester = remember { FocusRequester() }, onConfirmClick: (ModifyFilterRule.Add) -&gt; Unit, onCancelClick: () -&gt; Unit )</ID>
-    <ID>LongMethod:ApiTokenScannerDialog.kt$@ExperimentalGetImage @Composable fun ApiTokenScannerDialog( barcodeScanner: BarcodeScanner, onDismiss: () -&gt; Unit, onApiTokenScanFailed: () -&gt; Unit, onApiTokenScanned: (String) -&gt; Unit )</ID>
-    <ID>LongMethod:CurrentConnectionStatus.kt$@Composable fun CurrentConnectionStatus( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionSelected: (ConnectionEntity) -&gt; Unit, onStatusClicked: () -&gt; Unit )</ID>
-    <ID>LongMethod:DisableStatusDialogContent.kt$@Composable fun DisableStatusDialogContent( onDisableStatus: (duration: Long) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>LongMethod:DisplayFilterRuleDetailsDialog.kt$@Composable private fun DisplayFilterRuleDetailsDialogContent( filterRule: FilterRuleEntity, onDeleteClicked: (ModifyFilterRule.Delete) -&gt; Unit, onCancelClicked: () -&gt; Unit )</ID>
-    <ID>LongMethod:DonutChart.kt$@Composable fun DonutChart( modifier: Modifier = Modifier, chartSize: Dp = 350.dp, data: DonutChartDataCollection, minDisplayPercentage: Float = 5f, gapPercentage: Float = 0.00f, onIndexSelected: (Int) -&gt; Unit, )</ID>
-    <ID>LongMethod:FilterRuleItem.kt$@Composable fun FilterRuleItem( rule: FilterRuleEntity, onItemClicked: () -&gt; Unit )</ID>
-    <ID>LongMethod:FiltersRoot.kt$fun NavGraphBuilder.filtersRoot( onComposing: (AppBarState) -&gt; Unit )</ID>
-    <ID>LongMethod:ForwardDestinationsContent.kt$@Composable fun ForwardDestinationsContent( forwardDestinations: List&lt;ForwardDestinationEntity&gt; )</ID>
-    <ID>LongMethod:LogDetailsDialog.kt$@Composable private fun LogDetailsDialogContent( log: LogEntryEntity, addToAllowList: (domain: String) -&gt; Unit, addToBlockList: (domain: String) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>LongMethod:LogFiltersBottomSheet.kt$@Composable fun LogFiltersBottomSheet( uiState: LogsContract.UiState, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
-    <ID>LongMethod:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClicked: () -&gt; Unit)</ID>
-    <ID>LongMethod:LogsRoot.kt$@OptIn(ExperimentalMaterial3Api::class) fun NavGraphBuilder.logsRoot( onComposing: (AppBarState) -&gt; Unit )</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
-    <ID>LongMethod:ModifyConnectionAdvancedSettings.kt$@Composable fun ModifyConnectionAdvancedSettings( uiState: ModifyConnectionsContract.UiState, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit, hideKeyboard: () -&gt; Unit )</ID>
-    <ID>LongMethod:ModifyConnectionContent.kt$@Composable fun ModifyConnectionContent( uiState: ModifyConnectionsContract.UiState, onEvent: (ModifyConnectionsContract.Event) -&gt; Unit, paddingValues: PaddingValues )</ID>
-    <ID>LongMethod:PiHoleControlApp.kt$@Composable fun PiHoleControlApp( viewModel: AppViewModel = hiltViewModel(), isDarkTheme: Boolean, useDynamicColors: Boolean )</ID>
-    <ID>LongMethod:RadioGroup.kt$@Composable fun &lt;T&gt; RadioGroup( itemsList: List&lt;T&gt;, selectedItem: T, labelFormatter: @Composable (T) -&gt; String, onItemSelected: (T) -&gt; Unit, modifier: Modifier = Modifier, horizontalArrangement: Arrangement.Horizontal = Arrangement.Center, )</ID>
-    <ID>LongMethod:RefreshIntervalDialog.kt$@Composable fun RefreshIntervalDialog( currentRefreshTime: Long, onRefreshIntervalConfirmed: (Long) -&gt; Unit, onDismiss: () -&gt; Unit )</ID>
-    <ID>LongMethod:SummarySection.kt$@Composable fun SummarySection(summary: SummaryEntity)</ID>
-    <ID>LongMethod:TimeButton.kt$@Composable fun TimeButton( title: String, subTitle: String?, onClick: () -&gt; Unit, onClearClicked: () -&gt; Unit )</ID>
-    <ID>LongMethod:TopDomainsContent.kt$@Composable fun TopDomainsContent( topPermittedDomains: List&lt;TopDomainEntity&gt;, topBlockedDomains: List&lt;TopDomainEntity&gt; )</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionSelected: (ConnectionEntity) -&gt; Unit, onStatusClicked: () -&gt; Unit )</ID>
     <ID>LongParameterList:Dimensions.kt$Padding$( val none: Dp, val screenContent: Dp, val dialogContent: Dp, val searchBarIconPaddingStart: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val homeLoadingHeight: Dp, val lineChartHeight: Dp, val searchBarHeight: Dp, val searchProgress: Dp, val legendIcon: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val timeDialogButtonRowHeight: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
@@ -640,6 +475,7 @@
     <ID>MagicNumber:LogItem.kt$1_000L</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
+    <ID>MagicNumber:PiHoleControlApp.kt$500</ID>
     <ID>MagicNumber:PiHoleFilterRuleType.kt$PiHoleFilterRuleType.REGEX_BLOCK$3</ID>
     <ID>MagicNumber:PiHoleLogSerializer.kt$PiHoleLogSerializer$4</ID>
     <ID>MagicNumber:QueriesOverTimeEntityMapper.kt$1000L</ID>
@@ -1070,7 +906,6 @@
     <ID>NewLineAtEndOfFile:TopDomainsStatsViewModel.kt$eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.viewmodel.TopDomainsStatsViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:Type.kt$eu.wedgess.piholecontrol.presentation.theme.Type.kt</ID>
     <ID>NewLineAtEndOfFile:UIResult.kt$eu.wedgess.piholecontrol.presentation.compose.UIResult.kt</ID>
-    <ID>NewLineAtEndOfFile:UiState.kt$eu.wedgess.piholecontrol.presentation.filters.model.UiState.kt</ID>
     <ID>NewLineAtEndOfFile:UiStateViewModel.kt$eu.wedgess.piholecontrol.presentation.base.UiStateViewModel.kt</ID>
     <ID>NewLineAtEndOfFile:UiStateViewModelImpl.kt$eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl.kt</ID>
     <ID>NewLineAtEndOfFile:UiText.kt$eu.wedgess.piholecontrol.utils.UiText.kt</ID>
@@ -1145,7 +980,6 @@
     <ID>NoConsecutiveBlankLines:DashboardModule.kt$DashboardModule$ </ID>
     <ID>NoConsecutiveBlankLines:DashboardScreen.kt$ </ID>
     <ID>NoConsecutiveBlankLines:DonutChart.kt$ </ID>
-    <ID>NoConsecutiveBlankLines:FetchFilterRulesUseCase.kt$FetchFilterRulesUseCase$ </ID>
     <ID>NoConsecutiveBlankLines:FetchQueryTypesUseCaseTest.kt$FetchQueryTypesUseCaseTest$ </ID>
     <ID>NoConsecutiveBlankLines:FilterRuleItem.kt$ </ID>
     <ID>NoConsecutiveBlankLines:FilterRulesApiServiceImplTest.kt$FilterRulesApiServiceImplTest$ </ID>
@@ -1212,7 +1046,6 @@
     <ID>NoUnusedImports:DashboardMockHttpClient.kt$eu.wedgess.piholecontrol.data.api.fakes.DashboardMockHttpClient.kt</ID>
     <ID>NoUnusedImports:DisableAdBlockingUseCaseTest.kt$eu.wedgess.piholecontrol.domain.usecase.app.DisableAdBlockingUseCaseTest.kt</ID>
     <ID>NoUnusedImports:DisplayFilterRuleDetailsDialog.kt$eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs.DisplayFilterRuleDetailsDialog.kt</ID>
-    <ID>NoUnusedImports:FiltersContract.kt$eu.wedgess.piholecontrol.presentation.filters.FiltersContract.kt</ID>
     <ID>NoUnusedImports:FiltersViewModel.kt$eu.wedgess.piholecontrol.presentation.filters.viewmodel.FiltersViewModel.kt</ID>
     <ID>NoUnusedImports:LegendGrid.kt$eu.wedgess.piholecontrol.presentation.common.LegendGrid.kt</ID>
     <ID>NoUnusedImports:LogDetailsDialog.kt$eu.wedgess.piholecontrol.presentation.logs.view.components.dialogs.LogDetailsDialog.kt</ID>
@@ -1225,9 +1058,6 @@
     <ID>NoUnusedImports:topQueriesStatsScreen.kt$eu.wedgess.piholecontrol.presentation.statistics.tabs.server.view.topQueriesStatsScreen.kt</ID>
     <ID>NoWildcardImports:DonutChart.kt$import androidx.compose.foundation.layout.*</ID>
     <ID>NoWildcardImports:DonutChart.kt$import androidx.compose.runtime.*</ID>
-    <ID>NoWildcardImports:NetworkModule.kt$import io.ktor.client.*</ID>
-    <ID>NoWildcardImports:NetworkModule.kt$import io.ktor.client.engine.okhttp.*</ID>
-    <ID>NoWildcardImports:StatisticsRepositoryImplTest.kt$import eu.wedgess.piholecontrol.domain.model.*</ID>
     <ID>ParameterListWrapping:DashboardModule.kt$DashboardModule$(dashboardRepository: DashboardRepository)</ID>
     <ID>ParameterListWrapping:MarkerUtils.kt$&lt;no name provided&gt;$( context: MeasureContext, outInsets: Insets,horizontalDimensions: HorizontalDimensions )</ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabIndexChanged</ID>
@@ -1278,7 +1108,6 @@
     <ID>PreviewPublic:MainAppBar.kt$MainAppBarPreview</ID>
     <ID>PreviewPublic:SummaryItem.kt$SummaryItemPreview</ID>
     <ID>SpacingAroundColon:Dimensions.kt$AppDimens$:</ID>
-    <ID>SpacingAroundColon:NetworkModule.kt$NetworkModule$:</ID>
     <ID>SpacingAroundColon:PiHoleControlApplication.kt$PiHoleControlApplication$:</ID>
     <ID>SpacingAroundComma:DashboardMockHttpClient.kt$DashboardMockHttpClient$,</ID>
     <ID>SpacingAroundComma:MarkerUtils.kt$&lt;no name provided&gt;$,</ID>
@@ -1314,9 +1143,6 @@
     <ID>ViewModelInjection:FilterTabScreenRoot.kt$viewModel</ID>
     <ID>WildcardImport:DonutChart.kt$import androidx.compose.foundation.layout.*</ID>
     <ID>WildcardImport:DonutChart.kt$import androidx.compose.runtime.*</ID>
-    <ID>WildcardImport:NetworkModule.kt$import io.ktor.client.*</ID>
-    <ID>WildcardImport:NetworkModule.kt$import io.ktor.client.engine.okhttp.*</ID>
-    <ID>WildcardImport:StatisticsRepositoryImplTest.kt$import eu.wedgess.piholecontrol.domain.model.*</ID>
     <ID>Wrapping:AnimatedIntText.kt$( targetValue = value, animationSpec = tween( durationMillis = 500, easing = FastOutSlowInEasing ), label = "AnimatedText" )</ID>
     <ID>Wrapping:ApiTokenScannerDialog.kt$(</ID>
     <ID>Wrapping:ConnectionsScreen.kt$(</ID>
@@ -1335,6 +1161,7 @@
     <ID>Wrapping:LogItem.kt$(</ID>
     <ID>Wrapping:LogItem.kt$(log = LogEntryEntity( timestamp = System.currentTimeMillis().div(1000L), time = "10:12", queryType = "IPv4", requestedDomain = "www.google.com", client = "My Android", answerType = it, responseTime = 1200 ), onItemClicked = {})</ID>
     <ID>Wrapping:LogsEntryRadioButtonGroup.kt$(</ID>
+    <ID>Wrapping:LogsViewModel.kt$LogsViewModel$(</ID>
     <ID>Wrapping:MarkerUtils.kt$&lt;no name provided&gt;$(</ID>
     <ID>Wrapping:NetworkModule.kt$NetworkModule$(</ID>
     <ID>Wrapping:RadioGroup.kt$( 1.dp, if (selectedItem == item) { MaterialTheme.colorScheme.primary } else { MaterialTheme.colorScheme.primary.copy(alpha = PiHoleControlTheme.dimens.weight.radioGroupUnSelectedBorderAlpha) } )</ID>

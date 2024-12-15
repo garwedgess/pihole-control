@@ -5,24 +5,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
+import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
+import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabViewModel
+import eu.wedgess.piholecontrol.utils.UiText
 
 @Composable
 fun FilterTabScreenRoot(
     filterScreenTabType: FilterScreenTabType,
     onFilterRuleClick: (FilterRuleEntity) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
-    searchQuery: String? = null
+    searchQuery: String? = null,
+    showSnackBarText: (UiText) -> Unit
 ) {
+    val context = LocalContext.current
     val viewModel: FilterTabViewModel = hiltViewModel(
         key = "FilterTabViewModel-${filterScreenTabType.name}",
         creationCallback = { factory: FilterTabViewModelFactory ->
@@ -31,6 +37,7 @@ fun FilterTabScreenRoot(
     )
 
     val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
+    val sideEffect = viewModel.sideEffect
 
     LaunchedEffect(searchQuery) {
         viewModel.setSearchQuery(searchQuery)
@@ -39,6 +46,18 @@ fun FilterTabScreenRoot(
     LaunchedEffect(Unit) {
         onRefreshFilters {
             viewModel.onRefreshData()
+        }
+    }
+
+    CollectSideEffect(sideEffect) { effect ->
+        if (effect is FilterTabContract.Effect.ShowErrorSnackbar) {
+            showSnackBarText(
+                UiText.DynamicString(
+                    effect.errorMessages.joinToString(separator = "\n") {
+                        it.asString(context)
+                    }
+                )
+            )
         }
     }
 

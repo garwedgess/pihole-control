@@ -20,7 +20,8 @@ import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 
 fun NavGraphBuilder.filtersRoot(
-    onComposing: (AppBarState) -> Unit
+    onComposing: (AppBarState) -> Unit,
+    showSnackBarText: (UiText) -> Unit
 ) {
     composable<Screens.Filters> {
         val viewModel: FiltersViewModel = hiltViewModel()
@@ -81,7 +82,8 @@ fun NavGraphBuilder.filtersRoot(
         FiltersScreen(
             uiState = uiState,
             onEvent = viewModel::onEvent,
-            triggerRefreshEvent = { refreshTrigger = it }
+            triggerRefreshEvent = { refreshTrigger = it },
+            showSnackBarText = showSnackBarText
         )
     }
 }

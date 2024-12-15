@@ -20,6 +20,11 @@
     <string name="summary_title_blocked_queries">Blocked Queries</string>
     <string name="summary_title_percent_blocked">Percent Blocked</string>
     <string name="summary_title_domains_on_blocklist">Domains on Blocklist</string>
+    <string name="dashboard_summary_error">Failed to fetch summary: %s</string>
+    <string name="dashboard_queries_over_time_error">Failed to fetch queries over time: %s</string>
+    <string name="dashboard_client_queries_over_time_error">Failed to fetch client queries over time: %s</string>
+    <string name="filter_rules_error">Failed to fetch filter rules: %s</string>
+    <string name="filter_regex_rules_error">Failed to fetch regex filter rules: %s</string>
 
     <!-- Logs Screen -->
     <string name="logs_msg_loading_query_logs">Loading query logs</string>
@@ -143,7 +148,9 @@
     <string name="statistics_forward_destinations_title">Forward Destinations</string>
     <string name="logs_domain_added_to_allow_list">Domain added to allow list</string>
     <string name="logs_domain_added_to_block_list">Domain added to block list</string>
+
     <string name="filter_search_placeholder">Search for filter...</string>
     <string name="logs_search_placeholder">Search for logs...</string>
+    <string name="snackbar_dismiss">dismiss</string>
 
 </resources>

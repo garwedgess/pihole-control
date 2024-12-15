@@ -16,13 +16,15 @@ import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.view.FilterTabScreenRoot
 import eu.wedgess.piholecontrol.presentation.filters.view.components.FilterDialogs
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
+import eu.wedgess.piholecontrol.utils.UiText
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FiltersScreen(
     uiState: FiltersContract.UiState,
     onEvent: (FiltersContract.Event) -> Unit,
-    triggerRefreshEvent: (() -> Unit) -> Unit
+    triggerRefreshEvent: (() -> Unit) -> Unit,
+    showSnackBarText: (UiText) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
@@ -43,7 +45,8 @@ fun FiltersScreen(
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
                             },
-                            onRefreshFilters = triggerRefreshEvent
+                            onRefreshFilters = triggerRefreshEvent,
+                            showSnackBarText = showSnackBarText
                         )
 
                         FilterTab.BlockList -> FilterTabScreenRoot(
@@ -52,7 +55,8 @@ fun FiltersScreen(
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
                             },
-                            onRefreshFilters = triggerRefreshEvent
+                            onRefreshFilters = triggerRefreshEvent,
+                            showSnackBarText = showSnackBarText
                         )
                     }
                 }

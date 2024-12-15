@@ -37,7 +37,8 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "total queries animation"
     )
 
     val adsBlocked by animateIntAsState(
@@ -45,7 +46,8 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "ads blocked animation"
     )
 
     val domainsBeingBlocked by animateIntAsState(
@@ -53,7 +55,8 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "domains blocked animation"
     )
 
     val percentageBlocked by animateFloatAsState(
@@ -61,11 +64,14 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "percentage blocked animation"
     )
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(

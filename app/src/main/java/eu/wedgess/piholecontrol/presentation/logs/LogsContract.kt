@@ -13,30 +13,39 @@ import org.threeten.bp.LocalDateTime
 
 interface LogsContract {
 
-    data class UiState(
-        val logs: List<LogEntryEntity>,
+    data class BottomSheetUiState(
         val logsLimit: Int,
         val selectedLogEntryStatus: LogEntryStatus,
+        val filterFromTime: Long?,
+        val filterToTime: Long?,
+    ) {
+        companion object {
+            internal val availableLogLimits = listOf(500, 1000, 2500, 5000)
+            fun initial() = BottomSheetUiState(
+                logsLimit = availableLogLimits.first(),
+                selectedLogEntryStatus = LogEntryStatus.ALL,
+                filterFromTime = null,
+                filterToTime = null,
+            )
+        }
+    }
+
+    data class UiState(
+        val logs: List<LogEntryEntity>,
         val sorting: LogSorting,
         val searchQuery: String,
         val showSearchView: Boolean,
         val showSortingDropdownMenu: Boolean,
-        val filterFromTime: Long?,
-        val filterToTime: Long?,
         val dialogType: LogsDialogType
     ) {
 
         companion object {
-            val availableLogLimits = listOf(500, 1000, 2500, 5000)
+
             fun initial() = UiState(
                 logs = emptyList(),
-                logsLimit = availableLogLimits.first(),
                 searchQuery = "",
                 showSearchView = false,
                 showSortingDropdownMenu = false,
-                selectedLogEntryStatus = LogEntryStatus.ALL,
-                filterFromTime = null,
-                filterToTime = null,
                 sorting = LogSorting.DATE_DESC,
                 dialogType = LogsDialogType.None
             )

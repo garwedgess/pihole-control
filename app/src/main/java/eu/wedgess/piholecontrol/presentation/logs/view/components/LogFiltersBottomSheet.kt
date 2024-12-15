@@ -22,7 +22,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun LogFiltersBottomSheet(
-    uiState: LogsContract.UiState,
+    uiState: LogsContract.BottomSheetUiState,
     onEvent: (LogsContract.Event) -> Unit
 ) {
     Surface(
@@ -44,7 +44,7 @@ fun LogFiltersBottomSheet(
             )
             LogsLimitRadioButtonGroup(
                 modifier = Modifier.fillMaxWidth(),
-                itemsList = LogsContract.UiState.availableLogLimits,
+                itemsList = LogsContract.BottomSheetUiState.availableLogLimits,
                 selectedItem = uiState.logsLimit,
                 onLogLimitSelected = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
             )

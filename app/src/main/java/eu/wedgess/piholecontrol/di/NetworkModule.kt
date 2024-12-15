@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package eu.wedgess.piholecontrol.di
 
 import android.annotation.SuppressLint
@@ -10,9 +12,10 @@ import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.utils.AllCertsTrustManager
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
-import io.ktor.client.*
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngineConfig
-import io.ktor.client.engine.okhttp.*
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -96,7 +99,7 @@ object NetworkModule {
         }
     }
 
-    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
@@ -105,7 +108,7 @@ object NetworkModule {
             })
         }
 
-    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installLogging() = // custom logger set to use Timber
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installLogging() =
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
@@ -115,7 +118,7 @@ object NetworkModule {
             level = LogLevel.ALL
         }
 
-    fun<T: HttpClientEngineConfig> HttpClientConfig<T>.installRedirect() = // custom logger set to use Timber
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installRedirect() =
         install(HttpRedirect) {
             checkHttpMethod = false
         }

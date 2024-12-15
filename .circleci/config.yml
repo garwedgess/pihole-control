@@ -152,11 +152,15 @@ workflows:
           filters:
             branches:
               only:
-                - circleci
+                - develop
+                - master
+                - /^feature\/.*/
       - unit_test:
           filters:
             branches:
               only:
-                - circleci
+                - develop
+                - master
+                - /^feature\/.*/
           requires:
             - build

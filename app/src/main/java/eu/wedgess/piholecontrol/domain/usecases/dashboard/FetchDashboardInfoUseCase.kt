@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.domain.usecases.dashboard
 
+import eu.wedgess.piholecontrol.domain.model.DashboardInfoEntity
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
-import eu.wedgess.piholecontrol.presentation.dashboard.model.DashboardInfo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.supervisorScope
@@ -13,7 +13,7 @@ class FetchDashboardInfoUseCase(
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {
 
-    operator fun invoke(): Flow<Result<DashboardInfo>> {
+    operator fun invoke(): Flow<Result<DashboardInfoEntity>> {
         return periodicRefreshUseCase { connection ->
             supervisorScope {
                 val deferredSummary =
@@ -28,7 +28,7 @@ class FetchDashboardInfoUseCase(
                 val clientsOverTimeDataResult = deferredClientsOverTimeData.await()
 
                 Result.success(
-                    DashboardInfo(
+                    DashboardInfoEntity(
                         summaryResult,
                         overTimeDataResult,
                         clientsOverTimeDataResult

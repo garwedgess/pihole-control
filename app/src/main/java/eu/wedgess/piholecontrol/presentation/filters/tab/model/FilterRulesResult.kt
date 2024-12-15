@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.presentation.filters.tab.model
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
-import eu.wedgess.piholecontrol.presentation.filters.model.UiState
+import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import timber.log.Timber
 
@@ -11,7 +11,7 @@ data class FilterRulesResult(
     val rules: Result<List<FilterRuleEntity>>,
     val regexRules: Result<List<FilterRuleEntity>>,
 ) {
-    fun toUiResult(query: String): UIResult<UiState> {
+    fun toUiResult(query: String): UIResult<FilterTabContract.UiState> {
         return when {
             rules.isFailure && regexRules.isFailure -> {
                 UIResult.Error(
@@ -37,7 +37,7 @@ data class FilterRulesResult(
                 if (allRules.isEmpty()) {
                     UIResult.Empty(ResultType.Empty.WithTitle(UiText.DynamicString("No rules found")))
                 } else {
-                    UIResult.Loaded(UiState(allRules))
+                    UIResult.Loaded(FilterTabContract.UiState(allRules))
                 }
             }
         }

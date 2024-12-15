@@ -14,7 +14,7 @@ interface DashboardContract {
     )
 
     sealed interface Effect {
-        data class ShowErrorSnackbar(val msg: UiText, val retryAction: () -> Unit) : Effect
+        data class ShowErrorSnackbar(val errorMessages: List<UiText>) : Effect
     }
 
     sealed interface Event {

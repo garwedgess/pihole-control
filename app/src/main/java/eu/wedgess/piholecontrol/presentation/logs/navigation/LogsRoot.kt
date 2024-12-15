@@ -31,6 +31,7 @@ fun NavGraphBuilder.logsRoot(
     composable<Screens.Logs> {
         val viewModel: LogsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
+        val bottomSheetUiState by viewModel.bottomSheetUiState.collectAsStateWithLifecycle()
         val sideEffect = viewModel.sideEffect
         val context = LocalContext.current
 
@@ -113,6 +114,7 @@ fun NavGraphBuilder.logsRoot(
 
         LogsScreen(
             uiResult = uiResult,
+            bottomSheetUiState = bottomSheetUiState,
             scaffoldState = scaffoldState,
             snackbarHostState = snackbarHostState,
             onEvent = viewModel::onEvent

@@ -50,7 +50,9 @@ data class DashboardInfo(
                 }
                 UIResult.Loaded(
                     DashboardContract.UiState(
-                        summary, queriesOverTime, clientQueriesOverTime
+                        summary = summary,
+                        overtimeLineChart = queriesOverTime,
+                        clientQueriesOverTime = clientQueriesOverTime
                     )
                 )
             }
