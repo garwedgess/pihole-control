@@ -3,10 +3,8 @@ package eu.wedgess.piholecontrol.presentation.connections.modify.view.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -29,17 +27,14 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun ModifyConnectionContent(
     uiState: ModifyConnectionsContract.UiState,
-    onEvent: (ModifyConnectionsContract.Event) -> Unit,
-    paddingValues: PaddingValues
+    onEvent: (ModifyConnectionsContract.Event) -> Unit
 ) {
 
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
-        Modifier
-            .verticalScroll(scrollState)
-            .padding(paddingValues),
+        modifier = Modifier.verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
     ) {
         OutlinedTextField(

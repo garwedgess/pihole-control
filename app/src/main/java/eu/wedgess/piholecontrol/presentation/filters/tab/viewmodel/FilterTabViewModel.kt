@@ -16,6 +16,7 @@ import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toFilterRulesResult
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRulesResult
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,12 +37,7 @@ class FilterTabViewModel @AssistedInject constructor(
     val uiResult = filterRulesUseCase(filterRuleType.toFilterTypePair().first)
         .combine(searchQuery) { filterRules, query ->
             filterRules.getOrElse {
-                return@combine UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        UiText.DynamicString("Failed to fetch filter rules"),
-                        UiText.DynamicString(it.message ?: "Unknown error")
-                    )
-                )
+                return@combine FilterRulesResult.handleErrorThrowable(it)
             }.run {
                 return@combine this@run.toFilterRulesResult().toUiResult(query).also {
                     if (it !is UIResult.Error && showErrorMessage) {

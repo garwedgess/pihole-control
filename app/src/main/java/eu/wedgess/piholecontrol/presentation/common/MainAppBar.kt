@@ -5,7 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,9 +30,9 @@ import eu.wedgess.piholecontrol.utils.UiText
 @Composable
 fun MainAppBar(
     appBarState: AppBarState,
-    onNavigateBack: () -> Unit,
-    onStatusClicked: () -> Unit,
-    onConnectionSelected: (ConnectionEntity) -> Unit
+    onNavigateBack: (() -> Unit)? = null,
+    onStatusClicked: (() -> Unit)? = null,
+    onConnectionSelected: ((ConnectionEntity) -> Unit)? = null
 ) {
     val titleAlpha: Float by animateFloatAsState(
         targetValue = if (appBarState.showSearchView) 0f else 01f,
@@ -50,8 +50,8 @@ fun MainAppBar(
                     currentConnection = this,
                     connections = appBarState.connections ?: emptyList(),
                     adBlockingEnabled = appBarState.adBlockingEnabled,
-                    onStatusClicked = { onStatusClicked() },
-                    onConnectionSelected = { onConnectionSelected(it) }
+                    onStatusClicked = { onStatusClicked?.invoke() },
+                    onConnectionSelected = { onConnectionSelected?.invoke(it) }
                 )
             } ?: Text(
                 modifier = Modifier.graphicsLayer { alpha = titleAlpha },
@@ -68,9 +68,9 @@ fun MainAppBar(
         },
         navigationIcon = {
             if (appBarState.showNavigateBackIcon) {
-                IconButton(onClick = onNavigateBack) {
+                IconButton(onClick = { onNavigateBack?.invoke() }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
@@ -86,7 +86,12 @@ fun MainAppBarPreview(
     @PreviewParameter(MainAppBarPreviewParameterProvider::class) appbarState: AppBarState
 ) {
     PiHoleControlTheme {
-        MainAppBar(appBarState = appbarState, onNavigateBack = {}, onStatusClicked = {}, onConnectionSelected = {})
+        MainAppBar(
+            appBarState = appbarState,
+            onNavigateBack = {},
+            onStatusClicked = {},
+            onConnectionSelected = {}
+        )
     }
 }
 

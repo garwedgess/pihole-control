@@ -28,7 +28,13 @@ class ConnectionRepositoryImpl(
         connectionDao.fetchAllAsFlow().map { list -> list.map { it.toConnectionInfo() } }.resultOf()
 
     override fun fetchActiveFlow(): Flow<Result<ConnectionEntity>> =
-        connectionDao.fetchActiveFlow().map { it.toConnectionInfo() }.resultOf()
+        connectionDao.fetchActiveFlow().map { it?.toConnectionInfo() ?: ConnectionEntity.default }
+            .resultOf()
+
+    override suspend fun checkHasConnections(): Result<Boolean> =
+        withContext(dispatcherProvider.io) {
+            resultOf { connectionDao.checkNotEmpty() }
+        }
 
     override suspend fun fetchById(id: Long): Result<ConnectionEntity> =
         withContext(dispatcherProvider.io) {

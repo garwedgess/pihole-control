@@ -12,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -39,7 +40,7 @@ class ConnectionRepositoryImplTest {
         val result = target.insert(connection)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.insert(connection.toConnection()) }
+        verify { connectionDao.insert(connection.toConnection()) }
     }
 
     @Test
@@ -51,7 +52,28 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.insert(connection.toConnection()) }
+        verify { connectionDao.insert(connection.toConnection()) }
+    }
+
+    @Test
+    fun `checkHasConnections - success`() = runTest {
+        coEvery { connectionDao.checkNotEmpty() } returns true
+
+        val result = target.checkHasConnections()
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.checkNotEmpty() }
+    }
+
+    @Test
+    fun `checkHasConnections - failure`() = runTest {
+        coEvery { connectionDao.checkNotEmpty() } throws RuntimeException("Check failed")
+
+        val result = target.checkHasConnections()
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.checkNotEmpty() }
     }
 
     @Test
@@ -89,7 +111,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(connection)
-        coVerify { connectionDao.fetchById(1L) }
+        verify { connectionDao.fetchById(1L) }
     }
 
     @Test
@@ -100,7 +122,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.fetchById(1L) }
+        verify { connectionDao.fetchById(1L) }
     }
 
     @Test
@@ -111,7 +133,7 @@ class ConnectionRepositoryImplTest {
         val result = target.update(connection)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.update(connection.toConnection()) }
+        verify { connectionDao.update(connection.toConnection()) }
     }
 
     @Test
@@ -133,7 +155,7 @@ class ConnectionRepositoryImplTest {
         val result = target.deleteById(1L)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.delete(1L) }
+        verify { connectionDao.delete(1L) }
     }
 
     @Test
@@ -144,7 +166,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.delete(1L) }
+        verify { connectionDao.delete(1L) }
     }
 
     @Test
@@ -156,7 +178,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(connection)
-        coVerify { connectionDao.fetchActive() }
+        verify { connectionDao.fetchActive() }
     }
 
     @Test
@@ -167,7 +189,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.fetchActive() }
+        verify { connectionDao.fetchActive() }
     }
 
     @Test
@@ -178,7 +200,7 @@ class ConnectionRepositoryImplTest {
         val result = target.setActiveById(id)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.setActive(id) }
+        verify { connectionDao.setActive(id) }
     }
 
     @Test
@@ -190,7 +212,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.setActive(id) }
+        verify { connectionDao.setActive(id) }
     }
 
 }

@@ -4,6 +4,7 @@ import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 
 class FetchStatusUseCase(
     private val repository: StatusRepository,
@@ -11,7 +12,9 @@ class FetchStatusUseCase(
 ) {
     operator fun invoke(): Flow<Result<StatusEntity>> {
         return periodicRefreshUseCase { connection ->
-            repository.fetchStatus(connection)
+            repository.fetchStatus(connection).onFailure {
+                Timber.e(it, "Failed to fetch status: ${it.message}")
+            }
         }
     }
 }

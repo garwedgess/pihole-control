@@ -8,10 +8,12 @@ import eu.wedgess.piholecontrol.data.api.StatusApiService
 import eu.wedgess.piholecontrol.data.api.StatusApiServiceImpl
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
+import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
+import eu.wedgess.piholecontrol.domain.usecases.app.CheckHasConnectionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase
@@ -104,5 +106,12 @@ object AppUseCaseModule {
             observeActiveUserUseCase,
             disableAdBlockingUseCase
         )
+    }
+
+    @Provides
+    fun provideCheckHasConnectionsUseCase(
+        repository: ConnectionRepository
+    ): CheckHasConnectionsUseCase {
+        return CheckHasConnectionsUseCase(repository)
     }
 }

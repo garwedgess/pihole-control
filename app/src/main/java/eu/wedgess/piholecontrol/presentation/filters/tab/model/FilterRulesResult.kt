@@ -13,13 +13,7 @@ data class FilterRulesResult(
 ) {
     fun toUiResult(query: String): UIResult<FilterTabContract.UiState> {
         return when {
-            rules.isFailure && regexRules.isFailure -> {
-                UIResult.Error(
-                    ResultType.Error.WithTitle(
-                        UiText.DynamicString("Failed to fetch filter rules")
-                    )
-                )
-            }
+            rules.isFailure && regexRules.isFailure -> handleErrorThrowable(rules.exceptionOrNull())
 
             else -> {
                 val rulesList = rules.onFailure {
@@ -40,6 +34,17 @@ data class FilterRulesResult(
                     UIResult.Loaded(FilterTabContract.UiState(allRules))
                 }
             }
+        }
+    }
+
+    companion object {
+        fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
+            return UIResult.Error(
+                ResultType.Error.WithTitleAndSubTitle(
+                    UiText.DynamicString("Failed to fetch filter rules"),
+                    UiText.DynamicString(throwable?.message ?: "Unknown error")
+                )
+            )
         }
     }
 }

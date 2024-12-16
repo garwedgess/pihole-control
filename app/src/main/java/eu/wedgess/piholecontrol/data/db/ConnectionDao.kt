@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import app.cash.sqldelight.coroutines.mapToOne
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -23,7 +23,7 @@ class ConnectionDao @Inject constructor(
     fun fetchActive() = queries.selectActive().executeAsOne()
 
     fun fetchActiveFlow() = queries.selectActive().asFlow()
-        .mapToOne(dispatcherProvider.io)
+        .mapToOneOrNull(dispatcherProvider.io)
 
     fun checkNotEmpty(): Boolean = queries.checkNotEmpty().executeAsOne()
 

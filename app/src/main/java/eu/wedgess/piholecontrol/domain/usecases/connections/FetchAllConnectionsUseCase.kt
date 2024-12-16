@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class FetchAllConnectionsUseCase(
     private val repository: ConnectionRepository
 ) {
-    operator fun invoke(): Flow<Result<List<ConnectionEntity>>> =repository.fetchAll()
+    operator fun invoke(): Flow<Result<List<ConnectionEntity>>> = repository.fetchAll()
 }
