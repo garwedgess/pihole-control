@@ -16,29 +16,29 @@ import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 
 @Composable
 fun LogsTopBarActions(
-    onSearchClicked: () -> Unit,
-    onSortClicked: () -> Unit,
-    onSortDismissed: () -> Unit,
-    onSortItemSelected: (LogSorting) -> Unit,
+    onSearchClick: () -> Unit,
+    onSortClick: () -> Unit,
+    onDismissSort: () -> Unit,
+    onSortItemClick: (LogSorting) -> Unit,
     selectedSorting: LogSorting,
     isSortingMenuVisible: Boolean
 ) {
     Row {
-        IconButton(onClick = { onSortClicked() }) {
+        IconButton(onClick = { onSortClick() }) {
             Icon(
                 imageVector = Icons.Outlined.Sort,
                 contentDescription = "sort",
                 tint = MaterialTheme.colorScheme.onBackground,
             )
         }
-        IconButton(onClick = { onSearchClicked() }) {
+        IconButton(onClick = { onSearchClick() }) {
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = "search",
                 tint = MaterialTheme.colorScheme.onBackground,
             )
         }
-        DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = { onSortDismissed() }) {
+        DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = { onDismissSort() }) {
             LogSorting.entries.forEach {
                 DropdownMenuItem(
                     trailingIcon = {
@@ -51,7 +51,7 @@ fun LogsTopBarActions(
                         Icon(imageVector = it.icon, contentDescription = "")
                     },
                     text = { Text(text = it.uiText.asString()) },
-                    onClick = { onSortItemSelected(it) }
+                    onClick = { onSortItemClick(it) }
                 )
             }
         }

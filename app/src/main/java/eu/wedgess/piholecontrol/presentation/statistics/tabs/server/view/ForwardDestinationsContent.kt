@@ -82,7 +82,7 @@ fun ForwardDestinationsContent(forwardDestinations: List<ForwardDestinationEntit
             DonutChart(
                 data = pieChartData,
                 chartSize = PiHoleControlTheme.dimens.size.pieChart,
-                onIndexSelected = {
+                onSelectedIndexChange = {
                     selectedIndex = it
                 }
             )

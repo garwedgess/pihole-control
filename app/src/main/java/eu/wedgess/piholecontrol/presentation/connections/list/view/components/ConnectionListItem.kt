@@ -36,9 +36,9 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 @Composable
 fun ConnectionListItem(
     connectionInfo: ConnectionEntity,
-    onEditClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    onSetActiveClicked: () -> Unit
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onSetActiveClick: () -> Unit
 ) {
     var expandMoreDropdown by remember {
         mutableStateOf(false)
@@ -96,9 +96,9 @@ fun ConnectionListItem(
         AnimatedVisibility(visible = expandMoreDropdown) {
             ConnectionInfoContent(
                 connectionInfo,
-                onEditClicked = { onEditClicked() },
-                onDeleteClicked = { onDeleteClicked() },
-                onSetActiveClicked = { onSetActiveClicked() }
+                onEditClick = { onEditClick() },
+                onDeleteClick = { onDeleteClick() },
+                onSetActiveClick = { onSetActiveClick() }
             )
         }
     }
@@ -111,9 +111,9 @@ private fun ConnectionListItemPreview() {
         Surface {
             ConnectionListItem(
                 ConnectionEntity.default,
-                onEditClicked = {},
-                onSetActiveClicked = {},
-                onDeleteClicked = {}
+                onEditClick = {},
+                onSetActiveClick = {},
+                onDeleteClick = {}
             )
         }
     }

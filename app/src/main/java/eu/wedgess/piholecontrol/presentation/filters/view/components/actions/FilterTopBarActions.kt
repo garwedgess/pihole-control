@@ -8,8 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
-fun FilterTopBarActions(onSearchClicked: () -> Unit) {
-    IconButton(onClick = { onSearchClicked() }) {
+fun FilterTopBarActions(onSearchClick: () -> Unit) {
+    IconButton(onClick = { onSearchClick() }) {
         Icon(
             imageVector = Icons.Outlined.Search,
             contentDescription = null,

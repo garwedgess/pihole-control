@@ -18,7 +18,7 @@ fun ModifyConnectionDialogs(
             barcodeScanner = dialogType.barcodeScanner,
             onDismiss = { onEvent(ModifyConnectionsContract.Event.OnDismissDialog) },
             onApiTokenScanFailed = { },
-            onApiTokenScanned = { onEvent(ModifyConnectionsContract.Event.OnApiTokenChanged(it)) }
+            onApiTokenScan = { onEvent(ModifyConnectionsContract.Event.OnApiTokenChanged(it)) }
         )
     }
 }

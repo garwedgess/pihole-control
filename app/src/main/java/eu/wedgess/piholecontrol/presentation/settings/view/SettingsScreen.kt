@@ -36,7 +36,7 @@ fun SettingsScreen(
             icon = Icons.Outlined.Palette,
             items = AppThemePres.entries.map { Pair(it, it.label.asString()) },
             selectedItem = uiState.currentTheme,
-            onItemSelected = {
+            onItemClick = {
                 onEvent(SettingsContract.Event.OnThemeChanged(it))
             }
         )

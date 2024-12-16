@@ -63,7 +63,7 @@ fun QueryTypesContent(queryTypes: DonutChartDataCollection) {
             DonutChart(
                 data = queryTypes,
                 chartSize = PiHoleControlTheme.dimens.size.pieChart,
-                onIndexSelected = {
+                onSelectedIndexChange = {
                     selectedIndex = it
                 }
             )

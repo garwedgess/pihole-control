@@ -29,7 +29,7 @@ fun <T> RadioGroup(
     itemsList: List<T>,
     selectedItem: T,
     labelFormatter: @Composable (T) -> String,
-    onItemSelected: (T) -> Unit,
+    onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
 ) {
@@ -37,7 +37,7 @@ fun <T> RadioGroup(
         itemsList.forEachIndexed { index, item ->
 
             OutlinedButton(
-                onClick = { onItemSelected(item) },
+                onClick = { onItemClick(item) },
                 modifier = when (index) {
                     0 ->
                         Modifier
@@ -119,7 +119,7 @@ private fun RadioGroupPreview() {
             itemsList = LogEntryStatus.entries,
             selectedItem = LogEntryStatus.ALL,
             labelFormatter = { it.uiText.asString() },
-            onItemSelected = {}
+            onItemClick = {}
         )
     }
 }

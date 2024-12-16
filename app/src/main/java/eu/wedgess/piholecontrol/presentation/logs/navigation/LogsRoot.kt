@@ -45,20 +45,20 @@ fun NavGraphBuilder.logsRoot(
                     actions = {
                         (uiResult as? UIResult.Loaded)?.data?.run {
                             LogsTopBarActions(
-                                onSearchClicked = {
+                                onSearchClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSearchView)
                                 },
-                                onSortClicked = {
+                                onSortClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
                                 },
-                                onSortItemSelected = {
+                                onSortItemClick = {
                                     viewModel.onEvent(
                                         LogsContract.Event.OnSortTypeSelected(
                                             it
                                         )
                                     )
                                 },
-                                onSortDismissed = {
+                                onDismissSort = {
                                     viewModel.onEvent(LogsContract.Event.OnSortingDismissed)
                                 },
                                 isSortingMenuVisible = this.showSortingDropdownMenu,

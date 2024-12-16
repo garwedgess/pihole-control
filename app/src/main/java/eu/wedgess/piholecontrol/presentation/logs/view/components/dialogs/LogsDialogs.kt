@@ -15,7 +15,7 @@ fun LogsDialogs(dialogType: LogsDialogType, onEvent: (LogsContract.Event) -> Uni
 
         is LogsDialogType.ShowTimePickerDialog -> LogsTimePickerDialog(
             onDismiss = { onEvent(LogsContract.Event.OnDismissDialog) },
-            onTimeConfirmed = { hours, minutes ->
+            onConfirmTime = { hours, minutes ->
                 onEvent(
                     LogsContract.Event.OnTimeConfirmed(
                         dialogType.pickerType,

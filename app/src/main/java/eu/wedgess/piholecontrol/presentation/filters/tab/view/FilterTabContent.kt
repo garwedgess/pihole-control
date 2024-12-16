@@ -17,7 +17,7 @@ fun FilterListContent(
         items(filtersList) {
             FilterRuleItem(
                 rule = it,
-                onItemClicked = { onFilterRuleClick(it) }
+                onItemClick = { onFilterRuleClick(it) }
             )
         }
     }

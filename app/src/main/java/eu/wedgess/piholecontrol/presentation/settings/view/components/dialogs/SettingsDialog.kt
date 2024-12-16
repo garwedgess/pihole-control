@@ -10,7 +10,7 @@ fun SettingsDialog(dialogType: SettingsDialogType, onEvent: (SettingsContract.Ev
         SettingsDialogType.None -> Unit
         is SettingsDialogType.RefreshInterval -> RefreshIntervalDialog(
             currentRefreshTime = dialogType.currentRefreshTime,
-            onRefreshIntervalConfirmed = {
+            onConfirmRefreshInterval = {
                 onEvent(SettingsContract.Event.OnRefreshIntervalChanged(it))
             },
             onDismiss = { onEvent(SettingsContract.Event.OnDismissDialog) }

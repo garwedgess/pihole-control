@@ -35,7 +35,7 @@ fun TimeButton(
     title: String,
     subTitle: String?,
     onClick: () -> Unit,
-    onClearClicked: () -> Unit
+    onClearClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -72,7 +72,7 @@ fun TimeButton(
                 ) {
                     IconButton(
                         onClick = {
-                            onClearClicked()
+                            onClearClick()
                         },
                         modifier = Modifier
                             .size(PiHoleControlTheme.dimens.padding.itemContentLarge)
@@ -107,7 +107,7 @@ private fun TimeButtonPreview() {
             title = "From Time",
             subTitle = "12-12-2023 12:45",
             onClick = {},
-            onClearClicked = {}
+            onClearClick = {}
         )
     }
 }

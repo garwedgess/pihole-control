@@ -46,7 +46,7 @@ fun LogFiltersBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 itemsList = LogsContract.BottomSheetUiState.availableLogLimits,
                 selectedItem = uiState.logsLimit,
-                onLogLimitSelected = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
+                onLogLimitClick = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
             )
             HorizontalDivider(
                 modifier = Modifier.padding(
@@ -67,7 +67,7 @@ fun LogFiltersBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 itemsList = LogEntryStatus.entries.toTypedArray(),
                 selectedItem = uiState.selectedLogEntryStatus,
-                onLogEntryStatusSelected = { onEvent(LogsContract.Event.OnStatusChanged(it)) }
+                onLogEntryStatusClick = { onEvent(LogsContract.Event.OnStatusChanged(it)) }
             )
             HorizontalDivider(
                 modifier = Modifier.padding(
@@ -87,16 +87,16 @@ fun LogFiltersBottomSheet(
             TimePickerLayout(
                 fromTime = uiState.filterFromTime,
                 toTime = uiState.filterToTime,
-                onFromTimeClicked = {
+                onFromTimeClick = {
                     onEvent(LogsContract.Event.OnShowDatePicker(PickerType.FromTime))
                 },
-                onToTimeClicked = {
+                onToTimeClick = {
                     onEvent(LogsContract.Event.OnShowDatePicker(PickerType.ToTime))
                 },
-                onFromTimeCleared = {
+                onClearFromTime = {
                     onEvent(LogsContract.Event.OnFromTimeCleared)
                 },
-                onToTimeCleared = {
+                onClearToTime = {
                     onEvent(LogsContract.Event.OnToTimeCleared)
                 }
             )

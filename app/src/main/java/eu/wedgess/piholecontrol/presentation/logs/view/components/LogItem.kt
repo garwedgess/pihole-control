@@ -38,7 +38,7 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 import java.text.DateFormat
 
 @Composable
-fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
+fun LogListItem(log: LogEntryEntity, onItemClick: () -> Unit) {
     val dateFormat = remember { DateFormat.getTimeInstance() }
 
     val typePair = when (log.answerType) {
@@ -135,7 +135,7 @@ fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onItemClicked() }
+            .clickable { onItemClick() }
             .padding(
                 horizontal = PiHoleControlTheme.dimens.padding.screenContent,
                 vertical = PiHoleControlTheme.dimens.padding.screenContent
@@ -222,7 +222,7 @@ private fun LogListItemPreview() {
                             answerType = it,
                             responseTime = 1200
                         ),
-                        onItemClicked = {}
+                        onItemClick = {}
                     )
                 }
             }

@@ -21,7 +21,7 @@ fun DisableButtonRow(
     leftValue: Long,
     rightButtonTextResId: Int,
     rightValue: Long,
-    onTimeSelected: (Long) -> Unit
+    onTimeClick: (Long) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -34,7 +34,7 @@ fun DisableButtonRow(
             } else {
                 ButtonDefaults.outlinedButtonBorder(enabled = true)
             },
-            onClick = { onTimeSelected(leftValue) }
+            onClick = { onTimeClick(leftValue) }
         ) {
             Text(text = stringResource(id = leftButtonTextResId))
         }
@@ -45,7 +45,7 @@ fun DisableButtonRow(
             } else {
                 ButtonDefaults.outlinedButtonBorder(enabled = true)
             },
-            onClick = { onTimeSelected(rightValue) }
+            onClick = { onTimeClick(rightValue) }
         ) {
             Text(text = stringResource(id = rightButtonTextResId))
         }

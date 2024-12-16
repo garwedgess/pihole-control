@@ -58,7 +58,7 @@ fun DonutChart(
     chartSize: Dp = 350.dp,
     minDisplayPercentage: Float = 5f,
     gapPercentage: Float = 0.00f,
-    onIndexSelected: (Int) -> Unit,
+    onSelectedIndexChange: (Int) -> Unit
 ) {
     val isDarkTheme = isSystemInDarkTheme()
     var selectedIndex by remember { mutableIntStateOf(-1) }
@@ -197,7 +197,7 @@ fun DonutChart(
                 }
             }
         )
-        onIndexSelected(selectedIndex)
+        onSelectedIndexChange(selectedIndex)
     }
 }
 
@@ -256,6 +256,6 @@ private fun DonutChartPreview() {
                 QueryTypeChartData(percentage = 50f, title = "C")
             ),
         ),
-        onIndexSelected = {}
+        onSelectedIndexChange = {}
     )
 }

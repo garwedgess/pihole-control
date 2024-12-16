@@ -20,7 +20,7 @@
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SVCB") val SVCB: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("TXT") val TXT: Float = 0f</ID>
     <ID>CyclomaticComplexMethod:LogAnswerTypeEntityMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
-    <ID>CyclomaticComplexMethod:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClicked: () -&gt; Unit)</ID>
+    <ID>CyclomaticComplexMethod:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClick: () -&gt; Unit)</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
     <ID>Filename:safeRequest.kt$eu.wedgess.piholecontrol.data.utils.safeRequest.kt</ID>
@@ -34,18 +34,18 @@
     <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
     <ID>Indentation:StatisticsApiServiceImplTest.kt$StatisticsApiServiceImplTest$ </ID>
     <ID>Indentation:StatusApiServiceImplTest.kt$StatusApiServiceImplTest$ </ID>
-    <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClicked</ID>
-    <ID>LambdaParameterEventTrailing:DonutChart.kt$onIndexSelected</ID>
+    <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClick</ID>
+    <ID>LambdaParameterEventTrailing:DonutChart.kt$onSelectedIndexChange</ID>
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
-    <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionSelected: (ConnectionEntity) -&gt; Unit, onStatusClicked: () -&gt; Unit )</ID>
+    <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
     <ID>LongParameterList:Dimensions.kt$Padding$( val none: Dp, val screenContent: Dp, val dialogContent: Dp, val searchBarIconPaddingStart: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val homeLoadingHeight: Dp, val lineChartHeight: Dp, val searchBarHeight: Dp, val searchProgress: Dp, val legendIcon: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val timeDialogButtonRowHeight: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Weight$( val searchTextField: Float, val searchHintAlpha: Float, val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
-    <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeSelected: (Long) -&gt; Unit )</ID>
-    <ID>LongParameterList:LogsTopBarActions.kt$( onSearchClicked: () -&gt; Unit, onSortClicked: () -&gt; Unit, onSortDismissed: () -&gt; Unit, onSortItemSelected: (LogSorting) -&gt; Unit, selectedSorting: LogSorting, isSortingMenuVisible: Boolean )</ID>
+    <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
+    <ID>LongParameterList:LogsTopBarActions.kt$( onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit, selectedSorting: LogSorting, isSortingMenuVisible: Boolean )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
     <ID>MagicNumber:AppViewModel.kt$AppViewModel$300</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
@@ -207,44 +207,8 @@
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
     <ID>NoMultipleSpaces:HttpClientExt.kt$ </ID>
     <ID>ParameterListWrapping:DashboardModule.kt$DashboardModule$(dashboardRepository: DashboardRepository)</ID>
-    <ID>ParameterNaming:AnimatedTabContainer.kt$onTabIndexChanged</ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
-    <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanned</ID>
-    <ID>ParameterNaming:ConnectionInfoContent.kt$onDeleteClicked</ID>
-    <ID>ParameterNaming:ConnectionInfoContent.kt$onEditClicked</ID>
-    <ID>ParameterNaming:ConnectionInfoContent.kt$onSetActiveClicked</ID>
-    <ID>ParameterNaming:ConnectionListItem.kt$onDeleteClicked</ID>
-    <ID>ParameterNaming:ConnectionListItem.kt$onEditClicked</ID>
-    <ID>ParameterNaming:ConnectionListItem.kt$onSetActiveClicked</ID>
-    <ID>ParameterNaming:CurrentConnectionStatus.kt$onConnectionSelected</ID>
-    <ID>ParameterNaming:CurrentConnectionStatus.kt$onStatusClicked</ID>
-    <ID>ParameterNaming:CustomTimePicker.kt$onHoursChanged</ID>
-    <ID>ParameterNaming:CustomTimePicker.kt$onMinutesChanged</ID>
-    <ID>ParameterNaming:DisableButtonRow.kt$onTimeSelected</ID>
-    <ID>ParameterNaming:DisplayFilterRuleDetailsDialog.kt$onCancelClicked</ID>
-    <ID>ParameterNaming:DisplayFilterRuleDetailsDialog.kt$onDeleteClicked</ID>
-    <ID>ParameterNaming:DonutChart.kt$onIndexSelected</ID>
-    <ID>ParameterNaming:DropDownPreference.kt$onItemSelected</ID>
-    <ID>ParameterNaming:FilterRuleItem.kt$onItemClicked</ID>
-    <ID>ParameterNaming:FilterTopBarActions.kt$onSearchClicked</ID>
-    <ID>ParameterNaming:LogItem.kt$onItemClicked</ID>
-    <ID>ParameterNaming:LogsEntryRadioButtonGroup.kt$onLogEntryStatusSelected</ID>
-    <ID>ParameterNaming:LogsLimitRadioButtonGroup.kt$onLogLimitSelected</ID>
-    <ID>ParameterNaming:LogsTimePickerDialog.kt$onTimeConfirmed</ID>
-    <ID>ParameterNaming:LogsTopBarActions.kt$onSearchClicked</ID>
-    <ID>ParameterNaming:LogsTopBarActions.kt$onSortClicked</ID>
-    <ID>ParameterNaming:LogsTopBarActions.kt$onSortDismissed</ID>
-    <ID>ParameterNaming:LogsTopBarActions.kt$onSortItemSelected</ID>
-    <ID>ParameterNaming:MainAppBar.kt$onConnectionSelected</ID>
-    <ID>ParameterNaming:MainAppBar.kt$onStatusClicked</ID>
-    <ID>ParameterNaming:RadioGroup.kt$onItemSelected</ID>
-    <ID>ParameterNaming:RefreshIntervalDialog.kt$onRefreshIntervalConfirmed</ID>
-    <ID>ParameterNaming:TimeButton.kt$onClearClicked</ID>
-    <ID>ParameterNaming:TimePickerLayout.kt$onFromTimeCleared</ID>
-    <ID>ParameterNaming:TimePickerLayout.kt$onFromTimeClicked</ID>
-    <ID>ParameterNaming:TimePickerLayout.kt$onToTimeCleared</ID>
-    <ID>ParameterNaming:TimePickerLayout.kt$onToTimeClicked</ID>
     <ID>ParameterNaming:UIResult.kt$onLoaded</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreview$ThemePreview</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreviewWithBackground$ThemePreviewWithBackground</ID>

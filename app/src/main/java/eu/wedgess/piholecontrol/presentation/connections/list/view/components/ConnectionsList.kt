@@ -22,9 +22,9 @@ fun ConnectionsList(
             items(connections) {
                 ConnectionListItem(
                     connectionInfo = it,
-                    onEditClicked = { onEvent(ConnectionsContract.Event.EditConnection(it.id)) },
-                    onDeleteClicked = { onEvent(ConnectionsContract.Event.DeleteConnection(it)) },
-                    onSetActiveClicked = { onEvent(ConnectionsContract.Event.SetActive(it)) }
+                    onEditClick = { onEvent(ConnectionsContract.Event.EditConnection(it.id)) },
+                    onDeleteClick = { onEvent(ConnectionsContract.Event.DeleteConnection(it)) },
+                    onSetActiveClick = { onEvent(ConnectionsContract.Event.SetActive(it)) }
                 )
             }
         }

@@ -25,7 +25,7 @@ fun <T> DropDownPreference(
     title: String,
     items: List<Pair<T, String>>,
     selectedItem: T,
-    onItemSelected: (T) -> Unit,
+    onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     enabled: Boolean = true,
@@ -60,7 +60,7 @@ fun <T> DropDownPreference(
                     onClick = {
                         dropDownExpanded = false
 
-                        onItemSelected(item.first)
+                        onItemClick(item.first)
                     },
                     modifier = Modifier
                         .background(
@@ -96,6 +96,6 @@ private fun DropDownPreferencePreview() {
         icon = Icons.Default.Palette,
         items = themes,
         selectedItem = selectedTheme,
-        onItemSelected = { },
+        onItemClick = { },
     )
 }

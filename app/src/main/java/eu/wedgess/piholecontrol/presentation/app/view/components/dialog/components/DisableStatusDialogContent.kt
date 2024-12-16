@@ -61,7 +61,7 @@ fun DisableStatusDialogContent(
             leftValue = TimeUnit.SECONDS.toMillis(30),
             rightButtonTextResId = R.string.status_disable_btn_one_minute,
             rightValue = TimeUnit.MINUTES.toMillis(1),
-            onTimeSelected = {
+            onTimeClick = {
                 if (showCustomTimeInput) showCustomTimeInput = false
                 disableTimeMillis = it
             }
@@ -72,7 +72,7 @@ fun DisableStatusDialogContent(
             leftValue = TimeUnit.MINUTES.toMillis(2),
             rightButtonTextResId = R.string.status_disable_btn_five_minutes,
             rightValue = TimeUnit.MINUTES.toMillis(5),
-            onTimeSelected = {
+            onTimeClick = {
                 if (showCustomTimeInput) showCustomTimeInput = false
                 disableTimeMillis = it
             }
@@ -83,7 +83,7 @@ fun DisableStatusDialogContent(
             leftValue = Long.MAX_VALUE,
             rightButtonTextResId = R.string.status_disable_btn_custom,
             rightValue = Long.MIN_VALUE,
-            onTimeSelected = {
+            onTimeClick = {
                 if (it == Long.MIN_VALUE) {
                     showCustomTimeInput = true
                     disableTimeMillis = Long.MIN_VALUE
@@ -98,8 +98,8 @@ fun DisableStatusDialogContent(
             CustomTimePicker(
                 currentHours = customTimeHours,
                 currentMinutes = customTimeMinutes,
-                onHoursChanged = { customTimeHours = it },
-                onMinutesChanged = { customTimeMinutes = it }
+                onHoursChange = { customTimeHours = it },
+                onMinutesChange = { customTimeMinutes = it }
             )
         }
         Row(

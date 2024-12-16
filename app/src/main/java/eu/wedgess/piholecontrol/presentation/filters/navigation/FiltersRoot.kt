@@ -34,7 +34,7 @@ fun NavGraphBuilder.filtersRoot(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.nav_title_filters),
                     actions = {
-                        FilterTopBarActions(onSearchClicked = {
+                        FilterTopBarActions(onSearchClick = {
                             viewModel.onEvent(
                                 FiltersContract.Event.OnShowSearchView
                             )

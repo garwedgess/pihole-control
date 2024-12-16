@@ -24,7 +24,7 @@ fun LogsListContent(
             LogsListStickyHeader(listSize = logsList.size)
         }
         items(logsList) { log ->
-            LogListItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+            LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
         }
     }
     LogsDialogs(dialogType, onEvent)

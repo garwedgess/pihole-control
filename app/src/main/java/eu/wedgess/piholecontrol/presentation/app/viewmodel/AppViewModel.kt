@@ -12,8 +12,6 @@ import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiv
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
-import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
-import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,8 +29,7 @@ class AppViewModel @Inject constructor(
     private val disableAdBlockingConditionalUseCase: DisableAdBlockingConditionalUseCase,
     private val setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase
 ) : ViewModel(),
-    EventDrivenViewModel<AppContract.Event>,
-    SideEffectViewModel<AppContract.Effect> by SideEffectViewModelImpl() {
+    EventDrivenViewModel<AppContract.Event> {
 
     private val _uiState = MutableStateFlow(AppContract.UiState.initial())
 

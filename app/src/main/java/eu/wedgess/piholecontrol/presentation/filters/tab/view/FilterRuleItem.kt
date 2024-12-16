@@ -31,7 +31,7 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 @Composable
 fun FilterRuleItem(
     rule: FilterRuleEntity,
-    onItemClicked: () -> Unit
+    onItemClick: () -> Unit
 ) {
     val typePair = when (rule.type) {
         FilterRuleTypeEntity.ALLOW -> Pair(
@@ -57,7 +57,7 @@ fun FilterRuleItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onItemClicked() }
+            .clickable { onItemClick() }
             .padding(
                 horizontal = PiHoleControlTheme.dimens.padding.screenContent,
                 vertical = PiHoleControlTheme.dimens.padding.screenContent
@@ -110,7 +110,7 @@ private fun FilterRuleItemPreview(
 ) {
     PiHoleControlTheme {
         Surface {
-            FilterRuleItem(rule = filter, onItemClicked = {})
+            FilterRuleItem(rule = filter, onItemClick = {})
         }
     }
 }

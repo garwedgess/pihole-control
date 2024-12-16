@@ -131,14 +131,14 @@ fun PiHoleControlApp(
                     MainAppBar(
                         appBarState = uiState.appBarState,
                         onNavigateBack = { navHostController.navigateUp() },
-                        onStatusClicked = {
+                        onStatusClick = {
                             if (uiState.appBarState.adBlockingEnabled) {
                                 viewModel.onEvent(AppContract.Event.ShowDisabledStatusDialog)
                             } else {
                                 viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
                             }
                         },
-                        onConnectionSelected = {
+                        onConnectionClick = {
                             viewModel.onEvent(
                                 AppContract.Event.OnConnectionSelected(
                                     it

@@ -41,8 +41,8 @@ fun CurrentConnectionStatus(
     currentConnection: ConnectionEntity,
     adBlockingEnabled: Boolean,
     connections: List<ConnectionEntity>,
-    onConnectionSelected: (ConnectionEntity) -> Unit,
-    onStatusClicked: () -> Unit
+    onConnectionClick: (ConnectionEntity) -> Unit,
+    onStatusClick: () -> Unit
 ) {
     var showConnectionsDropdown by remember {
         mutableStateOf(false)
@@ -52,7 +52,7 @@ fun CurrentConnectionStatus(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        IconButton(onClick = { onStatusClicked() }) {
+        IconButton(onClick = { onStatusClick() }) {
             Icon(
                 modifier = Modifier.size(32.dp),
                 imageVector = if (adBlockingEnabled) Icons.Default.GppGood else Icons.Default.GppBad,
@@ -103,7 +103,7 @@ fun CurrentConnectionStatus(
                             )
                         },
                         onClick = {
-                            onConnectionSelected(connection)
+                            onConnectionClick(connection)
                             showConnectionsDropdown = false
                         }
                     )
@@ -122,8 +122,8 @@ private fun CurrentConnectionStatusPreview() {
             currentConnection = ConnectionEntity.default,
             connections = listOf(ConnectionEntity.default),
             adBlockingEnabled = true,
-            onConnectionSelected = {},
-            onStatusClicked = {}
+            onConnectionClick = {},
+            onStatusClick = {}
         )
     }
 }

@@ -29,7 +29,7 @@ fun ApiTokenScannerDialog(
     barcodeScanner: BarcodeScanner,
     onDismiss: () -> Unit,
     onApiTokenScanFailed: () -> Unit,
-    onApiTokenScanned: (String) -> Unit
+    onApiTokenScan: (String) -> Unit
 ) {
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(
@@ -86,7 +86,7 @@ fun ApiTokenScannerDialog(
                         barcodeScanner = barcodeScanner,
                         onBarcodeScanSuccess = {
                             it.firstOrNull()?.rawValue?.run {
-                                onApiTokenScanned(this)
+                                onApiTokenScan(this)
                             } ?: onApiTokenScanFailed()
                         }
                     )

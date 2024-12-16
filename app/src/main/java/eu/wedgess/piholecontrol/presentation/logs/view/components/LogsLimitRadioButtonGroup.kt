@@ -11,7 +11,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 fun LogsLimitRadioButtonGroup(
     itemsList: List<Int>,
     selectedItem: Int,
-    onLogLimitSelected: (Int) -> Unit,
+    onLogLimitClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     RadioGroup(
@@ -19,7 +19,7 @@ fun LogsLimitRadioButtonGroup(
         itemsList = itemsList.toList(),
         selectedItem = selectedItem,
         labelFormatter = { it.toString() },
-        onItemSelected = onLogLimitSelected
+        onItemClick = onLogLimitClick
     )
 }
 
@@ -30,7 +30,7 @@ private fun LogsLimitRadioButtonGroupPreview() {
         LogsLimitRadioButtonGroup(
             itemsList = LogsContract.BottomSheetUiState.availableLogLimits,
             selectedItem = LogsContract.BottomSheetUiState.availableLogLimits.last(),
-            onLogLimitSelected = {}
+            onLogLimitClick = {}
         )
     }
 }

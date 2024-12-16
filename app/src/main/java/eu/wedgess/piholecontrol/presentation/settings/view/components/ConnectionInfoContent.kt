@@ -28,9 +28,9 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun ConnectionInfoContent(
     connection: ConnectionEntity,
-    onEditClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    onSetActiveClicked: () -> Unit
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onSetActiveClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -67,13 +67,13 @@ fun ConnectionInfoContent(
                 Alignment.End
             )
         ) {
-            OutlinedButton(onClick = { onEditClicked() }) {
+            OutlinedButton(onClick = { onEditClick() }) {
                 Text(text = "Edit")
             }
-            OutlinedButton(onClick = { onDeleteClicked() }) {
+            OutlinedButton(onClick = { onDeleteClick() }) {
                 Text(text = "Delete")
             }
-            OutlinedButton(onClick = { onSetActiveClicked() }) {
+            OutlinedButton(onClick = { onSetActiveClick() }) {
                 Text(text = "Set Active")
             }
         }
@@ -109,9 +109,9 @@ private fun ConnectionInfoContentPreview() {
         Surface {
             ConnectionInfoContent(
                 connection = ConnectionEntity.default,
-                onEditClicked = {},
-                onDeleteClicked = {},
-                onSetActiveClicked = {}
+                onEditClick = {},
+                onDeleteClick = {},
+                onSetActiveClick = {}
             )
         }
     }

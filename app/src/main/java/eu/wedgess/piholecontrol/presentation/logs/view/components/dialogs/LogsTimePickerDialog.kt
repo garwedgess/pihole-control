@@ -26,7 +26,7 @@ import org.threeten.bp.LocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsTimePickerDialog(
-    onTimeConfirmed: (Int, Int) -> Unit,
+    onConfirmTime: (Int, Int) -> Unit,
     onDismiss: () -> Unit,
     initialMinutes: Int = LocalDateTime.now().minute,
     initialHour: Int = LocalDateTime.now().hour,
@@ -72,7 +72,7 @@ fun LogsTimePickerDialog(
 
                     Button(
                         onClick = {
-                            onTimeConfirmed(state.hour, state.minute)
+                            onConfirmTime(state.hour, state.minute)
                         }
                     ) {
                         Text("Confirm")

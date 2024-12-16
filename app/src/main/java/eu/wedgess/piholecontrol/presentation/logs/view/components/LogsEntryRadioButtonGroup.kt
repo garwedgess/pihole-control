@@ -11,7 +11,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 fun LogsEntryRadioButtonGroup(
     itemsList: Array<LogEntryStatus>,
     selectedItem: LogEntryStatus,
-    onLogEntryStatusSelected: (LogEntryStatus) -> Unit,
+    onLogEntryStatusClick: (LogEntryStatus) -> Unit,
     modifier: Modifier = Modifier
 ) {
     RadioGroup(
@@ -19,7 +19,7 @@ fun LogsEntryRadioButtonGroup(
         itemsList = itemsList.toList(),
         selectedItem = selectedItem,
         labelFormatter = { it.uiText.asString() },
-        onItemSelected = onLogEntryStatusSelected
+        onItemClick = onLogEntryStatusClick
     )
 }
 
@@ -30,7 +30,7 @@ private fun LogsEntryRadioButtonGroupPreview() {
         LogsEntryRadioButtonGroup(
             itemsList = LogEntryStatus.entries.toTypedArray(),
             selectedItem = LogEntryStatus.ALL,
-            onLogEntryStatusSelected = {}
+            onLogEntryStatusClick = {}
         )
     }
 }

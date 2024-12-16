@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun RefreshIntervalDialog(
     currentRefreshTime: Long,
-    onRefreshIntervalConfirmed: (Long) -> Unit,
+    onConfirmRefreshInterval: (Long) -> Unit,
     onDismiss: () -> Unit
 ) {
     var currentSeconds by remember {
@@ -89,7 +89,7 @@ fun RefreshIntervalDialog(
                         Text(text = stringResource(R.string.all_btn_cancel))
                     }
                     TextButton(onClick = {
-                        onRefreshIntervalConfirmed(TimeUnit.SECONDS.toMillis(currentSeconds.text.toLong()))
+                        onConfirmRefreshInterval(TimeUnit.SECONDS.toMillis(currentSeconds.text.toLong()))
                     }) {
                         Text(text = stringResource(R.string.all_btn_confirm))
                     }
@@ -106,7 +106,7 @@ private fun RefreshIntervalDialogPreview() {
         RefreshIntervalDialog(
             currentRefreshTime = 10_000,
             onDismiss = {},
-            onRefreshIntervalConfirmed = {}
+            onConfirmRefreshInterval = {}
         )
     }
 }

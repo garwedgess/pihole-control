@@ -31,8 +31,8 @@ import eu.wedgess.piholecontrol.utils.UiText
 fun MainAppBar(
     appBarState: AppBarState,
     onNavigateBack: (() -> Unit)? = null,
-    onStatusClicked: (() -> Unit)? = null,
-    onConnectionSelected: ((ConnectionEntity) -> Unit)? = null
+    onStatusClick: (() -> Unit)? = null,
+    onConnectionClick: ((ConnectionEntity) -> Unit)? = null
 ) {
     val titleAlpha: Float by animateFloatAsState(
         targetValue = if (appBarState.showSearchView) 0f else 01f,
@@ -50,8 +50,8 @@ fun MainAppBar(
                     currentConnection = this,
                     connections = appBarState.connections ?: emptyList(),
                     adBlockingEnabled = appBarState.adBlockingEnabled,
-                    onStatusClicked = { onStatusClicked?.invoke() },
-                    onConnectionSelected = { onConnectionSelected?.invoke(it) }
+                    onStatusClick = { onStatusClick?.invoke() },
+                    onConnectionClick = { onConnectionClick?.invoke(it) }
                 )
             } ?: Text(
                 modifier = Modifier.graphicsLayer { alpha = titleAlpha },
@@ -89,8 +89,8 @@ private fun MainAppBarPreview(
         MainAppBar(
             appBarState = appbarState,
             onNavigateBack = {},
-            onStatusClicked = {},
-            onConnectionSelected = {}
+            onStatusClick = {},
+            onConnectionClick = {}
         )
     }
 }
@@ -112,7 +112,7 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
             connections = listOf(ConnectionEntity.default),
-            actions = { FilterTopBarActions(onSearchClicked = {}) },
+            actions = { FilterTopBarActions(onSearchClick = {}) },
             searchContent = null,
             showSearchView = false
         ),
@@ -122,7 +122,7 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
             connections = listOf(ConnectionEntity.default),
-            actions = { FilterTopBarActions(onSearchClicked = {}) },
+            actions = { FilterTopBarActions(onSearchClick = {}) },
             searchContent = null,
             showSearchView = false
         ),
@@ -131,7 +131,7 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             currentConnection = ConnectionEntity.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
-            actions = { FilterTopBarActions(onSearchClicked = {}) },
+            actions = { FilterTopBarActions(onSearchClick = {}) },
             searchContent = {
                 SearchContent(
                     placeHolderText = "Search for filter...",

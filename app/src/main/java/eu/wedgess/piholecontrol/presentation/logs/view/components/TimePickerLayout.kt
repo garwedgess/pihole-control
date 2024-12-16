@@ -15,10 +15,10 @@ import eu.wedgess.piholecontrol.utils.extensions.toDateString
 
 @Composable
 fun TimePickerLayout(
-    onFromTimeClicked: () -> Unit,
-    onToTimeClicked: () -> Unit,
-    onFromTimeCleared: () -> Unit,
-    onToTimeCleared: () -> Unit,
+    onFromTimeClick: () -> Unit,
+    onToTimeClick: () -> Unit,
+    onClearFromTime: () -> Unit,
+    onClearToTime: () -> Unit,
     fromTime: Long? = null,
     toTime: Long? = null,
 ) {
@@ -30,15 +30,15 @@ fun TimePickerLayout(
         TimeButton(
             title = stringResource(R.string.logs_filter_sheet_btn_from_time),
             subTitle = fromTime?.toDateString(),
-            onClick = { onFromTimeClicked() },
-            onClearClicked = { onFromTimeCleared() }
+            onClick = { onFromTimeClick() },
+            onClearClick = { onClearFromTime() }
         )
         Text(stringResource(R.string.logs_filter_sheet_time_divider))
         TimeButton(
             title = stringResource(R.string.logs_filter_sheet_btn_to_time),
             subTitle = toTime?.toDateString(),
-            onClick = { onToTimeClicked() },
-            onClearClicked = { onToTimeCleared() }
+            onClick = { onToTimeClick() },
+            onClearClick = { onClearToTime() }
         )
     }
 }
@@ -48,10 +48,10 @@ fun TimePickerLayout(
 private fun TimePickerLayoutPreview() {
     PiHoleControlTheme {
         TimePickerLayout(
-            onFromTimeClicked = { },
-            onToTimeClicked = { },
-            onFromTimeCleared = {},
-            onToTimeCleared = {}
+            onFromTimeClick = { },
+            onToTimeClick = { },
+            onClearFromTime = {},
+            onClearToTime = {}
         )
     }
 }

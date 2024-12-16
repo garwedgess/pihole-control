@@ -45,8 +45,8 @@ fun DisplayFilterRuleDetailsDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         DisplayFilterRuleDetailsDialogContent(
             filterRule = filterRule,
-            onDeleteClicked = onDelete,
-            onCancelClicked = { onDismissRequest() }
+            onDeleteClick = onDelete,
+            onCancelClick = { onDismissRequest() }
         )
     }
 }
@@ -54,8 +54,8 @@ fun DisplayFilterRuleDetailsDialog(
 @Composable
 private fun DisplayFilterRuleDetailsDialogContent(
     filterRule: FilterRuleEntity,
-    onDeleteClicked: (ModifyFilterRule.Delete) -> Unit,
-    onCancelClicked: () -> Unit
+    onDeleteClick: (ModifyFilterRule.Delete) -> Unit,
+    onCancelClick: () -> Unit
 ) {
     Surface(shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadius)) {
         Column(
@@ -108,9 +108,9 @@ private fun DisplayFilterRuleDetailsDialogContent(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClicked) { Text(stringResource(id = R.string.all_btn_cancel)) }
+                TextButton(onClick = onCancelClick) { Text(stringResource(id = R.string.all_btn_cancel)) }
                 TextButton(onClick = {
-                    onDeleteClicked(
+                    onDeleteClick(
                         ModifyFilterRule.Delete(
                             filterRule.domain,
                             filterRule.type
