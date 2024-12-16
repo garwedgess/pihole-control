@@ -21,8 +21,10 @@ class FetchForwardDestinationsUseCaseTest {
 
     @MockK
     private lateinit var repository: StatisticsRepository
+
     @MockK
     private lateinit var periodicRefreshUseCase: PeriodicRefreshUseCase
+
     private lateinit var target: FetchForwardDestinationsUseCase
 
     @Before
@@ -57,7 +59,9 @@ class FetchForwardDestinationsUseCaseTest {
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
         val connection = ConnectionEntity.default
-        val expectedError = Result.failure<List<ForwardDestinationEntity>>(Exception("Error fetching forward destinations"))
+        val expectedError = Result.failure<List<ForwardDestinationEntity>>(
+            Exception("Error fetching forward destinations")
+        )
 
         coEvery { repository.fetchForwardDestinations(connection) } returns expectedError
         coEvery { periodicRefreshUseCase<List<ForwardDestinationEntity>>(any()) } answers {

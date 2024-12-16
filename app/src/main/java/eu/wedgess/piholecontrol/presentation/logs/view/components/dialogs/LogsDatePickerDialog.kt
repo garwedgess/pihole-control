@@ -16,9 +16,9 @@ import org.threeten.bp.ZoneOffset
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsDatePickerDialog(
-    selectedDate: LocalDate? = null,
     onDismiss: () -> Unit,
-    onConfirm: (date: LocalDate) -> Unit
+    onConfirm: (date: LocalDate) -> Unit,
+    selectedDate: LocalDate? = null,
 ) {
     val state = rememberDatePickerState(
         selectableDates = PastOrPresentSelectableDates,

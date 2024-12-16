@@ -15,12 +15,12 @@ import eu.wedgess.piholecontrol.utils.extensions.toDateString
 
 @Composable
 fun TimePickerLayout(
-    fromTime: Long? = null,
-    toTime: Long? = null,
     onFromTimeClicked: () -> Unit,
     onToTimeClicked: () -> Unit,
     onFromTimeCleared: () -> Unit,
-    onToTimeCleared: () -> Unit
+    onToTimeCleared: () -> Unit,
+    fromTime: Long? = null,
+    toTime: Long? = null,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -51,6 +51,7 @@ private fun TimePickerLayoutPreview() {
             onFromTimeClicked = { },
             onToTimeClicked = { },
             onFromTimeCleared = {},
-            onToTimeCleared = {})
+            onToTimeCleared = {}
+        )
     }
 }

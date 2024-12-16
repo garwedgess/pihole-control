@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,13 +21,14 @@ import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.common.LegendGrid
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
+import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.DonutChart
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun QueryTypesContent(queryTypes: DonutChartDataCollection) {
-
     var selectedIndex by remember { mutableIntStateOf(-1) }
 
     val legendData = remember(queryTypes.items, selectedIndex) {
@@ -74,20 +76,24 @@ fun QueryTypesContent(queryTypes: DonutChartDataCollection) {
     }
 }
 
-//@ThemePreview
-//@Composable
-//private fun QueryTypesContentPreview() {
-//    PiHoleControlTheme {
-//        QueryTypesContent(
-//            queryTypes = QueryTypes(
-//                AIPv4 = 60f,
-//                any = 1f,
-//                NAPTR = 5f,
-//                PTR = 4f,
-//                DS = 10f,
-//                TXT = 10f,
-//                HTTPS = 10f
-//            )
-//        )
-//    }
-//}
+@ThemePreview
+@Composable
+private fun QueryTypesContentPreview() {
+    PiHoleControlTheme {
+        Surface {
+            QueryTypesContent(
+                queryTypes = DonutChartDataCollection(
+                    items = listOf(
+                        QueryTypeChartData(title = "AIPv4", percentage = 60f),
+                        QueryTypeChartData(title = "Any", percentage = 1f),
+                        QueryTypeChartData(title = "NAPTR", percentage = 5f),
+                        QueryTypeChartData(title = "PTR", percentage = 4f),
+                        QueryTypeChartData(title = "DS", percentage = 10f),
+                        QueryTypeChartData(title = "TXT", percentage = 10f),
+                        QueryTypeChartData(title = "HTTPS", percentage = 10f)
+                    )
+                )
+            )
+        }
+    }
+}

@@ -22,7 +22,6 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             val viewModel = hiltViewModel<SplashViewModel>()
             val uiResult by viewModel.splashInfo.collectAsStateWithLifecycle()
 

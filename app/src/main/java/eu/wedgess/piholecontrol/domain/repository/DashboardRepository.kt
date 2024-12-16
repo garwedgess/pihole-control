@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.domain.repository
 
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.QueriesOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
 

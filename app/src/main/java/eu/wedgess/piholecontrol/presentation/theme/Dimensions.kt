@@ -68,7 +68,7 @@ class FontSize(
     val legendSubTitle: TextUnit,
 )
 
-class AppDimens: Dimensions {
+class AppDimens : Dimensions {
     override val padding: Padding =
         Padding(
             none = 0.dp,

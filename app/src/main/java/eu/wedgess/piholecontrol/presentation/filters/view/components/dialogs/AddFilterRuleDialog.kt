@@ -61,9 +61,9 @@ fun AddFilterRuleDialog(
 @Composable
 private fun AddFilterRuleDialogContent(
     filterRuleType: FilterRuleTypeEntity,
-    focusRequester: FocusRequester = remember { FocusRequester() },
     onConfirmClick: (ModifyFilterRule.Add) -> Unit,
-    onCancelClick: () -> Unit
+    onCancelClick: () -> Unit,
+    focusRequester: FocusRequester = remember { FocusRequester() },
 ) {
     var isWildcardChecked by remember {
         mutableStateOf(false)
@@ -148,7 +148,7 @@ private fun AddFilterRuleDialogContent(
 
 @Composable
 @Preview
-fun AddFilterRuleCardPreview() {
+private fun AddFilterRuleCardPreview() {
     AddFilterRuleDialogContent(
         filterRuleType = FilterRuleTypeEntity.ALLOW,
         focusRequester = FocusRequester(),

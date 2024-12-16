@@ -13,7 +13,6 @@ fun FilterListContent(
     filtersList: List<FilterRuleEntity>,
     onFilterRuleClick: (FilterRuleEntity) -> Unit
 ) {
-
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         items(filtersList) {
             FilterRuleItem(

@@ -18,8 +18,10 @@ class AddFilterRuleUseCaseTest {
 
     @MockK
     private lateinit var filterRuleRepository: FilterRulesRepository
+
     @MockK
     private lateinit var connectionRepository: ConnectionRepository
+
     private lateinit var target: AddFilterRuleUseCase
 
     @Before

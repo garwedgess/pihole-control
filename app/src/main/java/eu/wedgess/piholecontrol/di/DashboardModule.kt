@@ -39,7 +39,6 @@ object DashboardModule {
     ): DashboardApiService =
         DashboardApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
-
     @Provides
     fun provideFetchDashboardInfoUseCase(
         fetchStatusSummaryUseCase: FetchStatusSummaryUseCase,

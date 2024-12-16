@@ -52,7 +52,6 @@ class AppViewModel @Inject constructor(
             AppContract.UiState.initial()
         )
 
-
     override fun onEvent(event: AppContract.Event) {
         when (event) {
             AppContract.Event.DismissDialog -> _uiState.update {
@@ -82,7 +81,6 @@ class AppViewModel @Inject constructor(
                 .onFailure { Timber.e("Failed to change active connection", it) }
         }
     }
-
 
     private fun setDisableAdBlocking(duration: Long) {
         _uiState.update { it.copy(dialogType = AppDialogType.None) }

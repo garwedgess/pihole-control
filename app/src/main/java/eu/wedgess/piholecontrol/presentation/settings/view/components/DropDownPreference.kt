@@ -26,8 +26,8 @@ fun <T> DropDownPreference(
     items: List<Pair<T, String>>,
     selectedItem: T,
     onItemSelected: (T) -> Unit,
-    icon: ImageVector? = null,
     modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
     enabled: Boolean = true,
 ) {
     var dropDownExpanded by remember { mutableStateOf(value = false) }

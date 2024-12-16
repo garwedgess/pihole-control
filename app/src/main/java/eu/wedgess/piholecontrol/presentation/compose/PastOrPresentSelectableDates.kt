@@ -1,6 +1,6 @@
-package eu.wedgess.piholecontrol.presentation.compose;
+package eu.wedgess.piholecontrol.presentation.compose
 
-import androidx.compose.material3.ExperimentalMaterial3Api;
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import org.threeten.bp.LocalDate
 

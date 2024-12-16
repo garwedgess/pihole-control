@@ -29,12 +29,11 @@ import kotlin.math.roundToInt
 
 @Composable
 fun LineChart(
+    data: Iterable<LineChartInfo>,
     modifier: Modifier = Modifier,
-    data: Iterable<LineChartInfo>
 ) = ProvideChartStyle(
     m3ChartStyle(entityColors = data.map { it.color() })
 ) {
-
     val entries = remember(data) {
         data.map { it.entries.toList() }
     }
@@ -47,7 +46,8 @@ fun LineChart(
         chartModelProducer.setEntries(entries)
     }
 
-    Chart(modifier = modifier,
+    Chart(
+        modifier = modifier,
         chart = lineChart(
             lines = data.map {
                 with(it.color()) {
@@ -94,7 +94,7 @@ fun LineChart(
 
 @ThemePreview
 @Composable
-fun LineChartPreview() {
+private fun LineChartPreview() {
     PiHoleControlTheme {
         Surface {
             LineChart(

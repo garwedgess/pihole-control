@@ -40,7 +40,6 @@ fun ConnectionListItem(
     onDeleteClicked: () -> Unit,
     onSetActiveClicked: () -> Unit
 ) {
-
     var expandMoreDropdown by remember {
         mutableStateOf(false)
     }
@@ -50,7 +49,6 @@ fun ConnectionListItem(
             .padding(horizontal = PiHoleControlTheme.dimens.padding.screenContent),
         verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -81,7 +79,9 @@ fun ConnectionListItem(
                 Text(
                     text = connectionInfo.name,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                    color = MaterialTheme.colorScheme.onBackground.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                    )
                 )
             }
 
@@ -104,10 +104,9 @@ fun ConnectionListItem(
     }
 }
 
-
 @ThemePreview
 @Composable
-fun ConnectionListItemPreview() {
+private fun ConnectionListItemPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionListItem(

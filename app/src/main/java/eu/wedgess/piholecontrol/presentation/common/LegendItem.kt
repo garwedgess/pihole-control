@@ -61,7 +61,9 @@ fun RowScope.LegendItem(legendData: LegendData) {
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.Normal,
                         fontSize = PiHoleControlTheme.dimens.fontSize.legendSubTitle,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                        color = MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                        )
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

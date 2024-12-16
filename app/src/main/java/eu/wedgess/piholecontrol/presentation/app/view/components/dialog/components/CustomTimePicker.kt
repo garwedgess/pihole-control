@@ -25,7 +25,6 @@ fun CustomTimePicker(
     onHoursChanged: (hours: TextFieldValue) -> Unit,
     onMinutesChanged: (minutes: TextFieldValue) -> Unit
 ) {
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge)

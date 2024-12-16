@@ -26,10 +26,10 @@ import org.threeten.bp.LocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogsTimePickerDialog(
-    initialHour: Int = LocalDateTime.now().hour,
-    initialMinutes: Int = LocalDateTime.now().minute,
     onTimeConfirmed: (Int, Int) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    initialMinutes: Int = LocalDateTime.now().minute,
+    initialHour: Int = LocalDateTime.now().hour,
 ) {
     val state = rememberTimePickerState(
         initialHour = initialHour,

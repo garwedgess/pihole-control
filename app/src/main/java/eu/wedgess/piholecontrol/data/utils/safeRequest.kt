@@ -65,10 +65,8 @@ private suspend inline fun <reified T, reified E> HttpResponse.handleResponse():
         else -> {
             throw ResponseException(this, "Code: $statusCode")
         }
-
     }
 }
-
 
 /**
  * Extension function for getting the error response body from the [ResponseException]

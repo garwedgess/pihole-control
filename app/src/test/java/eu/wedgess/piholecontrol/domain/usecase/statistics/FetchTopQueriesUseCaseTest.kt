@@ -20,8 +20,10 @@ class FetchTopQueriesUseCaseTest {
 
     @MockK
     private lateinit var repository: StatisticsRepository
+
     @MockK
     private lateinit var periodicRefreshUseCase: PeriodicRefreshUseCase
+
     private lateinit var target: FetchTopQueriesUseCase
 
     @Before
@@ -34,9 +36,13 @@ class FetchTopQueriesUseCaseTest {
     fun `invoke - emits success when repository returns data`() = runTest {
         val topQueries = TopQueriesEntity(
             allowed = listOf(
-                TopDomainEntity("example.com", 120), TopDomainEntity("test.com", 80)
+                TopDomainEntity(domain = "example.com", hits = 120),
+                TopDomainEntity(domain = "test.com", hits = 80)
             ),
-            blocked = listOf(TopDomainEntity("ads.com", 95), TopDomainEntity("trackers.com", 70))
+            blocked = listOf(
+                TopDomainEntity(domain = "ads.com", hits = 95),
+                TopDomainEntity(domain = "trackers.com", hits = 70)
+            )
         )
         val connection = ConnectionEntity.default
 

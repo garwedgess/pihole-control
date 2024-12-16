@@ -23,7 +23,7 @@ fun LogsTopBarActions(
     selectedSorting: LogSorting,
     isSortingMenuVisible: Boolean
 ) {
-    Row() {
+    Row {
         IconButton(onClick = { onSortClicked() }) {
             Icon(
                 imageVector = Icons.Outlined.Sort,
@@ -54,7 +54,6 @@ fun LogsTopBarActions(
                     onClick = { onSortItemSelected(it) }
                 )
             }
-
         }
     }
 }

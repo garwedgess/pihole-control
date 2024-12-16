@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.utils;
+package eu.wedgess.piholecontrol.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -81,7 +81,6 @@ class ColorGenerator(isLightTheme: Boolean = false) {
      */
     private fun generateRGB(str: String): Array<Double> = generateHsl(str).hsl2Rgb()
 
-
     /**
      * Returns the hash in hex
      *
@@ -106,7 +105,6 @@ class ColorGenerator(isLightTheme: Boolean = false) {
 
         return hash.roundToLong()
     }
-
 
     // https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
     private fun Triple<Double, Double, Double>.hsl2Rgb(): Array<Double> {
@@ -154,8 +152,8 @@ class ColorGenerator(isLightTheme: Boolean = false) {
     }
 
     private fun hsl(str: String): Triple<Double, Double, Double> {
-        val hue: Double;
-        val saturation: Double;
+        val hue: Double
+        val saturation: Double
         val lightness: Double
 
         var hash = bkdrHash(str)

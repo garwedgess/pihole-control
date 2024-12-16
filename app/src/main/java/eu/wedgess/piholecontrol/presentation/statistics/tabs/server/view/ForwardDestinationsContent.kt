@@ -31,10 +31,7 @@ import eu.wedgess.piholecontrol.presentation.theme.isDark
 import eu.wedgess.piholecontrol.utils.ColorGenerator
 
 @Composable
-fun ForwardDestinationsContent(
-    forwardDestinations: List<ForwardDestinationEntity>
-) {
-
+fun ForwardDestinationsContent(forwardDestinations: List<ForwardDestinationEntity>) {
     val isDarkTheme = MaterialTheme.colorScheme.isDark
     val colorGenerator = remember(isDarkTheme) {
         ColorGenerator(isLightTheme = isDarkTheme.not())

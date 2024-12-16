@@ -14,6 +14,7 @@ class FetchLogsUseCase(
 
     @VisibleForTesting
     var logLimit: Int = 500
+
     @VisibleForTesting
     var logStatusFilter: LogEntryStatus = LogEntryStatus.ALL
 
@@ -22,7 +23,6 @@ class FetchLogsUseCase(
             logsRepository.fetchLogs(connection, logLimit).mapCatching {
                 it.applyStatusFilter()
             }
-
         }
     }
 

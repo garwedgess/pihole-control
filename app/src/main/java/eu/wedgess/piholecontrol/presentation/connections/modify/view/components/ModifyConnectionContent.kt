@@ -29,7 +29,6 @@ fun ModifyConnectionContent(
     uiState: ModifyConnectionsContract.UiState,
     onEvent: (ModifyConnectionsContract.Event) -> Unit
 ) {
-
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
 

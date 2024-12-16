@@ -56,10 +56,12 @@ object SummaryItem {
                     tint = Color.Black.copy(alpha = PiHoleControlTheme.dimens.weight.minAlpha)
                 )
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         Text(
                             text = title,
                             color = Color.White.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha),
@@ -67,7 +69,7 @@ object SummaryItem {
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold
                         )
-                       caption?.run {
+                        caption?.run {
                             Text(
                                 modifier = Modifier.padding(
                                     start = PiHoleControlTheme.dimens.padding.itemContentSmall
@@ -78,7 +80,7 @@ object SummaryItem {
                                 color = Color.White.copy(alpha = 0.6f),
                                 overflow = TextOverflow.Ellipsis
                             )
-                       }
+                        }
                     }
                     Text(
                         modifier = Modifier.fillMaxWidth(),
@@ -101,7 +103,14 @@ object SummaryItem {
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        SummaryItem(title, value.formatPercentage(), caption = null, imageVector, backgroundColor, modifier)
+        SummaryItem(
+            title = title,
+            value = value.formatPercentage(),
+            caption = null,
+            imageVector = imageVector,
+            backgroundColor = backgroundColor,
+            modifier = modifier
+        )
     }
 
     @Composable
@@ -112,7 +121,14 @@ object SummaryItem {
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        SummaryItem(title, value.formatWithThousands(), caption = null, imageVector, backgroundColor, modifier)
+        SummaryItem(
+            title,
+            value.formatWithThousands(),
+            caption = null,
+            imageVector,
+            backgroundColor,
+            modifier
+        )
     }
 
     @Composable
@@ -124,15 +140,19 @@ object SummaryItem {
         backgroundColor: Color,
         modifier: Modifier = Modifier
     ) {
-        SummaryItem(title, value.formatWithThousands(), caption = caption, imageVector, backgroundColor, modifier)
+        SummaryItem(
+            title,
+            value.formatWithThousands(),
+            caption = caption,
+            imageVector,
+            backgroundColor,
+            modifier
+        )
     }
 }
 
-
 @Preview
 @Composable
-fun SummaryItemPreview() {
-    PiHoleControlTheme {
-
-    }
+private fun SummaryItemPreview() {
+    PiHoleControlTheme {}
 }

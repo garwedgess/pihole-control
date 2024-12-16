@@ -18,7 +18,6 @@ fun Connection.toConnectionInfo() = ConnectionEntity(
     isActive = Active
 )
 
-
 fun ConnectionEntity.toConnection() = Connection(
     Id = id,
     Name = name,

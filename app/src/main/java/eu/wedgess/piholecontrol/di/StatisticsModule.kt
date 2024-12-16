@@ -54,5 +54,4 @@ object StatisticsModule {
         periodicRefreshUseCase: PeriodicRefreshUseCase
     ): FetchTopClientsUseCase =
         FetchTopClientsUseCase(statisticsRepository, periodicRefreshUseCase)
-
 }

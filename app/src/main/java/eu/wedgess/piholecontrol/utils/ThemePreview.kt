@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.utils
 
-
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
     showBackground = true
 )
 annotation class ThemePreviewWithBackground
-
 
 @Preview(
     name = "Light Theme",

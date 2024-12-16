@@ -74,7 +74,6 @@ class StatusApiServiceImplTest {
             )
     }
 
-
     @Test
     fun `disableAdBlocking - returns success`() = runTest {
         val connection = ConnectionEntity.default.copy(trustAllCerts = false)
@@ -101,6 +100,4 @@ class StatusApiServiceImplTest {
                         "Text: \"Client error: 400 Bad Request, Body: []\""
             )
     }
-
-
 }

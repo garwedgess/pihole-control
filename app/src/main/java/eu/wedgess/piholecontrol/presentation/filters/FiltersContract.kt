@@ -6,7 +6,6 @@ import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import eu.wedgess.piholecontrol.utils.UiText
 
-
 interface FiltersContract {
 
     data class UiState(

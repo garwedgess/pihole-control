@@ -48,9 +48,14 @@ fun LogFiltersBottomSheet(
                 selectedItem = uiState.logsLimit,
                 onLogLimitSelected = { onEvent(LogsContract.Event.OnLogLimitChanged(it)) }
             )
-            HorizontalDivider(modifier = Modifier.padding(vertical = PiHoleControlTheme.dimens.padding.itemContentLarge))
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    vertical = PiHoleControlTheme.dimens.padding.itemContentLarge
+                )
+            )
             Text(
-                text = stringResource(R.string.logs_filter_sheet_title_status), modifier = Modifier
+                text = stringResource(R.string.logs_filter_sheet_title_status),
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         start = PiHoleControlTheme.dimens.padding.itemContent,
@@ -60,13 +65,18 @@ fun LogFiltersBottomSheet(
             )
             LogsEntryRadioButtonGroup(
                 modifier = Modifier.fillMaxWidth(),
-                itemsList = LogEntryStatus.values(),
+                itemsList = LogEntryStatus.entries.toTypedArray(),
                 selectedItem = uiState.selectedLogEntryStatus,
                 onLogEntryStatusSelected = { onEvent(LogsContract.Event.OnStatusChanged(it)) }
             )
-            HorizontalDivider(modifier = Modifier.padding(vertical = PiHoleControlTheme.dimens.padding.itemContentLarge))
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    vertical = PiHoleControlTheme.dimens.padding.itemContentLarge
+                )
+            )
             Text(
-                text = stringResource(R.string.logs_filter_sheet_title_time), modifier = Modifier
+                text = stringResource(R.string.logs_filter_sheet_title_time),
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         start = PiHoleControlTheme.dimens.padding.itemContent,

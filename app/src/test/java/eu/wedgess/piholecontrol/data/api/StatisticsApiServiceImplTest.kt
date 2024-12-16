@@ -73,7 +73,6 @@ class StatisticsApiServiceImplTest {
             )
     }
 
-
     @Test
     fun `fetchTopQueries - returns success`() = runTest {
         val connection = ConnectionEntity.default.copy(trustAllCerts = false)
@@ -125,5 +124,4 @@ class StatisticsApiServiceImplTest {
                         "Text: \"Client error: 400 Bad Request, Body: []\""
             )
     }
-
 }

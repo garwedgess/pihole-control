@@ -13,5 +13,4 @@ data class LegendData(
 ) {
     @Composable
     fun color(): Color = color ?: ColorGenerator(isSystemInDarkTheme()).generateColor(title)
-
 }

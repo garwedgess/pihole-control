@@ -13,5 +13,4 @@ sealed class ResponseResult<out T, out E> {
         data class Serialization(val exception: SerializationException) : Error<Nothing>()
         data class Unknown(val exception: Exception) : Error<Nothing>()
     }
-
 }

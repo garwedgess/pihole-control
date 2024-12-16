@@ -134,7 +134,6 @@ private fun LogDetailsDialogContent(
             ) {
                 TextButton(onClick = onDismiss) { Text("Dismiss") }
             }
-
         }
     }
 }

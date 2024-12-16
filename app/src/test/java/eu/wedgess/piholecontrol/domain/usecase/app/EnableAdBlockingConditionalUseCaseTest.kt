@@ -101,5 +101,4 @@ class EnableAdBlockingConditionalUseCaseTest {
         assertThat(result.exceptionOrNull()).isInstanceOf(Exception::class.java)
         coVerify(exactly = 0) { enableAdBlockingUseCase(any()) }
     }
-
 }

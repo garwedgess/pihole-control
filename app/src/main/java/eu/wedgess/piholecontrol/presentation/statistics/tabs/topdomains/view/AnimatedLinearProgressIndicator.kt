@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
-
 @Composable
 fun AnimatedLinearProgressIndicator(indicatorProgress: Float) {
     var progress by remember(indicatorProgress) {
@@ -44,7 +43,6 @@ fun AnimatedLinearProgressIndicator(indicatorProgress: Float) {
     LaunchedEffect(indicatorProgress) {
         progress = animatedProgress
     }
-
 }
 
 @ThemePreview

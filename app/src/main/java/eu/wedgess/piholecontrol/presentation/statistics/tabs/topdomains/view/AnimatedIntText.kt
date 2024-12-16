@@ -19,7 +19,8 @@ fun AnimatedIntText(value: Int) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        ), label = "AnimatedText"
+        ),
+        label = "AnimatedText"
     )
     Text(text = count.formatWithThousands(), style = MaterialTheme.typography.bodySmall)
 }

@@ -175,7 +175,9 @@ fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Normal,
-                        color = LocalContentColor.current.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                        color = LocalContentColor.current.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                        )
                     )
                 )
             }
@@ -200,7 +202,6 @@ fun LogListItem(log: LogEntryEntity, onItemClicked: () -> Unit) {
                 )
             }
         }
-
     }
 }
 
@@ -211,15 +212,18 @@ private fun LogListItemPreview() {
         Surface {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 LogAnswerTypeEntity.entries.forEach {
-                    LogListItem(log = LogEntryEntity(
-                        timestamp = System.currentTimeMillis().div(1000L),
-                        time = "10:12",
-                        queryType = "IPv4",
-                        requestedDomain = "www.google.com",
-                        client = "My Android",
-                        answerType = it,
-                        responseTime = 1200
-                    ), onItemClicked = {})
+                    LogListItem(
+                        log = LogEntryEntity(
+                            timestamp = System.currentTimeMillis().div(1000L),
+                            time = "10:12",
+                            queryType = "IPv4",
+                            requestedDomain = "www.google.com",
+                            client = "My Android",
+                            answerType = it,
+                            responseTime = 1200
+                        ),
+                        onItemClicked = {}
+                    )
                 }
             }
         }

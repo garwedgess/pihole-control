@@ -102,7 +102,6 @@ private fun ConnectionInfoRow(
     }
 }
 
-
 @ThemePreview
 @Composable
 private fun ConnectionInfoContentPreview() {

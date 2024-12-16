@@ -45,7 +45,8 @@ fun DisableButtonRow(
             } else {
                 ButtonDefaults.outlinedButtonBorder(enabled = true)
             },
-            onClick = { onTimeSelected(rightValue) }) {
+            onClick = { onTimeSelected(rightValue) }
+        ) {
             Text(text = stringResource(id = rightButtonTextResId))
         }
     }

@@ -84,7 +84,9 @@ fun rememberMarker(): Marker {
             }
 
             override fun getInsets(
-                context: MeasureContext, outInsets: Insets,horizontalDimensions: HorizontalDimensions
+                context: MeasureContext,
+                outInsets: Insets,
+                horizontalDimensions: HorizontalDimensions
             ) = with(context) {
                 outInsets.top =
                     label.getHeight(context) + labelBackgroundShape.tickSizeDp.pixels + LABEL_BACKGROUND_SHADOW_RADIUS.pixels * SHADOW_RADIUS_MULTIPLIER - LABEL_BACKGROUND_SHADOW_DY.pixels
@@ -109,8 +111,8 @@ fun rememberMarker(): Marker {
                     ) { model ->
                         appendCompat(
                             when (val entry = model.entry) {
-                                is LineChartEntry -> PATTERN.format(model.entry.y) + (entry.yLabel?.let { " $it" }
-                                    ?: "")
+                                is LineChartEntry -> PATTERN.format(model.entry.y) +
+                                    (entry.yLabel?.let { " $it" } ?: "")
 
                                 else -> PATTERN.format(model.entry.y)
                             },

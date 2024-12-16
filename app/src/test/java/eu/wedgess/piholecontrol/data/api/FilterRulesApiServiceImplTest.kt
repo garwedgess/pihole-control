@@ -74,7 +74,6 @@ class FilterRulesApiServiceImplTest {
             )
     }
 
-
     @Test
     fun `removeFilterRule - returns success`() = runTest {
         val connection = ConnectionEntity.default.copy(trustAllCerts = false)
@@ -101,6 +100,4 @@ class FilterRulesApiServiceImplTest {
                         "Text: \"Client error: 400 Bad Request, Body: []\""
             )
     }
-
-
 }

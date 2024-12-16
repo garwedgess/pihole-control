@@ -68,8 +68,9 @@ sealed class LineChartInfo(
         val entity: ClientOverTimeEntity,
         val formatter: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
     ) : LineChartInfo(
-        title = UiText.DynamicString(entity.clientName.takeIf { it.isNotBlank() }
-            ?: entity.clientIp),
+        title = UiText.DynamicString(
+            entity.clientName.takeIf { it.isNotBlank() } ?: entity.clientIp
+        ),
         legendSubTitle = UiText.StringResource(
             R.string.home_legend_sub_title_queries_over_time,
             listOf(entity.clientActivity.sumOf { it.hits })

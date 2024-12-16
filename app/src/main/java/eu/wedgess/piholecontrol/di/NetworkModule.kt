@@ -101,11 +101,13 @@ object NetworkModule {
 
     fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
         install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }
+            )
         }
 
     fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installLogging() =
@@ -122,6 +124,4 @@ object NetworkModule {
         install(HttpRedirect) {
             checkHttpMethod = false
         }
-
-
 }

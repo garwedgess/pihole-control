@@ -52,7 +52,6 @@ fun DashboardScreen(uiResult: UIResult<DashboardContract.UiState>) {
     }
 }
 
-
 @ThemePreview
 @Composable
 private fun DashboardScreenPreview() {

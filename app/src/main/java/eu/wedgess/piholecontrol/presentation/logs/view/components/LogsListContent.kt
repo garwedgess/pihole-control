@@ -19,7 +19,6 @@ fun LogsListContent(
     dialogType: LogsDialogType,
     onEvent: (LogsContract.Event) -> Unit
 ) {
-
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         stickyHeader {
             LogsListStickyHeader(listSize = logsList.size)

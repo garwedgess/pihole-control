@@ -61,9 +61,8 @@ interface ModifyConnectionsContract {
 
     sealed interface Effect {
         sealed interface Navigation : Effect {
-           data  object Back : Navigation
+           data object Back : Navigation
         }
-
     }
 
     sealed interface Event {

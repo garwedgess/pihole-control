@@ -31,7 +31,6 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 
 @Composable
 fun SummarySection(summary: SummaryEntity) {
-
     val totalQueries by animateIntAsState(
         targetValue = summary.dnsQueries,
         animationSpec = tween(
@@ -120,6 +119,5 @@ fun SummarySection(summary: SummaryEntity) {
 @Composable
 private fun SummarySectionPreview() {
     PiHoleControlTheme {
-
     }
 }

@@ -27,9 +27,6 @@ interface AppContract {
         }
     }
 
-    sealed interface Effect {
-    }
-
     sealed interface Event {
         data object ShowEnabledStatusDialog : Event
         data object DismissDialog : Event

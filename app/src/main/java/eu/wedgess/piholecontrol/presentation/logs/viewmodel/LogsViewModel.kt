@@ -99,7 +99,6 @@ class LogsViewModel @Inject constructor(
         LogSorting.RESPONSE_TIME_DESC -> sortedByDescending { it.responseTime }
     }
 
-
     override fun onEvent(event: LogsContract.Event) {
         when (event) {
             is LogsContract.Event.AddToAllowList -> onAddToAllowList(event.domain)
@@ -199,8 +198,6 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW).onFailure {
                 Timber.e(it, "Failed to add domain to allow list: $domain")
-            }.onSuccess {
-
             }
         }
     }
@@ -209,8 +206,6 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.BLOCK).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
-            }.onSuccess {
-
             }
         }
     }

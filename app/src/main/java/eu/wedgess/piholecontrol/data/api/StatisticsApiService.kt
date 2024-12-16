@@ -1,10 +1,10 @@
 package eu.wedgess.piholecontrol.data.api
 
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleQueryTypes
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopClients
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopQueries
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 
 interface StatisticsApiService {
     suspend fun fetchQueryTypes(activeMiHole: ConnectionEntity): Result<PiHoleQueryTypes>

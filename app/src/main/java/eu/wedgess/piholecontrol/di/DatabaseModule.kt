@@ -33,5 +33,4 @@ object DatabaseModule {
             PortAdapter = portAdapter
         )
     )
-
 }

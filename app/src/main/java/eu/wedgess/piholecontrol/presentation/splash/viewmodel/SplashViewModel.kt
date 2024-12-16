@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     fetchAppPreferencesUseCase: FetchAppPreferencesUseCase,

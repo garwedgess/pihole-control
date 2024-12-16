@@ -131,5 +131,4 @@ class PeriodicRefreshUseCaseTest {
         assertThat(result).containsExactly(expectedData)
         coVerify(exactly = 1) { fetchData(activeConnection) }
     }
-
 }

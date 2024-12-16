@@ -69,5 +69,4 @@ fun FilterTabScreenRoot(
             FilterListContent(filtersList = it.filterRules, onFilterRuleClick = onFilterRuleClick)
         }
     )
-
 }

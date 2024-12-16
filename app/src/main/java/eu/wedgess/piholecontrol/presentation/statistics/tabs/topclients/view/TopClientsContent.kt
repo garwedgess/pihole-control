@@ -32,7 +32,6 @@ import eu.wedgess.piholecontrol.presentation.theme.queriesBlockedBackground
 
 @Composable
 fun TopClientsContent(topClients: List<TopClientEntity>) {
-
     val sumAllClients by remember {
         mutableIntStateOf(topClients.sumOf { it.hits })
     }

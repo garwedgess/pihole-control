@@ -57,7 +57,6 @@ private fun DisplayFilterRuleDetailsDialogContent(
     onDeleteClicked: (ModifyFilterRule.Delete) -> Unit,
     onCancelClicked: () -> Unit
 ) {
-
     Surface(shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadius)) {
         Column(
             Modifier.padding(PiHoleControlTheme.dimens.padding.dialogContent),
@@ -92,9 +91,11 @@ private fun DisplayFilterRuleDetailsDialogContent(
             FilterDetailsRow(
                 icon = if (filterRule.enabled) Icons.Default.Check else Icons.Default.Close,
                 title = stringResource(R.string.filters_details_dialog_label_status),
-                value = if (filterRule.enabled) stringResource(R.string.filters_details_dialog_value_enabled) else stringResource(
-                    R.string.filters_details_dialog_value_disabled
-                )
+                value = if (filterRule.enabled) {
+                    stringResource(R.string.filters_details_dialog_value_enabled)
+                } else {
+                    stringResource(R.string.filters_details_dialog_value_disabled)
+                }
             )
             FilterDetailsRow(
                 icon = Icons.AutoMirrored.Default.Comment,
@@ -117,7 +118,6 @@ private fun DisplayFilterRuleDetailsDialogContent(
                     )
                 }) { Text("Delete") }
             }
-
         }
     }
 }

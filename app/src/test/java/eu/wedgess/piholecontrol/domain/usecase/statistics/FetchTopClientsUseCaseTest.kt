@@ -19,8 +19,10 @@ class FetchTopClientsUseCaseTest {
 
     @MockK
     private lateinit var repository: StatisticsRepository
+
     @MockK
     private lateinit var periodicRefreshUseCase: PeriodicRefreshUseCase
+
     private lateinit var target: FetchTopClientsUseCase
 
     @Before

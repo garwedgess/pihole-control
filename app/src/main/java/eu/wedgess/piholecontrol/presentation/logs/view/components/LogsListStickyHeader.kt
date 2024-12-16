@@ -45,7 +45,6 @@ fun LogsListStickyHeader(listSize: Int) {
     }
 }
 
-
 @Preview
 @Composable
 private fun LogsListStickyHeaderPreview() {

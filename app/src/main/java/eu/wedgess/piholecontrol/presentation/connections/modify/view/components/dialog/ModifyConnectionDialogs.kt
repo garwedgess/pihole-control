@@ -21,5 +21,4 @@ fun ModifyConnectionDialogs(
             onApiTokenScanned = { onEvent(ModifyConnectionsContract.Event.OnApiTokenChanged(it)) }
         )
     }
-
 }

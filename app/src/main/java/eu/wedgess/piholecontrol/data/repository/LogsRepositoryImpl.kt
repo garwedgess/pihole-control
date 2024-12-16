@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.LogsApiService
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.mappers.toLogEntryEntity
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -19,9 +19,6 @@ class LogsRepositoryImpl(
     ): Result<List<LogEntryEntity>> = withContext(dispatcherProvider.io) {
         apiService.fetchLogs(activeConnection, limit).mapCatching { response ->
             response.data.map { it.toLogEntryEntity() }
-
         }
     }
 }
-
-

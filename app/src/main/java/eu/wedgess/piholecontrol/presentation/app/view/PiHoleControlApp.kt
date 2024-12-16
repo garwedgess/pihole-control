@@ -56,9 +56,9 @@ import kotlin.math.abs
 
 @Composable
 fun PiHoleControlApp(
-    viewModel: AppViewModel = hiltViewModel(),
     isDarkTheme: Boolean,
-    useDynamicColors: Boolean
+    useDynamicColors: Boolean,
+    viewModel: AppViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
@@ -146,7 +146,6 @@ fun PiHoleControlApp(
                             )
                         }
                     )
-
                 },
                 bottomBar = {
                     AnimatedVisibility(

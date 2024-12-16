@@ -33,7 +33,6 @@ fun FilterRuleItem(
     rule: FilterRuleEntity,
     onItemClicked: () -> Unit
 ) {
-
     val typePair = when (rule.type) {
         FilterRuleTypeEntity.ALLOW -> Pair(
             stringResource(id = R.string.filters_label_allowlist),
@@ -82,10 +81,13 @@ fun FilterRuleItem(
                 rule.comment?.takeIf { it.isNotBlank() }?.run {
                     Text(
                         text = this,
-                        maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = FontWeight.Normal,
-                            color = LocalContentColor.current.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                            color = LocalContentColor.current.copy(
+                                alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                            )
                         )
                     )
                 }
@@ -98,7 +100,6 @@ fun FilterRuleItem(
                 style = MaterialTheme.typography.labelSmall
             )
         }
-
     }
 }
 
@@ -113,7 +114,6 @@ private fun FilterRuleItemPreview(
         }
     }
 }
-
 
 private class FilterListItemPreviewParameterProvider :
     PreviewParameterProvider<FilterRuleEntity> {

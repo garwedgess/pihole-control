@@ -33,16 +33,22 @@ class ConnectionsViewModel @Inject constructor(
     val uiResult = fetchAllConnectionsUseCase()
         .map { result ->
             result.getOrElse {
-                return@map UIResult.Error(ResultType.Error.WithTitle(UiText.DynamicString("Failed to fetch connections")))
+                return@map UIResult.Error(
+                    ResultType.Error.WithTitle(
+                        UiText.DynamicString("Failed to fetch connections")
+                    )
+                )
             }.run {
                 return@map if (isEmpty()) {
-                        UIResult.Empty(ResultType.Empty.WithTitleAndSubTitle(
+                    UIResult.Empty(
+                        ResultType.Empty.WithTitleAndSubTitle(
                             UiText.DynamicString("No connections"),
                             UiText.DynamicString("Add a connection to get started")
-                        ))
-                    } else {
-                        UIResult.Loaded(ConnectionsContract.UiState(this))
-                    }
+                        )
+                    )
+                } else {
+                    UIResult.Loaded(ConnectionsContract.UiState(this))
+                }
             }
         }
         .stateIn(
@@ -68,8 +74,6 @@ class ConnectionsViewModel @Inject constructor(
         viewModelScope.launch {
             deleteConnectionUseCase(id).onFailure {
                 Timber.e(it, "Failed to delete connection by id: $id")
-            }.onSuccess {
-
             }
         }
     }
@@ -83,9 +87,6 @@ class ConnectionsViewModel @Inject constructor(
             setConnectionAsActiveUseCase(connection.id)
                 .onFailure {
                     Timber.e("Failed to set connection as active: $connection", it)
-                }
-                .onSuccess {
-
                 }
         }
     }

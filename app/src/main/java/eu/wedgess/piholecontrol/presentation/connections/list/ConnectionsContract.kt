@@ -17,7 +17,6 @@ interface ConnectionsContract {
             data object Add : Navigation
             data class Edit(val id: Long) : Navigation
         }
-
     }
 
     sealed interface Event {

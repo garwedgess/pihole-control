@@ -73,7 +73,6 @@ class DashboardApiServiceImplTest {
             )
     }
 
-
     @Test
     fun `fetchOverTimeDataClients - returns success`() = runTest {
         val connection = ConnectionEntity.default.copy(trustAllCerts = false)
@@ -99,6 +98,4 @@ class DashboardApiServiceImplTest {
                         "Text: \"Client error: 400 Bad Request, Body: []\""
             )
     }
-
-
 }

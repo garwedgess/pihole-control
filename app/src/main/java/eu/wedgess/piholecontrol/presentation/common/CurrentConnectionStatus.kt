@@ -76,15 +76,18 @@ fun CurrentConnectionStatus(
                 )
                 Text(
                     text = currentConnection.host,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal)
+                    color = MaterialTheme.colorScheme.onBackground.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                    ),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Normal
+                    )
                 )
             }
             DropdownMenu(
                 expanded = showConnectionsDropdown,
                 onDismissRequest = { showConnectionsDropdown = false }
             ) {
-
                 connections.forEach { connection ->
                     DropdownMenuItem(
                         text = {
@@ -98,18 +101,17 @@ fun CurrentConnectionStatus(
                                 headlineContent = { Text(connection.name) },
                                 supportingContent = { Text(connection.host) }
                             )
-                        }, onClick = {
+                        },
+                        onClick = {
                             onConnectionSelected(connection)
                             showConnectionsDropdown = false
                         }
                     )
                 }
-
             }
         }
     }
 }
-
 
 @ThemePreview
 @Composable

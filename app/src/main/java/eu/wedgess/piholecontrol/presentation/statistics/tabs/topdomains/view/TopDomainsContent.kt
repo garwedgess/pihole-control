@@ -36,7 +36,6 @@ fun TopDomainsContent(
     topPermittedDomains: List<TopDomainEntity>,
     topBlockedDomains: List<TopDomainEntity>
 ) {
-
     val sumAllPermitted by remember {
         mutableIntStateOf(topPermittedDomains.sumOf { it.hits })
     }

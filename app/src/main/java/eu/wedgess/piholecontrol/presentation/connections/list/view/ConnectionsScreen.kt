@@ -29,7 +29,8 @@ fun ConnectionsScreen(
                 onClick = { onEvent(ConnectionsContract.Event.AddConnection) },
                 content = {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "")
-                })
+                }
+            )
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
@@ -41,6 +42,4 @@ fun ConnectionsScreen(
             )
         }
     }
-
-
 }

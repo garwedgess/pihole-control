@@ -36,8 +36,6 @@ fun LoadingContent(
         subTitle?.run {
             Text(text = this, style = MaterialTheme.typography.bodyMedium)
         }
-
-
     }
 }
 

@@ -30,7 +30,6 @@ fun LogsScreen(
     snackbarHostState: SnackbarHostState,
     onEvent: (LogsContract.Event) -> Unit
 ) {
-
     BottomSheetScaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         scaffoldState = scaffoldState,

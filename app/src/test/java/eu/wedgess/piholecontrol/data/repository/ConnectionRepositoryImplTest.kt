@@ -214,5 +214,4 @@ class ConnectionRepositoryImplTest {
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
         verify { connectionDao.setActive(id) }
     }
-
 }

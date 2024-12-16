@@ -82,7 +82,7 @@ fun MainAppBar(
 
 @ThemePreview
 @Composable
-fun MainAppBarPreview(
+private fun MainAppBarPreview(
     @PreviewParameter(MainAppBarPreviewParameterProvider::class) appbarState: AppBarState
 ) {
     PiHoleControlTheme {

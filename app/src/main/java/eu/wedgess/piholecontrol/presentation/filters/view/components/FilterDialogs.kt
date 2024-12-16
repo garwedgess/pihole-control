@@ -13,7 +13,6 @@ fun FilterDialogs(
     onDeleteRuleClick: (ModifyFilterRule.Delete) -> Unit,
     onDismissDialogClick: () -> Unit
 ) {
-
     when (dialogType) {
         FilterDialogType.None -> Unit
         is FilterDialogType.AddFilterRule -> AddFilterRuleDialog(
@@ -27,6 +26,5 @@ fun FilterDialogs(
             onDismissRequest = onDismissDialogClick,
             onDelete = onDeleteRuleClick
         )
-
     }
 }

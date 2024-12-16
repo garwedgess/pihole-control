@@ -25,8 +25,12 @@ fun BottomNavigationBar(
                 label = { Text(text = item.title.asString()) },
                 icon = { Icon(item.icon, contentDescription = "") },
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = PiHoleControlTheme.dimens.weight.bottomNavUnselectedAlpha),
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = PiHoleControlTheme.dimens.weight.bottomNavUnselectedAlpha),
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.bottomNavUnselectedAlpha
+                    ),
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.bottomNavUnselectedAlpha
+                    ),
                     indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
                     selectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     selectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant

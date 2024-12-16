@@ -28,8 +28,9 @@ fun LogsEntryRadioButtonGroup(
 private fun LogsEntryRadioButtonGroupPreview() {
     PiHoleControlTheme {
         LogsEntryRadioButtonGroup(
-            itemsList = LogEntryStatus.values(),
+            itemsList = LogEntryStatus.entries.toTypedArray(),
             selectedItem = LogEntryStatus.ALL,
-            onLogEntryStatusSelected = {})
+            onLogEntryStatusSelected = {}
+        )
     }
 }

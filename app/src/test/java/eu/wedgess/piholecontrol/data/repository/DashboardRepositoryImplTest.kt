@@ -108,5 +108,4 @@ class DashboardRepositoryImplTest {
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
         coVerify { api.fetchOverTimeData10Minutes(activeConnection) }
     }
-
 }

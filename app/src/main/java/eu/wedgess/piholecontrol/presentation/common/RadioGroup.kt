@@ -34,7 +34,6 @@ fun <T> RadioGroup(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
 ) {
     Row(modifier = modifier.wrapContentWidth(), horizontalArrangement = horizontalArrangement) {
-
         itemsList.forEachIndexed { index, item ->
 
             OutlinedButton(
@@ -73,15 +72,20 @@ fun <T> RadioGroup(
                     )
                 },
                 border = BorderStroke(
-                    1.dp, if (selectedItem == item) {
+                    width = 1.dp,
+                    color = if (selectedItem == item) {
                         MaterialTheme.colorScheme.primary
                     } else {
-                        MaterialTheme.colorScheme.primary.copy(alpha = PiHoleControlTheme.dimens.weight.radioGroupUnSelectedBorderAlpha)
+                        MaterialTheme.colorScheme.primary.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.radioGroupUnSelectedBorderAlpha
+                        )
                     }
                 ),
                 colors = if (selectedItem == item) {
                     ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = PiHoleControlTheme.dimens.weight.minAlpha),
+                        containerColor = MaterialTheme.colorScheme.primary.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.minAlpha
+                        ),
                         contentColor = MaterialTheme.colorScheme.primary
                     )
                 } else {

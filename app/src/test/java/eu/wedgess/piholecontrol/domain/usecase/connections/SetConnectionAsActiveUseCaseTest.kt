@@ -39,7 +39,8 @@ class SetConnectionAsActiveUseCaseTest {
     fun `invoke - returns failure when repository fails`() = runTest {
         val connectionId = 123L
 
-        coEvery { repository.setActiveById(connectionId) } returns Result.failure(Exception("Failed to set connection as active"))
+        coEvery { repository.setActiveById(connectionId) } returns
+            Result.failure(Exception("Failed to set connection as active"))
 
         val result = setConnectionAsActiveUseCase(connectionId)
 

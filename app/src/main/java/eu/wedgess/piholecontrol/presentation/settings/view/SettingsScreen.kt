@@ -59,7 +59,8 @@ fun SettingsScreen(
             subtitle = uiState.currentConnection.name,
             onClick = {
                 onEvent(SettingsContract.Event.OnServerClicked)
-            })
+            }
+        )
         RegularPreference(
             title = "Data Refresh Interval",
             icon = Icons.Outlined.Update,
@@ -86,12 +87,11 @@ fun SettingsScreen(
     }
 }
 
-
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
     PiHoleControlTheme {
-        Surface() {
+        Surface {
             SettingsScreen(uiState = SettingsContract.UiState.initial(), onEvent = {})
         }
     }

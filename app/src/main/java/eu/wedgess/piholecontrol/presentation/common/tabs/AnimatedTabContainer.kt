@@ -22,7 +22,6 @@ fun <T : TabItem> AnimatedTabContainer(
     onTabIndexChanged: ((index: Int) -> Unit)? = null,
     onTabSelected: @Composable (T) -> Unit
 ) {
-
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = {
         tabItems.size

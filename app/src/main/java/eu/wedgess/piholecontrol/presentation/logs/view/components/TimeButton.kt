@@ -50,7 +50,6 @@ fun TimeButton(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
