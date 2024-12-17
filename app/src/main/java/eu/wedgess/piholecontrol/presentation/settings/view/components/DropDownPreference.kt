@@ -41,10 +41,11 @@ fun <T> DropDownPreference(
         },
         modifier = modifier
             .background(
-                color = if (dropDownExpanded)
+                color = if (dropDownExpanded) {
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                else
+                } else {
                     Color.Unspecified
+                }
             ),
         enabled = enabled,
     )
@@ -64,10 +65,11 @@ fun <T> DropDownPreference(
                     },
                     modifier = Modifier
                         .background(
-                            color = if (selectedItem == item.first)
+                            color = if (selectedItem == item.first) {
                                 MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                            else
-                                Color.Unspecified,
+                            } else {
+                                Color.Unspecified
+                            }
                         ),
                     text = {
                         Text(

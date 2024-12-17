@@ -2,8 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>BlockCommentInitialStarAlignment:Type.kt$/* Other default text styles to override titleLarge = TextStyle( fontFamily = FontFamily.Default, fontWeight = FontWeight.Normal, fontSize = 22.sp, lineHeight = 28.sp, letterSpacing = 0.sp ), labelSmall = TextStyle( fontFamily = FontFamily.Default, fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp ) */</ID>
-    <ID>ChainWrapping:DonutChart.kt$+</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
@@ -23,14 +21,13 @@
     <ID>CyclomaticComplexMethod:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClick: () -&gt; Unit)</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
-    <ID>Filename:safeRequest.kt$eu.wedgess.piholecontrol.data.utils.safeRequest.kt</ID>
-    <ID>Filename:topQueriesStatsScreen.kt$eu.wedgess.piholecontrol.presentation.statistics.tabs.server.view.topQueriesStatsScreen.kt</ID>
     <ID>Indentation:DashboardApiServiceImplTest.kt$DashboardApiServiceImplTest$ </ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
     <ID>Indentation:FilterRulesApiServiceImplTest.kt$FilterRulesApiServiceImplTest$ </ID>
     <ID>Indentation:LogDetailsDialog.kt$ </ID>
     <ID>Indentation:LogsApiServiceImplTest.kt$LogsApiServiceImplTest$ </ID>
     <ID>Indentation:LogsViewModel.kt$LogsViewModel$ </ID>
+    <ID>Indentation:MarkerUtils.kt$&lt;no name provided&gt;$ </ID>
     <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
     <ID>Indentation:StatisticsApiServiceImplTest.kt$StatisticsApiServiceImplTest$ </ID>
     <ID>Indentation:StatusApiServiceImplTest.kt$StatusApiServiceImplTest$ </ID>
@@ -127,23 +124,6 @@
     <ID>MagicNumber:UserPreferences.kt$10_000</ID>
     <ID>MagicNumber:UserPreferences.kt$500</ID>
     <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
-    <ID>MaxLineLength:CurrentConnectionStatus.kt$tint = if (adBlockingEnabled) MaterialTheme.colorScheme.adBlockingEnabled else MaterialTheme.colorScheme.adBlockingDisabled</ID>
-    <ID>MaxLineLength:DashboardModule.kt$DashboardModule$fun</ID>
-    <ID>MaxLineLength:DisableAdBlockingConditionalUseCaseTest.kt$DisableAdBlockingConditionalUseCaseTest$coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch connections")))</ID>
-    <ID>MaxLineLength:DisableAdBlockingConditionalUseCaseTest.kt$DisableAdBlockingConditionalUseCaseTest$coEvery { observeActiveUserUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch active connection")))</ID>
-    <ID>MaxLineLength:EnableAdBlockingConditionalUseCaseTest.kt$EnableAdBlockingConditionalUseCaseTest$coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch connections")))</ID>
-    <ID>MaxLineLength:EnableAdBlockingConditionalUseCaseTest.kt$EnableAdBlockingConditionalUseCaseTest$coEvery { observeActiveUserUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch active connection")))</ID>
-    <ID>MaxLineLength:MarkerUtils.kt$&lt;no name provided&gt;$label.getHeight(context) + labelBackgroundShape.tickSizeDp.pixels + LABEL_BACKGROUND_SHADOW_RADIUS.pixels * SHADOW_RADIUS_MULTIPLIER - LABEL_BACKGROUND_SHADOW_DY.pixels</ID>
-    <ID>MaxLineLength:ModifyConnectionAdvancedSettings.kt$visualTransformation = if (authPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()</ID>
-    <ID>MaxLineLength:safeRequest.kt$in HttpStatusCode.InternalServerError.value..HttpStatusCode.InsufficientStorage.value</ID>
-    <ID>MaxLineLength:safeRequest.kt$in HttpStatusCode.MultipleChoices.value..HttpStatusCode.PermanentRedirect.value</ID>
-    <ID>MaximumLineLength:CurrentConnectionStatus.kt$ </ID>
-    <ID>MaximumLineLength:DashboardModule.kt$DashboardModule$ </ID>
-    <ID>MaximumLineLength:DisableAdBlockingConditionalUseCaseTest.kt$DisableAdBlockingConditionalUseCaseTest$ </ID>
-    <ID>MaximumLineLength:EnableAdBlockingConditionalUseCaseTest.kt$EnableAdBlockingConditionalUseCaseTest$ </ID>
-    <ID>MaximumLineLength:MarkerUtils.kt$&lt;no name provided&gt;$ </ID>
-    <ID>MaximumLineLength:ModifyConnectionAdvancedSettings.kt$ </ID>
-    <ID>MaximumLineLength:safeRequest.kt$ </ID>
     <ID>ModifierMissing:AnimatedIntText.kt$AnimatedIntText</ID>
     <ID>ModifierMissing:AnimatedLinearProgressIndicator.kt$AnimatedLinearProgressIndicator</ID>
     <ID>ModifierMissing:ApiTokenInput.kt$ApiTokenInput</ID>
@@ -182,6 +162,7 @@
     <ID>ModifierMissing:QueryTypesContent.kt$QueryTypesContent</ID>
     <ID>ModifierMissing:QueryTypesScreen.kt$QueryTypesScreen</ID>
     <ID>ModifierMissing:SearchContent.kt$SearchContent</ID>
+    <ID>ModifierMissing:ServersScreen.kt$ServersScreen</ID>
     <ID>ModifierMissing:SettingsScreen.kt$SettingsScreen</ID>
     <ID>ModifierMissing:StatisticsListItem.kt$StatisticsListItem</ID>
     <ID>ModifierMissing:SummarySection.kt$SummarySection</ID>
@@ -191,22 +172,12 @@
     <ID>ModifierMissing:TopClientsStatsDestination.kt$TopClientsScreenRoot</ID>
     <ID>ModifierMissing:TopDomainsContent.kt$TopDomainsContent</ID>
     <ID>ModifierMissing:TopDomainsStatsScreen.kt$TopDomainsScreen</ID>
-    <ID>ModifierMissing:topQueriesStatsScreen.kt$ServersScreen</ID>
     <ID>ModifierWithoutDefault:CurrentConnectionStatus.kt$modifier</ID>
     <ID>ModifierWithoutDefault:EmptyScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:ErrorScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
-    <ID>MultiLineIfElse:AddFilterRuleDialog.kt$null</ID>
-    <ID>MultiLineIfElse:ApiTokenInput.kt$Icons.Filled.Visibility</ID>
-    <ID>MultiLineIfElse:ApiTokenInput.kt$Icons.Filled.VisibilityOff</ID>
-    <ID>MultiLineIfElse:DropDownPreference.kt$Color.Unspecified</ID>
-    <ID>MultiLineIfElse:DropDownPreference.kt$MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)</ID>
-    <ID>MultiLineIfElse:DropDownPreference.kt$MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)</ID>
-    <ID>MultiLineIfElse:ModifyConnectionAdvancedSettings.kt$Icons.Filled.Visibility</ID>
-    <ID>MultiLineIfElse:ModifyConnectionAdvancedSettings.kt$Icons.Filled.VisibilityOff</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
     <ID>NoMultipleSpaces:HttpClientExt.kt$ </ID>
-    <ID>ParameterListWrapping:DashboardModule.kt$DashboardModule$(dashboardRepository: DashboardRepository)</ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
     <ID>ParameterNaming:UIResult.kt$onLoaded</ID>
@@ -215,12 +186,9 @@
     <ID>SpreadOperator:UiText.kt$UiText$(id, *this.toTypedArray())</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: Exception</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: SerializationException</ID>
-    <ID>SwallowedException:safeRequest.kt$e: SerializationException</ID>
     <ID>ThrowsCount:HttpClientExt.kt$private suspend inline fun &lt;reified T, reified E&gt; HttpResponse.handleResponse(): T</ID>
-    <ID>ThrowsCount:safeRequest.kt$private suspend inline fun &lt;reified T, reified E&gt; HttpResponse.handleResponse(): ResponseResult&lt;T, E&gt;</ID>
     <ID>TooGenericExceptionCaught:CoroutineExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:HttpClientExt.kt$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:safeRequest.kt$e: Exception</ID>
     <ID>TooGenericExceptionThrown:HttpClientExt.kt$throw Exception("No content: HTTP $statusCode")</ID>
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
     <ID>ViewModelInjection:FilterTabScreenRoot.kt$viewModel</ID>

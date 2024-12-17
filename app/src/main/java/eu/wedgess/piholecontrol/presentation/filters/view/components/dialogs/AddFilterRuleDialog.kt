@@ -89,11 +89,15 @@ private fun AddFilterRuleDialogContent(
                 label = { Text(stringResource(R.string.filters_add_rule_dialog_label_domain)) },
                 leadingIcon = if (isWildcardChecked) {
                     { Text(WILDCARD_REGEX_PREFIX) }
-                } else null,
+                } else {
+                    null
+                },
                 value = value,
                 trailingIcon = if (isWildcardChecked) {
                     { Text(WILDCARD_REGEX_SUFFIX) }
-                } else null,
+                } else {
+                    null
+                },
                 onValueChange = {
                     value = it
                 },

@@ -186,10 +186,10 @@ fun DonutChart(
                         textLayoutResult = textMeasureResult,
                         color = Color.White,
                         topLeft = Offset(
-                            x = -textCenter.x + center.x
-                                + ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
-                            y = -textCenter.y + center.y
-                                + ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
+                            x = -textCenter.x + center.x +
+                                ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
+                            y = -textCenter.y + center.y +
+                                ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
                         )
                     )
 

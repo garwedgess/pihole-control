@@ -56,7 +56,11 @@ fun CurrentConnectionStatus(
             Icon(
                 modifier = Modifier.size(32.dp),
                 imageVector = if (adBlockingEnabled) Icons.Default.GppGood else Icons.Default.GppBad,
-                tint = if (adBlockingEnabled) MaterialTheme.colorScheme.adBlockingEnabled else MaterialTheme.colorScheme.adBlockingDisabled,
+                tint = if (adBlockingEnabled) {
+                    MaterialTheme.colorScheme.adBlockingEnabled
+                } else {
+                    MaterialTheme.colorScheme.adBlockingDisabled
+                },
                 contentDescription = ""
             )
         }

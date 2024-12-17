@@ -91,18 +91,23 @@ fun ModifyConnectionAdvancedSettings(
             label = { Text(stringResource(R.string.modify_connection_label_basic_auth_password)) },
             value = uiState.authPassword,
             onValueChange = { onEvent(ModifyConnectionsContract.Event.OnAuthPasswordChanged(it)) },
-            visualTransformation = if (authPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (authPasswordVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next
             ),
             trailingIcon = {
-                val image = if (authPasswordVisible)
+                val image = if (authPasswordVisible) {
                     Icons.Filled.Visibility
-                else Icons.Filled.VisibilityOff
+                } else {
+                    Icons.Filled.VisibilityOff
+                }
 
-                // Please provide localized description for accessibility services
                 val description = if (authPasswordVisible) "Hide password" else "Show password"
 
                 IconButton(onClick = { authPasswordVisible = !authPasswordVisible }) {

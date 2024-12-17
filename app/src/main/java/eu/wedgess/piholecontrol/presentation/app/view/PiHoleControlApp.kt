@@ -1,14 +1,13 @@
 package eu.wedgess.piholecontrol.presentation.app.view
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
@@ -34,10 +33,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -79,10 +78,7 @@ fun PiHoleControlApp(
         }
     })
 
-    val bottomBarHeight = 80.dp
-    val bottomBarHeightPx = with(localDensity) {
-        bottomBarHeight.roundToPx().toFloat()
-    }
+    val bottomBarHeight = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -90,7 +86,8 @@ fun PiHoleControlApp(
                 val delta = available.y
                 val newOffset = bottomBarOffsetHeightPx.floatValue + delta
                 bottomBarOffsetHeightPx.floatValue =
-                    newOffset.coerceIn(-bottomBarHeightPx, 0f)
+                    newOffset.coerceIn(-bottomBarHeight.floatValue, 0f)
+                Timber.d("Delta: $delta newOffset: $newOffset")
                 return Offset.Zero
             }
         }
@@ -99,7 +96,7 @@ fun PiHoleControlApp(
     val bottomPadding = remember {
         derivedStateOf {
             with(localDensity) {
-                abs(bottomBarOffsetHeightPx.floatValue.plus(bottomBarHeightPx)).toDp()
+                abs(bottomBarOffsetHeightPx.floatValue.plus(bottomBarHeight.floatValue)).toDp()
             }
         }
     }
@@ -150,12 +147,14 @@ fun PiHoleControlApp(
                 bottomBar = {
                     AnimatedVisibility(
                         visible = uiState.appBarState.bottomBarVisible,
-                        enter = slideInHorizontally(initialOffsetX = { -it }),
-                        exit = slideOutHorizontally(targetOffsetX = { -it }),
+                        enter = slideInVertically(initialOffsetY = { it }),
+                        exit = slideOutVertically(targetOffsetY = { it }),
                     ) {
                         BottomAppBar(
                             modifier = Modifier
-                                .height(bottomBarHeight)
+                                .onGloballyPositioned { coordinates ->
+                                    bottomBarHeight.floatValue = coordinates.size.height.toFloat()
+                                }
                                 .graphicsLayer {
                                     translationY = -bottomBarOffsetHeightPx.floatValue
                                 }

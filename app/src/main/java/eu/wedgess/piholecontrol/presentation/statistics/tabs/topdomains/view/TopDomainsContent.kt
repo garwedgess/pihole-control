@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,11 +65,15 @@ fun TopDomainsContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        PiHoleControlTheme.dimens.padding.itemContentLarge
+                    ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        modifier = Modifier.size(PiHoleControlTheme.dimens.size.statisticsTitleIcon),
+                        modifier = Modifier.size(
+                            PiHoleControlTheme.dimens.size.statisticsTitleIcon
+                        ),
                         tint = MaterialTheme.colorScheme.totalQueriesBackground,
                         imageVector = Icons.Default.GppGood,
                         contentDescription = "icon"
@@ -89,40 +94,46 @@ fun TopDomainsContent(
             }
         }
 
-        Card {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(PiHoleControlTheme.dimens.padding.itemContent),
-                verticalArrangement = Arrangement.spacedBy(
-                    PiHoleControlTheme.dimens.padding.itemContentXLarge,
-                    Alignment.CenterVertically
-                )
-            ) {
-                Row(
+        AnimatedVisibility(visible = topBlockedDomains.isNotEmpty()) {
+            Card {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxWidth()
+                        .padding(PiHoleControlTheme.dimens.padding.itemContent),
+                    verticalArrangement = Arrangement.spacedBy(
+                        PiHoleControlTheme.dimens.padding.itemContentXLarge,
+                        Alignment.CenterVertically
+                    )
                 ) {
-                    Icon(
-                        modifier = Modifier.size(PiHoleControlTheme.dimens.size.statisticsTitleIcon),
-                        tint = MaterialTheme.colorScheme.domainsOnAdListBackground,
-                        imageVector = Icons.Default.GppBad,
-                        contentDescription = "icon"
-                    )
-                    Text(
-                        text = stringResource(id = R.string.statistics_title_top_blocked),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                topBlockedDomains.forEach { (blockedDomain, hits) ->
-                    StatisticsListItem(
-                        domain = blockedDomain,
-                        hits = hits,
-                        progress = hits.toFloat().div(sumAllBlocked.toFloat())
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            PiHoleControlTheme.dimens.padding.itemContentLarge
+                        ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(
+                                PiHoleControlTheme.dimens.size.statisticsTitleIcon
+                            ),
+                            tint = MaterialTheme.colorScheme.domainsOnAdListBackground,
+                            imageVector = Icons.Default.GppBad,
+                            contentDescription = "icon"
+                        )
+                        Text(
+                            text = stringResource(id = R.string.statistics_title_top_blocked),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    topBlockedDomains.forEach { (blockedDomain, hits) ->
+                        StatisticsListItem(
+                            domain = blockedDomain,
+                            hits = hits,
+                            progress = hits.toFloat().div(sumAllBlocked.toFloat())
+                        )
+                    }
                 }
             }
         }

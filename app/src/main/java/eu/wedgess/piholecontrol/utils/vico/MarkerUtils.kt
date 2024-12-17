@@ -89,7 +89,11 @@ fun rememberMarker(): Marker {
                 horizontalDimensions: HorizontalDimensions
             ) = with(context) {
                 outInsets.top =
-                    label.getHeight(context) + labelBackgroundShape.tickSizeDp.pixels + LABEL_BACKGROUND_SHADOW_RADIUS.pixels * SHADOW_RADIUS_MULTIPLIER - LABEL_BACKGROUND_SHADOW_DY.pixels
+                    label.getHeight(context) +
+                            labelBackgroundShape.tickSizeDp.pixels +
+                            LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
+                            SHADOW_RADIUS_MULTIPLIER -
+                            LABEL_BACKGROUND_SHADOW_DY.pixels
             }
         }.apply {
             labelFormatter = object : MarkerLabelFormatter {

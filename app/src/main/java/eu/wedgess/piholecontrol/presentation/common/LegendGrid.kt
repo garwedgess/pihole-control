@@ -12,10 +12,10 @@ import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LegendGrid(data: List<LegendData>, modifier: Modifier = Modifier) {
+fun LegendGrid(data: List<LegendData>, modifier: Modifier = Modifier, itemsPerRow: Int = 2) {
     FlowRow(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        maxItemsInEachRow = 2,
+        maxItemsInEachRow = itemsPerRow,
         modifier = modifier.padding(top = 12.dp)
     ) {
         data.forEach { legend ->

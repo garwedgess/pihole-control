@@ -93,11 +93,10 @@ class StatusApiServiceImplTest {
         assertThat(result.isFailure).isTrue()
         val exception = result.exceptionOrNull()
         assertThat(exception).isInstanceOf(ClientRequestException::class.java)
-        assertThat(exception?.message)
-            .isEqualTo(
-                "Client request(GET http://pi.hole/admin/api.php" +
-                        "?disable=0) invalid: 400 Bad Request. " +
-                        "Text: \"Client error: 400 Bad Request, Body: []\""
-            )
+        assertThat(exception?.message).isEqualTo(
+            "Client request(GET http://pi.hole/admin/api.php" +
+                    "?disable=0) invalid: 400 Bad Request. " +
+                    "Text: \"Client error: 400 Bad Request, Body: []\""
+        )
     }
 }

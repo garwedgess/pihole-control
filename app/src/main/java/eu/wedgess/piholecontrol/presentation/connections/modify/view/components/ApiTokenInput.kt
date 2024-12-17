@@ -83,9 +83,11 @@ fun ApiTokenInput(
             onDone = { keyboardController?.hide() }
         ),
         trailingIcon = {
-            val image = if (apiKeyInputVisible)
+            val image = if (apiKeyInputVisible) {
                 Icons.Filled.Visibility
-            else Icons.Filled.VisibilityOff
+            } else {
+                Icons.Filled.VisibilityOff
+            }
 
             val description = if (apiKeyInputVisible) "Hide password" else "Show password"
 

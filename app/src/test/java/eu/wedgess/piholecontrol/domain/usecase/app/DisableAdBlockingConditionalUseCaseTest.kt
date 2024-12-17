@@ -92,7 +92,9 @@ class DisableAdBlockingConditionalUseCaseTest {
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
 
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns true
-        coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch connections")))
+        coEvery { fetchAllConnectionsUseCase() } returns flowOf(
+            Result.failure(Exception("Failed to fetch connections"))
+        )
 
         val result = disableAdBlockingConditionalUseCase(duration.toLong(DurationUnit.MILLISECONDS))
 
@@ -107,7 +109,9 @@ class DisableAdBlockingConditionalUseCaseTest {
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
 
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns false
-        coEvery { observeActiveUserUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch active connection")))
+        coEvery { observeActiveUserUseCase() } returns flowOf(
+            Result.failure(Exception("Failed to fetch active connection"))
+        )
 
         val result = disableAdBlockingConditionalUseCase(duration.toLong(DurationUnit.MILLISECONDS))
 

@@ -10,9 +10,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
+import kotlinx.serialization.Serializable
 
 sealed class BottomNavItem<T>(
-    open val route: T,
+    @Serializable open val route: T,
     open val title: UiText,
     open val icon: ImageVector
 ) {

@@ -81,7 +81,9 @@ class EnableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - returns failure when fetching all connections fails`() = runTest {
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns true
-        coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch connections")))
+        coEvery { fetchAllConnectionsUseCase() } returns flowOf(
+            Result.failure(Exception("Failed to fetch connections"))
+        )
 
         val result = enableAdBlockingConditionalUseCase()
 
@@ -93,7 +95,9 @@ class EnableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - returns failure when fetching active connection fails`() = runTest {
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns false
-        coEvery { observeActiveUserUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch active connection")))
+        coEvery { observeActiveUserUseCase() } returns flowOf(
+            Result.failure(Exception("Failed to fetch active connection"))
+        )
 
         val result = enableAdBlockingConditionalUseCase()
 
