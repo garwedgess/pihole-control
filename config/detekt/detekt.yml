@@ -618,6 +618,7 @@ style:
       - '0'
       - '1'
       - '2'
+    ignoreAnnotated: ['Preview', 'ThemePreview']
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: false

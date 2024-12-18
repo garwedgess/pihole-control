@@ -40,9 +40,9 @@ class DashboardViewModel @Inject constructor(
             }
         }
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            UIResult.Loading(ResultType.Loading.WithTitle())
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = UIResult.Loading(ResultType.Loading.WithTitle())
         )
 
     private fun handleCombinedErrors(dashboardInfoEntity: DashboardInfoEntity) {

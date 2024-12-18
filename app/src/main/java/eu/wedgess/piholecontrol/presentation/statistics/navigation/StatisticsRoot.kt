@@ -12,13 +12,21 @@ import eu.wedgess.piholecontrol.presentation.statistics.tabs.server.navigation.S
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.navigation.TopClientsScreenRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.navigation.TopDomainsRoot
 
-fun NavGraphBuilder.statisticsRoot(onComposing: (AppBarState) -> Unit) {
+fun NavGraphBuilder.statisticsRoot(
+    onComposing: (AppBarState) -> Unit,
+    onResetBottomAppBar: () -> Unit
+) {
     composable<Screens.Statistics> {
         LaunchedEffect(Unit) {
             onComposing(AppBarState(showSearchView = false, showNavigateBackIcon = false))
         }
 
-        AnimatedTabContainer(tabItems = StatisticsTab.all()) {
+        AnimatedTabContainer(
+            tabItems = StatisticsTab.all(),
+            onTabIndexChange = {
+                onResetBottomAppBar()
+            }
+        ) {
             when (it) {
                 StatisticsTab.Queries -> QueryTypesRoot()
                 StatisticsTab.Servers -> ServersRoot()

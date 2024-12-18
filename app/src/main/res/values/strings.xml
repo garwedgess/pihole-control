@@ -73,7 +73,7 @@
     <string name="home_title_clients_over_time">Client Queries Over The Last 24hours</string>
     <string name="home_title_queries_over_time_blocked">Blocked</string>
     <string name="home_title_queries_over_time_permitted">Permitted</string>
-    <string name="home_caption_clients">(Clients: %s)</string>
+    <string name="home_caption_clients">(Clients: %d)</string>
     <string name="home_legend_sub_title_queries_over_time">Hits: %s</string>
     <string name="home_title_queries_over_time">Queries Over The Last 24hours</string>
     <string name="home_fetching_statistics">Fetching statistics</string>

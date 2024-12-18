@@ -8,5 +8,5 @@ data class OverTimeEntity(val timestamp: Long, val hits: Long) {
     val time: String
         get() = Instant.ofEpochSecond(timestamp)
             .atZone(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ISO_LOCAL_TIME)
+            .format(DateTimeFormatter.ofPattern("HH:mm"))
 }

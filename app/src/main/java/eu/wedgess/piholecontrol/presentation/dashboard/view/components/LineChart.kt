@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -95,6 +97,7 @@ fun LineChart(
 @ThemePreview
 @Composable
 private fun LineChartPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PiHoleControlTheme {
         Surface {
             LineChart(
@@ -102,9 +105,9 @@ private fun LineChartPreview() {
                 data = listOf(
                     LineChartInfo.PermittedQueriesOverLineChart(
                         entity = listOf(
-                            OverTimeEntity(1525546500, 163),
+                            OverTimeEntity(1525546500, 84),
                             OverTimeEntity(1525547100, 154),
-                            OverTimeEntity(1525547700, 164)
+                            OverTimeEntity(1525547700, 50)
                         ),
                     ),
                     LineChartInfo.BlockedQueriesOverLineChart(

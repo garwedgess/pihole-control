@@ -1,7 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.view
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +21,7 @@ import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.common.LegendGrid
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ScrollAdaptiveColumn
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.DonutChart
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
@@ -44,7 +44,7 @@ fun QueryTypesContent(queryTypes: DonutChartDataCollection) {
     Card(
         modifier = Modifier.padding(PiHoleControlTheme.dimens.padding.screenContent)
     ) {
-        Column(
+        ScrollAdaptiveColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(PiHoleControlTheme.dimens.padding.itemContent)

@@ -1,11 +1,8 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.server.view
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,6 +20,7 @@ import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.presentation.common.LegendGrid
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ScrollAdaptiveColumn
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.DonutChart
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
@@ -63,11 +61,10 @@ fun ForwardDestinationsContent(forwardDestinations: List<ForwardDestinationEntit
     Card(
         modifier = Modifier.padding(PiHoleControlTheme.dimens.padding.screenContent)
     ) {
-        Column(
+        ScrollAdaptiveColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(PiHoleControlTheme.dimens.padding.itemContent)
-                .verticalScroll(rememberScrollState()),
+                .padding(PiHoleControlTheme.dimens.padding.itemContent),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
                 PiHoleControlTheme.dimens.padding.itemContentSmall,

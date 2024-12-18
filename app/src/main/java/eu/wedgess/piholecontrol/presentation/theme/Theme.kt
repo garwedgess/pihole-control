@@ -83,14 +83,9 @@ private val DarkColorScheme = darkColorScheme(
 
 val ColorScheme.isDark get() = this.toString() == DarkColorScheme.toString()
 
-private val LocalAppDimens = staticCompositionLocalOf {
-    appDimens
-}
-
 @Composable
 fun PiHoleControlTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -107,8 +102,13 @@ fun PiHoleControlTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                @Suppress("DEPRECATION")
+                window.statusBarColor = colorScheme.primary.toArgb()
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            }
         }
     }
 
@@ -119,13 +119,13 @@ fun PiHoleControlTheme(
     )
 }
 
+private val LocalAppDimens = staticCompositionLocalOf {
+    appDimens
+}
+
 object PiHoleControlTheme {
 
     val dimens: AppDimens
         @Composable
         get() = LocalAppDimens.current
 }
-
-val Dimens: Dimensions
-    @Composable
-    get() = PiHoleControlTheme.dimens

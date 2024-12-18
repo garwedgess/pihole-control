@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.app.view
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
@@ -80,6 +81,7 @@ fun PiHoleControlApp(
 
     val bottomBarHeight = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
+    val bottomBarOffsetOriginal by animateFloatAsState(targetValue = 0f, label = "")
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -186,8 +188,10 @@ fun PiHoleControlApp(
                         ),
                         navController = navHostController,
                         onComposing = { updateState ->
-                            Timber.d("UpdatedState: $updateState")
                             viewModel.onEvent(AppContract.Event.UpdateAppBarState(updateState))
+                        },
+                        onResetBottomAppBarOffset = {
+                            bottomBarOffsetHeightPx.floatValue = bottomBarOffsetOriginal
                         },
                         showSnackbarMessage = { msg ->
                             localCoroutineScope.launch {

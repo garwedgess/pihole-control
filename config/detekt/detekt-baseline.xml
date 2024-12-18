@@ -38,9 +38,9 @@
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
-    <ID>LongParameterList:Dimensions.kt$Padding$( val none: Dp, val screenContent: Dp, val dialogContent: Dp, val searchBarIconPaddingStart: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
-    <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val homeLoadingHeight: Dp, val lineChartHeight: Dp, val searchBarHeight: Dp, val searchProgress: Dp, val legendIcon: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val timeDialogButtonRowHeight: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
-    <ID>LongParameterList:Dimensions.kt$Weight$( val searchTextField: Float, val searchHintAlpha: Float, val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
     <ID>LongParameterList:LogsTopBarActions.kt$( onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit, selectedSorting: LogSorting, isSortingMenuVisible: Boolean )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
@@ -70,25 +70,11 @@
     <ID>MagicNumber:DonutChart.kt$700</ID>
     <ID>MagicNumber:DonutChartUtils.kt$180</ID>
     <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
-    <ID>MagicNumber:ForwardDestinationsContent.kt$16.5f</ID>
-    <ID>MagicNumber:ForwardDestinationsContent.kt$26f</ID>
-    <ID>MagicNumber:ForwardDestinationsContent.kt$27.5f</ID>
-    <ID>MagicNumber:ForwardDestinationsContent.kt$30f</ID>
-    <ID>MagicNumber:LineChart.kt$10</ID>
-    <ID>MagicNumber:LineChart.kt$1525546500</ID>
-    <ID>MagicNumber:LineChart.kt$1525547100</ID>
-    <ID>MagicNumber:LineChart.kt$1525547700</ID>
-    <ID>MagicNumber:LineChart.kt$154</ID>
-    <ID>MagicNumber:LineChart.kt$163</ID>
-    <ID>MagicNumber:LineChart.kt$164</ID>
-    <ID>MagicNumber:LineChart.kt$30</ID>
     <ID>MagicNumber:LineChart.kt$5</ID>
-    <ID>MagicNumber:LineChart.kt$64</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$0.1</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
     <ID>MagicNumber:LogItem.kt$0.1</ID>
     <ID>MagicNumber:LogItem.kt$0.8f</ID>
-    <ID>MagicNumber:LogItem.kt$1000L</ID>
     <ID>MagicNumber:LogItem.kt$1_000L</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
@@ -101,26 +87,6 @@
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Hours$99</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Minutes$60</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Seconds$60</ID>
-    <ID>MagicNumber:TopClientsContent.kt$165</ID>
-    <ID>MagicNumber:TopClientsContent.kt$1678</ID>
-    <ID>MagicNumber:TopClientsContent.kt$1890</ID>
-    <ID>MagicNumber:TopClientsContent.kt$2345</ID>
-    <ID>MagicNumber:TopClientsContent.kt$2435</ID>
-    <ID>MagicNumber:TopClientsContent.kt$3213</ID>
-    <ID>MagicNumber:TopClientsContent.kt$3456</ID>
-    <ID>MagicNumber:TopClientsContent.kt$500</ID>
-    <ID>MagicNumber:TopClientsContent.kt$5765</ID>
-    <ID>MagicNumber:TopClientsContent.kt$900</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$165</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$1678</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$1890</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$2345</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$2435</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$3213</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$3456</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$500</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$5765</ID>
-    <ID>MagicNumber:TopDomainsContent.kt$900</ID>
     <ID>MagicNumber:UserPreferences.kt$10_000</ID>
     <ID>MagicNumber:UserPreferences.kt$500</ID>
     <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
