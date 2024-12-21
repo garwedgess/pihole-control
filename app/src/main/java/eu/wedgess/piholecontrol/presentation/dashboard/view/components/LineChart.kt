@@ -21,7 +21,7 @@ import com.patrykandpatrick.vico.core.axis.vertical.VerticalAxis
 import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartEntry
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme

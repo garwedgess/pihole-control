@@ -27,12 +27,12 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.data.model.enums.WILDCARD_REGEX_PREFIX
 import eu.wedgess.piholecontrol.data.model.enums.WILDCARD_REGEX_SUFFIX
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
@@ -71,15 +71,25 @@ private fun AddFilterRuleDialogContent(
     var value by remember {
         mutableStateOf("")
     }
-    Surface(shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadius)) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadiusLarge)
+    ) {
         Column(
             Modifier.padding(PiHoleControlTheme.dimens.padding.dialogContent),
-            verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
+            verticalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContent
+            )
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            CompositionLocalProvider(
+                LocalContentColor provides MaterialTheme.colorScheme.onSurface
+            ) {
                 Text(
-                    stringResource(R.string.filters_add_rule_dialog_title),
-                    style = MaterialTheme.typography.titleLarge
+                    modifier = Modifier.padding(
+                        bottom = PiHoleControlTheme.dimens.padding.screenContent
+                    ),
+                    text = stringResource(R.string.filters_add_rule_dialog_title),
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
             OutlinedTextField(
@@ -104,7 +114,11 @@ private fun AddFilterRuleDialogContent(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
             )
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        bottom = PiHoleControlTheme.dimens.padding.dialogContent
+                    ),
                 horizontalArrangement = Arrangement.spacedBy(
                     PiHoleControlTheme.dimens.padding.itemContent,
                     Alignment.Start
@@ -126,7 +140,9 @@ private fun AddFilterRuleDialogContent(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClick) { Text(stringResource(R.string.all_btn_cancel)) }
+                TextButton(onClick = onCancelClick) {
+                    Text(stringResource(R.string.all_btn_cancel))
+                }
                 TextButton(
                     onClick = {
                         val type = if (isWildcardChecked) {
@@ -150,13 +166,16 @@ private fun AddFilterRuleDialogContent(
     }
 }
 
+@ThemePreviewWithBackground
 @Composable
-@Preview
-private fun AddFilterRuleCardPreview() {
-    AddFilterRuleDialogContent(
-        filterRuleType = FilterRuleTypeEntity.ALLOW,
-        focusRequester = FocusRequester(),
-        onConfirmClick = { },
-        onCancelClick = { }
-    )
+private fun AddFilterRuleDialogPreview() {
+    PiHoleControlTheme {
+        Surface {
+            AddFilterRuleDialog(
+                filterRuleType = FilterRuleTypeEntity.ALLOW,
+                onConfirmClick = { },
+                onDismissRequest = { }
+            )
+        }
+    }
 }

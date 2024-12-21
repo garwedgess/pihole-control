@@ -8,7 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.utils.extensions.formatWithThousands
 

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.presentation.theme.domainsOnAdListBackground
 import eu.wedgess.piholecontrol.presentation.theme.percentageBlockedBackground

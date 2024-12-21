@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.piholecontrol.R
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.utils.extensions.Border
 import eu.wedgess.piholecontrol.utils.extensions.border
@@ -40,12 +42,15 @@ fun LogsListStickyHeader(listSize: Int) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Results: $listSize", color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                text = stringResource(R.string.log_results_title, listSize),
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun LogsListStickyHeaderPreview() {
     PiHoleControlTheme {

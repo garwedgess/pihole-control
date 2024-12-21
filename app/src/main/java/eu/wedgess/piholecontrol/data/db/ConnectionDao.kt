@@ -16,8 +16,6 @@ class ConnectionDao @Inject constructor(
 
     fun fetchAllAsFlow() = queries.selectAll().asFlow().mapToList(dispatcherProvider.io)
 
-    fun fetchAll() = queries.selectAll().executeAsList()
-
     fun fetchById(id: Long) = queries.selectById(id).executeAsOne()
 
     fun fetchActive() = queries.selectActive().executeAsOne()
@@ -28,6 +26,8 @@ class ConnectionDao @Inject constructor(
     fun checkNotEmpty(): Boolean = queries.checkNotEmpty().executeAsOne()
 
     fun delete(id: Long) = queries.delete(id)
+
+    fun deleteMarkedForDeletion() = queries.deleteAllMarkedAsDeleted()
 
     fun insert(miHole: Connection) = with(miHole) {
         queries.insert(
@@ -41,6 +41,7 @@ class ConnectionDao @Inject constructor(
             AuthPassword = AuthPassword,
             AuthRealm = AuthRealm,
             TrustAllCerts = TrustAllCerts,
+            IsDeleted = false,
             Active = true
         )
     }
@@ -62,4 +63,8 @@ class ConnectionDao @Inject constructor(
             realm = AuthRealm
         )
     }
+
+    fun markAsDeleted(id: Long) = queries.markAsDeleted(id)
+
+    fun unmarkAsDeleted(id: Long) = queries.unmarkAsDeleted(id)
 }

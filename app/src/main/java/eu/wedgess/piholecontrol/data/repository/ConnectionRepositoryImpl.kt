@@ -67,4 +67,22 @@ class ConnectionRepositoryImpl(
             connectionDao.delete(id)
         }
     }
+
+    override suspend fun deleteAllMarkedForDeletion(): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.deleteMarkedForDeletion()
+        }
+    }
+
+    override suspend fun markForDeletion(id: Long): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.markAsDeleted(id)
+        }
+    }
+
+    override suspend fun unmarkForDeletion(id: Long): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.unmarkAsDeleted(id)
+        }
+    }
 }

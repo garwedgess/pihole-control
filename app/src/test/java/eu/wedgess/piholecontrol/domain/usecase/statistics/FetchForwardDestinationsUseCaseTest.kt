@@ -6,6 +6,7 @@ import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchForwardDestinationsUseCase
+import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.ForwardDestinationsChartData
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -40,9 +41,12 @@ class FetchForwardDestinationsUseCaseTest {
             ForwardDestinationEntity("destination1", 123f),
             ForwardDestinationEntity("destination2", 456f)
         )
-        val expectedResult = Result.success(destinations)
+        val expectedResult = Result.success(listOf(
+            ForwardDestinationsChartData("destination1", 123f),
+            ForwardDestinationsChartData("destination2", 456f)
+        ))
 
-        coEvery { repository.fetchForwardDestinations(connection) } returns expectedResult
+        coEvery { repository.fetchForwardDestinations(connection) } returns Result.success(destinations)
         coEvery { periodicRefreshUseCase<List<ForwardDestinationEntity>>(any()) } answers {
             flow {
                 val fetchData = arg<suspend (ConnectionEntity) -> List<ForwardDestinationEntity>>(0)

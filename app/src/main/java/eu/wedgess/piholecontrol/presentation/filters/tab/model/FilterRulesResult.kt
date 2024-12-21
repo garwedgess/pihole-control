@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.filters.tab.model
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import timber.log.Timber
@@ -27,9 +28,12 @@ data class FilterRulesResult(
                     rulesList?.run { addAll(this) }
                     regexRulesList?.run { addAll(this) }
                 }.filter { it.domain.contains(query.lowercase(), ignoreCase = true) }
+                    .map { it.toInfo() }
 
                 if (allRules.isEmpty()) {
-                    UIResult.Empty(ResultType.Empty.WithTitle(UiText.DynamicString("No rules found")))
+                    UIResult.Empty(
+                        ResultType.Empty.WithTitle(UiText.DynamicString("No rules found"))
+                    )
                 } else {
                     UIResult.Loaded(FilterTabContract.UiState(allRules))
                 }

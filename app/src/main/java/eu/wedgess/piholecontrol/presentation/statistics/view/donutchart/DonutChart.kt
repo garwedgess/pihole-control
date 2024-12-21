@@ -4,11 +4,11 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,6 +41,7 @@ import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.Do
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartState
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.STROKE_SIZE_UNSELECTED
+import eu.wedgess.piholecontrol.presentation.theme.isDark
 import eu.wedgess.piholecontrol.utils.extensions.degreeToRadian
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -60,7 +61,7 @@ fun DonutChart(
     gapPercentage: Float = 0.00f,
     onSelectedIndexChange: (Int) -> Unit
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = MaterialTheme.colorScheme.isDark
     var selectedIndex by remember { mutableIntStateOf(-1) }
     val animationTargetState = (0..data.items.size).map {
         remember { mutableStateOf(DonutChartState()) }
@@ -187,9 +188,9 @@ fun DonutChart(
                         color = Color.White,
                         topLeft = Offset(
                             x = -textCenter.x + center.x +
-                                ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
+                                    ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
                             y = -textCenter.y + center.y +
-                                ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
+                                    ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
                         )
                     )
 

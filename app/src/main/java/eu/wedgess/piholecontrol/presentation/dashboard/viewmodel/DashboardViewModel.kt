@@ -46,28 +46,28 @@ class DashboardViewModel @Inject constructor(
         )
 
     private fun handleCombinedErrors(dashboardInfoEntity: DashboardInfoEntity) {
-        val failures = mutableListOf<UiText.StringResource>()
+        val failures = mutableListOf<UiText>()
         dashboardInfoEntity.summaryResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_summary_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }
         dashboardInfoEntity.queriesOverTimeResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_queries_over_time_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }
         dashboardInfoEntity.clientQueriesOverTimeResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_client_queries_over_time_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }

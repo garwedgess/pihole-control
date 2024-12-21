@@ -51,7 +51,7 @@ class FiltersViewModel @Inject constructor(
                 type = event.rule.type
             )
 
-            is FiltersContract.Event.OnDeleteFilterRule -> handleRemoveFilterRule(
+            is FiltersContract.Event.OnDeleteFilterRuleConfirmed -> handleRemoveFilterRule(
                 rule = event.rule.domain,
                 type = event.rule.type
             )
@@ -69,6 +69,9 @@ class FiltersViewModel @Inject constructor(
             }
 
             is FiltersContract.Event.OnFilterTabChanged -> currentPiHoleFilterRuleType = event.type
+            is FiltersContract.Event.OnDeleteFilterRuleClick -> updateUiState {
+                copy(dialogType = FilterDialogType.OnConfirmFilterDelete(filterRule = event.rule))
+            }
         }
     }
 

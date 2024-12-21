@@ -40,7 +40,7 @@ fun FiltersScreen(
                     onEvent(FiltersContract.Event.OnFilterTabChanged(item.toFilterRuleType()))
                     when (item) {
                         FilterTab.AllowList -> FilterTabScreenRoot(
-                            FilterScreenTabType.ALLOW,
+                            filterScreenTabType = FilterScreenTabType.ALLOW,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
@@ -50,7 +50,7 @@ fun FiltersScreen(
                         )
 
                         FilterTab.BlockList -> FilterTabScreenRoot(
-                            FilterScreenTabType.BLOCK,
+                            filterScreenTabType = FilterScreenTabType.BLOCK,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
@@ -66,7 +66,7 @@ fun FiltersScreen(
     FilterDialogs(
         uiState.dialogType,
         onAddRuleClick = { onEvent(FiltersContract.Event.OnAddFilterRule(it)) },
-        onDeleteRuleClick = { onEvent(FiltersContract.Event.OnDeleteFilterRule(it)) },
+        onDeleteRuleClick = { onEvent(FiltersContract.Event.OnDeleteFilterRuleConfirmed(it)) },
         onDismissDialogClick = { onEvent(FiltersContract.Event.OnDismissDialog) }
     )
 }

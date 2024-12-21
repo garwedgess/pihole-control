@@ -15,6 +15,7 @@ fun Connection.toConnectionInfo() = ConnectionEntity(
     authPassword = AuthPassword,
     authRealm = AuthRealm,
     trustAllCerts = TrustAllCerts,
+    isDeleted = IsDeleted,
     isActive = Active
 )
 
@@ -30,5 +31,6 @@ fun ConnectionEntity.toConnection() = Connection(
     AuthPassword = authPassword,
     AuthRealm = authRealm,
     TrustAllCerts = trustAllCerts,
+    IsDeleted = isDeleted,
     Active = isActive
 )

@@ -2,6 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ArgumentListWrapping:DisableStatusDialog.kt$(customTimeMinutes.text.ifBlank { "00" } .toLong() )</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
@@ -17,12 +18,15 @@
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SRV") val SRV: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SVCB") val SVCB: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("TXT") val TXT: Float = 0f</ID>
+    <ID>CyclomaticComplexMethod:LogAnswerTypeEntityExt.kt$@Composable fun LogAnswerTypeEntity.toStringValue()</ID>
     <ID>CyclomaticComplexMethod:LogAnswerTypeEntityMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
-    <ID>CyclomaticComplexMethod:LogItem.kt$@Composable fun LogListItem(log: LogEntryEntity, onItemClick: () -&gt; Unit)</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
+    <ID>Indentation:ConnectionRepositoryImplTest.kt$ConnectionRepositoryImplTest$ </ID>
     <ID>Indentation:DashboardApiServiceImplTest.kt$DashboardApiServiceImplTest$ </ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
+    <ID>Indentation:DeleteConnectionMarkedForDeletionUseCaseTest.kt$DeleteConnectionMarkedForDeletionUseCaseTest$ </ID>
+    <ID>Indentation:DonutChart.kt$ </ID>
     <ID>Indentation:FilterRulesApiServiceImplTest.kt$FilterRulesApiServiceImplTest$ </ID>
     <ID>Indentation:LogDetailsDialog.kt$ </ID>
     <ID>Indentation:LogsApiServiceImplTest.kt$LogsApiServiceImplTest$ </ID>
@@ -31,18 +35,21 @@
     <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
     <ID>Indentation:StatisticsApiServiceImplTest.kt$StatisticsApiServiceImplTest$ </ID>
     <ID>Indentation:StatusApiServiceImplTest.kt$StatusApiServiceImplTest$ </ID>
+    <ID>Indentation:SwipeToDeleteItem.kt$ </ID>
     <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClick</ID>
     <ID>LambdaParameterEventTrailing:DonutChart.kt$onSelectedIndexChange</ID>
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
+    <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
+    <ID>LongParameterList:AlertMessageDialog.kt$( titleText: String, messageText: String, confirmText: String, dismissText: String, onDismiss: () -&gt; Unit, onConfirm: () -&gt; Unit )</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
     <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
-    <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
-    <ID>LongParameterList:LogsTopBarActions.kt$( onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit, selectedSorting: LogSorting, isSortingMenuVisible: Boolean )</ID>
+    <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
     <ID>MagicNumber:AppViewModel.kt$AppViewModel$300</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
@@ -63,8 +70,8 @@
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$727</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$9007199254740991</ID>
     <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$1000L</ID>
-    <ID>MagicNumber:DisableStatusDialogContent.kt$30</ID>
-    <ID>MagicNumber:DisableStatusDialogContent.kt$5</ID>
+    <ID>MagicNumber:DisableStatusDialog.kt$30</ID>
+    <ID>MagicNumber:DisableStatusDialog.kt$5</ID>
     <ID>MagicNumber:DonutChart.kt$0.1f</ID>
     <ID>MagicNumber:DonutChart.kt$4</ID>
     <ID>MagicNumber:DonutChart.kt$700</ID>
@@ -74,8 +81,6 @@
     <ID>MagicNumber:LogDetailsDialog.kt$0.1</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
     <ID>MagicNumber:LogItem.kt$0.1</ID>
-    <ID>MagicNumber:LogItem.kt$0.8f</ID>
-    <ID>MagicNumber:LogItem.kt$1_000L</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
     <ID>MagicNumber:PiHoleControlApp.kt$500</ID>
@@ -103,14 +108,13 @@
     <ID>ModifierMissing:CustomTimePicker.kt$CustomTimePicker</ID>
     <ID>ModifierMissing:DashboardScreen.kt$DashboardScreen</ID>
     <ID>ModifierMissing:DisableButtonRow.kt$DisableButtonRow</ID>
-    <ID>ModifierMissing:DisableStatusDialogContent.kt$DisableStatusDialogContent</ID>
-    <ID>ModifierMissing:EnableStatusDialogContent.kt$EnableStatusDialogContent</ID>
     <ID>ModifierMissing:FilterRuleItem.kt$FilterRuleItem</ID>
     <ID>ModifierMissing:FilterTabContent.kt$FilterListContent</ID>
     <ID>ModifierMissing:FilterTabScreenRoot.kt$FilterTabScreenRoot</ID>
     <ID>ModifierMissing:FilterTopBarActions.kt$FilterTopBarActions</ID>
     <ID>ModifierMissing:FiltersScreen.kt$FiltersScreen</ID>
     <ID>ModifierMissing:ForwardDestinationsContent.kt$ForwardDestinationsContent</ID>
+    <ID>ModifierMissing:ForwardDestinationsScreen.kt$ForwardDestinationsScreen</ID>
     <ID>ModifierMissing:LegendItem.kt$LegendItem</ID>
     <ID>ModifierMissing:LogFiltersBottomSheet.kt$LogFiltersBottomSheet</ID>
     <ID>ModifierMissing:LogItem.kt$LogListItem</ID>
@@ -128,14 +132,13 @@
     <ID>ModifierMissing:QueryTypesContent.kt$QueryTypesContent</ID>
     <ID>ModifierMissing:QueryTypesScreen.kt$QueryTypesScreen</ID>
     <ID>ModifierMissing:SearchContent.kt$SearchContent</ID>
-    <ID>ModifierMissing:ServersScreen.kt$ServersScreen</ID>
     <ID>ModifierMissing:SettingsScreen.kt$SettingsScreen</ID>
     <ID>ModifierMissing:StatisticsListItem.kt$StatisticsListItem</ID>
     <ID>ModifierMissing:SummarySection.kt$SummarySection</ID>
     <ID>ModifierMissing:TimeButton.kt$TimeButton</ID>
     <ID>ModifierMissing:TimePickerLayout.kt$TimePickerLayout</ID>
     <ID>ModifierMissing:TopClientsContent.kt$TopClientsContent</ID>
-    <ID>ModifierMissing:TopClientsStatsDestination.kt$TopClientsScreenRoot</ID>
+    <ID>ModifierMissing:TopClientsStatsRoot.kt$TopClientsScreenRoot</ID>
     <ID>ModifierMissing:TopDomainsContent.kt$TopDomainsContent</ID>
     <ID>ModifierMissing:TopDomainsStatsScreen.kt$TopDomainsScreen</ID>
     <ID>ModifierWithoutDefault:CurrentConnectionStatus.kt$modifier</ID>
@@ -149,7 +152,8 @@
     <ID>ParameterNaming:UIResult.kt$onLoaded</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreview$ThemePreview</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreviewWithBackground$ThemePreviewWithBackground</ID>
-    <ID>SpreadOperator:UiText.kt$UiText$(id, *this.toTypedArray())</ID>
+    <ID>SpreadOperator:UiText.kt$UiText$(id, *formatArgs)</ID>
+    <ID>SpreadOperator:UiText.kt$UiText$(id, count, *formatArgs)</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: Exception</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: SerializationException</ID>
     <ID>ThrowsCount:HttpClientExt.kt$private suspend inline fun &lt;reified T, reified E&gt; HttpResponse.handleResponse(): T</ID>
@@ -157,7 +161,11 @@
     <ID>TooGenericExceptionCaught:HttpClientExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionThrown:HttpClientExt.kt$throw Exception("No content: HTTP $statusCode")</ID>
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
+    <ID>TooManyFunctions:ConnectionDao.kt$ConnectionDao</ID>
+    <ID>TooManyFunctions:ConnectionRepository.kt$ConnectionRepository</ID>
+    <ID>TooManyFunctions:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl : ConnectionRepository</ID>
     <ID>ViewModelInjection:FilterTabScreenRoot.kt$viewModel</ID>
+    <ID>Wrapping:DisableStatusDialog.kt$(</ID>
     <ID>Wrapping:LineChart.kt$(</ID>
     <ID>Wrapping:LogsViewModel.kt$LogsViewModel$(</ID>
   </CurrentIssues>

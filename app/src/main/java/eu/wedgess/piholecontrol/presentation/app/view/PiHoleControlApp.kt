@@ -118,8 +118,8 @@ fun PiHoleControlApp(
                             content = {
                                 Snackbar(
                                     snackbarData = data,
-                                    containerColor = MaterialTheme.colorScheme.background,
-                                    contentColor = MaterialTheme.colorScheme.onBackground
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    contentColor = MaterialTheme.colorScheme.onSurface
                                 )
                             },
                             modifier = Modifier.fillMaxWidth()

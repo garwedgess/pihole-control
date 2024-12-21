@@ -62,6 +62,7 @@ sqldelight {
     databases {
         create("PiHoleControlDatabase") {
             packageName.set("eu.wedgess.piholecontrol.data")
+            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
         }
     }
 }

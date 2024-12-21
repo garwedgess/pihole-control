@@ -3,10 +3,12 @@ package eu.wedgess.piholecontrol.presentation.connections.list.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.usecases.connections.DeleteConnectionUseCase
+import eu.wedgess.piholecontrol.R
+import eu.wedgess.piholecontrol.domain.usecases.connections.DeleteConnectionMarkedForDeletionUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
+import eu.wedgess.piholecontrol.domain.usecases.connections.MarkConnectionForDeletionUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
+import eu.wedgess.piholecontrol.domain.usecases.connections.UnMarkConnectionForDeletionUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
@@ -25,7 +27,9 @@ import javax.inject.Inject
 class ConnectionsViewModel @Inject constructor(
     fetchAllConnectionsUseCase: FetchAllConnectionsUseCase,
     private val setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase,
-    private val deleteConnectionUseCase: DeleteConnectionUseCase
+    private val deleteConnectionMarkedForDeletionUseCase: DeleteConnectionMarkedForDeletionUseCase,
+    private val markConnectionForDeletionUseCase: MarkConnectionForDeletionUseCase,
+    private val unMarkConnectionForDeletionUseCase: UnMarkConnectionForDeletionUseCase
 ) : ViewModel(),
     EventDrivenViewModel<ConnectionsContract.Event>,
     SideEffectViewModel<ConnectionsContract.Effect> by SideEffectViewModelImpl() {
@@ -34,16 +38,19 @@ class ConnectionsViewModel @Inject constructor(
         .map { result ->
             result.getOrElse {
                 return@map UIResult.Error(
-                    ResultType.Error.WithTitle(
-                        UiText.DynamicString("Failed to fetch connections")
+                    ResultType.Error.WithTitleAndSubTitle(
+                        UiText.StringResource(id = R.string.connections_error_title),
+                        it.message?.run { UiText.DynamicString(this@run) } ?: UiText.StringResource(
+                            R.string.all_error_msg_unknown
+                        )
                     )
                 )
             }.run {
                 return@map if (isEmpty()) {
                     UIResult.Empty(
                         ResultType.Empty.WithTitleAndSubTitle(
-                            UiText.DynamicString("No connections"),
-                            UiText.DynamicString("Add a connection to get started")
+                            UiText.StringResource(R.string.connections_empty_title),
+                            UiText.StringResource(R.string.connections_empty_message)
                         )
                     )
                 } else {
@@ -59,22 +66,70 @@ class ConnectionsViewModel @Inject constructor(
 
     override fun onEvent(event: ConnectionsContract.Event) {
         when (event) {
-            is ConnectionsContract.Event.SetActive -> setConnectionAsActive(event.connection)
-            ConnectionsContract.Event.AddConnection -> navigateTo(ConnectionsContract.Effect.Navigation.Add)
-            is ConnectionsContract.Event.DeleteConnection -> deleteConnectionById(event.connection.id)
+            is ConnectionsContract.Event.SetActive -> setConnectionAsActive(event.id, event.name)
+            ConnectionsContract.Event.AddConnection -> navigateTo(
+                ConnectionsContract.Effect.Navigation.Add
+            )
+
+            is ConnectionsContract.Event.DeleteConnection -> deleteConnection(event.id, event.name)
             is ConnectionsContract.Event.EditConnection -> navigateTo(
-                ConnectionsContract.Effect.Navigation.Edit(
-                    event.connectionId
-                )
+                ConnectionsContract.Effect.Navigation.Edit(id = event.id)
+            )
+
+            is ConnectionsContract.Event.CompleteDeleteConnection -> onDeleteConnectionConfirmed(
+                name = event.name
+            )
+
+            is ConnectionsContract.Event.UndoDeleteConnection -> undoDeleteConnection(
+                id = event.id,
+                name = event.name
             )
         }
     }
 
-    private fun deleteConnectionById(id: Long) {
+    private fun undoDeleteConnection(id: Long, name: String) {
         viewModelScope.launch {
-            deleteConnectionUseCase(id).onFailure {
-                Timber.e(it, "Failed to delete connection by id: $id")
+            unMarkConnectionForDeletionUseCase(id).onFailure {
+                Timber.e(it, "Failed to unmark connection $id : $name for deletion")
+                emitSideEffect(
+                    ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed(
+                        id = id,
+                        name = name
+                    )
+                )
             }
+        }
+    }
+
+    private fun onDeleteConnectionConfirmed(name: String) {
+        viewModelScope.launch {
+            deleteConnectionMarkedForDeletionUseCase().onFailure {
+                Timber.e(it, "Failed to delete connection $name")
+                emitSideEffect(
+                    ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed(
+                        name = name
+                    )
+                )
+            }
+        }
+    }
+
+    private fun deleteConnection(id: Long, name: String) {
+        viewModelScope.launch {
+            markConnectionForDeletionUseCase(id)
+                .onFailure {
+                    Timber.e(it, "Failed to mark connection $id : $name for deletion")
+                    emitSideEffect(
+                        ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed(name = name)
+                    )
+                }.onSuccess {
+                    emitSideEffect(
+                        ConnectionsContract.Effect.Snackbar.DeleteConnection(
+                            id = id,
+                            name = name
+                        )
+                    )
+                }
         }
     }
 
@@ -82,11 +137,17 @@ class ConnectionsViewModel @Inject constructor(
         viewModelScope.emitSideEffect(destination)
     }
 
-    private fun setConnectionAsActive(connection: ConnectionEntity) {
+    private fun setConnectionAsActive(id: Long, name: String) {
         viewModelScope.launch {
-            setConnectionAsActiveUseCase(connection.id)
+            setConnectionAsActiveUseCase(id)
                 .onFailure {
-                    Timber.e("Failed to set connection as active: $connection", it)
+                    Timber.e(it, "Failed to set connection as active: $id : $name")
+                    emitSideEffect(
+                        ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed(
+                            id = id,
+                            name = name
+                        )
+                    )
                 }
         }
     }

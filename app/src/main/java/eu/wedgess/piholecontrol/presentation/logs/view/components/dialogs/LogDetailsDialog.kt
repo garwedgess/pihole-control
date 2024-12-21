@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Http
@@ -31,12 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.LogAnswerCategoryEntity
 import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import java.text.DateFormat
 
@@ -66,15 +65,25 @@ private fun LogDetailsDialogContent(
 ) {
     val dateTimeInstance = remember { DateFormat.getTimeInstance() }
 
-    Surface(shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadius)) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = MaterialTheme.shapes.extraLarge
+    ) {
         Column(
             Modifier.padding(PiHoleControlTheme.dimens.padding.dialogContent),
-            verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge)
+            verticalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContent
+            )
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            CompositionLocalProvider(
+                LocalContentColor provides MaterialTheme.colorScheme.onSurface
+            ) {
                 Text(
-                    stringResource(R.string.log_dialog_details_title),
-                    style = MaterialTheme.typography.titleLarge
+                    modifier = Modifier.padding(
+                        bottom = PiHoleControlTheme.dimens.padding.screenContent
+                    ),
+                    text = stringResource(R.string.log_dialog_details_title),
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
             LogDetailsRow(
@@ -121,7 +130,9 @@ private fun LogDetailsDialogContent(
                         log.answerType.category == LogAnswerCategoryEntity.CACHE
             ) {
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = PiHoleControlTheme.dimens.padding.itemContent),
                     onClick = { addToBlockList(log.requestedDomain) }
                 ) {
                     Text(text = "Add to Block List")
@@ -129,7 +140,9 @@ private fun LogDetailsDialogContent(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = PiHoleControlTheme.dimens.padding.dialogContent),
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onDismiss) { Text("Dismiss") }
@@ -164,7 +177,7 @@ private fun LogDetailsRow(
     }
 }
 
-@Preview
+@ThemePreviewWithBackground
 @Composable
 private fun DisplayFilterRuleDialogPreview() {
     PiHoleControlTheme {

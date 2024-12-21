@@ -10,18 +10,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
+import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun LogsTopBarActions(
+    selectedSorting: LogSorting,
+    isSortingMenuVisible: Boolean,
     onSearchClick: () -> Unit,
     onSortClick: () -> Unit,
     onDismissSort: () -> Unit,
-    onSortItemClick: (LogSorting) -> Unit,
-    selectedSorting: LogSorting,
-    isSortingMenuVisible: Boolean
+    onSortItemClick: (LogSorting) -> Unit
 ) {
     Row {
         IconButton(onClick = { onSortClick() }) {
@@ -54,6 +57,23 @@ fun LogsTopBarActions(
                     onClick = { onSortItemClick(it) }
                 )
             }
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun LogsTopAppBarActionsPreview() {
+    PiHoleControlTheme {
+        Surface {
+            LogsTopBarActions(
+                selectedSorting = LogSorting.DATE_ASC,
+                isSortingMenuVisible = true,
+                onSearchClick = {},
+                onSortClick = {},
+                onDismissSort = {},
+                onSortItemClick = {}
+            )
         }
     }
 }

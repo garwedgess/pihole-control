@@ -21,6 +21,7 @@ import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.dashboard.DashboardContract
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
@@ -29,7 +30,6 @@ import eu.wedgess.piholecontrol.presentation.dashboard.view.components.ClientQue
 import eu.wedgess.piholecontrol.presentation.dashboard.view.components.QueriesOverTimeSection
 import eu.wedgess.piholecontrol.presentation.dashboard.view.components.SummarySection
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
-import eu.wedgess.piholecontrol.utils.ThemePreview
 import eu.wedgess.piholecontrol.utils.UiText
 
 @Composable

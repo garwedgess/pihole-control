@@ -35,6 +35,7 @@ interface ModifyConnectionsContract {
                 authPassword = this.authPassword,
                 authRealm = this.authRealm,
                 trustAllCerts = this.trustAllCerts,
+                isDeleted = false,
                 isActive = false
             )
 

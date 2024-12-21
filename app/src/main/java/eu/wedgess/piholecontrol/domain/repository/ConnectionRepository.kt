@@ -13,4 +13,7 @@ interface ConnectionRepository {
     suspend fun update(connection: ConnectionEntity): Result<Unit>
     suspend fun setActiveById(id: Long): Result<Unit>
     suspend fun deleteById(id: Long): Result<Unit>
+    suspend fun deleteAllMarkedForDeletion(): Result<Unit>
+    suspend fun markForDeletion(id: Long): Result<Unit>
+    suspend fun unmarkForDeletion(id: Long): Result<Unit>
 }

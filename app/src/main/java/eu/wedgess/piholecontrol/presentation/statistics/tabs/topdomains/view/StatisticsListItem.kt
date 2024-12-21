@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import kotlin.math.roundToInt
 
@@ -27,7 +27,9 @@ fun StatisticsListItem(
             modifier = Modifier
                 .weight(PiHoleControlTheme.dimens.weight.point8)
                 .padding(end = PiHoleControlTheme.dimens.padding.screenContent),
-            verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentSmall)
+            verticalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContentXSmall
+            )
         ) {
             Text(
                 text = domain,

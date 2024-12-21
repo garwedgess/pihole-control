@@ -59,20 +59,20 @@ class FilterTabViewModel @AssistedInject constructor(
     fun onRefreshData() = filterRulesUseCase.refreshRules()
 
     private fun handleCombinedErrors(rulesEntity: FilterRulesResultEntity) {
-        val failures = mutableListOf<UiText.StringResource>()
+        val failures = mutableListOf<UiText>()
         rulesEntity.rules.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     R.string.filter_rules_error,
-                    listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }
         rulesEntity.regexRules.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     R.string.filter_regex_rules_error,
-                    listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }

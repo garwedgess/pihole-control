@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.filters.view.components.actions.FilterTopBarActions
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.utils.UiText

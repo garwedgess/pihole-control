@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import eu.wedgess.piholecontrol.presentation.common.RadioGroup
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
@@ -23,7 +23,7 @@ fun LogsEntryRadioButtonGroup(
     )
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun LogsEntryRadioButtonGroupPreview() {
     PiHoleControlTheme {

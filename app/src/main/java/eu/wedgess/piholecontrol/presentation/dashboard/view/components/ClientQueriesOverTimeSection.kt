@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 

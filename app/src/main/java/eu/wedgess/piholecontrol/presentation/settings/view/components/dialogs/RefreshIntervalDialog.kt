@@ -27,7 +27,7 @@ import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.components.TimePickerType
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.components.TimeTextField
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import java.util.concurrent.TimeUnit
 

@@ -7,7 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.compose.PastOrPresentSelectableDates
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
+import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
@@ -40,15 +44,26 @@ fun LogsDatePickerDialog(
                     onConfirm(date)
                 }
             ) {
-                Text("Confirm")
+                Text(text = stringResource(R.string.all_btn_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(text = stringResource(R.string.all_btn_cancel))
             }
         }
     ) {
         DatePicker(state = state)
+    }
+}
+
+@ThemePreview
+@Composable
+private fun LogsDatePickerDialogPreview() {
+    PiHoleControlTheme {
+        LogsDatePickerDialog(
+            onDismiss = {},
+            onConfirm = {}
+        )
     }
 }

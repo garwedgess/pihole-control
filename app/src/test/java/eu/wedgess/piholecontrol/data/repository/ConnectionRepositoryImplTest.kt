@@ -170,6 +170,27 @@ class ConnectionRepositoryImplTest {
     }
 
     @Test
+    fun `deleteAllMarkedForDeletion - success`() = runTest {
+        coEvery { connectionDao.deleteMarkedForDeletion() } returns Unit
+
+        val result = target.deleteAllMarkedForDeletion()
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.deleteMarkedForDeletion() }
+    }
+
+    @Test
+    fun `deleteAllMarkedForDeletion - failure`() = runTest {
+        coEvery { connectionDao.deleteMarkedForDeletion() } throws RuntimeException("Deletion failed")
+
+        val result = target.deleteAllMarkedForDeletion()
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.deleteMarkedForDeletion() }
+    }
+
+    @Test
     fun `fetchActive - success`() = runTest {
         val connection = ConnectionEntity.default
         coEvery { connectionDao.fetchActive() } returns connection.toConnection()
@@ -213,5 +234,53 @@ class ConnectionRepositoryImplTest {
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
         verify { connectionDao.setActive(id) }
+    }
+
+    @Test
+    fun `markForDeletion - success`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.markAsDeleted(id) } returns Unit
+
+        val result = target.markForDeletion(id)
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.markAsDeleted(id) }
+    }
+
+    @Test
+    fun `markForDeletion - failure`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.markAsDeleted(id) } throws
+                RuntimeException("Marking connection failed")
+
+        val result = target.markForDeletion(id)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.markAsDeleted(id) }
+    }
+
+    @Test
+    fun `unmarkAsDeleted - success`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.unmarkAsDeleted(id) } returns Unit
+
+        val result = target.unmarkForDeletion(id)
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.unmarkAsDeleted(id) }
+    }
+
+    @Test
+    fun `unmarkAsDeleted - failure`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.unmarkAsDeleted(id) } throws
+                RuntimeException("Marking connection failed")
+
+        val result = target.unmarkForDeletion(id)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.unmarkAsDeleted(id) }
     }
 }

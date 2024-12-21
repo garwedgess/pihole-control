@@ -7,5 +7,5 @@ sealed class DonutChartData(
     open val percentage: Float,
     open val title: String,
 ) {
-    fun color(isDarkTheme: Boolean): Color = ColorGenerator(isDarkTheme).generateColor(title)
+    fun color(isDarkTheme: Boolean): Color = ColorGenerator(!isDarkTheme).generateColor(title)
 }

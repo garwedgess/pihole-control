@@ -1,9 +1,9 @@
 package eu.wedgess.piholecontrol.presentation.filters
 
-import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.utils.UiText
 
 interface FiltersContract {
@@ -37,10 +37,11 @@ interface FiltersContract {
         data object OnSearchClick : Event
         data object OnDismissDialog : Event
         data object AddFilterRuleClick : Event
-        data class OnFilterRuleItemClick(val item: FilterRuleEntity) : Event
+        data class OnFilterRuleItemClick(val item: FilterRuleInfo) : Event
         data class OnFilterTabChanged(val type: FilterRuleTypeEntity) : Event
         data class OnAddFilterRule(val rule: ModifyFilterRule.Add) : Event
-        data class OnDeleteFilterRule(val rule: ModifyFilterRule.Delete) : Event
+        data class OnDeleteFilterRuleClick(val rule: FilterRuleInfo) : Event
+        data class OnDeleteFilterRuleConfirmed(val rule: ModifyFilterRule.Delete) : Event
         data class OnClearSearchQuery(val query: String) : Event
         data class OnSearchExpandedChanged(val expanded: Boolean) : Event
         data class OnSearchQueryChanged(val query: String) : Event

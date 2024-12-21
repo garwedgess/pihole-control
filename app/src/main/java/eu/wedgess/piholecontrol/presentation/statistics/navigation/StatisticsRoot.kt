@@ -7,8 +7,8 @@ import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.StatisticsTab
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.navigation.ForwardDestinationsRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.navigation.QueryTypesRoot
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.server.navigation.ServersRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.navigation.TopClientsScreenRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.navigation.TopDomainsRoot
 
@@ -29,7 +29,7 @@ fun NavGraphBuilder.statisticsRoot(
         ) {
             when (it) {
                 StatisticsTab.Queries -> QueryTypesRoot()
-                StatisticsTab.Servers -> ServersRoot()
+                StatisticsTab.Servers -> ForwardDestinationsRoot()
                 StatisticsTab.Domains -> TopDomainsRoot()
                 StatisticsTab.Clients -> TopClientsScreenRoot()
             }
