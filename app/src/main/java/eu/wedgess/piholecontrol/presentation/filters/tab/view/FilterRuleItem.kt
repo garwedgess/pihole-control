@@ -26,10 +26,11 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun FilterRuleItem(
     rule: FilterRuleInfo,
-    onItemClick: () -> Unit
+    onItemClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .clickable { onItemClick() }

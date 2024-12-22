@@ -35,7 +35,6 @@
     <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
     <ID>Indentation:StatisticsApiServiceImplTest.kt$StatisticsApiServiceImplTest$ </ID>
     <ID>Indentation:StatusApiServiceImplTest.kt$StatusApiServiceImplTest$ </ID>
-    <ID>Indentation:SwipeToDeleteItem.kt$ </ID>
     <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClick</ID>
     <ID>LambdaParameterEventTrailing:DonutChart.kt$onSelectedIndexChange</ID>
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
@@ -88,6 +87,8 @@
     <ID>MagicNumber:PiHoleLogSerializer.kt$PiHoleLogSerializer$4</ID>
     <ID>MagicNumber:QueriesOverTimeEntityMapper.kt$1000L</ID>
     <ID>MagicNumber:StatisticsListItem.kt$100</ID>
+    <ID>MagicNumber:SwipeToDeleteItem.kt$0.1f</ID>
+    <ID>MagicNumber:SwipeToDeleteItem.kt$200</ID>
     <ID>MagicNumber:TimeTextField.kt$3</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Hours$99</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Minutes$60</ID>
@@ -108,7 +109,6 @@
     <ID>ModifierMissing:CustomTimePicker.kt$CustomTimePicker</ID>
     <ID>ModifierMissing:DashboardScreen.kt$DashboardScreen</ID>
     <ID>ModifierMissing:DisableButtonRow.kt$DisableButtonRow</ID>
-    <ID>ModifierMissing:FilterRuleItem.kt$FilterRuleItem</ID>
     <ID>ModifierMissing:FilterTabContent.kt$FilterListContent</ID>
     <ID>ModifierMissing:FilterTabScreenRoot.kt$FilterTabScreenRoot</ID>
     <ID>ModifierMissing:FilterTopBarActions.kt$FilterTopBarActions</ID>

@@ -22,6 +22,7 @@ fun ConnectionsList(
         content = {
             items(connections, key = { it.id }) {
                 SwipeToDeleteItem(
+                    modifier = Modifier.animateItem(),
                     onDelete = {
                         onEvent(
                             ConnectionsContract.Event.DeleteConnection(

@@ -16,6 +16,7 @@ fun FilterListContent(
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         items(filtersList, key = { it.id }) {
             FilterRuleItem(
+                modifier = Modifier.animateItem(),
                 rule = it,
                 onItemClick = { onFilterRuleClick(it) }
             )

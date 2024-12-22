@@ -41,12 +41,16 @@ class FetchForwardDestinationsUseCaseTest {
             ForwardDestinationEntity("destination1", 123f),
             ForwardDestinationEntity("destination2", 456f)
         )
-        val expectedResult = Result.success(listOf(
-            ForwardDestinationsChartData("destination1", 123f),
-            ForwardDestinationsChartData("destination2", 456f)
-        ))
+        val expectedResult = Result.success(
+            listOf(
+                ForwardDestinationsChartData("destination1", 123f),
+                ForwardDestinationsChartData("destination2", 456f)
+            )
+        )
 
-        coEvery { repository.fetchForwardDestinations(connection) } returns Result.success(destinations)
+        coEvery { repository.fetchForwardDestinations(connection) } returns Result.success(
+            destinations
+        )
         coEvery { periodicRefreshUseCase<List<ForwardDestinationEntity>>(any()) } answers {
             flow {
                 val fetchData = arg<suspend (ConnectionEntity) -> List<ForwardDestinationEntity>>(0)
