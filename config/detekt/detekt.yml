@@ -641,6 +641,7 @@ style:
     excludeImportStatements: true
     excludeCommentStatements: false
     excludeRawStrings: true
+    ignoreAnnotated: ['Test']
   MayBeConst:
     active: true
   ModifierOrder:
@@ -792,6 +793,10 @@ style:
 formatting:
   Indentation:
     active: true
+    ignoreAnnotated: ['Test']
+  MaximumLineLength:
+    active: true
+    ignoreAnnotated: ['Test']
 
 Compose:
   ComposableAnnotationNaming:

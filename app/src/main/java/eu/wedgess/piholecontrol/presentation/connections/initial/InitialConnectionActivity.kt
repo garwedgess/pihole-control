@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
-import eu.wedgess.piholecontrol.presentation.common.MainAppBar
+import eu.wedgess.piholecontrol.presentation.common.components.MainAppBar
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
 import eu.wedgess.piholecontrol.presentation.connections.modify.view.ModifyConnectionScreen

@@ -88,12 +88,11 @@ fun rememberMarker(): Marker {
                 outInsets: Insets,
                 horizontalDimensions: HorizontalDimensions
             ) = with(context) {
-                outInsets.top =
-                    label.getHeight(context) +
-                            labelBackgroundShape.tickSizeDp.pixels +
-                            LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
-                            SHADOW_RADIUS_MULTIPLIER -
-                            LABEL_BACKGROUND_SHADOW_DY.pixels
+                outInsets.top = label.getHeight(context) +
+                        labelBackgroundShape.tickSizeDp.pixels +
+                        LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
+                        SHADOW_RADIUS_MULTIPLIER -
+                        LABEL_BACKGROUND_SHADOW_DY.pixels
             }
         }.apply {
             labelFormatter = object : MarkerLabelFormatter {
@@ -116,7 +115,7 @@ fun rememberMarker(): Marker {
                         appendCompat(
                             when (val entry = model.entry) {
                                 is LineChartEntry -> PATTERN.format(model.entry.y) +
-                                    (entry.yLabel?.let { " $it" } ?: "")
+                                        (entry.yLabel?.let { " $it" } ?: "")
 
                                 else -> PATTERN.format(model.entry.y)
                             },

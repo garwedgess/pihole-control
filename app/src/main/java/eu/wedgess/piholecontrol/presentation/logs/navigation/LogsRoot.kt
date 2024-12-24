@@ -14,7 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
-import eu.wedgess.piholecontrol.presentation.common.SearchContent
+import eu.wedgess.piholecontrol.presentation.common.components.SearchContent
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract

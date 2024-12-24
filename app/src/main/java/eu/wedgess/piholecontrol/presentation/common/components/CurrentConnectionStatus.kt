@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

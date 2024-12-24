@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke

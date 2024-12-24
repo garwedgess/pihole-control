@@ -66,8 +66,10 @@ class AppViewModel @Inject constructor(
                 it.copy(dialogType = AppDialogType.DisableAdBlocking)
             }
 
-            is AppContract.Event.UpdateAppBarState -> _uiState.update {
-                it.copy(appBarState = event.updateState)
+            is AppContract.Event.UpdateAppBarState -> {
+                _uiState.update {
+                    it.copy(appBarState = event.updateState)
+                }
             }
         }
     }

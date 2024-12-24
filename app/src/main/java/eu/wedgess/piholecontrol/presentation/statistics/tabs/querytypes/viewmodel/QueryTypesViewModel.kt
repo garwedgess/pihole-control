@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.viewmod
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchQueryTypesUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
@@ -23,14 +24,14 @@ class QueryTypesViewModel @Inject constructor(
     fetchQueryTypesUseCase: FetchQueryTypesUseCase
 ) : EventDrivenViewModel<QueryTypesContract.Event>, ViewModel() {
 
-    private val selectedIndexFlow = MutableStateFlow(0)
+    private val selectedIndexFlow = MutableStateFlow(-1)
 
     val uiResult =
         fetchQueryTypesUseCase().combine(selectedIndexFlow) { queryTypesResult, selectedIndex ->
             queryTypesResult.getOrElse {
                 return@combine UIResult.Error(
                     ResultType.Error.WithTitleAndSubTitle(
-                        UiText.DynamicString("Failed to fetch query types"),
+                        UiText.StringResource(R.string.query_types_error),
                         UiText.DynamicString(it.message ?: "Unknown error")
                     )
                 )

@@ -45,7 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs
 import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel
-import eu.wedgess.piholecontrol.presentation.common.MainAppBar
+import eu.wedgess.piholecontrol.presentation.common.components.MainAppBar
 import eu.wedgess.piholecontrol.presentation.navigation.bottom.BottomNavigationBar
 import eu.wedgess.piholecontrol.presentation.navigation.graphs.MainNavigationGraph
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme

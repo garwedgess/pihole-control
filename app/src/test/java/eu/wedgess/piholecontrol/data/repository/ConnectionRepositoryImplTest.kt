@@ -250,8 +250,9 @@ class ConnectionRepositoryImplTest {
     @Test
     fun `markForDeletion - failure`() = runTest {
         val id = 1L
-        coEvery { connectionDao.markAsDeleted(id) } throws
-                RuntimeException("Marking connection failed")
+        coEvery {
+            connectionDao.markAsDeleted(id)
+        } throws RuntimeException("Marking connection failed")
 
         val result = target.markForDeletion(id)
 
@@ -274,8 +275,9 @@ class ConnectionRepositoryImplTest {
     @Test
     fun `unmarkAsDeleted - failure`() = runTest {
         val id = 1L
-        coEvery { connectionDao.unmarkAsDeleted(id) } throws
-                RuntimeException("Marking connection failed")
+        coEvery {
+            connectionDao.unmarkAsDeleted(id)
+        } throws RuntimeException("Marking connection failed")
 
         val result = target.unmarkForDeletion(id)
 

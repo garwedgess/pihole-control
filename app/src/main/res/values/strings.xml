@@ -104,6 +104,7 @@
     <string name="filters_label_blocklist">Block</string>
     <string name="filters_label_allowlist_regex">Allow Regex</string>
     <string name="filters_label_blocklist_regex">Block Regex</string>
+    <string name="filter_rules_fetch_error">Failed to fetch filter rules</string>
 
 
     <!-- Statistics Screen -->
@@ -118,6 +119,10 @@
     <string name="statistics_tab_title_servers">Servers</string>
     <string name="statistics_tab_title_domains">Domains</string>
     <string name="statistics_tab_title_clients">Clients</string>
+    <string name="top_domains_error">Failed to fetch top domains</string>
+    <string name="top_clients_error">Failed to fetch top clients</string>
+    <string name="query_types_error">Failed to fetch query types</string>
+    <string name="forward_destinations_error">Failed to fetch forward destinations</string>
 
 
     <string name="modify_connection_label_name">Name</string>

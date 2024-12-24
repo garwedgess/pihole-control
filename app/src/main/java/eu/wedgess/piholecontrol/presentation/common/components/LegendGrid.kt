@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi

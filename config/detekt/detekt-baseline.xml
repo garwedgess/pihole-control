@@ -22,19 +22,12 @@
     <ID>CyclomaticComplexMethod:LogAnswerTypeEntityMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
-    <ID>Indentation:ConnectionRepositoryImplTest.kt$ConnectionRepositoryImplTest$ </ID>
-    <ID>Indentation:DashboardApiServiceImplTest.kt$DashboardApiServiceImplTest$ </ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
-    <ID>Indentation:DeleteConnectionMarkedForDeletionUseCaseTest.kt$DeleteConnectionMarkedForDeletionUseCaseTest$ </ID>
     <ID>Indentation:DonutChart.kt$ </ID>
-    <ID>Indentation:FilterRulesApiServiceImplTest.kt$FilterRulesApiServiceImplTest$ </ID>
     <ID>Indentation:LogDetailsDialog.kt$ </ID>
-    <ID>Indentation:LogsApiServiceImplTest.kt$LogsApiServiceImplTest$ </ID>
     <ID>Indentation:LogsViewModel.kt$LogsViewModel$ </ID>
     <ID>Indentation:MarkerUtils.kt$&lt;no name provided&gt;$ </ID>
     <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
-    <ID>Indentation:StatisticsApiServiceImplTest.kt$StatisticsApiServiceImplTest$ </ID>
-    <ID>Indentation:StatusApiServiceImplTest.kt$StatusApiServiceImplTest$ </ID>
     <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClick</ID>
     <ID>LambdaParameterEventTrailing:DonutChart.kt$onSelectedIndexChange</ID>
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>

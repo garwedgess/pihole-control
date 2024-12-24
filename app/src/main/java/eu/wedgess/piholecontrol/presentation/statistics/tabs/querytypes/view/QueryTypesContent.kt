@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.presentation.common.LegendGrid
+import eu.wedgess.piholecontrol.presentation.common.components.LegendGrid
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ScrollAdaptiveColumn
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview

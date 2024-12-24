@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace  = "eu.wedgess.piholecontrol"
+    namespace = "eu.wedgess.piholecontrol"
     compileSdk = 35
 
     defaultConfig {
@@ -35,7 +35,10 @@ android {
         }
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -89,7 +92,6 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.javalite)
-//    ksp(libs.protobuf.kotlin)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.android.date.backport)
 
@@ -99,6 +101,7 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.truth)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

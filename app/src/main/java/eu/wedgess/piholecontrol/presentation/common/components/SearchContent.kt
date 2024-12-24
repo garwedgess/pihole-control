@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close

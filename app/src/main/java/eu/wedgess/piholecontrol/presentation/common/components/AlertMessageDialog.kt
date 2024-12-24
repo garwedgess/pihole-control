@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Surface

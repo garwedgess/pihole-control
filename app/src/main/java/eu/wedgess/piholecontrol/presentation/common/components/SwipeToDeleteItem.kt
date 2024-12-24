@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.common
+package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.overscroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -73,8 +71,6 @@ fun SwipeToDeleteItem(
         )
     }
 
-    val overScrollEffect = ScrollableDefaults.overscrollEffect()
-
     LaunchedEffect(dragState.currentValue) {
         if (dragState.currentValue == SwipeToRevealValue.EndToStart) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -96,9 +92,10 @@ fun SwipeToDeleteItem(
         targetValue = lerp(
             MaterialTheme.colorScheme.inverseSurface, // White
             MaterialTheme.colorScheme.error,
-            dragState.progress(SwipeToRevealValue.Settled, SwipeToRevealValue.EndToStart)
-                .div(0.1f)
-                .coerceIn(0f, 1f)
+            dragState.progress(
+                from = SwipeToRevealValue.Settled,
+                to = SwipeToRevealValue.EndToStart
+            ).div(0.1f).coerceIn(0f, 1f)
         ),
         animationSpec = tween(durationMillis = 400),
         label = "background color"
@@ -133,8 +130,7 @@ fun SwipeToDeleteItem(
         propagateMinConstraints = true
     ) {
         Row(
-            modifier = Modifier
-                .matchParentSize(),
+            modifier = Modifier.matchParentSize(),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -158,15 +154,12 @@ fun SwipeToDeleteItem(
             content = content,
             modifier = Modifier
                 .anchoredDraggable(
-                    dragState,
-                    Orientation.Horizontal,
-                    overscrollEffect = overScrollEffect
+                    state = dragState,
+                    orientation = Orientation.Horizontal
                 )
-                .overscroll(overScrollEffect)
                 .offset {
                     IntOffset(
-                        x = dragState
-                            .offset
+                        x = dragState.offset
                             .takeIf { !it.isNaN() }
                             ?.run { this.roundToInt() } ?: 0,
                         y = 0

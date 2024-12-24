@@ -30,7 +30,7 @@ fun EmptyContent(
         Icon(
             modifier = Modifier.size(56.dp),
             imageVector = Icons.Outlined.Clear,
-            contentDescription = "error",
+            contentDescription = "empty",
             tint = MaterialTheme.colorScheme.error
         )
 

@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.filters.tab.model
 
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
@@ -45,7 +46,7 @@ data class FilterRulesResult(
         fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
             return UIResult.Error(
                 ResultType.Error.WithTitleAndSubTitle(
-                    UiText.DynamicString("Failed to fetch filter rules"),
+                    UiText.StringResource(R.string.filter_rules_fetch_error),
                     UiText.DynamicString(throwable?.message ?: "Unknown error")
                 )
             )

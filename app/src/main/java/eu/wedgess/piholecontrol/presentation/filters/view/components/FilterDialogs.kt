@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.presentation.filters.view.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.presentation.common.AlertMessageDialog
+import eu.wedgess.piholecontrol.presentation.common.components.AlertMessageDialog
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs.AddFilterRuleDialog

@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.presentation.common.SwipeToDeleteItem
+import eu.wedgess.piholecontrol.presentation.common.components.SwipeToDeleteItem
 import eu.wedgess.piholecontrol.presentation.connections.list.ConnectionsContract
 
 @Composable

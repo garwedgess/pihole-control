@@ -9,6 +9,7 @@ import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
 import eu.wedgess.piholecontrol.domain.model.FilterRulesResultEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRulesUseCase
+import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
@@ -29,7 +30,8 @@ class FilterTabViewModel @AssistedInject constructor(
     private val filterRulesUseCase: FetchFilterRulesUseCase,
     @Assisted val filterRuleType: FilterScreenTabType
 ) : ViewModel(),
-    SideEffectViewModel<FilterTabContract.Effect> by SideEffectViewModelImpl() {
+    SideEffectViewModel<FilterTabContract.Effect> by SideEffectViewModelImpl(),
+    EventDrivenViewModel<FilterTabContract.Event> {
 
     private val searchQuery = MutableStateFlow("")
     private var showErrorMessage: Boolean = true
@@ -52,11 +54,18 @@ class FilterTabViewModel @AssistedInject constructor(
             UIResult.Loading(ResultType.Loading.WithTitle())
         )
 
-    fun setSearchQuery(query: String?) {
+    override fun onEvent(event: FilterTabContract.Event) {
+        when (event) {
+            FilterTabContract.Event.OnRefresh -> onRefreshData()
+            is FilterTabContract.Event.OnSearchQueryChanged -> setSearchQuery(event.query)
+        }
+    }
+
+    private fun setSearchQuery(query: String?) {
         viewModelScope.launch { searchQuery.emit(query ?: "") }
     }
 
-    fun onRefreshData() = filterRulesUseCase.refreshRules()
+    private fun onRefreshData() = filterRulesUseCase.refreshRules()
 
     private fun handleCombinedErrors(rulesEntity: FilterRulesResultEntity) {
         val failures = mutableListOf<UiText>()

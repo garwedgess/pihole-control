@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.presentation.common.RadioGroup
+import eu.wedgess.piholecontrol.presentation.common.components.RadioGroup
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme

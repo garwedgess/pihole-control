@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.viewm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchForwardDestinationsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
@@ -23,7 +24,7 @@ class ForwardDestinationsViewModel @Inject constructor(
     fetchForwardDestinationsUseCase: FetchForwardDestinationsUseCase
 ) : EventDrivenViewModel<ForwardDestinationsContract.Event>, ViewModel() {
 
-    private val selectedIndexFlow = MutableStateFlow(0)
+    private val selectedIndexFlow = MutableStateFlow(-1)
 
     val uiResult =
         fetchForwardDestinationsUseCase()
@@ -31,7 +32,7 @@ class ForwardDestinationsViewModel @Inject constructor(
                 destinationsResult.getOrElse {
                     return@combine UIResult.Error(
                         ResultType.Error.WithTitleAndSubTitle(
-                            UiText.DynamicString("Failed to fetch query types"),
+                            UiText.StringResource(R.string.forward_destinations_error),
                             UiText.DynamicString(it.message ?: "Unknown error")
                         )
                     )

@@ -40,12 +40,12 @@ fun FilterTabScreenRoot(
     val sideEffect = viewModel.sideEffect
 
     LaunchedEffect(searchQuery) {
-        viewModel.setSearchQuery(searchQuery)
+        viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged(searchQuery ?: ""))
     }
 
     LaunchedEffect(Unit) {
         onRefreshFilters {
-            viewModel.onRefreshData()
+            viewModel.onEvent(FilterTabContract.Event.OnRefresh)
         }
     }
 

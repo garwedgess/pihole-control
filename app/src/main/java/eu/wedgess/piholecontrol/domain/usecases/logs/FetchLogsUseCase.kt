@@ -6,8 +6,9 @@ import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class FetchLogsUseCase(
+class FetchLogsUseCase @Inject constructor(
     private val logsRepository: LogsRepository,
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {
@@ -28,13 +29,16 @@ class FetchLogsUseCase(
 
     fun setLogLimit(limit: Int): Boolean {
         this.logLimit = limit
-        return periodicRefreshUseCase.triggerRefresh()
+        return refresh()
     }
 
     fun setLogStatusFilter(statusFilter: LogEntryStatus): Boolean {
         this.logStatusFilter = statusFilter
-        return periodicRefreshUseCase.triggerRefresh()
+        return refresh()
     }
+
+    @VisibleForTesting
+    fun refresh() = periodicRefreshUseCase.triggerRefresh()
 
     private fun List<LogEntryEntity>.applyStatusFilter(): List<LogEntryEntity> {
         return when (logStatusFilter) {

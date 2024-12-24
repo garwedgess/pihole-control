@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+coreTesting = "2.2.0"
 ksp = "2.1.0-1.0.29"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
@@ -12,6 +13,7 @@ composeBom = "2024.12.01"
 composeAnimations = "1.7.6"
 hilt = "2.53.1"
 navigationCompose = "2.8.5"
+robolectric = "4.14"
 timber = "5.0.1"
 sqldelight = "2.0.2"
 hiltNavigationCompose = "1.2.0"
@@ -32,6 +34,7 @@ detekt = "1.23.7"
 detektCompose = "0.4.22"
 
 [libraries]
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
 detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
