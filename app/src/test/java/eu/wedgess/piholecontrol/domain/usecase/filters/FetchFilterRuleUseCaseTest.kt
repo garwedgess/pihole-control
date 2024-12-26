@@ -8,6 +8,7 @@ import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRuleUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -16,7 +17,7 @@ import org.junit.Test
 
 class FetchFilterRuleUseCaseTest {
 
-    @MockK
+    @MockK(relaxed = true)
     private lateinit var filterRulesRepository: FilterRulesRepository
     private lateinit var target: FetchFilterRuleUseCase
 
@@ -43,8 +44,7 @@ class FetchFilterRuleUseCaseTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(filterRules)
-
-        coEvery { filterRulesRepository.fetchFilterRules(connection, ruleType) }
+        coVerify { filterRulesRepository.fetchFilterRules(connection, ruleType) }
     }
 
     @Test
@@ -61,7 +61,6 @@ class FetchFilterRuleUseCaseTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
-
-        coEvery { filterRulesRepository.fetchFilterRules(connection, ruleType) }
+        coVerify { filterRulesRepository.fetchFilterRules(connection, ruleType) }
     }
 }

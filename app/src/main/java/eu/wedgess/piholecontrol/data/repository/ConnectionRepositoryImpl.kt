@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
-import eu.wedgess.piholecontrol.domain.mappers.toConnection
-import eu.wedgess.piholecontrol.domain.mappers.toConnectionInfo
+import eu.wedgess.piholecontrol.data.mappers.toConnection
+import eu.wedgess.piholecontrol.data.mappers.toConnectionInfo
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider

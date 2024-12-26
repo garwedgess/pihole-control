@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.app
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
@@ -10,9 +11,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +34,7 @@ class FetchStatusUseCaseTest {
     @Test
     fun `invoke - emits success when repository returns status`() = runTest {
         val connection = ConnectionEntity.default
-        val status = mockk<StatusEntity>(relaxed = true)
+        val status = StatusEntity.ENABLED
 
         coEvery { periodicRefreshUseCase<Result<StatusEntity>>(any()) } answers {
             flow {
@@ -45,13 +44,14 @@ class FetchStatusUseCaseTest {
         }
         coEvery { repository.fetchStatus(connection) } returns Result.success(status)
 
-        val result = fetchStatusUseCase().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
-        assertThat(result.first().getOrNull()).isEqualTo(status)
-        coVerify { periodicRefreshUseCase<Result<StatusEntity>>(any()) }
-        coVerify { repository.fetchStatus(any()) }
+        fetchStatusUseCase().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isEqualTo(status)
+            awaitComplete()
+        }
+        coVerify { periodicRefreshUseCase<StatusEntity>(any()) }
+        coVerify { repository.fetchStatus(connection) }
     }
 
     @Test
@@ -65,14 +65,15 @@ class FetchStatusUseCaseTest {
                 emit(fetchBlock(connection))
             }
         }
-        coEvery { repository.fetchStatus(any()) } returns Result.failure(exception)
+        coEvery { repository.fetchStatus(connection) } returns Result.failure(exception)
 
-        val result = fetchStatusUseCase().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isFailure).isTrue()
-        assertThat(result.first().exceptionOrNull()).isEqualTo(exception)
-        coVerify { periodicRefreshUseCase<Result<StatusEntity>>(any()) }
-        coVerify { repository.fetchStatus(any()) }
+        fetchStatusUseCase().test {
+            val result = awaitItem()
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            awaitComplete()
+        }
+        coVerify { periodicRefreshUseCase<StatusEntity>(any()) }
+        coVerify { repository.fetchStatus(connection) }
     }
 }

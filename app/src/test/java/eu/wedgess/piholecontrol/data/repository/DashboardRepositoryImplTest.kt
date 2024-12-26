@@ -34,7 +34,9 @@ class DashboardRepositoryImplTest {
     @Test
     fun `fetchStatusSummary - api fetchStatusSummary is invoked AND result is success`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchStatusSummary(activeConnection) } returns Result.success(mockk(relaxed = true))
+        coEvery { api.fetchStatusSummary(activeConnection) } returns Result.success(
+            mockk(relaxed = true)
+        )
 
         val result = target.fetchStatusSummary(activeConnection)
 
@@ -47,65 +49,73 @@ class DashboardRepositoryImplTest {
     @Test
     fun `fetchStatusSummary - should return failure on API error`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchStatusSummary(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchStatusSummary(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchStatusSummary(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchStatusSummary(activeConnection) }
     }
 
     @Test
-    fun `fetchOverTimeDataClients - api fetchOverTimeDataClients is invoked AND result is success`() = runTest {
-        val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchOverTimeDataClients(activeConnection) } returns Result.success(mockk(relaxed = true))
+    fun `fetchOverTimeDataClients - api fetchOverTimeDataClients is invoked AND result is success`() =
+        runTest {
+            val activeConnection = mockk<ConnectionEntity>(relaxed = true)
+            coEvery { api.fetchOverTimeDataClients(activeConnection) } returns Result.success(
+                mockk(relaxed = true)
+            )
 
-        val result = target.fetchOverTimeDataClients(activeConnection)
+            val result = target.fetchOverTimeDataClients(activeConnection)
 
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrNull()).isNotNull()
-        assertThat(result.getOrNull()).isInstanceOf(List::class.java)
-        coVerify { api.fetchOverTimeDataClients(activeConnection) }
-    }
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isNotNull()
+            assertThat(result.getOrNull()).isInstanceOf(List::class.java)
+            coVerify { api.fetchOverTimeDataClients(activeConnection) }
+        }
 
     @Test
     fun `fetchOverTimeDataClients - should return failure on API error`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchOverTimeDataClients(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchOverTimeDataClients(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchOverTimeDataClients(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchOverTimeDataClients(activeConnection) }
     }
 
     @Test
-    fun `fetchOverTimeData10Minutes - api fetchOverTimeData10Minutes is invoked AND result is success`() = runTest {
-        val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchOverTimeData10Minutes(activeConnection) } returns Result.success(mockk(relaxed = true))
+    fun `fetchOverTimeData10Minutes - api fetchOverTimeData10Minutes is invoked AND result is success`() =
+        runTest {
+            val activeConnection = mockk<ConnectionEntity>(relaxed = true)
+            coEvery { api.fetchOverTimeData10Minutes(activeConnection) } returns Result.success(
+                mockk(relaxed = true)
+            )
 
-        val result = target.fetchOverTimeData10Minutes(activeConnection)
+            val result = target.fetchOverTimeData10Minutes(activeConnection)
 
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrNull()).isNotNull()
-        assertThat(result.getOrNull()).isInstanceOf(QueriesOverTimeEntity::class.java)
-        coVerify { api.fetchOverTimeData10Minutes(activeConnection) }
-    }
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isNotNull()
+            assertThat(result.getOrNull()).isInstanceOf(QueriesOverTimeEntity::class.java)
+            coVerify { api.fetchOverTimeData10Minutes(activeConnection) }
+        }
 
     @Test
     fun `fetchOverTimeData10Minutes - should return failure on API error`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchOverTimeData10Minutes(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchOverTimeData10Minutes(activeConnection) } returns Result.failure(
+            exception
+        )
 
         val result = target.fetchOverTimeData10Minutes(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchOverTimeData10Minutes(activeConnection) }
     }
 }

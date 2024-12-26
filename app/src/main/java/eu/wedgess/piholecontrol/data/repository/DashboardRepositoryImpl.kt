@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
-import eu.wedgess.piholecontrol.domain.mappers.toQueriesOverTimeData
-import eu.wedgess.piholecontrol.domain.mappers.toSummaryEntity
+import eu.wedgess.piholecontrol.data.mappers.toQueriesOverTimeData
+import eu.wedgess.piholecontrol.data.mappers.toSummaryEntity
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity

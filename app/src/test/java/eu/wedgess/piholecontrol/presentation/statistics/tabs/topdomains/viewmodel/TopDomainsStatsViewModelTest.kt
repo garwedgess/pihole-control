@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.TopDomainEntity
@@ -16,7 +17,6 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
@@ -62,9 +62,13 @@ class TopDomainsStatsViewModelTest {
             viewModel = TopDomainsStatsViewModel(fetchTopQueriesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType).isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -101,16 +105,20 @@ class TopDomainsStatsViewModelTest {
             viewModel = TopDomainsStatsViewModel(fetchTopQueriesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-            val uiState = result as UIResult.Loaded
-            assertThat(uiState.data).isInstanceOf(TopDomainsStatsContract.UiState::class.java)
-            assertThat(uiState.data.topPermitted.topDomains).isEqualTo(
-                allowedQueries
-            )
-            assertThat(uiState.data.topBlocked.topDomains).isEqualTo(
-                blockedQueries
-            )
+            viewModel.uiResult.test {
+                skipItems(1) // Loading
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                val uiState = result as UIResult.Loaded
+                assertThat(uiState.data).isInstanceOf(TopDomainsStatsContract.UiState::class.java)
+                assertThat(uiState.data.topPermitted.topDomains).isEqualTo(
+                    allowedQueries
+                )
+                assertThat(uiState.data.topBlocked.topDomains).isEqualTo(
+                    blockedQueries
+                )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -124,15 +132,19 @@ class TopDomainsStatsViewModelTest {
             viewModel = TopDomainsStatsViewModel(fetchTopQueriesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
-            assertThat((result as UIResult.Error).errorType)
-                .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
-                .isEqualTo(UiText.StringResource(R.string.top_domains_error))
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
-                .isEqualTo(
-                    UiText.DynamicString(exception.message ?: "Unknown error")
-                )
+            viewModel.uiResult.test {
+                skipItems(1) // Loading
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Error::class.java)
+                assertThat((result as UIResult.Error).errorType)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
+                    .isEqualTo(UiText.StringResource(R.string.top_domains_error))
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                    .isEqualTo(
+                        UiText.DynamicString(exception.message ?: "Unknown error")
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

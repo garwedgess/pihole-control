@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.settings.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.domain.model.AppPreferencesEntity
@@ -22,12 +23,12 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -81,10 +82,13 @@ class SettingsViewModelTest {
             )
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -118,15 +122,19 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(uiResults.any { it is UIResult.Loaded }).isTrue()
-            val loadedResult = uiResults.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(loadedResult.data.currentConnection).isEqualTo(connection)
-            assertThat(loadedResult.data.currentTheme).isEqualTo(AppThemePres.Dark)
-            assertThat(loadedResult.data.refreshInterval).isEqualTo(preferences.refreshInterval)
-            assertThat(loadedResult.data.useDynamicThemeColors)
-                .isEqualTo(preferences.useDynamicColors)
-            assertThat(loadedResult.data.changeStatusOnAllConnections)
-                .isEqualTo(preferences.multiStatusChange)
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                loadedResult as UIResult.Loaded
+                assertThat(loadedResult.data.currentConnection).isEqualTo(connection)
+                assertThat(loadedResult.data.currentTheme).isEqualTo(AppThemePres.Dark)
+                assertThat(loadedResult.data.refreshInterval).isEqualTo(preferences.refreshInterval)
+                assertThat(loadedResult.data.useDynamicThemeColors)
+                    .isEqualTo(preferences.useDynamicColors)
+                assertThat(loadedResult.data.changeStatusOnAllConnections)
+                    .isEqualTo(preferences.multiStatusChange)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -152,9 +160,13 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val loadedResult = viewModel.uiResult.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(loadedResult.data.dialogType)
-                .isInstanceOf(SettingsDialogType.RefreshInterval::class.java)
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((loadedResult as UIResult.Loaded).data.dialogType)
+                    .isInstanceOf(SettingsDialogType.RefreshInterval::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -179,8 +191,11 @@ class SettingsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(SettingsContract.Effect.Navigation.Connections::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem())
+                    .isInstanceOf(SettingsContract.Effect.Navigation.Connections::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -200,23 +215,23 @@ class SettingsViewModelTest {
                 updateSelectedThemeUseCase,
                 updateStatusChangeOnAllConnectionsUseCase
             )
-            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked)
-            advanceUntilIdle()
-            val loadedResult = viewModel.uiResult.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(loadedResult.data.dialogType).isEqualTo(
-                SettingsDialogType.RefreshInterval(
-                    10000L
-                )
-            )
+
+            val emittedStates = mutableListOf<UIResult<SettingsContract.UiState>>()
+            val job = backgroundScope.launch {
+                viewModel.uiResult.collect { emittedStates.add(it) }
+            }
 
             // When
+            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked)
+            runCurrent()
             viewModel.onEvent(SettingsContract.Event.OnDismissDialog)
-            advanceUntilIdle()
+            runCurrent()
+            job.cancel()
 
-            // Then
-            val lastLoadedResult =
-                viewModel.uiResult.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(lastLoadedResult.data.dialogType).isEqualTo(SettingsDialogType.None)
+            assertThat((emittedStates[0] as UIResult.Loaded).data.dialogType)
+                .isEqualTo(SettingsDialogType.RefreshInterval(10000L))
+            assertThat((emittedStates[1] as UIResult.Loaded).data.dialogType)
+                .isEqualTo(SettingsDialogType.None)
         }
 
     @Test

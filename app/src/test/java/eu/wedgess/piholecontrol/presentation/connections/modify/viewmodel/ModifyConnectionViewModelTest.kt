@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.connections.modify.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import eu.wedgess.piholecontrol.MainDispatcherRule
@@ -18,7 +19,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -70,11 +70,12 @@ class ModifyConnectionViewModelTest {
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result).isEqualTo(ModifyConnectionsContract.UiState.initial())
+            viewModel.uiState.test {
+                assertThat(awaitItem()).isEqualTo(ModifyConnectionsContract.UiState.initial())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -96,21 +97,23 @@ class ModifyConnectionViewModelTest {
                 savedStateHandleRule.savedStateHandleMock
             )
             viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection)
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.currentConnection).isEqualTo(connection)
-            assertThat(result.name).isEqualTo(connection.name)
-            assertThat(result.host).isEqualTo(connection.host)
-            assertThat(result.port).isEqualTo(connection.port)
-            assertThat(result.protocol).isEqualTo(connection.protocol)
-            assertThat(result.apiPath).isEqualTo(connection.apiPath)
-            assertThat(result.apiToken).isEqualTo(connection.token)
-            assertThat(result.authUsername).isEqualTo(connection.authUsername)
-            assertThat(result.authPassword).isEqualTo(connection.authPassword)
-            assertThat(result.authRealm).isEqualTo(connection.authRealm)
-            assertThat(result.trustAllCerts).isEqualTo(connection.trustAllCerts)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.currentConnection).isEqualTo(connection)
+                assertThat(result.name).isEqualTo(connection.name)
+                assertThat(result.host).isEqualTo(connection.host)
+                assertThat(result.port).isEqualTo(connection.port)
+                assertThat(result.protocol).isEqualTo(connection.protocol)
+                assertThat(result.apiPath).isEqualTo(connection.apiPath)
+                assertThat(result.apiToken).isEqualTo(connection.token)
+                assertThat(result.authUsername).isEqualTo(connection.authUsername)
+                assertThat(result.authPassword).isEqualTo(connection.authPassword)
+                assertThat(result.authRealm).isEqualTo(connection.authRealm)
+                assertThat(result.trustAllCerts).isEqualTo(connection.trustAllCerts)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -129,12 +132,14 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.SaveConnection)
-            advanceUntilIdle()
 
             // Then
             coVerify { addConnectionUseCase(any()) }
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(ModifyConnectionsContract.Effect.Navigation.Back::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem())
+                    .isInstanceOf(ModifyConnectionsContract.Effect.Navigation.Back::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -153,12 +158,14 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.SaveConnection)
-            advanceUntilIdle()
 
             // Then
             coVerify { updateConnectionUseCase(any()) }
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(ModifyConnectionsContract.Effect.Navigation.Back::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem())
+                    .isInstanceOf(ModifyConnectionsContract.Effect.Navigation.Back::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -176,15 +183,17 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.OnOpenBarcodeScanner)
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.dialogType).isEqualTo(
-                ModifyConnectionDialogType.ApiTokenScanner(
-                    barcodeScanner
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.dialogType).isEqualTo(
+                    ModifyConnectionDialogType.ApiTokenScanner(
+                        barcodeScanner
+                    )
                 )
-            )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -200,15 +209,16 @@ class ModifyConnectionViewModelTest {
                 savedStateHandleRule.savedStateHandleMock
             )
             viewModel.onEvent(ModifyConnectionsContract.Event.OnOpenBarcodeScanner)
-            advanceUntilIdle()
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.OnDismissDialog)
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.dialogType).isEqualTo(ModifyConnectionDialogType.None)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.dialogType).isEqualTo(ModifyConnectionDialogType.None)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -229,8 +239,10 @@ class ModifyConnectionViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val result = viewModel.uiState.value
-        assertThat(result.apiPath).isEqualTo(newApiPath)
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.apiPath).isEqualTo(newApiPath)
+        }
     }
 
     @Test
@@ -249,12 +261,14 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.OnApiTokenChanged(newApiToken))
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.apiToken).isEqualTo(newApiToken)
-            assertThat(result.dialogType).isEqualTo(ModifyConnectionDialogType.None)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.apiToken).isEqualTo(newApiToken)
+                assertThat(result.dialogType).isEqualTo(ModifyConnectionDialogType.None)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -275,11 +289,13 @@ class ModifyConnectionViewModelTest {
             viewModel.onEvent(
                 ModifyConnectionsContract.Event.OnAuthUsernameChanged(newAuthUsername)
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.authUsername).isEqualTo(newAuthUsername)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.authUsername).isEqualTo(newAuthUsername)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -300,11 +316,13 @@ class ModifyConnectionViewModelTest {
             viewModel.onEvent(
                 ModifyConnectionsContract.Event.OnAuthPasswordChanged(newAuthPassword)
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.authPassword).isEqualTo(newAuthPassword)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.authPassword).isEqualTo(newAuthPassword)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -323,11 +341,13 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.OnAuthRealmChanged(newAuthRealm))
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.authRealm).isEqualTo(newAuthRealm)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.authRealm).isEqualTo(newAuthRealm)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -350,11 +370,13 @@ class ModifyConnectionViewModelTest {
                     newTrustAllCerts
                 )
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.trustAllCerts).isEqualTo(newTrustAllCerts)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.trustAllCerts).isEqualTo(newTrustAllCerts)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -377,11 +399,13 @@ class ModifyConnectionViewModelTest {
                     newShowAdvancedSettings
                 )
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.showAdvancedSettings).isEqualTo(newShowAdvancedSettings)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showAdvancedSettings).isEqualTo(newShowAdvancedSettings)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -399,11 +423,13 @@ class ModifyConnectionViewModelTest {
 
         // When
         viewModel.onEvent(ModifyConnectionsContract.Event.OnHostChanged(newHost))
-        advanceUntilIdle()
 
         // Then
-        val result = viewModel.uiState.value
-        assertThat(result.host).isEqualTo(newHost)
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.host).isEqualTo(newHost)
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test
@@ -421,11 +447,13 @@ class ModifyConnectionViewModelTest {
 
         // When
         viewModel.onEvent(ModifyConnectionsContract.Event.OnNameChanged(newName))
-        advanceUntilIdle()
 
         // Then
-        val result = viewModel.uiState.value
-        assertThat(result.name).isEqualTo(newName)
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.name).isEqualTo(newName)
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test
@@ -443,11 +471,13 @@ class ModifyConnectionViewModelTest {
 
         // When
         viewModel.onEvent(ModifyConnectionsContract.Event.OnPortChanged(newPort))
-        advanceUntilIdle()
 
         // Then
-        val result = viewModel.uiState.value
-        assertThat(result.port).isEqualTo(newPort)
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.port).isEqualTo(newPort)
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test
@@ -466,11 +496,13 @@ class ModifyConnectionViewModelTest {
 
             // When
             viewModel.onEvent(ModifyConnectionsContract.Event.OnProtocolChanged(newProtocol))
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.value
-            assertThat(result.protocol).isEqualTo(newProtocol)
-            assertThat(result.port).isEqualTo(newProtocol.defaultPort)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.protocol).isEqualTo(newProtocol)
+                assertThat(result.port).isEqualTo(newProtocol.defaultPort)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

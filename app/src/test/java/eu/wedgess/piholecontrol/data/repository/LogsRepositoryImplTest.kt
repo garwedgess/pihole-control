@@ -52,16 +52,15 @@ class LogsRepositoryImplTest {
     fun `fetchLogs - api fetchLogs is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
         val limit = 10
+        val exception = RuntimeException("API error")
         coEvery { apiService.fetchLogs(activeConnection, limit) } returns Result.failure(
-            RuntimeException("API error")
+            exception
         )
 
         val result = target.fetchLogs(activeConnection, limit)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        assertThat(result.exceptionOrNull()).hasMessageThat().contains("API error")
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { apiService.fetchLogs(activeConnection, limit) }
     }
 }

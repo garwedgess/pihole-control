@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchQueryTypesUseCase
@@ -17,7 +18,6 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
@@ -64,10 +64,13 @@ class QueryTypesViewModelTest {
             viewModel = QueryTypesViewModel(fetchQueryTypesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -94,27 +97,31 @@ class QueryTypesViewModelTest {
             viewModel = QueryTypesViewModel(fetchQueryTypesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-            assertThat((result as UIResult.Loaded).data)
-                .isInstanceOf(QueryTypesContract.UiState::class.java)
-            assertThat(result.data.donutChartDataCollection)
-                .isInstanceOf(DonutChartDataCollection::class.java)
-            assertThat(result.data.legendData).hasSize(queryTypeChartDataList.size)
-            assertThat(result.data.legendData[0]).isEqualTo(
-                LegendData(
-                    "Query Type 1",
-                    "60.0%",
-                    false
+            viewModel.uiResult.test {
+                skipItems(1) // Loading
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data)
+                    .isInstanceOf(QueryTypesContract.UiState::class.java)
+                assertThat(result.data.donutChartDataCollection)
+                    .isInstanceOf(DonutChartDataCollection::class.java)
+                assertThat(result.data.legendData).hasSize(queryTypeChartDataList.size)
+                assertThat(result.data.legendData[0]).isEqualTo(
+                    LegendData(
+                        "Query Type 1",
+                        "60.0%",
+                        false
+                    )
                 )
-            )
-            assertThat(result.data.legendData[1]).isEqualTo(
-                LegendData(
-                    "Query Type 2",
-                    "40.0%",
-                    false
+                assertThat(result.data.legendData[1]).isEqualTo(
+                    LegendData(
+                        "Query Type 2",
+                        "40.0%",
+                        false
+                    )
                 )
-            )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -128,14 +135,18 @@ class QueryTypesViewModelTest {
             viewModel = QueryTypesViewModel(fetchQueryTypesUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
-            assertThat((result as UIResult.Error).errorType)
-                .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
-                .isEqualTo(UiText.StringResource(R.string.query_types_error))
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
-                .isEqualTo(UiText.DynamicString(exception.message ?: "Unknown error"))
+            viewModel.uiResult.test {
+                skipItems(1) // Loading
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Error::class.java)
+                assertThat((result as UIResult.Error).errorType)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
+                    .isEqualTo(UiText.StringResource(R.string.query_types_error))
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                    .isEqualTo(UiText.DynamicString(exception.message ?: "Unknown error"))
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -158,15 +169,18 @@ class QueryTypesViewModelTest {
                 )
             )
             viewModel = QueryTypesViewModel(fetchQueryTypesUseCase)
-            viewModel.uiResult.first { it is UIResult.Loaded }
 
             // When
             viewModel.onEvent(QueryTypesContract.Event.OnLegendItemSelected(1))
             advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat((result as UIResult.Loaded).data.legendData[0].isSelected).isFalse()
-            assertThat(result.data.legendData[1].isSelected).isTrue()
+            viewModel.uiResult.test {
+                skipItems(1) // Loading
+                val result = awaitItem()
+                assertThat((result as UIResult.Loaded).data.legendData[0].isSelected).isFalse()
+                assertThat(result.data.legendData[1].isSelected).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

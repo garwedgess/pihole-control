@@ -6,6 +6,7 @@ import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateSelectedThemeUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -32,8 +33,7 @@ class UpdateSelectedThemeUseCaseTest {
         val result = target(theme)
 
         assertThat(result.isSuccess).isTrue()
-
-        coEvery { repository.updateSelectedTheme(theme) }
+        coVerify { repository.updateSelectedTheme(theme) }
     }
 
     @Test
@@ -47,5 +47,6 @@ class UpdateSelectedThemeUseCaseTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { repository.updateSelectedTheme(theme) }
     }
 }

@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.filters.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
@@ -17,7 +18,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -52,8 +52,10 @@ class FiltersViewModelTest {
         viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
 
         // Then
-        val result = viewModel.uiState.first()
-        assertThat(result).isEqualTo(FiltersContract.UiState.initial())
+        viewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(FiltersContract.UiState.initial())
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test
@@ -66,8 +68,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnClearSearchQuery(""))
 
             // Then
-            val result = viewModel.uiState.first { !it.showSearchView }
-            assertThat(result.showSearchView).isFalse()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showSearchView).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -80,8 +85,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnClearSearchQuery("test"))
 
             // Then
-            val result = viewModel.uiState.first { it.searchQuery.isEmpty() }
-            assertThat(result.searchQuery).isEmpty()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.searchQuery).isEmpty()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -95,8 +103,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnSearchClick)
 
             // Then
-            val result = viewModel.uiState.first { !it.showSearchView }
-            assertThat(result.showSearchView).isFalse()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showSearchView).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -109,15 +120,21 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnSearchExpandedChanged(true))
 
             // Then
-            val result = viewModel.uiState.first { it.showSearchView }
-            assertThat(result.showSearchView).isTrue()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showSearchView).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnSearchExpandedChanged(false))
 
             // Then
-            val result2 = viewModel.uiState.first { !it.showSearchView }
-            assertThat(result2.showSearchView).isFalse()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showSearchView).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -131,8 +148,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnSearchQueryChanged(query))
 
             // Then
-            val result = viewModel.uiState.first { it.searchQuery == query }
-            assertThat(result.searchQuery).isEqualTo(query)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.searchQuery).isEqualTo(query)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -145,8 +165,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnShowSearchView)
 
             // Then
-            val result = viewModel.uiState.first { it.showSearchView }
-            assertThat(result.showSearchView).isTrue()
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showSearchView).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -214,8 +237,10 @@ class FiltersViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FiltersContract.Effect.Toast.RuleAdded::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isInstanceOf(FiltersContract.Effect.Toast.RuleAdded::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -249,8 +274,10 @@ class FiltersViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FiltersContract.Effect.Toast.RuleAddFailed::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isInstanceOf(FiltersContract.Effect.Toast.RuleAddFailed::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -311,15 +338,17 @@ class FiltersViewModelTest {
                 FiltersContract.Event.OnDeleteFilterRuleConfirmed(
                     ModifyFilterRule.Delete(
                         domain = "test.com",
-                        FilterRuleTypeEntity.BLOCK
+                        type = FilterRuleTypeEntity.BLOCK
                     )
                 )
             )
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FiltersContract.Effect.Toast.RuleRemoved::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isInstanceOf(FiltersContract.Effect.Toast.RuleRemoved::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -353,8 +382,10 @@ class FiltersViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FiltersContract.Effect.Toast.RuleRemovalFailed::class.java)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isInstanceOf(FiltersContract.Effect.Toast.RuleRemovalFailed::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -368,8 +399,11 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnDismissDialog)
 
             // Then
-            val result = viewModel.uiState.first { it.dialogType == FilterDialogType.None }
-            assertThat(result.dialogType).isEqualTo(FilterDialogType.None)
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.dialogType).isEqualTo(FilterDialogType.None)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -392,10 +426,13 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnFilterRuleItemClick(rule.toInfo()))
 
             // Then
-            val result =
-                viewModel.uiState.first { it.dialogType is FilterDialogType.ShowFilterRuleInfo }
-            assertThat((result.dialogType as FilterDialogType.ShowFilterRuleInfo).filterRule)
-                .isEqualTo(rule.toInfo())
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat((result.dialogType as FilterDialogType.ShowFilterRuleInfo).filterRule).isEqualTo(
+                        rule.toInfo()
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -408,10 +445,13 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
 
             // Then
-            val result = viewModel.uiState.first { it.dialogType is FilterDialogType.AddFilterRule }
-            assertThat((result.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
-                FilterRuleTypeEntity.ALLOW
-            )
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat((result.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
+                    FilterRuleTypeEntity.ALLOW
+                )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -426,12 +466,15 @@ class FiltersViewModelTest {
             )
 
             // Then
-            val result = viewModel.uiState.first()
-            viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
-            val result2 =
-                viewModel.uiState.first { it.dialogType is FilterDialogType.AddFilterRule }
-            assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type)
-                .isEqualTo(FilterRuleTypeEntity.REGEX_BLOCK)
+            viewModel.uiState.test {
+                awaitItem() // Consume the initial state
+                viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+                val result2 = awaitItem()
+                assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
+                        FilterRuleTypeEntity.REGEX_BLOCK
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -454,9 +497,12 @@ class FiltersViewModelTest {
             viewModel.onEvent(FiltersContract.Event.OnDeleteFilterRuleClick(rule.toInfo()))
 
             // Then
-            val result =
-                viewModel.uiState.first { it.dialogType is FilterDialogType.OnConfirmFilterDelete }
-            assertThat((result.dialogType as FilterDialogType.OnConfirmFilterDelete).filterRule)
-                .isEqualTo(rule.toInfo())
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat((result.dialogType as FilterDialogType.OnConfirmFilterDelete).filterRule).isEqualTo(
+                        rule.toInfo()
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

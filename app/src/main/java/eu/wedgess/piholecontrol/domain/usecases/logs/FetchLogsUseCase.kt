@@ -22,7 +22,7 @@ class FetchLogsUseCase @Inject constructor(
     operator fun invoke(): Flow<Result<List<LogEntryEntity>>> {
         return periodicRefreshUseCase { connection ->
             logsRepository.fetchLogs(connection, logLimit).mapCatching {
-                it.applyStatusFilter()
+                it.applyStatusFilter(logStatusFilter)
             }
         }
     }
@@ -40,12 +40,16 @@ class FetchLogsUseCase @Inject constructor(
     @VisibleForTesting
     fun refresh() = periodicRefreshUseCase.triggerRefresh()
 
-    private fun List<LogEntryEntity>.applyStatusFilter(): List<LogEntryEntity> {
-        return when (logStatusFilter) {
-            LogEntryStatus.ALL -> this
-            LogEntryStatus.ALLOWED,
-            LogEntryStatus.BLOCKED ->
-                filter { logStatusFilter.categories.contains(it.answerType.category) }
+    companion object {
+        internal fun List<LogEntryEntity>.applyStatusFilter(
+            logStatusFilter: LogEntryStatus
+        ): List<LogEntryEntity> {
+            return when (logStatusFilter) {
+                LogEntryStatus.ALL -> this
+                LogEntryStatus.ALLOWED,
+                LogEntryStatus.BLOCKED ->
+                    filter { logStatusFilter.categories.contains(it.answerType.category) }
+            }
         }
     }
 }

@@ -7,15 +7,15 @@ import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
 import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchOverallTimeDataUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 class FetchOverallTimeDataUseCaseTest {
 
-    @MockK
+    @MockK(relaxed = true)
     private lateinit var dashboardRepository: DashboardRepository
 
     private lateinit var target: FetchOverallTimeDataUseCase
@@ -30,7 +30,7 @@ class FetchOverallTimeDataUseCaseTest {
     fun `invoke - successfully fetches overall time data`() = runTest {
         val connection = ConnectionEntity.default
         val queriesOverTime =
-            QueriesOverTimeEntity(permitted = listOf(mockk(relaxed = true)), blocked = emptyList())
+            QueriesOverTimeEntity(permitted = emptyList(), blocked = emptyList())
         coEvery { dashboardRepository.fetchOverTimeData10Minutes(connection) } returns Result.success(
             queriesOverTime
         )
@@ -39,6 +39,7 @@ class FetchOverallTimeDataUseCaseTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(queriesOverTime)
+        coVerify { dashboardRepository.fetchOverTimeData10Minutes(connection) }
     }
 
     @Test
@@ -53,5 +54,6 @@ class FetchOverallTimeDataUseCaseTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { dashboardRepository.fetchOverTimeData10Minutes(connection) }
     }
 }

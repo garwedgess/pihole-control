@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.dashboard.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.DashboardInfoEntity
@@ -15,7 +16,6 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
@@ -63,10 +63,13 @@ class DashboardViewModelTest {
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -87,13 +90,18 @@ class DashboardViewModelTest {
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-            assertThat((result as UIResult.Loaded).data)
-                .isInstanceOf(DashboardContract.UiState::class.java)
-            assertThat(result.data.summary).isNotNull()
-            assertThat(result.data.overtimeLineChart).isNotNull()
-            assertThat(result.data.clientQueriesOverTime).isNotNull()
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((loadedResult as UIResult.Loaded).data)
+                    .isInstanceOf(DashboardContract.UiState::class.java)
+                assertThat(loadedResult.data.summary).isNotNull()
+                assertThat(loadedResult.data.overtimeLineChart).isNotNull()
+                assertThat(loadedResult.data.clientQueriesOverTime).isNotNull()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -107,10 +115,15 @@ class DashboardViewModelTest {
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
-            assertThat((result as UIResult.Error).errorType)
-                .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                val errorResult = awaitItem()
+                assertThat(errorResult).isInstanceOf(UIResult.Error::class.java)
+                assertThat((errorResult as UIResult.Error).errorType)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -133,8 +146,14 @@ class DashboardViewModelTest {
             // When
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
 
-            val result = viewModel.uiResult.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
+            // Then
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                val errorResult = awaitItem()
+                assertThat(errorResult).isInstanceOf(UIResult.Error::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -165,14 +184,24 @@ class DashboardViewModelTest {
 
             // When
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect).isInstanceOf(DashboardContract.Effect.ShowErrorSnackbar::class.java)
-            assertThat((sideEffect as DashboardContract.Effect.ShowErrorSnackbar).errorMessages.size)
-                .isEqualTo(expectedFailures.size)
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect)
+                    .isInstanceOf(DashboardContract.Effect.ShowErrorSnackbar::class.java)
+                assertThat(
+                    (sideEffect as DashboardContract.Effect.ShowErrorSnackbar).errorMessages.size
+                ).isEqualTo(expectedFailures.size)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -198,13 +227,23 @@ class DashboardViewModelTest {
 
             // When
             viewModel = DashboardViewModel(fetchDashboardInfoUseCase)
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect).isInstanceOf(DashboardContract.Effect.ShowErrorSnackbar::class.java)
-            assertThat((sideEffect as DashboardContract.Effect.ShowErrorSnackbar).errorMessages.size)
-                .isEqualTo(expectedFailures.size)
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect)
+                    .isInstanceOf(DashboardContract.Effect.ShowErrorSnackbar::class.java)
+                assertThat(
+                    (sideEffect as DashboardContract.Effect.ShowErrorSnackbar).errorMessages.size
+                ).isEqualTo(expectedFailures.size)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

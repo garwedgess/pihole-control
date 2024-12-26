@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.StatusApiService
-import eu.wedgess.piholecontrol.domain.mappers.toStatusEntity
+import eu.wedgess.piholecontrol.data.mappers.toStatusEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository

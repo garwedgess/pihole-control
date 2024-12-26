@@ -102,6 +102,8 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.core.ktx)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

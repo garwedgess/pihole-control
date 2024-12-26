@@ -35,13 +35,15 @@ class DeleteConnectionMarkedForDeletionUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fails`() = runTest {
+        val exception = Exception("Delete failed")
         coEvery {
             repository.deleteAllMarkedForDeletion()
-        } returns Result.failure(Exception("Delete failed"))
+        } returns Result.failure(exception)
 
         val result = target()
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(Exception::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { repository.deleteAllMarkedForDeletion() }
     }
 }

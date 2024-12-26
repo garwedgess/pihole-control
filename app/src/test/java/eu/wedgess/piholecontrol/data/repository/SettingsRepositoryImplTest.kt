@@ -12,6 +12,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -48,7 +49,7 @@ class SettingsRepositoryImplTest {
             assertThat(result.useDynamicColors).isFalse()
             assertThat(result.refreshInterval).isEqualTo(30L)
             assertThat(result.multiStatusChange).isFalse()
-            cancelAndIgnoreRemainingEvents()
+            cancelAndConsumeRemainingEvents()
         }
     }
 
@@ -66,7 +67,7 @@ class SettingsRepositoryImplTest {
         target.getRefreshInterval().test {
             val interval = awaitItem()
             assertThat(interval).isEqualTo(30L)
-            cancelAndIgnoreRemainingEvents()
+            cancelAndConsumeRemainingEvents()
         }
     }
 
@@ -84,7 +85,7 @@ class SettingsRepositoryImplTest {
         target.changeStatusOnAllConnection().test {
             val status = awaitItem()
             assertThat(status).isFalse()
-            cancelAndIgnoreRemainingEvents()
+            cancelAndConsumeRemainingEvents()
         }
     }
 
@@ -99,10 +100,10 @@ class SettingsRepositoryImplTest {
                 .build()
         )
         coEvery { preferences.data } returns userPreferencesFlow
-        coEvery { preferences.updateData(any()) } answers {
-            userPreferencesFlow.value = userPreferencesFlow.value.toBuilder()
-                .setTheme(UserPreferences.Theme.DARK)
-                .build()
+        val updateDataLambdaSlot = slot<suspend (UserPreferences) -> UserPreferences>()
+        coEvery { preferences.updateData(capture(updateDataLambdaSlot)) } coAnswers {
+            val lambda = updateDataLambdaSlot.captured
+            userPreferencesFlow.value = lambda(userPreferencesFlow.value)
             userPreferencesFlow.value
         }
 
@@ -110,16 +111,18 @@ class SettingsRepositoryImplTest {
 
         assertThat(result.isSuccess).isTrue()
         coVerify { preferences.updateData(any()) }
+        assertThat(userPreferencesFlow.value.theme).isEqualTo(UserPreferences.Theme.DARK)
     }
 
     @Test
     fun `updateSelectedTheme - handles failure`() = runTest {
-        coEvery { preferences.updateData(any()) } throws RuntimeException("Update error")
+        val exception = RuntimeException("Update error")
+        coEvery { preferences.updateData(any()) } throws exception
 
         val result = target.updateSelectedTheme(AppThemeEntity.DARK)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { preferences.updateData(any()) }
     }
 
@@ -134,16 +137,28 @@ class SettingsRepositoryImplTest {
                 .build()
         )
         coEvery { preferences.data } returns userPreferencesFlow
-        coEvery { preferences.updateData(any()) } answers {
-            userPreferencesFlow.value = userPreferencesFlow.value.toBuilder()
-                .setUseDynamicColors(true)
-                .build()
+        val updateDataLambdaSlot = slot<suspend (UserPreferences) -> UserPreferences>()
+        coEvery { preferences.updateData(capture(updateDataLambdaSlot)) } coAnswers {
+            val lambda = updateDataLambdaSlot.captured
+            userPreferencesFlow.value = lambda(userPreferencesFlow.value)
             userPreferencesFlow.value
         }
 
         val result = target.updateDynamicTheme(true)
 
         assertThat(result.isSuccess).isTrue()
+        coVerify { preferences.updateData(any()) }
+    }
+
+    @Test
+    fun `updateDynamicTheme - handles failure`() = runTest {
+        val exception = RuntimeException("Update error")
+        coEvery { preferences.updateData(any()) } throws exception
+
+        val result = target.updateDynamicTheme(true)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { preferences.updateData(any()) }
     }
 
@@ -158,16 +173,28 @@ class SettingsRepositoryImplTest {
                 .build()
         )
         coEvery { preferences.data } returns userPreferencesFlow
-        coEvery { preferences.updateData(any()) } answers {
-            userPreferencesFlow.value = userPreferencesFlow.value.toBuilder()
-                .setRefreshTime(60L)
-                .build()
+        val updateDataLambdaSlot = slot<suspend (UserPreferences) -> UserPreferences>()
+        coEvery { preferences.updateData(capture(updateDataLambdaSlot)) } coAnswers {
+            val lambda = updateDataLambdaSlot.captured
+            userPreferencesFlow.value = lambda(userPreferencesFlow.value)
             userPreferencesFlow.value
         }
 
         val result = target.updateRefreshInterval(60L)
 
         assertThat(result.isSuccess).isTrue()
+        coVerify { preferences.updateData(any()) }
+    }
+
+    @Test
+    fun `updateRefreshInterval - handles failure`() = runTest {
+        val exception = RuntimeException("Update error")
+        coEvery { preferences.updateData(any()) } throws exception
+
+        val result = target.updateRefreshInterval(60L)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { preferences.updateData(any()) }
     }
 
@@ -182,16 +209,28 @@ class SettingsRepositoryImplTest {
                 .build()
         )
         coEvery { preferences.data } returns userPreferencesFlow
-        coEvery { preferences.updateData(any()) } answers {
-            userPreferencesFlow.value = userPreferencesFlow.value.toBuilder()
-                .setChangeStatusOnAllConnection(true)
-                .build()
+        val updateDataLambdaSlot = slot<suspend (UserPreferences) -> UserPreferences>()
+        coEvery { preferences.updateData(capture(updateDataLambdaSlot)) } coAnswers {
+            val lambda = updateDataLambdaSlot.captured
+            userPreferencesFlow.value = lambda(userPreferencesFlow.value)
             userPreferencesFlow.value
         }
 
         val result = target.updateStatusChangeOnAllConnections(true)
 
         assertThat(result.isSuccess).isTrue()
+        coVerify { preferences.updateData(any()) }
+    }
+
+    @Test
+    fun `updateStatusChangeOnAllConnections - handles failure`() = runTest {
+        val exception = RuntimeException("Update error")
+        coEvery { preferences.updateData(any()) } throws exception
+
+        val result = target.updateStatusChangeOnAllConnections(true)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { preferences.updateData(any()) }
     }
 }

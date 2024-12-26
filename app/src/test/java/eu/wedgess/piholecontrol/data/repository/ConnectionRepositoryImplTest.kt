@@ -4,7 +4,7 @@ import TestDispatcherProvider
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
-import eu.wedgess.piholecontrol.domain.mappers.toConnection
+import eu.wedgess.piholecontrol.data.mappers.toConnection
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import io.mockk.MockKAnnotations
@@ -85,7 +85,7 @@ class ConnectionRepositoryImplTest {
             val result = awaitItem()
             assertThat(result.isSuccess).isTrue()
             assertThat(result.getOrNull()).isEqualTo(connections)
-            cancelAndIgnoreRemainingEvents()
+            awaitComplete()
         }
     }
 
@@ -98,7 +98,7 @@ class ConnectionRepositoryImplTest {
             val result = awaitItem()
             assertThat(result.isSuccess).isTrue()
             assertThat(result.getOrNull()).isEqualTo(connection)
-            cancelAndIgnoreRemainingEvents()
+            awaitComplete()
         }
     }
 

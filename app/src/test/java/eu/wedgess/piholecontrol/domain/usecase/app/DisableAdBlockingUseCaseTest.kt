@@ -9,7 +9,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +30,7 @@ class DisableAdBlockingUseCaseTest {
     @Test
     fun `invoke - disables ad blocking and returns success`() = runTest {
         val connection = ConnectionEntity.default
-        val status = mockk<StatusEntity>(relaxed = true)
+        val status = StatusEntity.DISABLED
         val duration: Duration = 30.minutes
 
         coEvery {

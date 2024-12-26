@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.connections.list.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.R
@@ -20,10 +21,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -74,10 +72,12 @@ class ConnectionsViewModelTest {
             )
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType).isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -98,9 +98,12 @@ class ConnectionsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-            assertThat((result as UIResult.Loaded).data.connections).isEqualTo(connections)
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.connections).isEqualTo(connections)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -120,14 +123,17 @@ class ConnectionsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Empty }
-            assertThat(result).isInstanceOf(UIResult.Empty::class.java)
-            assertThat((result as UIResult.Empty).emptyType)
-                .isInstanceOf(ResultType.Empty.WithTitleAndSubTitle::class.java)
-            assertThat((result.emptyType as ResultType.Empty.WithTitleAndSubTitle).title)
-                .isEqualTo(UiText.StringResource(R.string.connections_empty_title))
-            assertThat((result.emptyType as ResultType.Empty.WithTitleAndSubTitle).subTitle)
-                .isEqualTo(UiText.StringResource(R.string.connections_empty_message))
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Empty::class.java)
+                assertThat((result as UIResult.Empty).emptyType)
+                    .isInstanceOf(ResultType.Empty.WithTitleAndSubTitle::class.java)
+                assertThat((result.emptyType as ResultType.Empty.WithTitleAndSubTitle).title)
+                    .isEqualTo(UiText.StringResource(R.string.connections_empty_title))
+                assertThat((result.emptyType as ResultType.Empty.WithTitleAndSubTitle).subTitle)
+                    .isEqualTo(UiText.StringResource(R.string.connections_empty_message))
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -148,16 +154,17 @@ class ConnectionsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
-            assertThat((result as UIResult.Error).errorType)
-                .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
-                .isEqualTo(UiText.StringResource(R.string.connections_error_title))
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
-                .isEqualTo(
-                    UiText.DynamicString(exception.message ?: "Unknown error")
-                )
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Error::class.java)
+                assertThat((result as UIResult.Error).errorType)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title)
+                    .isEqualTo(UiText.StringResource(R.string.connections_error_title))
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                    .isEqualTo(UiText.DynamicString(exception.message ?: "Unknown error"))
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -172,17 +179,16 @@ class ConnectionsViewModelTest {
                 markConnectionForDeletionUseCase,
                 unMarkConnectionForDeletionUseCase
             )
-            val sideEffects = mutableListOf<ConnectionsContract.Effect>()
-            backgroundScope.launch {
-                viewModel.sideEffect.toList(sideEffects)
-            }
 
             // When
             viewModel.onEvent(ConnectionsContract.Event.AddConnection)
             advanceUntilIdle()
 
             // Then
-            assertThat(sideEffects).containsExactly(ConnectionsContract.Effect.Navigation.Add)
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isEqualTo(ConnectionsContract.Effect.Navigation.Add)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -222,21 +228,20 @@ class ConnectionsViewModelTest {
                 markConnectionForDeletionUseCase,
                 unMarkConnectionForDeletionUseCase
             )
-            val sideEffects = mutableListOf<ConnectionsContract.Effect>()
-            backgroundScope.launch {
-                viewModel.sideEffect.toList(sideEffects)
-            }
 
             // When
             viewModel.onEvent(ConnectionsContract.Event.EditConnection(connectionId))
             advanceUntilIdle()
 
             // Then
-            assertThat(sideEffects).containsExactly(
-                ConnectionsContract.Effect.Navigation.Edit(
-                    connectionId
-                )
-            )
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isEqualTo(
+                        ConnectionsContract.Effect.Navigation.Edit(
+                            connectionId
+                        )
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -283,8 +288,8 @@ class ConnectionsViewModelTest {
             // When
             viewModel.onEvent(
                 ConnectionsContract.Event.UndoDeleteConnection(
-                    connectionId,
-                    connectionName
+                    id = connectionId,
+                    name = connectionName
                 )
             )
             advanceUntilIdle()
@@ -318,15 +323,17 @@ class ConnectionsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect)
-                .isInstanceOf(
-                    ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed::class.java
-                )
-            (sideEffect as ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed).run {
-                assertThat(id).isEqualTo(connectionId)
-                assertThat(name).isEqualTo(connectionName)
-                assertThat(message).isInstanceOf(UiText.StringResourceWithArgs::class.java)
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(
+                        ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed::class.java
+                    )
+                (sideEffect as ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed).run {
+                    assertThat(id).isEqualTo(connectionId)
+                    assertThat(name).isEqualTo(connectionName)
+                    assertThat(message).isInstanceOf(UiText.StringResourceWithArgs::class.java)
+                }
+                cancelAndConsumeRemainingEvents()
             }
         }
 
@@ -351,19 +358,23 @@ class ConnectionsViewModelTest {
             // When
             viewModel.onEvent(
                 ConnectionsContract.Event.DeleteConnection(
-                    connectionId,
-                    connectionName
+                    id = connectionId,
+                    name = connectionName
                 )
             )
             advanceUntilIdle()
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect)
-                .isInstanceOf(ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java)
-            assertThat(
-                (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).name
-            ).isEqualTo(connectionName)
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(
+                        ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
+                    )
+                assertThat(
+                    (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).name
+                ).isEqualTo(connectionName)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -385,19 +396,22 @@ class ConnectionsViewModelTest {
             // When
             viewModel.onEvent(
                 ConnectionsContract.Event.DeleteConnection(
-                    connectionId,
-                    connectionName
+                    id = connectionId,
+                    name = connectionName
                 )
             )
             advanceUntilIdle()
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect)
-                .isInstanceOf(ConnectionsContract.Effect.Snackbar.DeleteConnection::class.java)
-            assertThat((sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnection).id)
-                .isEqualTo(connectionId)
-            assertThat(sideEffect.name).isEqualTo(connectionName)
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(ConnectionsContract.Effect.Snackbar.DeleteConnection::class.java)
+                assertThat((sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnection).id).isEqualTo(
+                        connectionId
+                    )
+                assertThat(sideEffect.name).isEqualTo(connectionName)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -424,16 +438,17 @@ class ConnectionsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect)
-                .isInstanceOf(
-                    ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
-                )
-            assertThat(
-                (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).message
-            )
-                .isInstanceOf(UiText.StringResourceWithArgs::class.java)
-            assertThat(sideEffect.name).isEqualTo(connectionName)
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(
+                        ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
+                    )
+                assertThat(
+                    (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).message
+                ).isInstanceOf(UiText.StringResourceWithArgs::class.java)
+                assertThat(sideEffect.name).isEqualTo(connectionName)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -457,22 +472,23 @@ class ConnectionsViewModelTest {
             // When
             viewModel.onEvent(
                 ConnectionsContract.Event.UndoDeleteConnection(
-                    connectionId,
-                    connectionName
+                    id = connectionId,
+                    name = connectionName
                 )
             )
             advanceUntilIdle()
 
             // Then
-            val sideEffect = viewModel.sideEffect.first()
-            assertThat(sideEffect)
-                .isInstanceOf(
-                    ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed::class.java
-                )
-            assertThat(
-                (sideEffect as ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed).id
-            )
-                .isEqualTo(connectionId)
-            assertThat(sideEffect.name).isEqualTo(connectionName)
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(
+                        ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed::class.java
+                    )
+                assertThat(
+                    (sideEffect as ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed).id
+                ).isEqualTo(connectionId)
+                assertThat(sideEffect.name).isEqualTo(connectionName)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

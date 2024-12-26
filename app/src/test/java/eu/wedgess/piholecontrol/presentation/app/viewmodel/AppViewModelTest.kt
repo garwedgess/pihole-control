@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.app.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
@@ -19,12 +20,13 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -79,8 +81,10 @@ class AppViewModelTest {
         )
 
         // Then
-        val result = viewModel.uiState.first()
-        assertThat(result).isEqualTo(AppContract.UiState.initial())
+        viewModel.uiState.test {
+            assertThat(awaitItem()).isEqualTo(AppContract.UiState.initial())
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test
@@ -101,14 +105,20 @@ class AppViewModelTest {
                 disableAdBlockingConditionalUseCase,
                 setConnectionAsActiveUseCase
             )
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.first { it.appInfo.connections.isNotEmpty() }
-            assertThat(result.appInfo).isEqualTo(appInfo)
-            assertThat(result.appBarState.adBlockingEnabled).isTrue()
-            assertThat(result.appBarState.currentConnection).isEqualTo(appInfo.currentConnection)
-            assertThat(result.appBarState.connections).isEqualTo(appInfo.connections)
+            viewModel.uiState.test {
+                // Skip the initial state
+                skipItems(1)
+                // Await the updated state
+                with(awaitItem()) {
+                    assertThat(appInfo).isEqualTo(appInfo)
+                    assertThat(appBarState.adBlockingEnabled).isTrue()
+                    assertThat(appBarState.currentConnection).isEqualTo(appInfo.currentConnection)
+                    assertThat(appBarState.connections).isEqualTo(appInfo.connections)
+                }
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -122,14 +132,22 @@ class AppViewModelTest {
                 disableAdBlockingConditionalUseCase,
                 setConnectionAsActiveUseCase
             )
-            viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
+
+            // Track emitted states
+            val emittedStates = mutableListOf<AppContract.UiState>()
+            val job = backgroundScope.launch {
+                viewModel.uiState.collect { emittedStates.add(it) }
+            }
 
             // When
+            viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
+            runCurrent()
             viewModel.onEvent(AppContract.Event.DismissDialog)
+            runCurrent()
+            job.cancel()
 
-            // Then
-            val result = viewModel.uiState.first { it.dialogType == AppDialogType.None }
-            assertThat(result.dialogType).isEqualTo(AppDialogType.None)
+            assertThat(emittedStates[1].dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
+            assertThat(emittedStates[2].dialogType).isEqualTo(AppDialogType.None)
         }
 
     @Test
@@ -204,11 +222,14 @@ class AppViewModelTest {
 
             // When
             viewModel.onEvent(AppContract.Event.UpdateAppBarState(newAppBarState))
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiState.first { it.appBarState == newAppBarState }
-            assertThat(result.appBarState).isEqualTo(newAppBarState)
+            viewModel.uiState.test {
+                skipItems(1)
+                val result = awaitItem()
+                assertThat(result.appBarState).isEqualTo(newAppBarState)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -318,8 +339,12 @@ class AppViewModelTest {
             viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
 
             // Then
-            val result = viewModel.uiState.first { it.dialogType == AppDialogType.EnableAdBlocking }
-            assertThat(result.dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
+            viewModel.uiState.test {
+                skipItems(1)
+                val result = awaitItem()
+                assertThat(result.dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -338,8 +363,11 @@ class AppViewModelTest {
             viewModel.onEvent(AppContract.Event.ShowDisabledStatusDialog)
 
             // Then
-            val result =
-                viewModel.uiState.first { it.dialogType == AppDialogType.DisableAdBlocking }
-            assertThat(result.dialogType).isEqualTo(AppDialogType.DisableAdBlocking)
+            viewModel.uiState.test {
+                skipItems(1)
+                val result = awaitItem()
+                assertThat(result.dialogType).isEqualTo(AppDialogType.DisableAdBlocking)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }

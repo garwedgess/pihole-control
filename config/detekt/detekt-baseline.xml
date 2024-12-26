@@ -3,6 +3,8 @@
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>ArgumentListWrapping:DisableStatusDialog.kt$(customTimeMinutes.text.ifBlank { "00" } .toLong() )</ID>
+    <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( 16788864L to 5L, 16788900L to 8L )</ID>
+    <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( timestamp = 16788864000L, hits = 10 )</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
@@ -19,7 +21,7 @@
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SVCB") val SVCB: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("TXT") val TXT: Float = 0f</ID>
     <ID>CyclomaticComplexMethod:LogAnswerTypeEntityExt.kt$@Composable fun LogAnswerTypeEntity.toStringValue()</ID>
-    <ID>CyclomaticComplexMethod:LogAnswerTypeEntityMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
+    <ID>CyclomaticComplexMethod:LogAnswerTypeMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
@@ -78,7 +80,7 @@
     <ID>MagicNumber:PiHoleControlApp.kt$500</ID>
     <ID>MagicNumber:PiHoleFilterRuleType.kt$PiHoleFilterRuleType.REGEX_BLOCK$3</ID>
     <ID>MagicNumber:PiHoleLogSerializer.kt$PiHoleLogSerializer$4</ID>
-    <ID>MagicNumber:QueriesOverTimeEntityMapper.kt$1000L</ID>
+    <ID>MagicNumber:QueriesOverTimeMapper.kt$1000L</ID>
     <ID>MagicNumber:StatisticsListItem.kt$100</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$0.1f</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$200</ID>
@@ -152,6 +154,7 @@
     <ID>ThrowsCount:HttpClientExt.kt$private suspend inline fun &lt;reified T, reified E&gt; HttpResponse.handleResponse(): T</ID>
     <ID>TooGenericExceptionCaught:CoroutineExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:HttpClientExt.kt$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:CoroutinesExtTest.kt$CoroutinesExtTest$throw RuntimeException("Test Exception")</ID>
     <ID>TooGenericExceptionThrown:HttpClientExt.kt$throw Exception("No content: HTTP $statusCode")</ID>
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
     <ID>TooManyFunctions:ConnectionDao.kt$ConnectionDao</ID>

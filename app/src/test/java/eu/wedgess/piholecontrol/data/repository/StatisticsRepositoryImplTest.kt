@@ -52,43 +52,49 @@ class StatisticsRepositoryImplTest {
     @Test
     fun `fetchQueryTypes - api fetchQueryTypes is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchQueryTypes(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchQueryTypes(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchQueryTypes(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchQueryTypes(activeConnection) }
     }
 
     @Test
-    fun `fetchForwardDestinations - api fetchForwardDestinations is invoked AND result is success`() = runTest {
-        val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        val mockResponse = mockk<PiHoleForwardDestinations>(relaxed = true)
-        coEvery { api.fetchForwardDestinations(activeConnection) } returns Result.success(mockResponse)
+    fun `fetchForwardDestinations - api fetchForwardDestinations is invoked AND result is success`() =
+        runTest {
+            val activeConnection = mockk<ConnectionEntity>(relaxed = true)
+            val mockResponse = mockk<PiHoleForwardDestinations>(relaxed = true)
+            coEvery { api.fetchForwardDestinations(activeConnection) } returns Result.success(
+                mockResponse
+            )
 
-        val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchForwardDestinations(activeConnection)
 
-        assertThat(result.isSuccess).isTrue()
-        val resultList = result.getOrNull()
-        assertThat(resultList).isNotNull()
-        assertThat(resultList).isInstanceOf(List::class.java)
-        coVerify { api.fetchForwardDestinations(activeConnection) }
-    }
+            assertThat(result.isSuccess).isTrue()
+            val resultList = result.getOrNull()
+            assertThat(resultList).isNotNull()
+            assertThat(resultList).isInstanceOf(List::class.java)
+            coVerify { api.fetchForwardDestinations(activeConnection) }
+        }
 
     @Test
-    fun `fetchForwardDestinations - api fetchForwardDestinations is invoked AND result is failure`() = runTest {
-        val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchForwardDestinations(activeConnection) } returns Result.failure(RuntimeException())
+    fun `fetchForwardDestinations - api fetchForwardDestinations is invoked AND result is failure`() =
+        runTest {
+            val activeConnection = mockk<ConnectionEntity>(relaxed = true)
+            val exception = RuntimeException("API error")
+            coEvery { api.fetchForwardDestinations(activeConnection) } returns Result.failure(
+                exception
+            )
 
-        val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchForwardDestinations(activeConnection)
 
-        assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { api.fetchForwardDestinations(activeConnection) }
-    }
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            coVerify { api.fetchForwardDestinations(activeConnection) }
+        }
 
     @Test
     fun `fetchTopQueries - api fetchTopQueries is invoked AND result is success`() = runTest {
@@ -108,13 +114,13 @@ class StatisticsRepositoryImplTest {
     @Test
     fun `fetchTopQueries - api fetchTopQueries is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchTopQueries(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchTopQueries(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchTopQueries(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchTopQueries(activeConnection) }
     }
 
@@ -136,13 +142,13 @@ class StatisticsRepositoryImplTest {
     @Test
     fun `fetchTopClients - api fetchTopClients is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchTopClients(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchTopClients(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchTopClients(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchTopClients(activeConnection) }
     }
 }

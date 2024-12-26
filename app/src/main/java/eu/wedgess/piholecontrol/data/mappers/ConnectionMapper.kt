@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.domain.mappers
+package eu.wedgess.piholecontrol.data.mappers
 
 import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity

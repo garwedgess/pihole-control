@@ -9,6 +9,7 @@ import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -38,12 +39,20 @@ class AddFilterRuleUseCaseTest {
         val response = ModifyFilterRuleResponseEntity(success = true, message = null)
 
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
-        coEvery { filterRuleRepository.addFilterRule(connection, rule, ruleType) } returns Result.success(response)
+        coEvery {
+            filterRuleRepository.addFilterRule(
+                connection,
+                rule,
+                ruleType
+            )
+        } returns Result.success(response)
 
         val result = target(rule, ruleType)
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(response)
+        coVerify { connectionRepository.fetchActive() }
+        coVerify { filterRuleRepository.addFilterRule(connection, rule, ruleType) }
     }
 
     @Test
@@ -58,6 +67,8 @@ class AddFilterRuleUseCaseTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { connectionRepository.fetchActive() }
+        coVerify(exactly = 0) { filterRuleRepository.addFilterRule(any(), any(), any()) }
     }
 
     @Test
@@ -68,11 +79,19 @@ class AddFilterRuleUseCaseTest {
         val exception = Exception("Failed to add filter rule")
 
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
-        coEvery { filterRuleRepository.addFilterRule(connection, rule, ruleType) } returns Result.failure(exception)
+        coEvery {
+            filterRuleRepository.addFilterRule(
+                connection,
+                rule,
+                ruleType
+            )
+        } returns Result.failure(exception)
 
         val result = target(rule, ruleType)
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { connectionRepository.fetchActive() }
+        coVerify { filterRuleRepository.addFilterRule(connection, rule, ruleType) }
     }
 }

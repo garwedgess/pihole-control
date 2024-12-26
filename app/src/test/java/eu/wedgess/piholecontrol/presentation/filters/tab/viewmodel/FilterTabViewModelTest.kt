@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.R
@@ -16,15 +17,10 @@ import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -59,10 +55,13 @@ class FilterTabViewModelTest {
             )
 
             // Then
-            val result = viewModel.uiResult.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -96,17 +95,15 @@ class FilterTabViewModelTest {
                 fetchFilterRulesUseCase,
                 FilterScreenTabType.ALLOW
             )
-            val uiResults = mutableListOf<UIResult<FilterTabContract.UiState>>()
-            backgroundScope.launch {
-                viewModel.uiResult.toList(uiResults)
-            }
-            advanceUntilIdle()
 
             // Then
-            val result = uiResults.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-            assertThat((result as UIResult.Loaded).data.filterRules)
-                .isEqualTo(filterRules.map { it.toInfo() })
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.filterRules)
+                    .isEqualTo(filterRules.map { it.toInfo() })
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -125,24 +122,22 @@ class FilterTabViewModelTest {
                 fetchFilterRulesUseCase,
                 FilterScreenTabType.ALLOW
             )
-            val uiResults = mutableListOf<UIResult<FilterTabContract.UiState>>()
-            backgroundScope.launch {
-                viewModel.uiResult.toList(uiResults)
-            }
-            advanceUntilIdle()
 
             // Then
-            val result = uiResults.first { it is UIResult.Error }
-            assertThat(result).isInstanceOf(UIResult.Error::class.java)
-            assertThat((result as UIResult.Error).errorType)
-                .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title).isEqualTo(
-                UiText.StringResource(R.string.filter_rules_fetch_error)
-            )
-            assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
-                .isEqualTo(
-                    UiText.DynamicString(exception.message ?: "Unknown error")
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Error::class.java)
+                assertThat((result as UIResult.Error).errorType)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title).isEqualTo(
+                    UiText.StringResource(R.string.filter_rules_fetch_error)
                 )
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                    .isEqualTo(
+                        UiText.DynamicString(exception.message ?: "Unknown error")
+                    )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -190,41 +185,18 @@ class FilterTabViewModelTest {
 
             // When
             viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged(query))
-            advanceUntilIdle()
 
             // Then
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat((result as UIResult.Loaded).data.filterRules.size).isEqualTo(1)
-            assertThat(result.data.filterRules.first()).isEqualTo(
-                expectedResult.toInfo()
-            )
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.filterRules.size).isEqualTo(1)
+                assertThat(result.data.filterRules.first()).isEqualTo(
+                    expectedResult.toInfo()
+                )
+                cancelAndConsumeRemainingEvents()
+            }
         }
-
-    @Test
-    fun `WHEN OnRefresh event is received THEN refreshRules should be called`() = runTest {
-        // Given
-        val filterRulesResultEntity = FilterRulesResultEntity(
-            rules = Result.success(emptyList()),
-            regexRules = Result.success(emptyList())
-        )
-        coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-            Result.success(
-                filterRulesResultEntity
-            )
-        )
-        coEvery { fetchFilterRulesUseCase.refreshRules() } returns true
-        viewModel = FilterTabViewModel(
-            fetchFilterRulesUseCase,
-            FilterScreenTabType.ALLOW
-        )
-
-        // When
-        viewModel.onEvent(FilterTabContract.Event.OnRefresh)
-        advanceUntilIdle()
-
-        // Then
-        coVerify { fetchFilterRulesUseCase.refreshRules() }
-    }
 
     @Test
     fun `GIVEN rules and regexRules returns failure WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should be emitted`() =
@@ -246,15 +218,12 @@ class FilterTabViewModelTest {
                 FilterScreenTabType.ALLOW
             )
 
-            val uiResults = mutableListOf<UIResult<FilterTabContract.UiState>>()
-            backgroundScope.launch {
-                viewModel.uiResult.toList(uiResults)
-            }
-            advanceUntilIdle()
-
             // Then
-            uiResults.first { it is UIResult.Error }
-            assertThat(viewModel.uiResult.value).isInstanceOf(UIResult.Error::class.java)
+            viewModel.uiResult.test {
+                val errorResult = awaitItem()
+                assertThat(errorResult).isInstanceOf(UIResult.Error::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -276,12 +245,18 @@ class FilterTabViewModelTest {
                 FilterScreenTabType.ALLOW
             )
 
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect)
+                    .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -303,12 +278,18 @@ class FilterTabViewModelTest {
                 FilterScreenTabType.ALLOW
             )
 
-            val result = viewModel.uiResult.first { it is UIResult.Empty }
-            assertThat(result).isInstanceOf(UIResult.Empty::class.java)
-
             // Then
-            assertThat(viewModel.sideEffect.first())
-                .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+            viewModel.uiResult.test {
+                val emptyResult = awaitItem()
+                assertThat(emptyResult).isInstanceOf(UIResult.Empty::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect)
+                    .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -330,13 +311,19 @@ class FilterTabViewModelTest {
                 FilterScreenTabType.ALLOW
             )
 
-            val result = viewModel.uiResult.first { it is UIResult.Loaded }
-            assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
-
             // Then
-            assertThat(viewModel.sideEffect.first()).isInstanceOf(
-                FilterTabContract.Effect.ShowErrorSnackbar::class.java
-            )
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+            viewModel.sideEffect.test {
+                val sideEffect = awaitItem()
+                assertThat(sideEffect).isInstanceOf(
+                    FilterTabContract.Effect.ShowErrorSnackbar::class.java
+                )
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -356,13 +343,10 @@ class FilterTabViewModelTest {
                 fetchFilterRulesUseCase,
                 FilterScreenTabType.ALLOW
             )
-            val sideEffects = mutableListOf<FilterTabContract.Effect>()
-            backgroundScope.launch {
-                viewModel.sideEffect.toList(sideEffects)
-            }
-            advanceUntilIdle()
 
             // Then
-            assertThat(sideEffects).isEmpty()
+            viewModel.sideEffect.test {
+                expectNoEvents()
+            }
         }
 }

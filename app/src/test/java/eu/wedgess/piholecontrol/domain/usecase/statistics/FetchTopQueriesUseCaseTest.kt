@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.statistics
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.TopDomainEntity
@@ -11,7 +12,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -58,11 +58,12 @@ class FetchTopQueriesUseCaseTest {
             repository.fetchTopQueries(connection)
         } returns Result.success(topQueries)
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
-        assertThat(result.first().getOrNull()).isEqualTo(topQueries)
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isEqualTo(topQueries)
+            awaitComplete()
+        }
     }
 
     @Test
@@ -82,10 +83,11 @@ class FetchTopQueriesUseCaseTest {
             repository.fetchTopQueries(connection)
         } returns Result.failure(exception)
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isFailure).isTrue()
-        assertThat(result.first().exceptionOrNull()).isEqualTo(exception)
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            awaitComplete()
+        }
     }
 }

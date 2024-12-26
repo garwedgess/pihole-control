@@ -5,6 +5,7 @@ import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchShouldChangeStatusOnAllConnectionsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -33,6 +34,7 @@ class FetchShouldChangeStatusOnAllConnectionsUseCaseTest {
         val result = fetchShouldChangeStatusOnAllConnectionsUseCase()
 
         assertThat(result).isTrue()
+        coVerify { settingsRepository.changeStatusOnAllConnection() }
     }
 
     @Test
@@ -42,5 +44,6 @@ class FetchShouldChangeStatusOnAllConnectionsUseCaseTest {
         val result = fetchShouldChangeStatusOnAllConnectionsUseCase()
 
         assertThat(result).isFalse()
+        coVerify { settingsRepository.changeStatusOnAllConnection() }
     }
 }

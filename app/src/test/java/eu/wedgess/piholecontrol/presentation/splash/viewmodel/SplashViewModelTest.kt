@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.splash.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.domain.model.AppPreferencesEntity
@@ -15,7 +16,6 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -55,10 +55,13 @@ class SplashViewModelTest {
             viewModel = SplashViewModel(fetchAppPreferencesUseCase, checkHasConnectionsUseCase)
 
             // Then
-            val result = viewModel.splashInfo.first()
-            assertThat(result).isInstanceOf(UIResult.Loading::class.java)
-            assertThat((result as UIResult.Loading).loadingType)
-                .isEqualTo(ResultType.Loading.WithTitle())
+            viewModel.splashInfo.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loading::class.java)
+                assertThat((result as UIResult.Loading).loadingType)
+                    .isEqualTo(ResultType.Loading.WithTitle())
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -78,12 +81,14 @@ class SplashViewModelTest {
             }
             advanceUntilIdle()
 
-            // Then
-            assertThat(splashInfos.any { it is UIResult.Loaded }).isTrue()
-            val loadedResult = splashInfos.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(loadedResult.data.theme).isEqualTo(AppThemePres.Dark)
-            assertThat(loadedResult.data.useDynamicColors).isEqualTo(preferences.useDynamicColors)
-            assertThat(loadedResult.data.hasConnections).isEqualTo(hasConnections)
+            viewModel.splashInfo.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.theme).isEqualTo(AppThemePres.Dark)
+                assertThat(result.data.useDynamicColors).isEqualTo(preferences.useDynamicColors)
+                assertThat(result.data.hasConnections).isEqualTo(hasConnections)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
     @Test
@@ -105,8 +110,11 @@ class SplashViewModelTest {
             advanceUntilIdle()
 
             // Then
-            assertThat(splashInfos.any { it is UIResult.Loaded }).isTrue()
-            val loadedResult = splashInfos.first { it is UIResult.Loaded } as UIResult.Loaded
-            assertThat(loadedResult.data.hasConnections).isFalse()
+            viewModel.splashInfo.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((loadedResult as UIResult.Loaded).data.hasConnections).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
         }
 }
