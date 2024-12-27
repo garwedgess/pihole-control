@@ -53,7 +53,6 @@ object StatusMockHttpClient {
         }
     }
 
-
     fun mockErrorHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
             val url = request.url
@@ -97,5 +96,4 @@ object StatusMockHttpClient {
             installContentNegotiation()
         }
     }
-
 }

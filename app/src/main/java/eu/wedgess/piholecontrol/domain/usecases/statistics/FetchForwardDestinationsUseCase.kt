@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.domain.usecases.statistics
 
-import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
+import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.ForwardDestinationsChartData
 import kotlinx.coroutines.flow.Flow
 
 class FetchForwardDestinationsUseCase(
@@ -10,9 +10,11 @@ class FetchForwardDestinationsUseCase(
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {
 
-    operator fun invoke(): Flow<Result<List<ForwardDestinationEntity>>> {
+    operator fun invoke(): Flow<Result<List<ForwardDestinationsChartData>>> {
         return periodicRefreshUseCase { connection ->
-            repository.fetchForwardDestinations(connection)
+            repository.fetchForwardDestinations(connection).mapCatching { list ->
+                list.map { ForwardDestinationsChartData(it.key, it.value) }
+            }
         }
     }
 }

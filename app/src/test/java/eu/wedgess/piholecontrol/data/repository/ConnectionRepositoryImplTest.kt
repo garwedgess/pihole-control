@@ -4,7 +4,7 @@ import TestDispatcherProvider
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
-import eu.wedgess.piholecontrol.domain.mappers.toConnection
+import eu.wedgess.piholecontrol.data.mappers.toConnection
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import io.mockk.MockKAnnotations
@@ -12,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -39,7 +40,7 @@ class ConnectionRepositoryImplTest {
         val result = target.insert(connection)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.insert(connection.toConnection()) }
+        verify { connectionDao.insert(connection.toConnection()) }
     }
 
     @Test
@@ -51,7 +52,28 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.insert(connection.toConnection()) }
+        verify { connectionDao.insert(connection.toConnection()) }
+    }
+
+    @Test
+    fun `checkHasConnections - success`() = runTest {
+        coEvery { connectionDao.checkNotEmpty() } returns true
+
+        val result = target.checkHasConnections()
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.checkNotEmpty() }
+    }
+
+    @Test
+    fun `checkHasConnections - failure`() = runTest {
+        coEvery { connectionDao.checkNotEmpty() } throws RuntimeException("Check failed")
+
+        val result = target.checkHasConnections()
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.checkNotEmpty() }
     }
 
     @Test
@@ -63,7 +85,7 @@ class ConnectionRepositoryImplTest {
             val result = awaitItem()
             assertThat(result.isSuccess).isTrue()
             assertThat(result.getOrNull()).isEqualTo(connections)
-            cancelAndIgnoreRemainingEvents()
+            awaitComplete()
         }
     }
 
@@ -76,7 +98,7 @@ class ConnectionRepositoryImplTest {
             val result = awaitItem()
             assertThat(result.isSuccess).isTrue()
             assertThat(result.getOrNull()).isEqualTo(connection)
-            cancelAndIgnoreRemainingEvents()
+            awaitComplete()
         }
     }
 
@@ -89,7 +111,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(connection)
-        coVerify { connectionDao.fetchById(1L) }
+        verify { connectionDao.fetchById(1L) }
     }
 
     @Test
@@ -100,7 +122,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.fetchById(1L) }
+        verify { connectionDao.fetchById(1L) }
     }
 
     @Test
@@ -111,7 +133,7 @@ class ConnectionRepositoryImplTest {
         val result = target.update(connection)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.update(connection.toConnection()) }
+        verify { connectionDao.update(connection.toConnection()) }
     }
 
     @Test
@@ -133,7 +155,7 @@ class ConnectionRepositoryImplTest {
         val result = target.deleteById(1L)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.delete(1L) }
+        verify { connectionDao.delete(1L) }
     }
 
     @Test
@@ -144,7 +166,28 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.delete(1L) }
+        verify { connectionDao.delete(1L) }
+    }
+
+    @Test
+    fun `deleteAllMarkedForDeletion - success`() = runTest {
+        coEvery { connectionDao.deleteMarkedForDeletion() } returns Unit
+
+        val result = target.deleteAllMarkedForDeletion()
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.deleteMarkedForDeletion() }
+    }
+
+    @Test
+    fun `deleteAllMarkedForDeletion - failure`() = runTest {
+        coEvery { connectionDao.deleteMarkedForDeletion() } throws RuntimeException("Deletion failed")
+
+        val result = target.deleteAllMarkedForDeletion()
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.deleteMarkedForDeletion() }
     }
 
     @Test
@@ -156,7 +199,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(connection)
-        coVerify { connectionDao.fetchActive() }
+        verify { connectionDao.fetchActive() }
     }
 
     @Test
@@ -167,7 +210,7 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.fetchActive() }
+        verify { connectionDao.fetchActive() }
     }
 
     @Test
@@ -178,7 +221,7 @@ class ConnectionRepositoryImplTest {
         val result = target.setActiveById(id)
 
         assertThat(result.isSuccess).isTrue()
-        coVerify { connectionDao.setActive(id) }
+        verify { connectionDao.setActive(id) }
     }
 
     @Test
@@ -190,7 +233,56 @@ class ConnectionRepositoryImplTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        coVerify { connectionDao.setActive(id) }
+        verify { connectionDao.setActive(id) }
     }
 
+    @Test
+    fun `markForDeletion - success`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.markAsDeleted(id) } returns Unit
+
+        val result = target.markForDeletion(id)
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.markAsDeleted(id) }
+    }
+
+    @Test
+    fun `markForDeletion - failure`() = runTest {
+        val id = 1L
+        coEvery {
+            connectionDao.markAsDeleted(id)
+        } throws RuntimeException("Marking connection failed")
+
+        val result = target.markForDeletion(id)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.markAsDeleted(id) }
+    }
+
+    @Test
+    fun `unmarkAsDeleted - success`() = runTest {
+        val id = 1L
+        coEvery { connectionDao.unmarkAsDeleted(id) } returns Unit
+
+        val result = target.unmarkForDeletion(id)
+
+        assertThat(result.isSuccess).isTrue()
+        verify { connectionDao.unmarkAsDeleted(id) }
+    }
+
+    @Test
+    fun `unmarkAsDeleted - failure`() = runTest {
+        val id = 1L
+        coEvery {
+            connectionDao.unmarkAsDeleted(id)
+        } throws RuntimeException("Marking connection failed")
+
+        val result = target.unmarkForDeletion(id)
+
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        verify { connectionDao.unmarkAsDeleted(id) }
+    }
 }

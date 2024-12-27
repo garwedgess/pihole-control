@@ -38,12 +38,13 @@ class AddConnectionUseCaseTest {
     @Test
     fun `invoke - returns failure when repository fails`() = runTest {
         val connectionInfo = ConnectionEntity.default
-
-        coEvery { repository.insert(connectionInfo) } returns Result.failure(Exception("Insert failed"))
+        val exception = Exception("Insert failed")
+        coEvery { repository.insert(connectionInfo) } returns Result.failure(exception)
 
         val result = addConnectionUseCase(connectionInfo)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(Exception::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { repository.insert(connectionInfo) }
     }
 }

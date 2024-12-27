@@ -12,12 +12,15 @@ import eu.wedgess.piholecontrol.presentation.filters.navigation.filtersRoot
 import eu.wedgess.piholecontrol.presentation.logs.navigation.logsRoot
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.statistics.navigation.statisticsRoot
+import eu.wedgess.piholecontrol.utils.UiText
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
 fun MainNavigationGraph(
     navController: NavHostController,
     onComposing: (AppBarState) -> Unit,
+    onResetBottomAppBarOffset: () -> Unit,
+    showSnackbarMessage: (UiText) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -25,9 +28,9 @@ fun MainNavigationGraph(
         startDestination = Screens.Dashboard,
         modifier = modifier
     ) {
-        dashboardRoot(onComposing)
-        statisticsRoot(onComposing)
-        filtersRoot(onComposing)
+        dashboardRoot(onComposing, showSnackbarMessage)
+        statisticsRoot(onComposing, onResetBottomAppBarOffset)
+        filtersRoot(onComposing, showSnackbarMessage)
         logsRoot(onComposing)
         settingsNavigationGraph(navController, onComposing)
     }

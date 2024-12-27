@@ -7,9 +7,13 @@ interface ConnectionRepository {
     suspend fun insert(connection: ConnectionEntity): Result<Unit>
     fun fetchAll(): Flow<Result<List<ConnectionEntity>>>
     fun fetchActiveFlow(): Flow<Result<ConnectionEntity>>
+    suspend fun checkHasConnections(): Result<Boolean>
     suspend fun fetchById(id: Long): Result<ConnectionEntity>
     suspend fun fetchActive(): Result<ConnectionEntity>
     suspend fun update(connection: ConnectionEntity): Result<Unit>
     suspend fun setActiveById(id: Long): Result<Unit>
     suspend fun deleteById(id: Long): Result<Unit>
+    suspend fun deleteAllMarkedForDeletion(): Result<Unit>
+    suspend fun markForDeletion(id: Long): Result<Unit>
+    suspend fun unmarkForDeletion(id: Long): Result<Unit>
 }

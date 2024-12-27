@@ -19,16 +19,15 @@ import kotlinx.coroutines.launch
 fun <T : TabItem> AnimatedTabContainer(
     tabItems: List<T>,
     modifier: Modifier = Modifier,
-    onTabIndexChanged: ((index: Int) -> Unit)? = null,
+    onTabIndexChange: ((index: Int) -> Unit)? = null,
     onTabSelected: @Composable (T) -> Unit
 ) {
-
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = {
         tabItems.size
     })
     LaunchedEffect(key1 = pagerState.settledPage) {
-        onTabIndexChanged?.invoke(pagerState.settledPage)
+        onTabIndexChange?.invoke(pagerState.settledPage)
     }
 
     Column(modifier = modifier.fillMaxSize()) {

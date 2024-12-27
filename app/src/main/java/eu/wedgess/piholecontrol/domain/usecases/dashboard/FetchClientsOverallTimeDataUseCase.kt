@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.domain.usecases.dashboard
 
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
 
 class FetchClientsOverallTimeDataUseCase(private val dashboardRepository: DashboardRepository) {

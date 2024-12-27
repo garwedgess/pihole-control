@@ -3,8 +3,8 @@ package eu.wedgess.piholecontrol.presentation.logs.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
@@ -18,9 +18,10 @@ import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
 import eu.wedgess.piholecontrol.utils.UiText
-import eu.wedgess.piholecontrol.utils.extensions.toEpochMillis
+import eu.wedgess.piholecontrol.utils.extensions.toEpochSeconds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -37,8 +38,14 @@ class LogsViewModel @Inject constructor(
     SideEffectViewModel<LogsContract.Effect> by SideEffectViewModelImpl() {
 
     private val _uiState = MutableStateFlow(LogsContract.UiState.initial())
+    private val _bottomSheetUiState = MutableStateFlow(LogsContract.BottomSheetUiState.initial())
+    val bottomSheetUiState = _bottomSheetUiState.asStateFlow()
 
-    val uiResult = fetchLogsUseCase().combine(_uiState) { logsResult, uiState ->
+    val uiResult = combine(
+        fetchLogsUseCase(),
+        _uiState,
+        _bottomSheetUiState
+    ) { logsResult, uiState, bsUiState ->
         logsResult.getOrElse {
             return@combine UIResult.Error(
                 ResultType.Error.WithTitleAndSubTitle(
@@ -54,17 +61,22 @@ class LogsViewModel @Inject constructor(
             } else {
                 return@combine UIResult.Loaded(
                     uiState.copy(
-                        logs = this@run.sortedBy { uiState.sorting }
+                        logs = this@run.sortBy(uiState.sorting)
                             .run {
                                 val filteredByQuery = if (uiState.searchQuery.isNotBlank()) {
                                     filter { it.requestedDomain.contains(uiState.searchQuery) }
                                 } else {
                                     this
                                 }
-                                if (uiState.filterFromTime != null || uiState.filterToTime != null) {
+                                if (
+                                    bsUiState.filterFromTime != null ||
+                                    bsUiState.filterToTime != null
+                                ) {
                                     filteredByQuery.filter { log ->
-                                        (uiState.filterFromTime == null || log.timestamp >= uiState.filterFromTime) &&
-                                                (uiState.filterToTime == null || log.timestamp <= uiState.filterToTime)
+                                        (bsUiState.filterFromTime == null ||
+                                                log.timestamp >= bsUiState.filterFromTime) &&
+                                                (bsUiState.filterToTime == null ||
+                                                        log.timestamp <= bsUiState.filterToTime)
                                     }
                                 } else {
                                     filteredByQuery
@@ -80,13 +92,12 @@ class LogsViewModel @Inject constructor(
         UIResult.Loading(ResultType.Loading.WithTitle())
     )
 
-    fun List<PiHoleLog>.sortBy(sortType: LogSorting) = when (sortType) {
+    private fun List<LogEntryEntity>.sortBy(sortType: LogSorting) = when (sortType) {
         LogSorting.DATE_DESC -> sortedByDescending { it.timestamp }
         LogSorting.DATE_ASC -> sortedBy { it.timestamp }
         LogSorting.RESPONSE_TIME_ASC -> sortedBy { it.responseTime }
         LogSorting.RESPONSE_TIME_DESC -> sortedByDescending { it.responseTime }
     }
-
 
     override fun onEvent(event: LogsContract.Event) {
         when (event) {
@@ -100,7 +111,7 @@ class LogsViewModel @Inject constructor(
                 it.copy(showSortingDropdownMenu = false)
             }
 
-            is LogsContract.Event.OnLogLimitChanged -> _uiState.update {
+            is LogsContract.Event.OnLogLimitChanged -> _bottomSheetUiState.update {
                 it.copy(logsLimit = event.limit)
             }.also {
                 fetchLogsUseCase.setLogLimit(event.limit)
@@ -140,26 +151,21 @@ class LogsViewModel @Inject constructor(
             }
 
             is LogsContract.Event.OnTimeConfirmed -> {
-                _uiState.update {
+                _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                _bottomSheetUiState.update {
                     if (event.type == PickerType.FromTime) {
-                        it.copy(
-                            filterFromTime = event.time.toEpochMillis(),
-                            dialogType = LogsDialogType.None
-                        )
+                        it.copy(filterFromTime = event.time.toEpochSeconds())
                     } else {
-                        it.copy(
-                            filterToTime = event.time.toEpochMillis(),
-                            dialogType = LogsDialogType.None
-                        )
+                        it.copy(filterToTime = event.time.toEpochSeconds())
                     }
                 }
             }
 
-            LogsContract.Event.OnToTimeCleared -> _uiState.update {
+            LogsContract.Event.OnToTimeCleared -> _bottomSheetUiState.update {
                 it.copy(filterToTime = null)
             }
 
-            LogsContract.Event.OnFromTimeCleared -> _uiState.update {
+            LogsContract.Event.OnFromTimeCleared -> _bottomSheetUiState.update {
                 it.copy(filterFromTime = null)
             }
 
@@ -185,15 +191,13 @@ class LogsViewModel @Inject constructor(
 
     private fun handleStatusFilterChanged(status: LogEntryStatus) {
         fetchLogsUseCase.setLogStatusFilter(status)
-        _uiState.update { it.copy(selectedLogEntryStatus = status) }
+        _bottomSheetUiState.update { it.copy(selectedLogEntryStatus = status) }
     }
 
     private fun onAddToAllowList(domain: String) {
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW).onFailure {
                 Timber.e(it, "Failed to add domain to allow list: $domain")
-            }.onSuccess {
-
             }
         }
     }
@@ -202,8 +206,6 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.BLOCK).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
-            }.onSuccess {
-
             }
         }
     }

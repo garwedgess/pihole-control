@@ -9,7 +9,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +28,7 @@ class EnableAdBlockingUseCaseTest {
     @Test
     fun `invoke - enables ad blocking and returns success`() = runTest {
         val connection = ConnectionEntity.default
-        val status = mockk<StatusEntity>(relaxed = true)
+        val status = StatusEntity.ENABLED
 
         coEvery { repository.enableAdBlocking(connection) } returns Result.success(status)
 

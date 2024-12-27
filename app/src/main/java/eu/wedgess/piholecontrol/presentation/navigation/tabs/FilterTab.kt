@@ -22,7 +22,7 @@ sealed class FilterTab(override val title: UiText, override val icon: ImageVecto
         icon = Icons.Default.Block
     )
 
-    fun toFilterRuleType() = when(this) {
+    fun toFilterRuleType() = when (this) {
         AllowList -> FilterRuleTypeEntity.ALLOW
         BlockList -> FilterRuleTypeEntity.BLOCK
     }

@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.settings.view.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,21 +23,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun ConnectionInfoContent(
     connection: ConnectionEntity,
-    onEditClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
-    onSetActiveClicked: () -> Unit
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onSetActiveClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(PiHoleControlTheme.dimens.padding.screenContent),
-        verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(
+            PiHoleControlTheme.dimens.padding.itemContentSmall
+        )
     ) {
         ConnectionInfoRow(
             icon = Icons.Default.Bolt,
@@ -46,7 +47,7 @@ fun ConnectionInfoContent(
         ConnectionInfoRow(
             icon = Icons.Default.Api,
             title = "Api Path",
-            value = "Connected".takeIf { connection.isActive } ?: "Disconnected"
+            value = connection.apiPath
         )
         ConnectionInfoRow(
             icon = Icons.Default.Token,
@@ -67,14 +68,16 @@ fun ConnectionInfoContent(
                 Alignment.End
             )
         ) {
-            OutlinedButton(onClick = { onEditClicked() }) {
+            OutlinedButton(onClick = { onEditClick() }) {
                 Text(text = "Edit")
             }
-            OutlinedButton(onClick = { onDeleteClicked() }) {
+            OutlinedButton(onClick = { onDeleteClick() }) {
                 Text(text = "Delete")
             }
-            OutlinedButton(onClick = { onSetActiveClicked() }) {
-                Text(text = "Set Active")
+            AnimatedVisibility(visible = !connection.isActive) {
+                OutlinedButton(onClick = { onSetActiveClick() }) {
+                    Text(text = "Set Active")
+                }
             }
         }
     }
@@ -85,7 +88,7 @@ private fun ConnectionInfoRow(
     icon: ImageVector,
     title: String,
     value: String,
-    valueTextColor: Color = Color.Unspecified
+    valueTextColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -97,11 +100,16 @@ private fun ConnectionInfoRow(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
             )
-            Text(text = value, style = MaterialTheme.typography.bodyMedium, color = valueTextColor)
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = valueTextColor.copy(
+                    alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                )
+            )
         }
     }
 }
-
 
 @ThemePreview
 @Composable
@@ -110,9 +118,9 @@ private fun ConnectionInfoContentPreview() {
         Surface {
             ConnectionInfoContent(
                 connection = ConnectionEntity.default,
-                onEditClicked = {},
-                onDeleteClicked = {},
-                onSetActiveClicked = {}
+                onEditClick = {},
+                onDeleteClick = {},
+                onSetActiveClick = {}
             )
         }
     }

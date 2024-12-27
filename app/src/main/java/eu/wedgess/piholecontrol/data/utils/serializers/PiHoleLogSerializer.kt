@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.utils.serializers
 
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor

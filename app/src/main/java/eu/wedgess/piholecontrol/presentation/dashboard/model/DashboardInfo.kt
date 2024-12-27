@@ -14,19 +14,13 @@ data class DashboardInfo(
     val queriesOverTimeResult: Result<QueriesOverTimeEntity>,
     val clientQueriesOverTimeResult: Result<List<ClientOverTimeEntity>>
 ) {
+
     fun toUiResult(): UIResult<DashboardContract.UiState> {
         return when {
             summaryResult.isFailure &&
                     queriesOverTimeResult.isFailure &&
                     clientQueriesOverTimeResult.isFailure -> {
-                UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        title = UiText.DynamicString("Failed to fetch dashboard info"),
-                        subTitle = UiText.DynamicString(
-                            summaryResult.exceptionOrNull()?.message ?: "Unknown error"
-                        )
-                    )
-                )
+                handleErrorThrowable(summaryResult.exceptionOrNull())
             }
 
             else -> {
@@ -50,10 +44,25 @@ data class DashboardInfo(
                 }
                 UIResult.Loaded(
                     DashboardContract.UiState(
-                        summary, queriesOverTime, clientQueriesOverTime
+                        summary = summary,
+                        overtimeLineChart = queriesOverTime,
+                        clientQueriesOverTime = clientQueriesOverTime
                     )
                 )
             }
+        }
+    }
+
+    companion object {
+        fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
+            return UIResult.Error(
+                ResultType.Error.WithTitleAndSubTitle(
+                    title = UiText.DynamicString("Failed to fetch dashboard info"),
+                    subTitle = UiText.DynamicString(
+                        throwable?.message ?: "Unknown error"
+                    )
+                )
+            )
         }
     }
 }

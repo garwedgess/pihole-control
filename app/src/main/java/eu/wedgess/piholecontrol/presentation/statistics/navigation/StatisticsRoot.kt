@@ -7,21 +7,29 @@ import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.StatisticsTab
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.navigation.ForwardDestinationsRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.navigation.QueryTypesRoot
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.server.navigation.ServersRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.navigation.TopClientsScreenRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.navigation.TopDomainsRoot
 
-fun NavGraphBuilder.statisticsRoot(onComposing: (AppBarState) -> Unit) {
+fun NavGraphBuilder.statisticsRoot(
+    onComposing: (AppBarState) -> Unit,
+    onResetBottomAppBar: () -> Unit
+) {
     composable<Screens.Statistics> {
         LaunchedEffect(Unit) {
             onComposing(AppBarState(showSearchView = false, showNavigateBackIcon = false))
         }
 
-        AnimatedTabContainer(tabItems = StatisticsTab.all()) {
+        AnimatedTabContainer(
+            tabItems = StatisticsTab.all(),
+            onTabIndexChange = {
+                onResetBottomAppBar()
+            }
+        ) {
             when (it) {
                 StatisticsTab.Queries -> QueryTypesRoot()
-                StatisticsTab.Servers -> ServersRoot()
+                StatisticsTab.Servers -> ForwardDestinationsRoot()
                 StatisticsTab.Domains -> TopDomainsRoot()
                 StatisticsTab.Clients -> TopClientsScreenRoot()
             }

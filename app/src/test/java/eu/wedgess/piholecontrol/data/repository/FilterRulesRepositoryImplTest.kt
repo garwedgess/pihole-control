@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.data.repository
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
-import eu.wedgess.piholecontrol.domain.mappers.toPiHoleFilterRuleType
+import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
@@ -61,20 +61,20 @@ class FilterRulesRepositoryImplTest {
     fun `fetchFilterRules - api fetchFilterRules is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
         val ruleType = mockk<FilterRuleTypeEntity>(relaxed = true)
+        val exception = RuntimeException("API error")
         coEvery {
             apiService.fetchFilterRules(
                 activeConnection,
                 ruleType.toPiHoleFilterRuleType()
             )
         } returns Result.failure(
-            RuntimeException("API error")
+            exception
         )
 
         val result = target.fetchFilterRules(activeConnection, ruleType)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        assertThat(result.exceptionOrNull()).hasMessageThat().contains("API error")
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify {
             apiService.fetchFilterRules(
                 activeConnection,
@@ -117,6 +117,7 @@ class FilterRulesRepositoryImplTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
         val rule = "testRule"
         val ruleType = mockk<FilterRuleTypeEntity>(relaxed = true)
+        val exception = RuntimeException("API error")
         coEvery {
             apiService.addFilterRule(
                 activeConnection,
@@ -124,14 +125,13 @@ class FilterRulesRepositoryImplTest {
                 ruleType.toPiHoleFilterRuleType()
             )
         } returns Result.failure(
-            RuntimeException("API error")
+            exception
         )
 
         val result = target.addFilterRule(activeConnection, rule, ruleType)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        assertThat(result.exceptionOrNull()).hasMessageThat().contains("API error")
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify {
             apiService.addFilterRule(
                 activeConnection,
@@ -175,6 +175,7 @@ class FilterRulesRepositoryImplTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
         val rule = "testRule"
         val ruleType = mockk<FilterRuleTypeEntity>(relaxed = true)
+        val exception = RuntimeException("API error")
         coEvery {
             apiService.removeFilterRule(
                 activeConnection,
@@ -182,14 +183,13 @@ class FilterRulesRepositoryImplTest {
                 ruleType.toPiHoleFilterRuleType()
             )
         } returns Result.failure(
-            RuntimeException("API error")
+            exception
         )
 
         val result = target.removeFilterRule(activeConnection, rule, ruleType)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
-        assertThat(result.exceptionOrNull()).hasMessageThat().contains("API error")
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify {
             apiService.removeFilterRule(
                 activeConnection,

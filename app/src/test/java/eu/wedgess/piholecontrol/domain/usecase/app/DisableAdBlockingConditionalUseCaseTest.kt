@@ -12,7 +12,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -50,10 +49,10 @@ class DisableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - disables ad blocking for all connections when changeForAll is true`() = runTest {
         val connection1 = ConnectionEntity.default
-        val connection2 = ConnectionEntity.default
+        val connection2 = ConnectionEntity.default.copy(id = 2L)
         val connections = listOf(connection1, connection2)
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
-        val status = mockk<StatusEntity>(relaxed = true)
+        val status = StatusEntity.DISABLED
 
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns true
         coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(connections))
@@ -72,7 +71,7 @@ class DisableAdBlockingConditionalUseCaseTest {
         runTest {
             val activeConnection = ConnectionEntity.default
             val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
-            val status = mockk<StatusEntity>(relaxed = true)
+            val status = StatusEntity.DISABLED
 
             coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns false
             coEvery { observeActiveUserUseCase() } returns flowOf(Result.success(activeConnection))
@@ -90,14 +89,17 @@ class DisableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - returns failure when fetching all connections fails`() = runTest {
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
+        val exception = Exception("Failed to fetch connections")
 
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns true
-        coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch connections")))
+        coEvery { fetchAllConnectionsUseCase() } returns flowOf(
+            Result.failure(exception)
+        )
 
         val result = disableAdBlockingConditionalUseCase(duration.toLong(DurationUnit.MILLISECONDS))
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(Exception::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
 
         coVerify(exactly = 0) { disableAdBlockingUseCase(any(), any()) }
     }
@@ -105,14 +107,17 @@ class DisableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - returns failure when fetching active connection fails`() = runTest {
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
+        val exception = Exception("Failed to fetch active connection")
 
         coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns false
-        coEvery { observeActiveUserUseCase() } returns flowOf(Result.failure(Exception("Failed to fetch active connection")))
+        coEvery { observeActiveUserUseCase() } returns flowOf(
+            Result.failure(exception)
+        )
 
         val result = disableAdBlockingConditionalUseCase(duration.toLong(DurationUnit.MILLISECONDS))
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isInstanceOf(Exception::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
 
         coVerify(exactly = 0) { disableAdBlockingUseCase(any(), any()) }
     }

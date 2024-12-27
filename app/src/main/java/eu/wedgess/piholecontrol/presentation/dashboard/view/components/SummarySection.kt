@@ -10,19 +10,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.BackHand
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.presentation.theme.domainsOnAdListBackground
 import eu.wedgess.piholecontrol.presentation.theme.percentageBlockedBackground
@@ -31,13 +31,13 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 
 @Composable
 fun SummarySection(summary: SummaryEntity) {
-
     val totalQueries by animateIntAsState(
         targetValue = summary.dnsQueries,
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "total queries animation"
     )
 
     val adsBlocked by animateIntAsState(
@@ -45,7 +45,8 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "ads blocked animation"
     )
 
     val domainsBeingBlocked by animateIntAsState(
@@ -53,7 +54,8 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "domains blocked animation"
     )
 
     val percentageBlocked by animateFloatAsState(
@@ -61,22 +63,27 @@ fun SummarySection(summary: SummaryEntity) {
         animationSpec = tween(
             durationMillis = 500,
             easing = FastOutSlowInEasing
-        )
+        ),
+        label = "percentage blocked animation"
     )
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = PiHoleControlTheme.dimens.padding.screenContent),
+        verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContent
+            )
         ) {
             SummaryItem.NumberWithCaption(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.summary_title_total_queries),
                 value = totalQueries,
-                caption = summary.uniqueClients.toString(),
+                caption = stringResource(id = R.string.home_caption_clients, summary.uniqueClients),
                 imageVector = Icons.Default.Public,
                 backgroundColor = MaterialTheme.colorScheme.totalQueriesBackground
             )
@@ -90,7 +97,9 @@ fun SummarySection(summary: SummaryEntity) {
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContent
+            )
         ) {
             SummaryItem.Percentage(
                 modifier = Modifier.weight(1f),
@@ -103,17 +112,27 @@ fun SummarySection(summary: SummaryEntity) {
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.summary_title_domains_on_blocklist),
                 value = domainsBeingBlocked,
-                imageVector = Icons.Default.ListAlt,
+                imageVector = Icons.AutoMirrored.Filled.ListAlt,
                 backgroundColor = MaterialTheme.colorScheme.domainsOnAdListBackground
             )
         }
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun SummarySectionPreview() {
     PiHoleControlTheme {
-
+        Surface {
+            SummarySection(
+                summary = SummaryEntity(
+                    dnsQueries = 234565,
+                    adsBlocked = 2456,
+                    domainsBlocked = 1234567,
+                    adsPercentage = 30f,
+                    uniqueClients = 25
+                )
+            )
+        }
     }
 }

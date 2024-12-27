@@ -1,11 +1,14 @@
 package eu.wedgess.piholecontrol.domain.usecase.logs
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
+import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase.Companion.applyStatusFilter
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -15,8 +18,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -54,9 +55,10 @@ class FetchLogsUseCaseTest {
             }
         }
 
-        val results = target().take(1).toList()
-
-        assertThat(results).containsExactly(expectedResult)
+        target().test {
+            assertThat(awaitItem()).isEqualTo(expectedResult)
+            awaitComplete()
+        }
         coVerify { logsRepository.fetchLogs(connection, 500) }
     }
 
@@ -74,9 +76,10 @@ class FetchLogsUseCaseTest {
             }
         }
 
-        val results = target().take(1).toList()
-
-        assertThat(results).containsExactly(expectedError)
+        target().test {
+            assertThat(awaitItem()).isEqualTo(expectedError)
+            awaitComplete()
+        }
         coVerify { logsRepository.fetchLogs(connection, 500) }
     }
 
@@ -104,17 +107,38 @@ class FetchLogsUseCaseTest {
 
     @Test
     fun `applyStatusFilter - filters logs based on status`() {
-        val logEntries = listOf<LogEntryEntity>(
-            mockk(relaxed = true),
-            mockk(relaxed = true),
-            mockk(relaxed = true)
+        val logEntries = listOf(
+            LogEntryEntity(
+                timestamp = 0,
+                time = "25-12-2024",
+                queryType = "query",
+                requestedDomain = "domain1",
+                answerType = LogAnswerTypeEntity.LOCAL_CACHE,
+                client = "client1",
+                responseTime = 200
+            ),
+            LogEntryEntity(
+                timestamp = 0,
+                time = "25-12-2024",
+                queryType = "query",
+                requestedDomain = "domain2",
+                answerType = LogAnswerTypeEntity.GRAVITY_BLOCK,
+                client = "client2",
+                responseTime = 200
+            ),
+            LogEntryEntity(
+                timestamp = 0,
+                time = "25-12-2024",
+                queryType = "query",
+                requestedDomain = "domain3",
+                answerType = LogAnswerTypeEntity.LOCAL_CACHE,
+                client = "client3",
+                responseTime = 200
+            )
         )
-        val filteredLogs = FetchLogsUseCase::class.java.getDeclaredMethod(
-            "applyStatusFilter",
-            List::class.java
-        ).apply { isAccessible = true }
-            .invoke(target, logEntries) as List<LogEntryEntity>
+        target.setLogStatusFilter(LogEntryStatus.ALLOWED)
+        val filteredLogs = logEntries.applyStatusFilter(target.logStatusFilter)
 
-        assertThat(filteredLogs).hasSize(3)
+        assertThat(filteredLogs).hasSize(2)
     }
 }

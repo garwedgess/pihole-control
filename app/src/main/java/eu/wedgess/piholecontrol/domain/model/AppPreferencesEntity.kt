@@ -5,4 +5,13 @@ data class AppPreferencesEntity(
     val useDynamicColors: Boolean,
     val refreshInterval: Long,
     val multiStatusChange: Boolean
-)
+) {
+    companion object {
+        val default = AppPreferencesEntity(
+            theme = AppThemeEntity.DARK,
+            useDynamicColors = false,
+            refreshInterval = 1000L,
+            multiStatusChange = true
+        )
+    }
+}

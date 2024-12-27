@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -19,7 +21,7 @@ import com.patrykandpatrick.vico.core.axis.vertical.VerticalAxis
 import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartEntry
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -29,12 +31,11 @@ import kotlin.math.roundToInt
 
 @Composable
 fun LineChart(
+    data: Iterable<LineChartInfo>,
     modifier: Modifier = Modifier,
-    data: Iterable<LineChartInfo>
 ) = ProvideChartStyle(
     m3ChartStyle(entityColors = data.map { it.color() })
 ) {
-
     val entries = remember(data) {
         data.map { it.entries.toList() }
     }
@@ -47,7 +48,8 @@ fun LineChart(
         chartModelProducer.setEntries(entries)
     }
 
-    Chart(modifier = modifier,
+    Chart(
+        modifier = modifier,
         chart = lineChart(
             lines = data.map {
                 with(it.color()) {
@@ -94,7 +96,8 @@ fun LineChart(
 
 @ThemePreview
 @Composable
-fun LineChartPreview() {
+private fun LineChartPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PiHoleControlTheme {
         Surface {
             LineChart(
@@ -102,9 +105,9 @@ fun LineChartPreview() {
                 data = listOf(
                     LineChartInfo.PermittedQueriesOverLineChart(
                         entity = listOf(
-                            OverTimeEntity(1525546500, 163),
+                            OverTimeEntity(1525546500, 84),
                             OverTimeEntity(1525547100, 154),
-                            OverTimeEntity(1525547700, 164)
+                            OverTimeEntity(1525547700, 50)
                         ),
                     ),
                     LineChartInfo.BlockedQueriesOverLineChart(

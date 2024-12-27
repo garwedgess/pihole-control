@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
@@ -20,13 +19,12 @@ fun LogsListContent(
     dialogType: LogsDialogType,
     onEvent: (LogsContract.Event) -> Unit
 ) {
-
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         stickyHeader {
             LogsListStickyHeader(listSize = logsList.size)
         }
         items(logsList) { log ->
-            LogListItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+            LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
         }
     }
     LogsDialogs(dialogType, onEvent)

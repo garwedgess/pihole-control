@@ -10,7 +10,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
-import io.ktor.utils.io.errors.IOException
+import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
 // Safe request function that uses Result<T> and catches exceptions, supports error deserialization with E

@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.presentation.dashboard.model
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -8,6 +7,7 @@ import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
 import eu.wedgess.piholecontrol.presentation.theme.domainsOnAdListBackground
+import eu.wedgess.piholecontrol.presentation.theme.isDark
 import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 import eu.wedgess.piholecontrol.utils.ColorGenerator
 import eu.wedgess.piholecontrol.utils.UiText
@@ -26,9 +26,9 @@ sealed class LineChartInfo(
         val entity: List<OverTimeEntity>
     ) : LineChartInfo(
         title = UiText.StringResource(R.string.home_title_queries_over_time_permitted),
-        legendSubTitle = UiText.StringResource(
+        legendSubTitle = UiText.StringResourceWithArgs(
             R.string.home_legend_sub_title_queries_over_time,
-            listOf(entity.sumOf { it.hits })
+            entity.sumOf { it.hits }
         ),
         entries = entity.mapIndexed { index, item ->
             LineChartEntry(
@@ -47,9 +47,9 @@ sealed class LineChartInfo(
         val entity: List<OverTimeEntity>
     ) : LineChartInfo(
         title = UiText.StringResource(R.string.home_title_queries_over_time_blocked),
-        legendSubTitle = UiText.StringResource(
+        legendSubTitle = UiText.StringResourceWithArgs(
             R.string.home_legend_sub_title_queries_over_time,
-            listOf(entity.sumOf { it.hits })
+            entity.sumOf { it.hits }
         ),
         entries = entity.mapIndexed { index, item ->
             LineChartEntry(
@@ -68,11 +68,12 @@ sealed class LineChartInfo(
         val entity: ClientOverTimeEntity,
         val formatter: DateFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
     ) : LineChartInfo(
-        title = UiText.DynamicString(entity.clientName.takeIf { it.isNotBlank() }
-            ?: entity.clientIp),
-        legendSubTitle = UiText.StringResource(
+        title = UiText.DynamicString(
+            entity.clientName.takeIf { it.isNotBlank() } ?: entity.clientIp
+        ),
+        legendSubTitle = UiText.StringResourceWithArgs(
             R.string.home_legend_sub_title_queries_over_time,
-            listOf(entity.clientActivity.sumOf { it.hits })
+            entity.clientActivity.sumOf { it.hits }
         ),
         entries = entity.clientActivity.mapIndexed { index, item ->
             LineChartEntry(
@@ -85,6 +86,7 @@ sealed class LineChartInfo(
     ) {
         @Composable
         override fun color(): Color =
-            ColorGenerator(!isSystemInDarkTheme()).generateColor(entity.clientName + entity.clientIp)
+            ColorGenerator(!MaterialTheme.colorScheme.isDark)
+                .generateColor(entity.clientName + entity.clientIp)
     }
 }

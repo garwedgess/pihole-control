@@ -47,13 +47,13 @@ class StatusRepositoryImplTest {
     @Test
     fun `fetchStatus - should return failure on API error`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.fetchStatus(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.fetchStatus(activeConnection) } returns Result.failure(exception)
 
         val result = target.fetchStatus(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.fetchStatus(activeConnection) }
     }
 
@@ -73,20 +73,24 @@ class StatusRepositoryImplTest {
     @Test
     fun `enableAdBlocking - api enableAdBlocking is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.enableAdBlocking(activeConnection) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.enableAdBlocking(activeConnection) } returns Result.failure(exception)
 
         val result = target.enableAdBlocking(activeConnection)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.enableAdBlocking(activeConnection) }
     }
 
     @Test
     fun `disableAdBlocking - api enableAdBlocking is invoked AND result is success`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.disableAdBlocking(activeConnection, any()) } returns Result.success(mockk(relaxed = true))
+        coEvery { api.disableAdBlocking(activeConnection, any()) } returns Result.success(
+            mockk(
+                relaxed = true
+            )
+        )
 
         val result = target.disableAdBlocking(activeConnection, Duration.INFINITE)
 
@@ -99,13 +103,13 @@ class StatusRepositoryImplTest {
     @Test
     fun `disableAdBlocking - api enableAdBlocking is invoked AND result is failure`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
-        coEvery { api.disableAdBlocking(activeConnection, any()) } returns Result.failure(RuntimeException())
+        val exception = RuntimeException("API error")
+        coEvery { api.disableAdBlocking(activeConnection, any()) } returns Result.failure(exception)
 
         val result = target.disableAdBlocking(activeConnection, Duration.INFINITE)
 
         assertThat(result.isFailure).isTrue()
-        assertThat(result.exceptionOrNull()).isNotNull()
-        assertThat(result.exceptionOrNull()).isInstanceOf(RuntimeException::class.java)
+        assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { api.disableAdBlocking(activeConnection, any()) }
     }
 }

@@ -1,9 +1,11 @@
 package eu.wedgess.piholecontrol.presentation.logs.view.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,8 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import eu.wedgess.piholecontrol.R
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
@@ -35,7 +37,7 @@ fun TimeButton(
     title: String,
     subTitle: String?,
     onClick: () -> Unit,
-    onClearClicked: () -> Unit
+    onClearClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -50,7 +52,6 @@ fun TimeButton(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,14 +67,14 @@ fun TimeButton(
                 style = MaterialTheme.typography.titleSmall
             )
             AnimatedVisibility(visible = subTitle.isNullOrBlank().not()) {
-                Surface(
-                    modifier = Modifier,
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surfaceVariant
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     IconButton(
                         onClick = {
-                            onClearClicked()
+                            onClearClick()
                         },
                         modifier = Modifier
                             .size(PiHoleControlTheme.dimens.padding.itemContentLarge)
@@ -100,15 +101,17 @@ fun TimeButton(
     }
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun TimeButtonPreview() {
     PiHoleControlTheme {
-        TimeButton(
-            title = "From Time",
-            subTitle = "12-12-2023 12:45",
-            onClick = {},
-            onClearClicked = {}
-        )
+        Surface {
+            TimeButton(
+                title = "From Time",
+                subTitle = "12-12-2023 12:45",
+                onClick = {},
+                onClearClick = {}
+            )
+        }
     }
 }

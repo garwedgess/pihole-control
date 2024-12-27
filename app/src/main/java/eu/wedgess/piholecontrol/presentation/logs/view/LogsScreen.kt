@@ -25,19 +25,17 @@ import eu.wedgess.piholecontrol.presentation.logs.view.components.LogsListConten
 @Composable
 fun LogsScreen(
     uiResult: UIResult<LogsContract.UiState>,
+    bottomSheetUiState: LogsContract.BottomSheetUiState,
     scaffoldState: BottomSheetScaffoldState,
     snackbarHostState: SnackbarHostState,
     onEvent: (LogsContract.Event) -> Unit
 ) {
-
     BottomSheetScaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         scaffoldState = scaffoldState,
         sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight,
         sheetContent = {
-            (uiResult as? UIResult.Loaded)?.run {
-                LogFiltersBottomSheet(this@run.data, onEvent)
-            }
+            LogFiltersBottomSheet(bottomSheetUiState, onEvent)
         },
         content = { padding ->
             Column(
@@ -48,7 +46,13 @@ fun LogsScreen(
             ) {
                 uiResult.Compose(
                     onLoading = { LoadingScreen(modifier = Modifier.fillMaxSize(), it) },
-                    onLoaded = { LogsListContent(logsList = it.logs, dialogType = it.dialogType, onEvent = onEvent) },
+                    onLoaded = {
+                        LogsListContent(
+                            logsList = it.logs,
+                            dialogType = it.dialogType,
+                            onEvent = onEvent
+                        )
+                    },
                     onEmpty = { EmptyScreen(modifier = Modifier.fillMaxSize(), it) },
                     onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) }
                 )

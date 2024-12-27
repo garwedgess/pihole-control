@@ -27,14 +27,14 @@ import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.components.TimePickerType
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.components.TimeTextField
-import eu.wedgess.piholecontrol.presentation.common.previews.ThemePreview
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import java.util.concurrent.TimeUnit
 
 @Composable
 fun RefreshIntervalDialog(
     currentRefreshTime: Long,
-    onRefreshIntervalConfirmed: (Long) -> Unit,
+    onConfirmRefreshInterval: (Long) -> Unit,
     onDismiss: () -> Unit
 ) {
     var currentSeconds by remember {
@@ -89,7 +89,7 @@ fun RefreshIntervalDialog(
                         Text(text = stringResource(R.string.all_btn_cancel))
                     }
                     TextButton(onClick = {
-                        onRefreshIntervalConfirmed(TimeUnit.SECONDS.toMillis(currentSeconds.text.toLong()))
+                        onConfirmRefreshInterval(TimeUnit.SECONDS.toMillis(currentSeconds.text.toLong()))
                     }) {
                         Text(text = stringResource(R.string.all_btn_confirm))
                     }
@@ -106,7 +106,7 @@ private fun RefreshIntervalDialogPreview() {
         RefreshIntervalDialog(
             currentRefreshTime = 10_000,
             onDismiss = {},
-            onRefreshIntervalConfirmed = {}
+            onConfirmRefreshInterval = {}
         )
     }
 }

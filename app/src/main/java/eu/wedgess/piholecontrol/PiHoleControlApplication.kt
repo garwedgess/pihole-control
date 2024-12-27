@@ -6,7 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class PiHoleControlApplication: Application() {
+class PiHoleControlApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

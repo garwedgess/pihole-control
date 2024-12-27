@@ -10,22 +10,23 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 class RemoveFilterRuleUseCaseTest {
 
+    @MockK
     private lateinit var filterRuleRepository: FilterRulesRepository
+
+    @MockK
     private lateinit var connectionRepository: ConnectionRepository
     private lateinit var target: RemoveFilterRuleUseCase
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        filterRuleRepository = mockk()
-        connectionRepository = mockk()
         target = RemoveFilterRuleUseCase(filterRuleRepository, connectionRepository)
     }
 

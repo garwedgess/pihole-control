@@ -6,15 +6,14 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import java.io.File
 
 object DashboardMockHttpClient {
 
     private const val DIRECTORY = "dashboard"
 
     private val summary = loadJson(DIRECTORY, "summary.json")
-    private val overTimeData10mins = loadJson(DIRECTORY,"overtime_data_10mins.json")
-    private val clientOverTimeData = loadJson(DIRECTORY,"overtime_clients.json")
+    private val overTimeData10mins = loadJson(DIRECTORY, "overtime_data_10mins.json")
+    private val clientOverTimeData = loadJson(DIRECTORY, "overtime_clients.json")
 
     fun mockSuccessHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
@@ -37,6 +36,7 @@ object DashboardMockHttpClient {
                         headers = headersOf("Content-Type", "application/json")
                     )
                 }
+
                 params["overTimeDataClients"] == "true" -> {
                     respond(
                         content = clientOverTimeData,
@@ -58,7 +58,6 @@ object DashboardMockHttpClient {
             installContentNegotiation()
         }
     }
-
 
     fun mockErrorHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
@@ -103,5 +102,4 @@ object DashboardMockHttpClient {
             installContentNegotiation()
         }
     }
-
 }

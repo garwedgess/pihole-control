@@ -12,8 +12,6 @@ import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiv
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
-import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
-import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,8 +29,7 @@ class AppViewModel @Inject constructor(
     private val disableAdBlockingConditionalUseCase: DisableAdBlockingConditionalUseCase,
     private val setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase
 ) : ViewModel(),
-    EventDrivenViewModel<AppContract.Event>,
-    SideEffectViewModel<AppContract.Effect> by SideEffectViewModelImpl() {
+    EventDrivenViewModel<AppContract.Event> {
 
     private val _uiState = MutableStateFlow(AppContract.UiState.initial())
 
@@ -52,7 +49,6 @@ class AppViewModel @Inject constructor(
             AppContract.UiState.initial()
         )
 
-
     override fun onEvent(event: AppContract.Event) {
         when (event) {
             AppContract.Event.DismissDialog -> _uiState.update {
@@ -70,8 +66,10 @@ class AppViewModel @Inject constructor(
                 it.copy(dialogType = AppDialogType.DisableAdBlocking)
             }
 
-            is AppContract.Event.UpdateAppBarState -> _uiState.update {
-                it.copy(appBarState = event.updateState)
+            is AppContract.Event.UpdateAppBarState -> {
+                _uiState.update {
+                    it.copy(appBarState = event.updateState)
+                }
             }
         }
     }
@@ -82,7 +80,6 @@ class AppViewModel @Inject constructor(
                 .onFailure { Timber.e("Failed to change active connection", it) }
         }
     }
-
 
     private fun setDisableAdBlocking(duration: Long) {
         _uiState.update { it.copy(dialogType = AppDialogType.None) }

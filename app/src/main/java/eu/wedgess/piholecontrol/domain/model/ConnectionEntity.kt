@@ -14,6 +14,7 @@ data class ConnectionEntity(
     val authPassword: String,
     val authRealm: String,
     val trustAllCerts: Boolean,
+    val isDeleted: Boolean,
     val isActive: Boolean
 ) {
     val hasAuthCredentials: Boolean get() = authUsername.isNotBlank() && authPassword.isNotBlank()
@@ -31,6 +32,7 @@ data class ConnectionEntity(
             authPassword = "",
             authRealm = "",
             trustAllCerts = false,
+            isDeleted = false,
             isActive = true
         )
     }

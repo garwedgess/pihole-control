@@ -1,0 +1,11 @@
+CREATE TRIGGER IF NOT EXISTS next_connection_active_on_delete
+AFTER DELETE ON Connection
+WHEN old.Active = 1
+BEGIN
+    UPDATE Connection
+    SET Active = 1
+    WHERE Id = (
+        SELECT MAX(Id) FROM Connection
+        WHERE IsDeleted = 0 AND Active = 0
+    );
+END;

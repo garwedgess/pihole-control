@@ -3,9 +3,11 @@ package eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.viewmod
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchTopClientsUseCase
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.model.TopClientsInfo
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -22,12 +24,12 @@ class TopClientsStatsViewModel @Inject constructor(
             result.getOrElse {
                 return@map UIResult.Error(
                     ResultType.Error.WithTitleAndSubTitle(
-                        UiText.DynamicString("Failed to fetch top clients"),
+                        UiText.StringResource(R.string.top_clients_error),
                         UiText.DynamicString(it.message ?: "Unknown error")
                     )
                 )
             }.run {
-                return@map UIResult.Loaded(this)
+                return@map UIResult.Loaded(TopClientsInfo(topClients = this))
             }
         }
         .stateIn(

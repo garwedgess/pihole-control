@@ -3,7 +3,6 @@ package eu.wedgess.piholecontrol.presentation.filters.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
@@ -52,7 +51,7 @@ class FiltersViewModel @Inject constructor(
                 type = event.rule.type
             )
 
-            is FiltersContract.Event.OnDeleteFilterRule -> handleRemoveFilterRule(
+            is FiltersContract.Event.OnDeleteFilterRuleConfirmed -> handleRemoveFilterRule(
                 rule = event.rule.domain,
                 type = event.rule.type
             )
@@ -70,6 +69,9 @@ class FiltersViewModel @Inject constructor(
             }
 
             is FiltersContract.Event.OnFilterTabChanged -> currentPiHoleFilterRuleType = event.type
+            is FiltersContract.Event.OnDeleteFilterRuleClick -> updateUiState {
+                copy(dialogType = FilterDialogType.OnConfirmFilterDelete(filterRule = event.rule))
+            }
         }
     }
 

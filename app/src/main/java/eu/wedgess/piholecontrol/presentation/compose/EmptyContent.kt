@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import eu.wedgess.piholecontrol.utils.ThemePreview
 
 @Composable
 fun EmptyContent(
@@ -31,7 +30,7 @@ fun EmptyContent(
         Icon(
             modifier = Modifier.size(56.dp),
             imageVector = Icons.Outlined.Clear,
-            contentDescription = "error",
+            contentDescription = "empty",
             tint = MaterialTheme.colorScheme.error
         )
 
