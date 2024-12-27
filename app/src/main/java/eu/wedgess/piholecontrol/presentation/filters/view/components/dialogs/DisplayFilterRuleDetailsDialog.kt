@@ -28,45 +28,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun DisplayFilterRuleDetailsDialog(
-    filterRule: FilterRuleEntity,
+    filterRule: FilterRuleInfo,
     onDelete: (ModifyFilterRule.Delete) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DisplayFilterRuleDetailsDialogContent(
             filterRule = filterRule,
-            onDeleteClicked = onDelete,
-            onCancelClicked = { onDismissRequest() }
+            onDeleteClick = onDelete,
+            onCancelClick = { onDismissRequest() }
         )
     }
 }
 
 @Composable
 private fun DisplayFilterRuleDetailsDialogContent(
-    filterRule: FilterRuleEntity,
-    onDeleteClicked: (ModifyFilterRule.Delete) -> Unit,
-    onCancelClicked: () -> Unit
+    filterRule: FilterRuleInfo,
+    onDeleteClick: (ModifyFilterRule.Delete) -> Unit,
+    onCancelClick: () -> Unit
 ) {
-
-    Surface(shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadius)) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadiusLarge)
+    ) {
         Column(
             Modifier.padding(PiHoleControlTheme.dimens.padding.dialogContent),
-            verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge)
+            verticalArrangement = Arrangement.spacedBy(
+                PiHoleControlTheme.dimens.padding.itemContent
+            )
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            CompositionLocalProvider(
+                LocalContentColor provides MaterialTheme.colorScheme.onSurface
+            ) {
                 Text(
-                    stringResource(R.string.filters_details_dialog_title),
-                    style = MaterialTheme.typography.titleLarge
+                    modifier = Modifier.padding(
+                        bottom = PiHoleControlTheme.dimens.padding.screenContent
+                    ),
+                    text = stringResource(R.string.filters_details_dialog_title),
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
             FilterDetailsRow(
@@ -77,7 +86,7 @@ private fun DisplayFilterRuleDetailsDialogContent(
             FilterDetailsRow(
                 icon = Icons.AutoMirrored.Default.Rule,
                 title = stringResource(R.string.filters_details_dialog_label_type),
-                value = filterRule.type.name.lowercase().replaceFirstChar(Char::titlecase)
+                value = filterRule.typeTitle
             )
             FilterDetailsRow(
                 icon = Icons.Default.Schedule,
@@ -92,9 +101,11 @@ private fun DisplayFilterRuleDetailsDialogContent(
             FilterDetailsRow(
                 icon = if (filterRule.enabled) Icons.Default.Check else Icons.Default.Close,
                 title = stringResource(R.string.filters_details_dialog_label_status),
-                value = if (filterRule.enabled) stringResource(R.string.filters_details_dialog_value_enabled) else stringResource(
-                    R.string.filters_details_dialog_value_disabled
-                )
+                value = if (filterRule.enabled) {
+                    stringResource(R.string.filters_details_dialog_value_enabled)
+                } else {
+                    stringResource(R.string.filters_details_dialog_value_disabled)
+                }
             )
             FilterDetailsRow(
                 icon = Icons.AutoMirrored.Default.Comment,
@@ -104,12 +115,14 @@ private fun DisplayFilterRuleDetailsDialogContent(
             )
 
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(
+                    top = PiHoleControlTheme.dimens.padding.dialogContent
+                ),
                 horizontalArrangement = Arrangement.End
             ) {
-                TextButton(onClick = onCancelClicked) { Text(stringResource(id = R.string.all_btn_cancel)) }
+                TextButton(onClick = onCancelClick) { Text(stringResource(id = R.string.all_btn_cancel)) }
                 TextButton(onClick = {
-                    onDeleteClicked(
+                    onDeleteClick(
                         ModifyFilterRule.Delete(
                             filterRule.domain,
                             filterRule.type
@@ -117,7 +130,6 @@ private fun DisplayFilterRuleDetailsDialogContent(
                     )
                 }) { Text("Delete") }
             }
-
         }
     }
 }
@@ -130,34 +142,38 @@ private fun FilterDetailsRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.screenContent)
+        horizontalArrangement = Arrangement.spacedBy(
+            PiHoleControlTheme.dimens.padding.screenContent
+        )
     ) {
         Icon(
             modifier = Modifier.size(PiHoleControlTheme.dimens.size.defaultIcon),
             imageVector = icon,
             contentDescription = title
         )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(
-                PiHoleControlTheme.dimens.padding.itemContentSmall,
-                Alignment.CenterVertically
-            )
-        ) {
+        Column {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
             )
-            Text(text = value, style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                    )
+                )
+            )
         }
     }
 }
 
-@Preview
+@ThemePreviewWithBackground
 @Composable
 private fun DisplayFilterRuleDetailsDialogPreview() {
     PiHoleControlTheme {
         DisplayFilterRuleDetailsDialog(
-            filterRule = FilterRuleEntity(
+            filterRule = FilterRuleInfo(
                 id = 1,
                 enabled = true,
                 comment = "Some random comment",

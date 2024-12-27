@@ -11,5 +11,5 @@ import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.viewmode
 fun QueryTypesRoot(viewModel: QueryTypesViewModel = hiltViewModel()) {
     val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
 
-    QueryTypesScreen(uiResult)
+    QueryTypesScreen(uiResult, viewModel::onEvent)
 }

@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
-import eu.wedgess.piholecontrol.domain.mappers.toConnection
-import eu.wedgess.piholecontrol.domain.mappers.toConnectionInfo
+import eu.wedgess.piholecontrol.data.mappers.toConnection
+import eu.wedgess.piholecontrol.data.mappers.toConnectionInfo
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -28,7 +28,13 @@ class ConnectionRepositoryImpl(
         connectionDao.fetchAllAsFlow().map { list -> list.map { it.toConnectionInfo() } }.resultOf()
 
     override fun fetchActiveFlow(): Flow<Result<ConnectionEntity>> =
-        connectionDao.fetchActiveFlow().map { it.toConnectionInfo() }.resultOf()
+        connectionDao.fetchActiveFlow().map { it?.toConnectionInfo() ?: ConnectionEntity.default }
+            .resultOf()
+
+    override suspend fun checkHasConnections(): Result<Boolean> =
+        withContext(dispatcherProvider.io) {
+            resultOf { connectionDao.checkNotEmpty() }
+        }
 
     override suspend fun fetchById(id: Long): Result<ConnectionEntity> =
         withContext(dispatcherProvider.io) {
@@ -59,6 +65,24 @@ class ConnectionRepositoryImpl(
     override suspend fun deleteById(id: Long): Result<Unit> = withContext(dispatcherProvider.io) {
         resultOf {
             connectionDao.delete(id)
+        }
+    }
+
+    override suspend fun deleteAllMarkedForDeletion(): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.deleteMarkedForDeletion()
+        }
+    }
+
+    override suspend fun markForDeletion(id: Long): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.markAsDeleted(id)
+        }
+    }
+
+    override suspend fun unmarkForDeletion(id: Long): Result<Unit> = withContext(dispatcherProvider.io) {
+        resultOf {
+            connectionDao.unmarkAsDeleted(id)
         }
     }
 }

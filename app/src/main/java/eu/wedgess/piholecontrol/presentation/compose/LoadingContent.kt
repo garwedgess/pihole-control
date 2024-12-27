@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import eu.wedgess.piholecontrol.utils.ThemePreview
 
 @Composable
 fun LoadingContent(
@@ -36,8 +35,6 @@ fun LoadingContent(
         subTitle?.run {
             Text(text = this, style = MaterialTheme.typography.bodyMedium)
         }
-
-
     }
 }
 

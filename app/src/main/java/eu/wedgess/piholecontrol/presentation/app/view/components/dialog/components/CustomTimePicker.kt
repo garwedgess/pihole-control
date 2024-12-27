@@ -22,10 +22,9 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 fun CustomTimePicker(
     currentHours: TextFieldValue,
     currentMinutes: TextFieldValue,
-    onHoursChanged: (hours: TextFieldValue) -> Unit,
-    onMinutesChanged: (minutes: TextFieldValue) -> Unit
+    onHoursChange: (hours: TextFieldValue) -> Unit,
+    onMinutesChange: (minutes: TextFieldValue) -> Unit
 ) {
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContentLarge)
@@ -51,7 +50,7 @@ fun CustomTimePicker(
                     type = TimePickerType.Hours,
                     value = currentHours,
                     onValueChange = {
-                        onHoursChanged(it)
+                        onHoursChange(it)
                     }
                 )
             }
@@ -72,7 +71,7 @@ fun CustomTimePicker(
                     type = TimePickerType.Minutes,
                     value = currentMinutes,
                     onValueChange = {
-                        onMinutesChanged(it)
+                        onMinutesChange(it)
                     }
                 )
             }

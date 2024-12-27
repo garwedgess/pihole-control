@@ -5,6 +5,7 @@ import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateStatusChangeOnAllConnectionsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -33,8 +34,7 @@ class UpdateStatusChangeOnAllConnectionsUseCaseTest {
         val result = target(applyOnAll)
 
         assertThat(result.isSuccess).isTrue()
-
-        coEvery { repository.updateStatusChangeOnAllConnections(applyOnAll) }
+        coVerify { repository.updateStatusChangeOnAllConnections(applyOnAll) }
     }
 
     @Test
@@ -50,5 +50,6 @@ class UpdateStatusChangeOnAllConnectionsUseCaseTest {
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            coVerify { repository.updateStatusChangeOnAllConnections(applyOnAll) }
         }
 }

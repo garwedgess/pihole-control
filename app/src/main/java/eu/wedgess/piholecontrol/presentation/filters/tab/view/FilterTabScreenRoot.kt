@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
-import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
@@ -17,13 +16,14 @@ import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabViewModel
 import eu.wedgess.piholecontrol.utils.UiText
 
 @Composable
 fun FilterTabScreenRoot(
     filterScreenTabType: FilterScreenTabType,
-    onFilterRuleClick: (FilterRuleEntity) -> Unit,
+    onFilterRuleClick: (FilterRuleInfo) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
     searchQuery: String? = null,
     showSnackBarText: (UiText) -> Unit
@@ -40,12 +40,12 @@ fun FilterTabScreenRoot(
     val sideEffect = viewModel.sideEffect
 
     LaunchedEffect(searchQuery) {
-        viewModel.setSearchQuery(searchQuery)
+        viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged(searchQuery ?: ""))
     }
 
     LaunchedEffect(Unit) {
         onRefreshFilters {
-            viewModel.onRefreshData()
+            viewModel.onEvent(FilterTabContract.Event.OnRefresh)
         }
     }
 
@@ -66,8 +66,10 @@ fun FilterTabScreenRoot(
         onEmpty = { EmptyScreen(modifier = Modifier.fillMaxSize(), it) },
         onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) },
         onLoaded = {
-            FilterListContent(filtersList = it.filterRules, onFilterRuleClick = onFilterRuleClick)
+            FilterListContent(
+                filtersList = it.filterRules,
+                onFilterRuleClick = onFilterRuleClick
+            )
         }
     )
-
 }

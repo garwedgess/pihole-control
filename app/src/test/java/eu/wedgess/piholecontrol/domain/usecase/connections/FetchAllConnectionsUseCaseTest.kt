@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.connections
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
@@ -8,7 +9,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -29,34 +30,36 @@ class FetchAllConnectionsUseCaseTest {
     fun `invoke - fetches all connections and returns success`() = runTest {
         val connections = listOf(ConnectionEntity.default, ConnectionEntity.default.copy(id = 2L))
 
-        coEvery { repository.fetchAll() } returns kotlinx.coroutines.flow.flowOf(
+        coEvery { repository.fetchAll() } returns flowOf(
             Result.success(
                 connections
             )
         )
 
-        val result = fetchAllConnectionsUseCase().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
-        assertThat(result.first().getOrNull()).isEqualTo(connections)
+        fetchAllConnectionsUseCase().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isEqualTo(connections)
+            awaitComplete()
+        }
         coVerify { repository.fetchAll() }
     }
 
     @Test
     fun `invoke - returns failure when repository fetch fails`() = runTest {
         val exception = Exception("Failed to fetch connections")
-        coEvery { repository.fetchAll() } returns kotlinx.coroutines.flow.flowOf(
+        coEvery { repository.fetchAll() } returns flowOf(
             Result.failure(
                 exception
             )
         )
 
-        val result = fetchAllConnectionsUseCase().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isFailure).isTrue()
-        assertThat(result.first().exceptionOrNull()).isEqualTo(exception)
+        fetchAllConnectionsUseCase().test {
+            val result = awaitItem()
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            awaitComplete()
+        }
         coVerify { repository.fetchAll() }
     }
 }

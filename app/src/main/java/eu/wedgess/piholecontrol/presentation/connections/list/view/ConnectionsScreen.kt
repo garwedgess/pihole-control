@@ -7,7 +7,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.presentation.compose.Compose
@@ -21,7 +25,8 @@ import eu.wedgess.piholecontrol.presentation.connections.list.view.components.Co
 @Composable
 fun ConnectionsScreen(
     uiResult: UIResult<ConnectionsContract.UiState>,
-    onEvent: (ConnectionsContract.Event) -> Unit
+    onEvent: (ConnectionsContract.Event) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     Scaffold(
         floatingActionButton = {
@@ -29,7 +34,17 @@ fun ConnectionsScreen(
                 onClick = { onEvent(ConnectionsContract.Event.AddConnection) },
                 content = {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "")
-                })
+                }
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
@@ -41,6 +56,4 @@ fun ConnectionsScreen(
             )
         }
     }
-
-
 }

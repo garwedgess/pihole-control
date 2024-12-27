@@ -18,8 +18,8 @@ import com.google.mlkit.vision.common.InputImage
 @ExperimentalGetImage
 @Composable
 fun Scanner(
-    modifier: Modifier = Modifier,
     barcodeScanner: BarcodeScanner,
+    modifier: Modifier = Modifier,
     onBarcodeScanSuccess: (Iterable<Barcode>) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current

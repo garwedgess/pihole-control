@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace  = "eu.wedgess.piholecontrol"
+    namespace = "eu.wedgess.piholecontrol"
     compileSdk = 35
 
     defaultConfig {
@@ -35,7 +35,10 @@ android {
         }
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -62,6 +65,7 @@ sqldelight {
     databases {
         create("PiHoleControlDatabase") {
             packageName.set("eu.wedgess.piholecontrol.data")
+            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
         }
     }
 }
@@ -88,7 +92,6 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.javalite)
-//    ksp(libs.protobuf.kotlin)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.android.date.backport)
 
@@ -98,6 +101,9 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.truth)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.core.ktx)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import androidx.datastore.core.DataStore
+import eu.wedgess.piholecontrol.data.mappers.toEntity
 import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.model.UserPreferences.Theme
 import eu.wedgess.piholecontrol.domain.model.AppPreferencesEntity
@@ -20,14 +21,7 @@ class SettingsRepositoryImpl(
     override fun fetchAllPreferences(): Flow<AppPreferencesEntity> {
         return preferences.data.map {
             AppPreferencesEntity(
-                theme = when (it.theme) {
-                    null,
-                    Theme.SYSTEM,
-                    Theme.UNRECOGNIZED -> AppThemeEntity.SYSTEM
-
-                    Theme.DARK -> AppThemeEntity.DARK
-                    Theme.LIGHT -> AppThemeEntity.LIGHT
-                },
+                theme = it.theme.toEntity(),
                 useDynamicColors = it.useDynamicColors,
                 refreshInterval = it.refreshTime,
                 multiStatusChange = it.changeStatusOnAllConnection

@@ -12,11 +12,11 @@ import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.dashboard.DashboardContract
 import eu.wedgess.piholecontrol.presentation.dashboard.extensions.toUiInfo
+import eu.wedgess.piholecontrol.presentation.dashboard.model.DashboardInfo
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,14 +30,7 @@ class DashboardViewModel @Inject constructor(
     val uiResult = fetchDashboardInfoUseCase()
         .map { result ->
             result.getOrElse { throwable ->
-                Timber.e(throwable, "Failed to fetch dashboard info")
-                return@map UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        title = UiText.DynamicString("Failed to fetch dashboard info"),
-                        subTitle = UiText.DynamicString(throwable.message?.takeIf { it.isNotBlank() }
-                            ?: "Unknown error")
-                    )
-                )
+                return@map DashboardInfo.handleErrorThrowable(throwable)
             }.run {
                 this.toUiInfo().toUiResult().also {
                     if (it !is UIResult.Error && showErrorMessage) {
@@ -47,34 +40,34 @@ class DashboardViewModel @Inject constructor(
             }
         }
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            UIResult.Loading(ResultType.Loading.WithTitle())
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = UIResult.Loading(ResultType.Loading.WithTitle())
         )
 
     private fun handleCombinedErrors(dashboardInfoEntity: DashboardInfoEntity) {
-        val failures = mutableListOf<UiText.StringResource>()
+        val failures = mutableListOf<UiText>()
         dashboardInfoEntity.summaryResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_summary_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }
         dashboardInfoEntity.queriesOverTimeResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_queries_over_time_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }
         dashboardInfoEntity.clientQueriesOverTimeResult.onFailure {
             failures.add(
-                UiText.StringResource(
+                UiText.StringResourceWithArgs(
                     id = R.string.dashboard_client_queries_over_time_error,
-                    args = listOf(it.message ?: "")
+                    it.message ?: ""
                 )
             )
         }

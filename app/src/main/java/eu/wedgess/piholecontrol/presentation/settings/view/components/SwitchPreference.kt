@@ -29,12 +29,12 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun SwitchPreference(
-    modifier: Modifier = Modifier,
     title: String,
-    subtitle: String? = null,
-    icon: ImageVector? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    subtitle: String? = null,
+    icon: ImageVector? = null,
     enabled: Boolean = true,
 ) {
     SwitchPreferenceImpl(
@@ -52,10 +52,10 @@ fun SwitchPreference(
 private fun SwitchPreferenceImpl(
     title: String,
     annotatedSubtitle: AnnotatedString?,
-    icon: ImageVector? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
     enabled: Boolean = true,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -72,7 +72,6 @@ private fun SwitchPreferenceImpl(
             )
             .padding(all = 16.dp),
     ) {
-
         icon?.run {
             Icon(
                 imageVector = icon,
@@ -88,7 +87,11 @@ private fun SwitchPreferenceImpl(
                 style = MaterialTheme.typography.titleMedium,
                 color = if (enabled) {
                     Color.Unspecified
-                } else MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha),
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
+                    )
+                },
             )
 
             annotatedSubtitle?.run {
@@ -96,9 +99,13 @@ private fun SwitchPreferenceImpl(
                     text = this,
                     style = MaterialTheme.typography.bodySmall,
                     color = if (enabled) {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                        )
                     } else {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha)
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
+                        )
                     },
                 )
             }

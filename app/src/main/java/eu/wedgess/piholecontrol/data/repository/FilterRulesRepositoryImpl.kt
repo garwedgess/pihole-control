@@ -1,10 +1,10 @@
 package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
+import eu.wedgess.piholecontrol.data.mappers.toFilterRuleEntity
+import eu.wedgess.piholecontrol.data.mappers.toModifyFilterRuleResponseEntity
+import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.mappers.toFilterRuleEntity
-import eu.wedgess.piholecontrol.domain.mappers.toModifyFilterRuleResponseEntity
-import eu.wedgess.piholecontrol.domain.mappers.toPiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
@@ -48,5 +48,4 @@ class FilterRulesRepositoryImpl(
                 it.toModifyFilterRuleResponseEntity()
             }
     }
-
 }

@@ -14,18 +14,20 @@ CREATE TABLE Connection(
  AuthPassword TEXT NOT NULL DEFAULT "",
  AuthRealm TEXT NOT NULL DEFAULT "",
  TrustAllCerts INTEGER AS Boolean NOT NULL DEFAULT 0,
+ IsDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
  Active INTEGER AS Boolean NOT NULL DEFAULT 0
 );
 
 insert:
-INSERT OR FAIL INTO Connection (Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, Active)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR FAIL INTO Connection (Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, IsDeleted, Active)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 checkNotEmpty:
 SELECT COUNT(*) != 0 FROM Connection;
 
 selectAll:
-SELECT * FROM Connection;
+SELECT * FROM Connection
+WHERE IsDeleted = 0;
 
 selectById:
 SELECT * FROM Connection
@@ -37,6 +39,20 @@ WHERE Active = 1;
 
 delete:
 DELETE FROM Connection WHERE Id = :id;
+
+markAsDeleted:
+UPDATE Connection
+SET IsDeleted = 1
+WHERE Id = :id;
+
+unmarkAsDeleted:
+UPDATE Connection
+SET IsDeleted = 0
+WHERE Id = :id;
+
+deleteAllMarkedAsDeleted:
+DELETE FROM Connection
+WHERE IsDeleted = 1;
 
 update:
 UPDATE Connection
@@ -70,5 +86,17 @@ BEFORE INSERT ON Connection
 BEGIN
   UPDATE Connection
   SET Active = 0;
+END;
+
+CREATE TRIGGER IF NOT EXISTS next_connection_active_on_delete
+AFTER DELETE ON Connection
+WHEN old.Active = 1
+BEGIN
+    UPDATE Connection
+    SET Active = 1
+    WHERE Id = (
+        SELECT MAX(Id) FROM Connection
+        WHERE IsDeleted = 0 AND Active = 0
+    );
 END;
 

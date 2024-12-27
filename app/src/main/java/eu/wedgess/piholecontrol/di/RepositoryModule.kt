@@ -5,13 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.LogsRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.SettingsRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.StatisticsRepositoryImpl
-import eu.wedgess.piholecontrol.data.repository.StatusRepositoryImpl
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.LogsApiService
@@ -19,6 +12,13 @@ import eu.wedgess.piholecontrol.data.api.StatisticsApiService
 import eu.wedgess.piholecontrol.data.api.StatusApiService
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
 import eu.wedgess.piholecontrol.data.model.UserPreferences
+import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.LogsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.SettingsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.StatisticsRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.StatusRepositoryImpl
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
@@ -48,7 +48,6 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): SettingsRepository =
         SettingsRepositoryImpl(dataStore, dispatcherProvider)
-
 
     @Provides
     @Singleton
@@ -89,5 +88,4 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): StatisticsRepository =
         StatisticsRepositoryImpl(api, dispatcherProvider)
-
 }

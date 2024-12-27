@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleStatusResponse
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import kotlin.time.Duration
 
 interface StatusApiService {
@@ -12,5 +12,4 @@ interface StatusApiService {
         activeMiHole: ConnectionEntity,
         duration: Duration
     ): Result<PiHoleStatusResponse>
-
 }

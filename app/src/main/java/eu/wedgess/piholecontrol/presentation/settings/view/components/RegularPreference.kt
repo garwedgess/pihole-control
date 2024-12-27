@@ -21,9 +21,9 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun RegularPreference(
-    modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     subtitle: String? = null,
     enabled: Boolean = true,
@@ -40,9 +40,9 @@ fun RegularPreference(
 
 @Composable
 private fun RegularPreferenceImpl(
-    modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     subtitleAnnotatedString: AnnotatedString? = null,
     icon: ImageVector? = null,
     enabled: Boolean = true,
@@ -64,13 +64,17 @@ private fun RegularPreferenceImpl(
                 contentDescription = title
             )
         }
-        Column(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 color = if (enabled) {
                     Color.Unspecified
-                } else MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha),
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
+                    )
+                },
             )
 
             subtitleAnnotatedString?.let { subtitle ->
@@ -78,9 +82,13 @@ private fun RegularPreferenceImpl(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
                     color = if (enabled) {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha)
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                        )
                     } else {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha)
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
+                        )
                     },
                 )
             }

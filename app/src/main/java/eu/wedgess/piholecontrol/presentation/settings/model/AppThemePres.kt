@@ -7,7 +7,7 @@ import eu.wedgess.piholecontrol.utils.UiText
 enum class AppThemePres(val theme: Theme, val label: UiText) {
     System(theme = Theme.SYSTEM, UiText.DynamicString("System")),
     Light(theme = Theme.LIGHT, UiText.DynamicString("Light")),
-    Dark(theme = Theme.DARK, UiText.DynamicString("Dark"));
+    Dark(theme = Theme.DARK, UiText.DynamicString("Dark"))
 }
 
 fun AppThemePres.mapToEntity(): AppThemeEntity = when (this) {

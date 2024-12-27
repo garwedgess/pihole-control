@@ -35,8 +35,10 @@ internal fun calculateTouchAngleAccordingToCanvas(
  * compared to other data points.
  */
 private fun calculateTouchAngleInDegrees(canvasCenter: Offset, normalizedPoint: Offset): Double {
-    val touchInRadian = kotlin.math.atan2(normalizedPoint.y - canvasCenter.y,
-        normalizedPoint.x - canvasCenter.x)
+    val touchInRadian = kotlin.math.atan2(
+        y = normalizedPoint.y - canvasCenter.y,
+        x = normalizedPoint.x - canvasCenter.x
+    )
     return touchInRadian * -180 / Math.PI // Convert radians to angle in degrees
 }
 

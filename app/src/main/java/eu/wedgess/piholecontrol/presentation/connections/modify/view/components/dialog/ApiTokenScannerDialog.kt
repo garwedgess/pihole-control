@@ -29,9 +29,8 @@ fun ApiTokenScannerDialog(
     barcodeScanner: BarcodeScanner,
     onDismiss: () -> Unit,
     onApiTokenScanFailed: () -> Unit,
-    onApiTokenScanned: (String) -> Unit
+    onApiTokenScan: (String) -> Unit
 ) {
-
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
@@ -75,17 +74,22 @@ fun ApiTokenScannerDialog(
                         )
                     }
                 }
-                BoxWithConstraints(modifier = Modifier.padding(vertical = PiHoleControlTheme.dimens.padding.dialogContent)) {
+                BoxWithConstraints(
+                    modifier = Modifier.padding(
+                        vertical = PiHoleControlTheme.dimens.padding.dialogContent
+                    )
+                ) {
                     Scanner(
-                        Modifier
+                        modifier = Modifier
                             .fillMaxWidth()
                             .height(maxWidth),
                         barcodeScanner = barcodeScanner,
                         onBarcodeScanSuccess = {
                             it.firstOrNull()?.rawValue?.run {
-                                onApiTokenScanned(this)
+                                onApiTokenScan(this)
                             } ?: onApiTokenScanFailed()
-                        })
+                        }
+                    )
                 }
             }
         }

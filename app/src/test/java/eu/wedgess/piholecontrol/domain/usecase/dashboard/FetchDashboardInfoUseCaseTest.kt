@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.dashboard
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
@@ -14,9 +15,7 @@ import eu.wedgess.piholecontrol.presentation.dashboard.model.DashboardInfo
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -51,10 +50,27 @@ class FetchDashboardInfoUseCaseTest {
     @Test
     fun `invoke - successfully fetches dashboard info`() = runTest {
         val connection = ConnectionEntity.default
-        val summary = Result.success(mockk<SummaryEntity>(relaxed = true))
-        val overTimeData = Result.success(mockk<QueriesOverTimeEntity>(relaxed = true))
+        val summary = Result.success(
+            SummaryEntity(
+                dnsQueries = 1234,
+                domainsBlocked = 1232,
+                adsPercentage = 30f,
+                adsBlocked = 623,
+                uniqueClients = 21
+            )
+        )
+        val overTimeData =
+            Result.success(QueriesOverTimeEntity(permitted = emptyList(), blocked = emptyList()))
         val clientsOverTimeData =
-            Result.success(listOf(mockk<ClientOverTimeEntity>(relaxed = true)))
+            Result.success(
+                listOf(
+                    ClientOverTimeEntity(
+                        clientName = "client",
+                        clientIp = "192.168.1.1",
+                        clientActivity = emptyList()
+                    )
+                )
+            )
 
         coEvery { fetchStatusSummaryUseCase(connection) } returns summary
         coEvery { fetchOverallTimeDataUseCase(connection) } returns overTimeData
@@ -66,24 +82,41 @@ class FetchDashboardInfoUseCaseTest {
             }
         }
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
-        val dashboardInfo = result.first().getOrNull()
-        assertThat(dashboardInfo?.summaryResult).isEqualTo(summary)
-        assertThat(dashboardInfo?.queriesOverTimeResult).isEqualTo(overTimeData)
-        assertThat(dashboardInfo?.clientQueriesOverTimeResult).isEqualTo(clientsOverTimeData)
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            val dashboardInfo = result.getOrNull()!!
+            assertThat(dashboardInfo.summaryResult).isEqualTo(summary)
+            assertThat(dashboardInfo.queriesOverTimeResult).isEqualTo(overTimeData)
+            assertThat(dashboardInfo.clientQueriesOverTimeResult).isEqualTo(clientsOverTimeData)
+            awaitComplete()
+        }
     }
 
     @Test
     fun `invoke - returns success when one of the results fails`() = runTest {
         val connection = ConnectionEntity.default
-        val summary = Result.success(mockk<SummaryEntity>(relaxed = true))
+        val summary = Result.success(
+            SummaryEntity(
+                dnsQueries = 1234,
+                domainsBlocked = 1232,
+                adsPercentage = 30f,
+                adsBlocked = 623,
+                uniqueClients = 21
+            )
+        )
         val overTimeData =
             Result.failure<QueriesOverTimeEntity>(Exception("Failed to fetch overtime data"))
         val clientsOverTimeData =
-            Result.success(listOf(mockk<ClientOverTimeEntity>(relaxed = true)))
+            Result.success(
+                listOf(
+                    ClientOverTimeEntity(
+                        clientName = "client",
+                        clientIp = "192.168.1.1",
+                        clientActivity = emptyList()
+                    )
+                )
+            )
 
         coEvery { fetchStatusSummaryUseCase(connection) } returns summary
         coEvery { fetchOverallTimeDataUseCase(connection) } returns overTimeData
@@ -95,9 +128,10 @@ class FetchDashboardInfoUseCaseTest {
             }
         }
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            awaitComplete()
+        }
     }
 }

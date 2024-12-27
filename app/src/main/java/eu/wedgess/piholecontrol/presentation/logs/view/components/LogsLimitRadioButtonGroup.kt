@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import eu.wedgess.piholecontrol.presentation.common.RadioGroup
+import eu.wedgess.piholecontrol.presentation.common.components.RadioGroup
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
@@ -11,7 +11,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 fun LogsLimitRadioButtonGroup(
     itemsList: List<Int>,
     selectedItem: Int,
-    onLogLimitSelected: (Int) -> Unit,
+    onLogLimitClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     RadioGroup(
@@ -19,18 +19,18 @@ fun LogsLimitRadioButtonGroup(
         itemsList = itemsList.toList(),
         selectedItem = selectedItem,
         labelFormatter = { it.toString() },
-        onItemSelected = onLogLimitSelected
+        onItemClick = onLogLimitClick
     )
 }
 
-@Preview
+@ThemePreview
 @Composable
 private fun LogsLimitRadioButtonGroupPreview() {
     PiHoleControlTheme {
         LogsLimitRadioButtonGroup(
             itemsList = LogsContract.BottomSheetUiState.availableLogLimits,
             selectedItem = LogsContract.BottomSheetUiState.availableLogLimits.last(),
-            onLogLimitSelected = {}
+            onLogLimitClick = {}
         )
     }
 }

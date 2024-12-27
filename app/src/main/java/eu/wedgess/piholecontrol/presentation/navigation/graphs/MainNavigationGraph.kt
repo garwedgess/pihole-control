@@ -19,6 +19,7 @@ import eu.wedgess.piholecontrol.utils.UiText
 fun MainNavigationGraph(
     navController: NavHostController,
     onComposing: (AppBarState) -> Unit,
+    onResetBottomAppBarOffset: () -> Unit,
     showSnackbarMessage: (UiText) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +29,7 @@ fun MainNavigationGraph(
         modifier = modifier
     ) {
         dashboardRoot(onComposing, showSnackbarMessage)
-        statisticsRoot(onComposing)
+        statisticsRoot(onComposing, onResetBottomAppBarOffset)
         filtersRoot(onComposing, showSnackbarMessage)
         logsRoot(onComposing)
         settingsNavigationGraph(navController, onComposing)

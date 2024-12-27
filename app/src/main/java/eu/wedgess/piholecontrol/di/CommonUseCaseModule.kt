@@ -23,5 +23,4 @@ object CommonUseCaseModule {
         settingsRepository: SettingsRepository
     ): PeriodicRefreshUseCase =
         PeriodicRefreshUseCase(observeActiveUserUseCase, settingsRepository)
-
 }

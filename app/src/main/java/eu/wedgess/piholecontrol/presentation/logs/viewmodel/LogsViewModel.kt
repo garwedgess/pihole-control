@@ -18,7 +18,7 @@ import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
 import eu.wedgess.piholecontrol.utils.UiText
-import eu.wedgess.piholecontrol.utils.extensions.toEpochMillis
+import eu.wedgess.piholecontrol.utils.extensions.toEpochSeconds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -99,7 +99,6 @@ class LogsViewModel @Inject constructor(
         LogSorting.RESPONSE_TIME_DESC -> sortedByDescending { it.responseTime }
     }
 
-
     override fun onEvent(event: LogsContract.Event) {
         when (event) {
             is LogsContract.Event.AddToAllowList -> onAddToAllowList(event.domain)
@@ -155,9 +154,9 @@ class LogsViewModel @Inject constructor(
                 _uiState.update { it.copy(dialogType = LogsDialogType.None) }
                 _bottomSheetUiState.update {
                     if (event.type == PickerType.FromTime) {
-                        it.copy(filterFromTime = event.time.toEpochMillis())
+                        it.copy(filterFromTime = event.time.toEpochSeconds())
                     } else {
-                        it.copy(filterToTime = event.time.toEpochMillis())
+                        it.copy(filterToTime = event.time.toEpochSeconds())
                     }
                 }
             }
@@ -199,8 +198,6 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW).onFailure {
                 Timber.e(it, "Failed to add domain to allow list: $domain")
-            }.onSuccess {
-
             }
         }
     }
@@ -209,8 +206,6 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.BLOCK).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
-            }.onSuccess {
-
             }
         }
     }

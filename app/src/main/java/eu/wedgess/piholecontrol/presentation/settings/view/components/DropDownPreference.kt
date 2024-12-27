@@ -25,9 +25,9 @@ fun <T> DropDownPreference(
     title: String,
     items: List<Pair<T, String>>,
     selectedItem: T,
-    onItemSelected: (T) -> Unit,
-    icon: ImageVector? = null,
+    onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
     enabled: Boolean = true,
 ) {
     var dropDownExpanded by remember { mutableStateOf(value = false) }
@@ -41,10 +41,11 @@ fun <T> DropDownPreference(
         },
         modifier = modifier
             .background(
-                color = if (dropDownExpanded)
+                color = if (dropDownExpanded) {
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                else
+                } else {
                     Color.Unspecified
+                }
             ),
         enabled = enabled,
     )
@@ -60,14 +61,15 @@ fun <T> DropDownPreference(
                     onClick = {
                         dropDownExpanded = false
 
-                        onItemSelected(item.first)
+                        onItemClick(item.first)
                     },
                     modifier = Modifier
                         .background(
-                            color = if (selectedItem == item.first)
+                            color = if (selectedItem == item.first) {
                                 MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
-                            else
-                                Color.Unspecified,
+                            } else {
+                                Color.Unspecified
+                            }
                         ),
                     text = {
                         Text(
@@ -96,6 +98,6 @@ private fun DropDownPreferencePreview() {
         icon = Icons.Default.Palette,
         items = themes,
         selectedItem = selectedTheme,
-        onItemSelected = { },
+        onItemClick = { },
     )
 }

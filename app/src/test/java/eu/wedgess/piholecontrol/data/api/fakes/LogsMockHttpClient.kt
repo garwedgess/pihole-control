@@ -16,7 +16,6 @@ object LogsMockHttpClient {
     fun mockSuccessHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
             val url = request.url
-            val params = url.parameters
 
             respond(
                 content = logs,
@@ -32,7 +31,6 @@ object LogsMockHttpClient {
     fun mockErrorHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
             val url = request.url
-            val params = url.parameters
 
             respond(
                 content = """[]""",
@@ -44,5 +42,4 @@ object LogsMockHttpClient {
             installContentNegotiation()
         }
     }
-
 }

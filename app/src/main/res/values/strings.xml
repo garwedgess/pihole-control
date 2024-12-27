@@ -2,6 +2,7 @@
     <string name="app_name">PiHole Control</string>
     <string name="all_btn_cancel">Cancel</string>
     <string name="all_btn_retry">Retry</string>
+    <string name="all_btn_undo">Undo</string>
     <string name="all_msg_no_results_found_for">No results found for: %s</string>
     <string name="all_error_msg_unknown">Unknown error</string>
 
@@ -73,7 +74,7 @@
     <string name="home_title_clients_over_time">Client Queries Over The Last 24hours</string>
     <string name="home_title_queries_over_time_blocked">Blocked</string>
     <string name="home_title_queries_over_time_permitted">Permitted</string>
-    <string name="home_caption_clients">(Clients: %s)</string>
+    <string name="home_caption_clients">(Clients: %d)</string>
     <string name="home_legend_sub_title_queries_over_time">Hits: %s</string>
     <string name="home_title_queries_over_time">Queries Over The Last 24hours</string>
     <string name="home_fetching_statistics">Fetching statistics</string>
@@ -85,7 +86,7 @@
     <string name="filters_tab_title_block_list">Block List</string>
     <string name="filters_add_rule_dialog_title">Add rule</string>
     <string name="filters_add_rule_dialog_label_as_wildcard">Add as wildcard</string>
-    <string name="filters_add_rule_dialog_btn_add">ADD</string>
+    <string name="filters_add_rule_dialog_btn_add">Add</string>
     <string name="filters_add_rule_dialog_label_domain">Domain</string>
     <string name="filters_details_dialog_title">Filter rule</string>
     <string name="filters_details_dialog_label_domain">Domain</string>
@@ -99,10 +100,11 @@
     <string name="filters_details_dialog_label_comment">Comment</string>
     <string name="filters_label_regex">Regex</string>
     <string name="filters_msg_loading_filters">Loading filters</string>
-    <string name="filters_label_allowlist">Allow List</string>
-    <string name="filters_label_blocklist">Block List</string>
-    <string name="filters_label_allowlist_regex">Allow List Regex</string>
-    <string name="filters_label_blocklist_regex">Block List Regex</string>
+    <string name="filters_label_allowlist">Allow</string>
+    <string name="filters_label_blocklist">Block</string>
+    <string name="filters_label_allowlist_regex">Allow Regex</string>
+    <string name="filters_label_blocklist_regex">Block Regex</string>
+    <string name="filter_rules_fetch_error">Failed to fetch filter rules</string>
 
 
     <!-- Statistics Screen -->
@@ -117,6 +119,10 @@
     <string name="statistics_tab_title_servers">Servers</string>
     <string name="statistics_tab_title_domains">Domains</string>
     <string name="statistics_tab_title_clients">Clients</string>
+    <string name="top_domains_error">Failed to fetch top domains</string>
+    <string name="top_clients_error">Failed to fetch top clients</string>
+    <string name="query_types_error">Failed to fetch query types</string>
+    <string name="forward_destinations_error">Failed to fetch forward destinations</string>
 
 
     <string name="modify_connection_label_name">Name</string>
@@ -152,5 +158,22 @@
     <string name="filter_search_placeholder">Search for filter...</string>
     <string name="logs_search_placeholder">Search for logs...</string>
     <string name="snackbar_dismiss">dismiss</string>
+    <string name="title_activity_initial_connection">InitialConnectionActivity</string>
+    <string name="initial_setup_title">Setup Connection</string>
+
+    <string name="delete_filter_dialog_title">Delete Filter</string>
+    <string name="delete_filter_dialog_message">Are you sure you want to delete the filter for %s? This cannot be undone.</string>
+    <string name="delete_filter_dialog_confirm_btn">Confirm</string>
+    <string name="delete_filter_dialog_cancel_btn">Cancel</string>
+
+
+    <string name="connections_error_title">Failed to fetch connections</string>
+    <string name="connections_empty_title">No connections</string>
+    <string name="connections_empty_message">Add a connection to get starteds</string>
+    <string name="snackbar_msg_failed_to_delete_connection">Failed to delete connection %s</string>
+    <string name="snackbar_msg_connection_deleted">Connection %s has been deleted</string>
+    <string name="snackbar_msg_failed_connection_restore">Failed to restore connection %s</string>
+    <string name="snackbar_msg_failed_to_set_active_connection">Failed to set %s as the active connection</string>
+    <string name="log_results_title">Results: %d</string>
 
 </resources>

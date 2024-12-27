@@ -1,8 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.filters.tab.model
 
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import timber.log.Timber
@@ -13,13 +15,7 @@ data class FilterRulesResult(
 ) {
     fun toUiResult(query: String): UIResult<FilterTabContract.UiState> {
         return when {
-            rules.isFailure && regexRules.isFailure -> {
-                UIResult.Error(
-                    ResultType.Error.WithTitle(
-                        UiText.DynamicString("Failed to fetch filter rules")
-                    )
-                )
-            }
+            rules.isFailure && regexRules.isFailure -> handleErrorThrowable(rules.exceptionOrNull())
 
             else -> {
                 val rulesList = rules.onFailure {
@@ -33,13 +29,27 @@ data class FilterRulesResult(
                     rulesList?.run { addAll(this) }
                     regexRulesList?.run { addAll(this) }
                 }.filter { it.domain.contains(query.lowercase(), ignoreCase = true) }
+                    .map { it.toInfo() }
 
                 if (allRules.isEmpty()) {
-                    UIResult.Empty(ResultType.Empty.WithTitle(UiText.DynamicString("No rules found")))
+                    UIResult.Empty(
+                        ResultType.Empty.WithTitle(UiText.DynamicString("No rules found"))
+                    )
                 } else {
                     UIResult.Loaded(FilterTabContract.UiState(allRules))
                 }
             }
+        }
+    }
+
+    companion object {
+        fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
+            return UIResult.Error(
+                ResultType.Error.WithTitleAndSubTitle(
+                    UiText.StringResource(R.string.filter_rules_fetch_error),
+                    UiText.DynamicString(throwable?.message ?: "Unknown error")
+                )
+            )
         }
     }
 }

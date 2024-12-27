@@ -21,15 +21,21 @@ import io.ktor.client.HttpClient
 object DashboardModule {
 
     @Provides
-    fun provideFetchStatusSummaryUseCase(dashboardRepository: DashboardRepository): FetchStatusSummaryUseCase =
+    fun provideFetchStatusSummaryUseCase(
+        dashboardRepository: DashboardRepository
+    ): FetchStatusSummaryUseCase =
         FetchStatusSummaryUseCase(dashboardRepository)
 
     @Provides
-    fun provideFetchOverallTimeDataUseCase(dashboardRepository: DashboardRepository): FetchOverallTimeDataUseCase =
+    fun provideFetchOverallTimeDataUseCase(
+        dashboardRepository: DashboardRepository
+    ): FetchOverallTimeDataUseCase =
         FetchOverallTimeDataUseCase(dashboardRepository)
 
     @Provides
-    fun provideFetchClientsOverallTimeDataUseCase(dashboardRepository: DashboardRepository): FetchClientsOverallTimeDataUseCase =
+    fun provideFetchClientsOverallTimeDataUseCase(
+        dashboardRepository: DashboardRepository
+    ): FetchClientsOverallTimeDataUseCase =
         FetchClientsOverallTimeDataUseCase(dashboardRepository)
 
     @Provides
@@ -38,7 +44,6 @@ object DashboardModule {
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
     ): DashboardApiService =
         DashboardApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
-
 
     @Provides
     fun provideFetchDashboardInfoUseCase(

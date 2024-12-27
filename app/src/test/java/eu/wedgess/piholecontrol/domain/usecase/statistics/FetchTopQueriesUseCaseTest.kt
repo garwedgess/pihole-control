@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.statistics
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.TopDomainEntity
@@ -11,7 +12,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -20,8 +20,10 @@ class FetchTopQueriesUseCaseTest {
 
     @MockK
     private lateinit var repository: StatisticsRepository
+
     @MockK
     private lateinit var periodicRefreshUseCase: PeriodicRefreshUseCase
+
     private lateinit var target: FetchTopQueriesUseCase
 
     @Before
@@ -34,9 +36,13 @@ class FetchTopQueriesUseCaseTest {
     fun `invoke - emits success when repository returns data`() = runTest {
         val topQueries = TopQueriesEntity(
             allowed = listOf(
-                TopDomainEntity("example.com", 120), TopDomainEntity("test.com", 80)
+                TopDomainEntity(domain = "example.com", hits = 120),
+                TopDomainEntity(domain = "test.com", hits = 80)
             ),
-            blocked = listOf(TopDomainEntity("ads.com", 95), TopDomainEntity("trackers.com", 70))
+            blocked = listOf(
+                TopDomainEntity(domain = "ads.com", hits = 95),
+                TopDomainEntity(domain = "trackers.com", hits = 70)
+            )
         )
         val connection = ConnectionEntity.default
 
@@ -52,11 +58,12 @@ class FetchTopQueriesUseCaseTest {
             repository.fetchTopQueries(connection)
         } returns Result.success(topQueries)
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isSuccess).isTrue()
-        assertThat(result.first().getOrNull()).isEqualTo(topQueries)
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrNull()).isEqualTo(topQueries)
+            awaitComplete()
+        }
     }
 
     @Test
@@ -76,10 +83,11 @@ class FetchTopQueriesUseCaseTest {
             repository.fetchTopQueries(connection)
         } returns Result.failure(exception)
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first().isFailure).isTrue()
-        assertThat(result.first().exceptionOrNull()).isEqualTo(exception)
+        target().test {
+            val result = awaitItem()
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            awaitComplete()
+        }
     }
 }

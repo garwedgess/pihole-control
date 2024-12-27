@@ -5,6 +5,7 @@ import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateRefreshIntervalUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -30,7 +31,7 @@ class UpdateRefreshIntervalUseCaseTest {
         val result = target(interval)
 
         assertThat(result.isSuccess).isTrue()
-        coEvery { repository.updateRefreshInterval(interval) }
+        coVerify { repository.updateRefreshInterval(interval) }
     }
 
     @Test
@@ -43,5 +44,6 @@ class UpdateRefreshIntervalUseCaseTest {
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
+        coVerify { repository.updateRefreshInterval(interval) }
     }
 }

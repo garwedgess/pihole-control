@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.domain.model
 
-
 enum class LogAnswerTypeEntity(val category: LogAnswerCategoryEntity) {
     GRAVITY_BLOCK(LogAnswerCategoryEntity.BLOCK),
     UPSTREAM(LogAnswerCategoryEntity.ALLOW),

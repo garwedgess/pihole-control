@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.presentation.common.components.SwipeToDeleteItem
 import eu.wedgess.piholecontrol.presentation.connections.list.ConnectionsContract
 
 @Composable
@@ -19,12 +20,41 @@ fun ConnectionsList(
             .fillMaxSize(),
         state = rememberLazyListState(),
         content = {
-            items(connections) {
-                ConnectionListItem(
-                    connectionInfo = it,
-                    onEditClicked = { onEvent(ConnectionsContract.Event.EditConnection(it.id)) },
-                    onDeleteClicked = { onEvent(ConnectionsContract.Event.DeleteConnection(it)) },
-                    onSetActiveClicked = { onEvent(ConnectionsContract.Event.SetActive(it)) }
+            items(connections, key = { it.id }) {
+                SwipeToDeleteItem(
+                    modifier = Modifier.animateItem(),
+                    onDelete = {
+                        onEvent(
+                            ConnectionsContract.Event.DeleteConnection(
+                                id = it.id,
+                                name = it.name
+                            )
+                        )
+                    },
+                    content = {
+                        ConnectionListItem(
+                            connectionInfo = it,
+                            onEditClick = {
+                                onEvent(ConnectionsContract.Event.EditConnection(it.id))
+                            },
+                            onDeleteClick = {
+                                onEvent(
+                                    ConnectionsContract.Event.DeleteConnection(
+                                        id = it.id,
+                                        name = it.name
+                                    )
+                                )
+                            },
+                            onSetActiveClick = {
+                                onEvent(
+                                    ConnectionsContract.Event.SetActive(
+                                        id = it.id,
+                                        name = it.name
+                                    )
+                                )
+                            }
+                        )
+                    }
                 )
             }
         }

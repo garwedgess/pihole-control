@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.domain.usecase.settings
 
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.AppPreferencesEntity
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
@@ -10,7 +11,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -33,18 +33,18 @@ class FetchAppPreferencesUseCaseTest {
 
         every { repository.fetchAllPreferences() } returns flowOf(mockPreferences)
 
-        val result = target().toList()
-
-        assertThat(result).hasSize(1)
-        assertThat(result.first()).isEqualTo(mockPreferences)
+        target().test {
+            assertThat(awaitItem()).isEqualTo(mockPreferences)
+            awaitComplete()
+        }
     }
 
     @Test
     fun `invoke - emits empty preferences if repository returns nothing`() = runTest {
         every { repository.fetchAllPreferences() } returns emptyFlow()
 
-        val result = target().toList()
-
-        assertThat(result).isEmpty()
+        target().test {
+            awaitComplete()
+        }
     }
 }

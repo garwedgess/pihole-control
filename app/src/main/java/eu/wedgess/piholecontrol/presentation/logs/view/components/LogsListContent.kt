@@ -19,13 +19,12 @@ fun LogsListContent(
     dialogType: LogsDialogType,
     onEvent: (LogsContract.Event) -> Unit
 ) {
-
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         stickyHeader {
             LogsListStickyHeader(listSize = logsList.size)
         }
         items(logsList) { log ->
-            LogListItem(log, onItemClicked = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+            LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
         }
     }
     LogsDialogs(dialogType, onEvent)

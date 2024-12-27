@@ -5,14 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.domain.model.TopQueriesEntity
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.TopDomainsStatsContract
 
 @Composable
-fun TopDomainsScreen(statistics: UIResult<TopQueriesEntity>) {
+fun TopDomainsScreen(statistics: UIResult<TopDomainsStatsContract.UiState>) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -22,8 +22,8 @@ fun TopDomainsScreen(statistics: UIResult<TopQueriesEntity>) {
             onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) },
             onLoaded = {
                 TopDomainsContent(
-                    topPermittedDomains = it.allowed,
-                    topBlockedDomains = it.blocked
+                    topPermittedDomains = it.topPermitted,
+                    topBlockedDomains = it.topBlocked
                 )
             }
         )

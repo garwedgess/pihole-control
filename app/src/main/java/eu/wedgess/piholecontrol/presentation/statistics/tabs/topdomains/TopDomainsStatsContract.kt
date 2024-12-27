@@ -1,10 +1,11 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains
 
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopQueries
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.model.TopDomainsInfo
 
 interface TopDomainsStatsContract {
 
     data class UiState(
-        val topQueries: PiHoleTopQueries
+        val topPermitted: TopDomainsInfo,
+        val topBlocked: TopDomainsInfo
     )
 }

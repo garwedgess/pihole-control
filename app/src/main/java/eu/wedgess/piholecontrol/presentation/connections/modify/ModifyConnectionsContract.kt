@@ -35,6 +35,7 @@ interface ModifyConnectionsContract {
                 authPassword = this.authPassword,
                 authRealm = this.authRealm,
                 trustAllCerts = this.trustAllCerts,
+                isDeleted = false,
                 isActive = false
             )
 
@@ -61,9 +62,8 @@ interface ModifyConnectionsContract {
 
     sealed interface Effect {
         sealed interface Navigation : Effect {
-           data  object Back : Navigation
+           data object Back : Navigation
         }
-
     }
 
     sealed interface Event {

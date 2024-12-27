@@ -4,9 +4,17 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -33,26 +41,27 @@ import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.Do
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartState
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.STROKE_SIZE_UNSELECTED
+import eu.wedgess.piholecontrol.presentation.theme.isDark
 import eu.wedgess.piholecontrol.utils.extensions.degreeToRadian
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-
 private data class DrawingAngles(val start: Float, val end: Float)
 
-private fun DrawingAngles.isInsideAngle(angle: Float) = angle > this.start && angle < this.start + this.end
+private fun DrawingAngles.isInsideAngle(angle: Float) =
+    angle > this.start && angle < this.start + this.end
 
 @Composable
 fun DonutChart(
+    data: DonutChartDataCollection,
     modifier: Modifier = Modifier,
     chartSize: Dp = 350.dp,
-    data: DonutChartDataCollection,
     minDisplayPercentage: Float = 5f,
     gapPercentage: Float = 0.00f,
-    onIndexSelected: (Int) -> Unit,
+    onSelectedIndexChange: (Int) -> Unit
 ) {
-    val isDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = MaterialTheme.colorScheme.isDark
     var selectedIndex by remember { mutableIntStateOf(-1) }
     val animationTargetState = (0..data.items.size).map {
         remember { mutableStateOf(DonutChartState()) }
@@ -138,14 +147,19 @@ fun DonutChart(
                         useCenter = false,
                         topLeft = Offset(defaultStrokeWidth / 2, defaultStrokeWidth / 2),
                         style = Stroke(strokeWidth, cap = StrokeCap.Butt),
-                        size = Size(size.width - defaultStrokeWidth,
-                            size.height - defaultStrokeWidth)
+                        size = Size(
+                            size.width - defaultStrokeWidth,
+                            size.height - defaultStrokeWidth
+                        )
                     )
 
                     val colorInner =
                         Color(
-                            ColorUtils
-                                .blendARGB(item.color(isDarkTheme).toArgb(), Color.Black.toArgb(), 0.1f)
+                            ColorUtils.blendARGB(
+                                item.color(isDarkTheme).toArgb(),
+                                Color.Black.toArgb(),
+                                0.1f
+                            )
                         )
 
                     drawArc(
@@ -158,8 +172,10 @@ fun DonutChart(
                             y = (defaultStrokeWidth / 2) + (defaultStrokeWidth / 2)
                         ),
                         style = Stroke(strokeWidth / 4, cap = StrokeCap.Butt),
-                        size = Size(size.width - (defaultStrokeWidth * 2),
-                            size.height - (defaultStrokeWidth * 2))
+                        size = Size(
+                            size.width - (defaultStrokeWidth * 2),
+                            size.height - (defaultStrokeWidth * 2)
+                        )
                     )
 
                     val textMeasureResult = textMeasureResults[ind]
@@ -171,19 +187,18 @@ fun DonutChart(
                         textLayoutResult = textMeasureResult,
                         color = Color.White,
                         topLeft = Offset(
-                            -textCenter.x + center.x
-                                    + ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
-                            -textCenter.y + center.y
-                                    + ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
+                            x = -textCenter.x + center.x +
+                                    ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
+                            y = -textCenter.y + center.y +
+                                    ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
                         )
                     )
-
 
                     lastAngle += sweepAngle + gapAngle
                 }
             }
         )
-        onIndexSelected(selectedIndex)
+        onSelectedIndexChange(selectedIndex)
     }
 }
 
@@ -208,9 +223,11 @@ private fun handleCanvasTap(
     anglesList.forEachIndexed { ind, angle ->
         val stroke = currentStrokeValues[ind]
         if (angle.isInsideAngle(touchAngle)) {
-            if (distance > (center.x - stroke) &&
+            if (
+                distance > (center.x - stroke) &&
                 distance < (center.x)
-            ) { // since it's a square center.x or center.y will be the same
+            ) {
+                // since it's a square center.x or center.y will be the same
                 selectedIndex = ind
                 newDataTapped = true
             }
@@ -228,18 +245,18 @@ private fun handleCanvasTap(
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
-fun DonutChartPreview() {
-    DonutChart(data = DonutChartDataCollection(
-        items = listOf(
-            QueryTypeChartData(percentage = 20f, title = "ABC"),
-            QueryTypeChartData(percentage = 10f, title = "A"),
-            QueryTypeChartData(percentage = 20f, title = "B"),
-            QueryTypeChartData(percentage = 50f, title = "C")
+private fun DonutChartPreview() {
+    DonutChart(
+        data = DonutChartDataCollection(
+            items = listOf(
+                QueryTypeChartData(percentage = 20f, title = "ABC"),
+                QueryTypeChartData(percentage = 10f, title = "A"),
+                QueryTypeChartData(percentage = 20f, title = "B"),
+                QueryTypeChartData(percentage = 50f, title = "C")
+            ),
         ),
-    ), onIndexSelected = {}
+        onSelectedIndexChange = {}
     )
 }

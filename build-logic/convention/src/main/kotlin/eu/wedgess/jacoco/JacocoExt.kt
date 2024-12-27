@@ -18,9 +18,16 @@ private val coverageExclusions = listOf(
     "**/Manifest*.*",
     "**/*_Hilt*.class",
     "**/Hilt_*.class",
-    "**/presentation/**",
-    "**/utils/extensions/**",
+    "**/presentation/**/view/**",
+    "**/presentation/**/components/**",
+    "**/presentation/compose/**",
+    "**/presentation/common/**",
+    "**/presentation/theme/**",
+    "**/presentation/**/navigation/**",
+    "**/presentation/**/*Activity.*",
+    "**/*Application.*",
     "**/utils/vico/**",
+    "**/di/**",
 )
 
 private fun String.capitalize() = replaceFirstChar {
@@ -39,32 +46,32 @@ internal fun Project.configureJacoco() {
 
     androidComponentsExtension.onVariants { variant ->
         val testTaskName = "test${variant.name.capitalize()}UnitTest"
-        val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class.java) {
-            group = "reporting"
-            dependsOn(testTaskName)
-            reports {
-                xml.required.set(true)
-                html.required.set(true)
-            }
+        val reportTask =
+            tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class.java) {
+                group = "reporting"
+                dependsOn(testTaskName)
+                reports {
+                    xml.required.set(true)
+                    html.required.set(true)
+                }
 
-            val filesFilters = layout.buildDirectory.dir("tmp/kotlin-classes/${variant.name}").get().asFileTree.matching {
-                exclude(coverageExclusions)
-            }
-            classDirectories.setFrom(filesFilters)
-            sourceDirectories.setFrom(
-                files(
-                    "$projectDir/src/main/java",
-                    "$projectDir/src/main/kotlin"
+                classDirectories.setFrom(
+                    files(
+                        fileTree(layout.buildDirectory.dir("intermediates/javac/")) {
+                            exclude(coverageExclusions)
+                        },
+                        fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/")) {
+                            exclude(coverageExclusions)
+                        }
+                    )
                 )
-            )
-            executionData.setFrom(
-                layout.buildDirectory.dir("/outputs/unit_test_code_coverage/${variant.name}UnitTest").get().asFileTree
-                    .matching { include("**/${testTaskName}.exec") },
-
-                layout.buildDirectory.dir("/outputs/code_coverage/${variant.name}AndroidTest").get().asFileTree
-                    .matching { include("**/*.ec") },
-            )
-        }
+                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+                executionData.setFrom(
+                    files(
+                        fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }
+                    )
+                )
+            }
 
         jacocoTestReport.dependsOn(reportTask)
     }

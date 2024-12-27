@@ -177,7 +177,7 @@ complexity:
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false
-    ignoreAnnotatedFunctions: ['Preview', 'ThemePreview']
+    ignoreAnnotatedFunctions: ['Preview', 'ThemePreview', 'ThemePreviewWithBackground']
 
 coroutines:
   active: true
@@ -618,6 +618,7 @@ style:
       - '0'
       - '1'
       - '2'
+    ignoreAnnotated: ['Preview', 'ThemePreview', 'ThemePreviewWithBackground']
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: false
@@ -640,6 +641,7 @@ style:
     excludeImportStatements: true
     excludeCommentStatements: false
     excludeRawStrings: true
+    ignoreAnnotated: ['Test']
   MayBeConst:
     active: true
   ModifierOrder:
@@ -742,7 +744,7 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ''
-    ignoreAnnotated: ['Preview', 'ThemePreview']
+    ignoreAnnotated: ['Preview', 'ThemePreview', 'ThemePreviewWithBackground']
   UnusedPrivateProperty:
     active: true
     allowedNames: '_|ignored|expected|serialVersionUID'
@@ -787,6 +789,14 @@ style:
     active: true
     excludeImports:
       - 'java.util.*'
+
+formatting:
+  Indentation:
+    active: true
+    ignoreAnnotated: ['Test']
+  MaximumLineLength:
+    active: true
+    ignoreAnnotated: ['Test']
 
 Compose:
   ComposableAnnotationNaming:

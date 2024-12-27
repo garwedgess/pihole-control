@@ -59,7 +59,6 @@ object DashboardMockHttpClient {
         }
     }
 
-
     fun mockErrorHttpClient(): HttpClient {
         val mockEngine = MockEngine { request ->
             val url = request.url
@@ -103,5 +102,4 @@ object DashboardMockHttpClient {
             installContentNegotiation()
         }
     }
-
 }
