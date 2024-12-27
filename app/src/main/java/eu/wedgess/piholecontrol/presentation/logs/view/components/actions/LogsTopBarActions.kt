@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components.actions
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -29,7 +29,7 @@ fun LogsTopBarActions(
     Row {
         IconButton(onClick = { onSortClick() }) {
             Icon(
-                imageVector = Icons.Outlined.Sort,
+                imageVector = Icons.AutoMirrored.Outlined.Sort,
                 contentDescription = "sort",
                 tint = MaterialTheme.colorScheme.onBackground,
             )

@@ -18,7 +18,7 @@ import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
 import eu.wedgess.piholecontrol.utils.UiText
-import eu.wedgess.piholecontrol.utils.extensions.toEpochMillis
+import eu.wedgess.piholecontrol.utils.extensions.toEpochSeconds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -154,9 +154,9 @@ class LogsViewModel @Inject constructor(
                 _uiState.update { it.copy(dialogType = LogsDialogType.None) }
                 _bottomSheetUiState.update {
                     if (event.type == PickerType.FromTime) {
-                        it.copy(filterFromTime = event.time.toEpochMillis())
+                        it.copy(filterFromTime = event.time.toEpochSeconds())
                     } else {
-                        it.copy(filterToTime = event.time.toEpochMillis())
+                        it.copy(filterToTime = event.time.toEpochSeconds())
                     }
                 }
             }

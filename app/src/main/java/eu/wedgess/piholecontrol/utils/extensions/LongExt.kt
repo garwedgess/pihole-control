@@ -11,5 +11,5 @@ fun Long.toDateString(zoneId: ZoneId = ZoneId.systemDefault()): String {
     return dateTime.format(formatter)
 }
 
-fun LocalDateTime.toEpochMillis(zoneId: ZoneId = ZoneId.systemDefault()) =
+fun LocalDateTime.toEpochSeconds(zoneId: ZoneId = ZoneId.systemDefault()) =
     this.atZone(zoneId).toInstant().epochSecond
