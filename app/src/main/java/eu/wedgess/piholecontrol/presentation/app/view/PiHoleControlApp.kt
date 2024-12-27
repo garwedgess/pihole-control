@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -44,6 +45,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs
+import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.NetworkStatusRow
 import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel
 import eu.wedgess.piholecontrol.presentation.common.components.MainAppBar
 import eu.wedgess.piholecontrol.presentation.navigation.bottom.BottomNavigationBar
@@ -127,24 +129,27 @@ fun PiHoleControlApp(
                     }
                 },
                 topBar = {
-                    MainAppBar(
-                        appBarState = uiState.appBarState,
-                        onNavigateBack = { navHostController.navigateUp() },
-                        onStatusClick = {
-                            if (uiState.appBarState.adBlockingEnabled) {
-                                viewModel.onEvent(AppContract.Event.ShowDisabledStatusDialog)
-                            } else {
-                                viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
-                            }
-                        },
-                        onConnectionClick = {
-                            viewModel.onEvent(
-                                AppContract.Event.OnConnectionSelected(
-                                    it
+                    Column {
+                        MainAppBar(
+                            appBarState = uiState.appBarState,
+                            onNavigateBack = { navHostController.navigateUp() },
+                            onStatusClick = {
+                                if (uiState.appBarState.adBlockingEnabled) {
+                                    viewModel.onEvent(AppContract.Event.ShowDisabledStatusDialog)
+                                } else {
+                                    viewModel.onEvent(AppContract.Event.ShowEnabledStatusDialog)
+                                }
+                            },
+                            onConnectionClick = {
+                                viewModel.onEvent(
+                                    AppContract.Event.OnConnectionSelected(
+                                        it
+                                    )
                                 )
-                            )
-                        }
-                    )
+                            }
+                        )
+                        NetworkStatusRow(uiState.networkConnectionState)
+                    }
                 },
                 bottomBar = {
                     AnimatedVisibility(
@@ -155,7 +160,8 @@ fun PiHoleControlApp(
                         BottomAppBar(
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->
-                                    bottomBarHeight.floatValue = coordinates.size.height.toFloat()
+                                    bottomBarHeight.floatValue =
+                                        coordinates.size.height.toFloat()
                                 }
                                 .graphicsLayer {
                                     translationY = -bottomBarOffsetHeightPx.floatValue
