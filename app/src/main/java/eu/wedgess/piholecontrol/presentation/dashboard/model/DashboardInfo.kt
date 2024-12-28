@@ -15,12 +15,15 @@ data class DashboardInfo(
     val clientQueriesOverTimeResult: Result<List<ClientOverTimeEntity>>
 ) {
 
-    fun toUiResult(): UIResult<DashboardContract.UiState> {
+    fun toUiResult(onRetry: () -> Unit): UIResult<DashboardContract.UiState> {
         return when {
             summaryResult.isFailure &&
                     queriesOverTimeResult.isFailure &&
                     clientQueriesOverTimeResult.isFailure -> {
-                handleErrorThrowable(summaryResult.exceptionOrNull())
+                handleErrorThrowable(
+                    throwable = summaryResult.exceptionOrNull(),
+                    onRetry = onRetry
+                )
             }
 
             else -> {
@@ -54,13 +57,14 @@ data class DashboardInfo(
     }
 
     companion object {
-        fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
+        fun handleErrorThrowable(throwable: Throwable?, onRetry: () -> Unit): UIResult.Error {
             return UIResult.Error(
-                ResultType.Error.WithTitleAndSubTitle(
+                ResultType.Error.WithTitleAndSubTitleAndRetry(
                     title = UiText.DynamicString("Failed to fetch dashboard info"),
                     subTitle = UiText.DynamicString(
                         throwable?.message ?: "Unknown error"
-                    )
+                    ),
+                    onRetry = onRetry
                 )
             )
         }

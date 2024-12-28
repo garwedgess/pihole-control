@@ -7,10 +7,9 @@ import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import io.mockk.MockKAnnotations
-import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -22,10 +21,10 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class PeriodicRefreshUseCaseTest {
 
-    @MockK
+    @RelaxedMockK
     private lateinit var observeActiveUser: ObserveActiveUserUseCase
 
-    @MockK
+    @RelaxedMockK
     private lateinit var settingsRepository: SettingsRepository
 
     private lateinit var target: PeriodicRefreshUseCase
@@ -38,27 +37,33 @@ class PeriodicRefreshUseCaseTest {
 
     @Test
     fun `invoke - fetchData called with active connection and delay`() = runTest {
+        var fetchDataCallCount = 0
         val activeConnection = ConnectionEntity.default
-        val fetchData: suspend (ConnectionEntity) -> String = mockk(relaxed = true)
-        val refreshInterval = 1000L
         val expectedData = "Fetched Data"
+        val fetchData: suspend (ConnectionEntity) -> Result<String> = {
+            fetchDataCallCount++
+            Result.success(expectedData)
+        }
+        val refreshInterval = 1000L
         every { observeActiveUser() } returns flowOf(Result.success(activeConnection))
         every { settingsRepository.getRefreshInterval() } returns flowOf(refreshInterval)
-        coEvery { fetchData(activeConnection) } returns expectedData
 
         target(fetchData).test {
-            assertThat(awaitItem()).isEqualTo(expectedData)
-            assertThat(awaitItem()).isEqualTo(expectedData)
-            assertThat(awaitItem()).isEqualTo(expectedData)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
+            advanceTimeBy(refreshInterval)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
+            advanceTimeBy(refreshInterval)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
             cancelAndConsumeRemainingEvents()
         }
 
-        coVerify(exactly = 3) { fetchData(activeConnection) }
+        assertThat(fetchDataCallCount).isEqualTo(3)
     }
+
 
     @Test
     fun `invoke - fetchData not called when connection is null`() = runTest {
-        val fetchData: suspend (ConnectionEntity) -> String = mockk(relaxed = true)
+        val fetchData: suspend (ConnectionEntity) -> Result<String> = mockk(relaxed = true)
 
         every { observeActiveUser() } returns flowOf(Result.failure(Exception("No active connection")))
         every { settingsRepository.getRefreshInterval() } returns flowOf(1000L)
@@ -72,42 +77,53 @@ class PeriodicRefreshUseCaseTest {
 
     @Test
     fun `invoke - fetchData handles delay`() = runTest {
+        var fetchDataCallCount = 0
         val activeConnection = ConnectionEntity.default
-        val fetchData: suspend (ConnectionEntity) -> String = mockk(relaxed = true)
-        val refreshInterval = 500L
         val expectedData = "Fetched Data"
+        val fetchData: suspend (ConnectionEntity) -> Result<String> = {
+            fetchDataCallCount++
+            Result.success(expectedData)
+        }
+        val refreshInterval = 500L
 
         every { observeActiveUser() } returns flowOf(Result.success(activeConnection))
         every { settingsRepository.getRefreshInterval() } returns flowOf(refreshInterval)
-        coEvery { fetchData(activeConnection) } returns expectedData
 
         target(fetchData).test {
-            assertThat(awaitItem()).isEqualTo(expectedData)
-            assertThat(awaitItem()).isEqualTo(expectedData)
-            assertThat(awaitItem()).isEqualTo(expectedData)
+            // Verify the first emission
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
+            // Simulate the delay and verify subsequent emissions
+            advanceTimeBy(refreshInterval)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
+            advanceTimeBy(refreshInterval)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
             cancelAndConsumeRemainingEvents()
         }
-        advanceTimeBy(1500L)
 
-        coVerify(exactly = 3) { fetchData(activeConnection) }
+        assertThat(fetchDataCallCount).isEqualTo(3)
     }
 
     @Test
     fun `triggerRefresh - triggers refresh flow`() = runTest {
-        val fetchData: suspend (ConnectionEntity) -> String = mockk(relaxed = true)
+        var fetchDataCallCount = 0
+        val expectedData = "Fetched Data"
+        val fetchData: suspend (ConnectionEntity) -> Result<String> = {
+            fetchDataCallCount++
+            Result.success(expectedData)
+        }
         val activeConnection = ConnectionEntity.default
         val refreshInterval = 1000L
-        val expectedData = "Fetched Data"
+
         every { observeActiveUser() } returns flowOf(Result.success(activeConnection))
         every { settingsRepository.getRefreshInterval() } returns flowOf(refreshInterval)
-        coEvery { fetchData(activeConnection) } returns expectedData
 
         target(fetchData).test {
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
             target.triggerRefresh()
-            assertThat(awaitItem()).isEqualTo(expectedData)
+            assertThat(awaitItem()).isEqualTo(Result.success(expectedData))
             cancelAndConsumeRemainingEvents()
         }
 
-        coVerify(exactly = 2) { fetchData(activeConnection) }
+        assertThat(fetchDataCallCount).isEqualTo(2)
     }
 }

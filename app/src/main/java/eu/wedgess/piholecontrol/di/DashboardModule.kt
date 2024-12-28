@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
 import eu.wedgess.piholecontrol.data.api.DashboardApiServiceImpl
@@ -17,7 +18,7 @@ import eu.wedgess.piholecontrol.domain.usecases.dashboard.FetchStatusSummaryUseC
 import io.ktor.client.HttpClient
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object DashboardModule {
 
     @Provides
@@ -37,13 +38,6 @@ object DashboardModule {
         dashboardRepository: DashboardRepository
     ): FetchClientsOverallTimeDataUseCase =
         FetchClientsOverallTimeDataUseCase(dashboardRepository)
-
-    @Provides
-    fun provideDashboardApi(
-        @DefaultHttpClient defaultHttpClient: HttpClient,
-        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): DashboardApiService =
-        DashboardApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     fun provideFetchDashboardInfoUseCase(

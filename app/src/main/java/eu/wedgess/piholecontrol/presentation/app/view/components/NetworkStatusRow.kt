@@ -1,5 +1,14 @@
 package eu.wedgess.piholecontrol.presentation.app.view.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -14,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,51 +40,79 @@ import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 
 @Composable
 fun NetworkStatusRow(status: NetworkStatusUiState, modifier: Modifier = Modifier) {
+    val targetColor = if (status.isConnected) {
+        MaterialTheme.colorScheme.totalQueriesBackground
+    } else {
+        MaterialTheme.colorScheme.domainsOnAdListBackground
+    }
+
+    val animatedColor by animateColorAsState(
+        targetValue = targetColor,
+        animationSpec = tween(durationMillis = 500),
+        label = "background colour"
+    )
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(
-                if (status.isConnected) {
-                    MaterialTheme.colorScheme.totalQueriesBackground
-                } else {
-                    MaterialTheme.colorScheme.domainsOnAdListBackground
-                }
-            ),
+            .background(animatedColor)
+            .animateContentSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            modifier = Modifier.padding(
-                horizontal = PiHoleControlTheme.dimens.padding.screenContent,
-                vertical = PiHoleControlTheme.dimens.padding.itemContentSmall
-            ),
-            text = if (status.isConnected) {
-                stringResource(R.string.network_connected)
-            } else {
-                stringResource(R.string.network_disconnected)
-            },
-            color = MaterialTheme.colorScheme.onTertiaryContainer
-        )
-
-        Icon(
-            modifier = Modifier
-                .padding(
+        AnimatedContent(
+            targetState = status.isConnected,
+            label = "text animation",
+            transitionSpec = {
+                ContentTransform(
+                    targetContentEnter = fadeIn(animationSpec = tween(500)),
+                    initialContentExit = fadeOut(animationSpec = tween(500))
+                )
+            }
+        ) { isConnected ->
+            Text(
+                modifier = Modifier.padding(
                     horizontal = PiHoleControlTheme.dimens.padding.screenContent,
                     vertical = PiHoleControlTheme.dimens.padding.itemContentSmall
+                ),
+                text = if (isConnected) {
+                    stringResource(R.string.network_connected)
+                } else {
+                    stringResource(R.string.network_disconnected)
+                },
+                color = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
+
+        AnimatedContent(
+            targetState = status.isConnected,
+            label = "icon animation",
+            transitionSpec = {
+                ContentTransform(
+                    targetContentEnter = fadeIn(animationSpec = tween(500)),
+                    initialContentExit = fadeOut(animationSpec = tween(500))
                 )
-                .size(24.dp),
-            imageVector = if (status.isConnected) {
-                Icons.Default.Cloud
-            } else {
-                Icons.Default.CloudOff
-            },
-            contentDescription = if (status.isConnected) {
-                stringResource(R.string.network_connected)
-            } else {
-                stringResource(R.string.network_disconnected)
-            },
-            tint = MaterialTheme.colorScheme.onErrorContainer
-        )
+            }
+        ) { isConnected ->
+            Icon(
+                modifier = Modifier
+                    .padding(
+                        horizontal = PiHoleControlTheme.dimens.padding.screenContent,
+                        vertical = PiHoleControlTheme.dimens.padding.itemContentSmall
+                    )
+                    .size(24.dp),
+                imageVector = if (isConnected) {
+                    Icons.Default.Cloud
+                } else {
+                    Icons.Default.CloudOff
+                },
+                contentDescription = if (isConnected) {
+                    stringResource(R.string.network_connected)
+                } else {
+                    stringResource(R.string.network_disconnected)
+                },
+                tint = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
     }
 }
 

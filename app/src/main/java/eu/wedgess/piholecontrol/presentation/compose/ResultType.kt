@@ -10,6 +10,11 @@ sealed interface ResultType {
             val title: UiText,
             val subTitle: UiText
         ) : Error
+        data class WithTitleAndSubTitleAndRetry(
+            val title: UiText,
+            val subTitle: UiText,
+            val onRetry: () -> Unit
+        ) : Error
     }
 
     sealed interface Empty : ResultType {

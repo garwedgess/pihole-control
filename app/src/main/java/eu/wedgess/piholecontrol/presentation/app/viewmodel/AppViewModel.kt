@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -97,6 +98,7 @@ class AppViewModel @Inject constructor(
 
     private fun handleNetworkStatusChange(connectionState: NetworkConnectionState) {
         val isVisible = currentConnectionState != connectionState
+        Timber.d("GARETH --> handleNetworkStatusChange($connectionState) isVisible=$isVisible")
         when (connectionState) {
             NetworkConnectionState.Available -> {
                 if (isVisible) {
@@ -120,7 +122,7 @@ class AppViewModel @Inject constructor(
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            delay(6_000)
+            delay(3_000)
             _uiState.update {
                 it.copy(networkConnectionState = it.networkConnectionState.copy(isVisible = false))
             }

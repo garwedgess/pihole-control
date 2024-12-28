@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiServiceImpl
@@ -18,15 +19,8 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
 import io.ktor.client.HttpClient
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object FiltersModule {
-
-    @Provides
-    fun provideFiltersApi(
-        @DefaultHttpClient defaultHttpClient: HttpClient,
-        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): FilterRulesApiService =
-        FilterRulesApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     fun provideAddFilterRuleUseCase(

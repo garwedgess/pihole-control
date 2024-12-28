@@ -40,17 +40,18 @@ class FetchForwardDestinationsUseCaseTest {
             ForwardDestinationEntity("destination1", 123f),
             ForwardDestinationEntity("destination2", 456f)
         )
-        val expectedResult = listOf(
+        val expectedResult = Result.success(
+            listOf(
                 ForwardDestinationsChartData("destination1", 123f),
                 ForwardDestinationsChartData("destination2", 456f)
             )
+        )
 
         coEvery { repository.fetchForwardDestinations(connection) } returns Result.success(
             destinations
         )
-        coEvery { periodicRefreshUseCase<List<ForwardDestinationsChartData>>(any()) } returns flowOf(
-            expectedResult
-        )
+        coEvery { periodicRefreshUseCase<List<ForwardDestinationsChartData>>(any()) } returns
+                flowOf(expectedResult)
 
         target().test {
             assertThat(awaitItem()).isEqualTo(expectedResult)
@@ -68,7 +69,8 @@ class FetchForwardDestinationsUseCaseTest {
         coEvery { repository.fetchForwardDestinations(connection) } returns expectedError
         coEvery { periodicRefreshUseCase<List<ForwardDestinationEntity>>(any()) } answers {
             flow {
-                val fetchData = arg<suspend (ConnectionEntity) -> List<ForwardDestinationEntity>>(0)
+                val fetchData =
+                    arg<suspend (ConnectionEntity) -> Result<List<ForwardDestinationEntity>>>(0)
                 emit(fetchData(connection))
             }
         }

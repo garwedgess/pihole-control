@@ -51,7 +51,7 @@ class FetchFilterRulesUseCaseTest {
                 FilterRuleTypeEntity.REGEX_ALLOW
             )
         } returns regexRules
-        coEvery { periodicRefreshUseCase<Result<FilterRulesResult>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<FilterRulesResult>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<FilterRulesResult>>(0)
                 emit(fetchBlock(connection))
@@ -80,7 +80,7 @@ class FetchFilterRulesUseCaseTest {
         coEvery { fetchFilterRuleUseCase(connection, FilterRuleTypeEntity.BLOCK) } returns rules
         coEvery { fetchFilterRuleUseCase(connection, FilterRuleTypeEntity.REGEX_BLOCK) } returns
                 Result.failure(regexRulesException)
-        coEvery { periodicRefreshUseCase<Result<FilterRulesResult>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<FilterRulesResult>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<FilterRulesResult>>(0)
                 emit(fetchBlock(connection))

@@ -48,7 +48,7 @@ class FetchLogsUseCaseTest {
 
         coEvery { logsRepository.fetchLogs(connection, any()) } returns Result.success(logEntries)
 
-        coEvery { periodicRefreshUseCase<Result<List<LogEntryEntity>>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<List<LogEntryEntity>>(any()) } answers {
             val fetchData = arg<suspend (ConnectionEntity) -> Result<List<LogEntryEntity>>>(0)
             flow {
                 emit(fetchData(connection))
@@ -69,7 +69,7 @@ class FetchLogsUseCaseTest {
 
         coEvery { logsRepository.fetchLogs(connection, any()) } returns expectedError
 
-        coEvery { periodicRefreshUseCase<Result<List<LogEntryEntity>>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<List<LogEntryEntity>>(any()) } answers {
             val fetchData = arg<suspend (ConnectionEntity) -> Result<List<LogEntryEntity>>>(0)
             flow {
                 emit(fetchData(connection))

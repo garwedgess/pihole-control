@@ -38,7 +38,7 @@ class FetchQueryTypesUseCaseTest {
         val connection = ConnectionEntity.default
 
         coEvery {
-            periodicRefreshUseCase<Result<List<QueryTypeChartData>>>(any())
+            periodicRefreshUseCase<List<QueryTypeChartData>>(any())
         } answers {
             flow {
                 val fetchData =
@@ -65,7 +65,7 @@ class FetchQueryTypesUseCaseTest {
         val exception = Exception("Failed to fetch query types")
 
         coEvery {
-            periodicRefreshUseCase<Result<List<QueryTypeChartData>>>(any())
+            periodicRefreshUseCase<List<QueryTypeChartData>>(any())
         } answers {
             flow {
                 val fetchData =

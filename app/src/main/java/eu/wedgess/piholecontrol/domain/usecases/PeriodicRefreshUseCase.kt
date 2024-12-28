@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.domain.usecases
 
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.presentation.base.RefreshFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,24 +16,48 @@ class PeriodicRefreshUseCase(
     private val settingsRepository: SettingsRepository
 ) {
     private val refreshFlow = RefreshFlow()
+    private var currentRefreshMode: RefreshMode = RefreshMode.Automatic
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun <T> invoke(fetchData: suspend (ConnectionEntity) -> T): Flow<T> {
+    operator fun <T> invoke(fetchData: suspend (ConnectionEntity) -> Result<T>): Flow<Result<T>> {
         val delayFlow = settingsRepository.getRefreshInterval()
 
         return refreshFlow.flatMapLatest {
             combine(
                 observeActiveUser(),
                 delayFlow
-            ) { connection, delay ->
-                connection to delay
+            ) { activeConnection, delay ->
+                activeConnection to delay
             }
-        }.flatMapLatest { (connection, delay) ->
+        }.flatMapLatest { (activeConnection, delay) ->
             flow {
-                val currentConnection = connection.getOrNull()
-                while (currentConnection != null) {
-                    emit(fetchData(currentConnection))
-                    delay(delay)
+                val currentActiveConnection = activeConnection.getOrNull()
+
+                when (currentRefreshMode) {
+                    RefreshMode.Automatic -> {
+                        while (
+                            currentActiveConnection != null &&
+                            currentRefreshMode == RefreshMode.Automatic
+                        ) {
+                            val result = fetchData(currentActiveConnection)
+                            emit(result)
+                            if (result.isFailure) {
+                                currentRefreshMode = RefreshMode.Manual
+                            } else {
+                                delay(delay)
+                            }
+                        }
+                    }
+
+                    RefreshMode.Manual -> {
+                        if (currentActiveConnection != null) {
+                            val result = fetchData(currentActiveConnection)
+                            emit(result)
+                            if (result.isSuccess) {
+                                currentRefreshMode = RefreshMode.Automatic
+                            }
+                        }
+                    }
                 }
             }
         }

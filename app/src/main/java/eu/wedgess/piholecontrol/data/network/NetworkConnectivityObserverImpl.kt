@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,26 +25,48 @@ class NetworkConnectivityObserverImpl @Inject constructor(
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+    private var currentNetworkState: NetworkConnectionState? = null
+
     private fun networkCallback(callback: (NetworkConnectionState) -> Unit): ConnectivityManager.NetworkCallback =
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                val isConnected = isInternetAvailable()
-                if (isConnected) {
-                    callback(NetworkConnectionState.Available)
+                Timber.d("GARETH --> onAvailable")
+                val newNetworkState = NetworkConnectionState.Available
+                if (currentNetworkState != newNetworkState) {
+                    currentNetworkState = newNetworkState
+                    Timber.d("GARETH --> onAvailable($newNetworkState)")
+                    callback(newNetworkState)
                 }
             }
 
             override fun onLost(network: Network) {
-                val isConnected = isInternetAvailable()
-                if (!isConnected) {
-                    callback(NetworkConnectionState.Unavailable)
+                Timber.d("GARETH --> onLost")
+                val newNetworkState = NetworkConnectionState.Unavailable
+                if (currentNetworkState != newNetworkState) {
+                    currentNetworkState = newNetworkState
+                    Timber.d("GARETH --> onLost($newNetworkState)")
+                    callback(newNetworkState)
+                }
+            }
+
+            override fun onUnavailable() {
+                Timber.d("GARETH --> onUnavailable")
+                val newNetworkState = NetworkConnectionState.Unavailable
+                if (currentNetworkState != newNetworkState) {
+                    currentNetworkState = newNetworkState
+                    Timber.d("GARETH --> onUnavailable($newNetworkState)")
+                    callback(newNetworkState)
                 }
             }
         }
 
     private fun getCurrentConnectivityState(): NetworkConnectionState {
-        val isConnected = isInternetAvailable()
-        return if (isConnected) NetworkConnectionState.Available else NetworkConnectionState.Unavailable
+        val network = connectivityManager.activeNetwork
+        return if (network != null) {
+            NetworkConnectionState.Available
+        } else {
+            NetworkConnectionState.Unavailable
+        }
     }
 
     override fun observe(): Flow<NetworkConnectionState> = callbackFlow {
@@ -53,26 +76,20 @@ class NetworkConnectivityObserverImpl @Inject constructor(
 
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
 
         connectivityManager.registerNetworkCallback(networkRequest, callback)
-
         val currentState = getCurrentConnectivityState()
-        launch { send(currentState) }
+        if (currentNetworkState != currentState) {
+            currentNetworkState = currentState
+            launch { send(currentState) }
+        }
 
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }.distinctUntilChanged()
-
-    private fun isInternetAvailable(): Boolean {
-        val network = connectivityManager.activeNetwork ?: return false
-        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-
-        return when {
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
-        }
-    }
 }

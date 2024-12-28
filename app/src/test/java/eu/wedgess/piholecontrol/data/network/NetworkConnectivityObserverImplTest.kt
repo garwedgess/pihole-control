@@ -50,7 +50,11 @@ class NetworkConnectivityObserverImplTest {
         // When
         networkConnectivityObserver.observe().test {
             // Then
+            shadowConnectivityManager.networkCallbacks.forEach {
+                it.onLost(network)
+            }
             assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Unavailable)
+            expectNoEvents()
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -69,7 +73,11 @@ class NetworkConnectivityObserverImplTest {
         // When
         networkConnectivityObserver.observe().test {
             // Then
+            shadowConnectivityManager.networkCallbacks.forEach {
+                it.onAvailable(network)
+            }
             assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Available)
+            expectNoEvents()
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -88,7 +96,11 @@ class NetworkConnectivityObserverImplTest {
         // When
         networkConnectivityObserver.observe().test {
             // Then
+            shadowConnectivityManager.networkCallbacks.forEach {
+                it.onAvailable(network)
+            }
             assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Available)
+            expectNoEvents()
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -107,6 +119,9 @@ class NetworkConnectivityObserverImplTest {
             // When
             networkConnectivityObserver.observe().test {
                 // Then
+                shadowConnectivityManager.networkCallbacks.forEach {
+                    it.onLost(network)
+                }
                 assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Unavailable)
                 shadowConnectivityManager.setNetworkCapabilities(network, networkCapabilities)
                 shadowConnectivityManager.setDefaultNetworkActive(true)
@@ -114,6 +129,7 @@ class NetworkConnectivityObserverImplTest {
                     it.onAvailable(network)
                 }
                 assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Available)
+                expectNoEvents()
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -133,12 +149,16 @@ class NetworkConnectivityObserverImplTest {
             // When
             networkConnectivityObserver.observe().test {
                 // Then
+                shadowConnectivityManager.networkCallbacks.forEach {
+                    it.onAvailable(network)
+                }
                 assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Available)
                 shadowConnectivityManager.setDefaultNetworkActive(false)
                 shadowConnectivityManager.networkCallbacks.forEach {
                     it.onLost(network)
                 }
                 assertThat(awaitItem()).isEqualTo(NetworkConnectionState.Unavailable)
+                expectNoEvents()
                 cancelAndConsumeRemainingEvents()
             }
         }
