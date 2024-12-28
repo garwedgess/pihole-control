@@ -23,8 +23,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -66,8 +69,12 @@ class AppViewModelTest {
     @Test
     fun `WHEN viewmodel is initialized THEN uiState should emit initial state`() = runTest {
         // Given
-        coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
-        every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
+        coEvery { fetchAppInfoUseCase() } returns flowOf(
+            PiHoleAppInfo.initial().copy(status = StatusEntity.UNKNOWN)
+        )
+        every { observeNetworkConnectivityUseCase() } returns flowOf(
+            NetworkConnectionState.Available
+        )
 
         // When
         viewModel = AppViewModel(
@@ -77,10 +84,19 @@ class AppViewModelTest {
             setConnectionAsActiveUseCase,
             observeNetworkConnectivityUseCase
         )
+        advanceUntilIdle()
 
         // Then
         viewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(AppContract.UiState.initial())
+            val result = awaitItem()
+            val expected = AppContract.UiState.initial().copy(
+                appBarState = AppBarState(
+                    currentConnection = ConnectionEntity.default,
+                    connections = emptyList(),
+                    adBlockingEnabled = false
+                )
+            )
+            assertThat(result).isEqualTo(expected)
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -108,8 +124,6 @@ class AppViewModelTest {
 
             // Then
             viewModel.uiState.test {
-                // Skip the initial state
-                skipItems(1)
                 // Await the updated state
                 with(awaitItem()) {
                     assertThat(this.appInfo).isEqualTo(appInfo)
@@ -436,96 +450,135 @@ class AppViewModelTest {
             }
         }
 
-//    @Test
-//    fun `GIVEN network is available WHEN observeNetworkStatus is called THEN timer should start and set isVisible to false after 5 seconds`() =
-//        runTest {
-//            // Given
-//            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
-//            every { observeNetworkConnectivityUseCase() } coAnswers {
-//                flowOf(NetworkConnectionState.Unavailable)
-//                flowOf(NetworkConnectionState.Available)
-//            }
-//            viewModel = AppViewModel(
-//                fetchAppInfoUseCase,
-//                enableAdBlockingConditionalUseCase,
-//                disableAdBlockingConditionalUseCase,
-//                setConnectionAsActiveUseCase,
-//                observeNetworkConnectivityUseCase
-//            )
-//
-//            // Track emitted states
-//            val emittedStates = mutableListOf<AppContract.UiState>()
-//            val job = backgroundScope.launch {
-//                viewModel.uiState.collect { emittedStates.add(it) }
-//            }
-//            runCurrent()
-//            advanceUntilIdle()
-//            advanceTimeBy(6_000)
-//            job.cancel()
-//
-//            // Then
-//            assertThat(emittedStates[0].networkConnectionState.isVisible).isFalse()
-//            assertThat(emittedStates[1].networkConnectionState.isVisible).isFalse()
-//            assertThat(emittedStates[2].networkConnectionState.isVisible).isFalse()
-//        }
-//
-//    @Test
-//    fun `GIVEN network is unavailable and then available WHEN observeNetworkStatus is called THEN timer should start and set isVisible to false after 5 seconds`() =
-//        runTest {
-//            // Given
-//            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
-//            every { observeNetworkConnectivityUseCase() } returns flowOf(
-//                NetworkConnectionState.Unavailable,
-//                NetworkConnectionState.Available
-//            )
-//            viewModel = AppViewModel(
-//                fetchAppInfoUseCase,
-//                enableAdBlockingConditionalUseCase,
-//                disableAdBlockingConditionalUseCase,
-//                setConnectionAsActiveUseCase,
-//                observeNetworkConnectivityUseCase
-//            )
-//
-//            // Then
-//            viewModel.uiState.test {
-//                assertThat(awaitItem().networkConnectionState.isVisible).isTrue()
-//                assertThat(awaitItem().networkConnectionState.networkConnectionState)
-//                .isEqualTo(NetworkConnectionState.Unavailable)
-//                assertThat(awaitItem().networkConnectionState.isVisible).isTrue()
-//                assertThat(awaitItem().networkConnectionState.networkConnectionState)
-//                .isEqualTo(NetworkConnectionState.Available)
-//                advanceTimeBy(5000)
-//                assertThat(awaitItem().networkConnectionState.isVisible).isFalse()
-//                cancelAndConsumeRemainingEvents()
-//            }
-//        }
-//
-//    @Test
-//    fun `GIVEN network is available and then unavailable WHEN observeNetworkStatus is called THEN isVisible should be true`() =
-//        runTest {
-//            // Given
-//            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
-//            every { observeNetworkConnectivityUseCase() } returns flowOf(
-//                NetworkConnectionState.Available,
-//                NetworkConnectionState.Unavailable
-//            )
-//            viewModel = AppViewModel(
-//                fetchAppInfoUseCase,
-//                enableAdBlockingConditionalUseCase,
-//                disableAdBlockingConditionalUseCase,
-//                setConnectionAsActiveUseCase,
-//                observeNetworkConnectivityUseCase
-//            )
-//
-//            // Then
-//            viewModel.uiState.test {
-//                assertThat(awaitItem().networkConnectionState.isVisible).isTrue()
-//                assertThat(awaitItem().networkConnectionState.networkConnectionState)
-//                .isEqualTo(NetworkConnectionState.Available)
-//                assertThat(awaitItem().networkConnectionState.isVisible).isTrue()
-//                assertThat(awaitItem().networkConnectionState.networkConnectionState)
-//                .isEqualTo(NetworkConnectionState.Unavailable)
-//                cancelAndConsumeRemainingEvents()
-//            }
-//        }
+    @Test
+    fun `GIVEN network is available WHEN listenToConnectionChanges is called THEN handleNetworkStatusChange should be called with Available`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flowOf(NetworkConnectionState.Available)
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                awaitItem()
+            }
+            advanceUntilIdle()
+
+            // Then
+            coVerify { observeNetworkConnectivityUseCase() }
+        }
+
+    @Test
+    fun `GIVEN network is unavailable WHEN listenToConnectionChanges is called THEN handleNetworkStatusChange should be called with Unavailable`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flowOf(NetworkConnectionState.Unavailable)
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+
+            // Then
+            coVerify { observeNetworkConnectivityUseCase() }
+        }
+
+    @Test
+    fun `GIVEN network unavailable then available WHEN timer completes THEN isVisible is false`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flow {
+                emit(NetworkConnectionState.Unavailable)
+                delay(1_000)
+                emit(NetworkConnectionState.Available)
+            }
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                advanceTimeBy(1_000)
+                val secondState = awaitItem()
+                assertThat(secondState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                assertThat(secondState.networkConnectionState.isVisible).isTrue()
+                advanceTimeBy(3000)
+                val thirdState = awaitItem()
+                assertThat(thirdState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                assertThat(thirdState.networkConnectionState.isVisible).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN network becomes unavailable again WHEN timer is running THEN timer is cancelled`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flow {
+                emit(NetworkConnectionState.Unavailable)
+                delay(1_000)
+                emit(NetworkConnectionState.Available)
+                delay(1_000)
+                emit(NetworkConnectionState.Unavailable)
+            }
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                advanceTimeBy(1_000)
+                val secondState = awaitItem()
+                assertThat(secondState.networkConnectionState.isVisible).isTrue()
+                assertThat(secondState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                advanceTimeBy(1_000)
+                val thirdState = awaitItem()
+                assertThat(thirdState.networkConnectionState.isVisible).isTrue()
+                assertThat(thirdState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
 }

@@ -13,15 +13,15 @@ import eu.wedgess.piholecontrol.domain.usecases.app.ObserveNetworkConnectivityUs
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
-import eu.wedgess.piholecontrol.presentation.app.model.NetworkStatusUiState
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,12 +44,10 @@ class AppViewModel @Inject constructor(
 
     val uiState = combine(
         fetchAppInfoUseCase(),
-        observeNetworkStatus(),
         _uiState
-    ) { appInfo, connectionState, uiState ->
+    ) { appInfo, uiState ->
         uiState.copy(
             appInfo = appInfo,
-            networkConnectionState = connectionState,
             appBarState = uiState.appBarState.copy(
                 adBlockingEnabled = appInfo.status == StatusEntity.ENABLED,
                 currentConnection = appInfo.currentConnection,
@@ -57,6 +55,9 @@ class AppViewModel @Inject constructor(
             )
         )
     }
+        .onStart {
+            listenToNetworkChanges()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
@@ -88,43 +89,40 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    private fun observeNetworkStatus(): Flow<NetworkStatusUiState> {
-        return observeNetworkConnectivityUseCase().map { connectionState ->
-            val isVisible = currentConnectionState != connectionState
-            when (connectionState) {
-                NetworkConnectionState.Available -> {
-                    if (isVisible) {
-                        startTimer()
-                    }
-                    NetworkStatusUiState(
-                        isVisible = isVisible,
-                        networkConnectionState = connectionState
-                    )
-                }
+    private fun listenToNetworkChanges() {
+        observeNetworkConnectivityUseCase()
+            .onEach { handleNetworkStatusChange(it) }
+            .launchIn(viewModelScope)
+    }
 
-                NetworkConnectionState.Unavailable -> {
-                    timerJob?.cancel()
-                    NetworkStatusUiState(
-                        isVisible = isVisible,
-                        networkConnectionState = connectionState
-                    )
+    private fun handleNetworkStatusChange(connectionState: NetworkConnectionState) {
+        val isVisible = currentConnectionState != connectionState
+        when (connectionState) {
+            NetworkConnectionState.Available -> {
+                if (isVisible) {
+                    startTimer()
                 }
-            }.also {
-                currentConnectionState = connectionState
             }
+
+            NetworkConnectionState.Unavailable -> timerJob?.cancel()
         }
+        _uiState.update {
+            it.copy(
+                networkConnectionState = it.networkConnectionState.copy(
+                    networkConnectionState = connectionState,
+                    isVisible = isVisible
+                )
+            )
+        }
+        currentConnectionState = connectionState
     }
 
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            delay(5000)
+            delay(6_000)
             _uiState.update {
-                it.copy(
-                    networkConnectionState = it.networkConnectionState.copy(
-                        isVisible = false
-                    )
-                )
+                it.copy(networkConnectionState = it.networkConnectionState.copy(isVisible = false))
             }
         }
     }
