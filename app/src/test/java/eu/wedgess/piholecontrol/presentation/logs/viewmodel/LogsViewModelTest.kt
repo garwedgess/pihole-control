@@ -120,10 +120,10 @@ class LogsViewModelTest {
                 val errorResult = awaitItem()
                 assertThat(errorResult).isInstanceOf(UIResult.Error::class.java)
                 assertThat((errorResult as UIResult.Error).errorType)
-                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-                assertThat((errorResult.errorType as ResultType.Error.WithTitleAndSubTitle).title)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitleAndRetry::class.java)
+                assertThat((errorResult.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).title)
                     .isEqualTo(UiText.DynamicString("Failed to fetch logs"))
-                assertThat((errorResult.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                assertThat((errorResult.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).subTitle)
                     .isEqualTo(UiText.DynamicString(exception.message ?: "Unknown error"))
                 cancelAndConsumeRemainingEvents()
             }

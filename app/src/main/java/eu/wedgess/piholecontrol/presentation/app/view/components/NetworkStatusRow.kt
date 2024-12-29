@@ -2,13 +2,11 @@ package eu.wedgess.piholecontrol.presentation.app.view.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -38,6 +36,8 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.presentation.theme.domainsOnAdListBackground
 import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
 
+private const val ANIMATION_DURATION = 500
+
 @Composable
 fun NetworkStatusRow(status: NetworkStatusUiState, modifier: Modifier = Modifier) {
     val targetColor = if (status.isConnected) {
@@ -48,7 +48,7 @@ fun NetworkStatusRow(status: NetworkStatusUiState, modifier: Modifier = Modifier
 
     val animatedColor by animateColorAsState(
         targetValue = targetColor,
-        animationSpec = tween(durationMillis = 500),
+        animationSpec = tween(durationMillis = ANIMATION_DURATION),
         label = "background colour"
     )
     Row(
@@ -64,8 +64,8 @@ fun NetworkStatusRow(status: NetworkStatusUiState, modifier: Modifier = Modifier
             label = "text animation",
             transitionSpec = {
                 ContentTransform(
-                    targetContentEnter = fadeIn(animationSpec = tween(500)),
-                    initialContentExit = fadeOut(animationSpec = tween(500))
+                    targetContentEnter = fadeIn(animationSpec = tween(ANIMATION_DURATION)),
+                    initialContentExit = fadeOut(animationSpec = tween(ANIMATION_DURATION))
                 )
             }
         ) { isConnected ->
@@ -88,8 +88,8 @@ fun NetworkStatusRow(status: NetworkStatusUiState, modifier: Modifier = Modifier
             label = "icon animation",
             transitionSpec = {
                 ContentTransform(
-                    targetContentEnter = fadeIn(animationSpec = tween(500)),
-                    initialContentExit = fadeOut(animationSpec = tween(500))
+                    targetContentEnter = fadeIn(animationSpec = tween(ANIMATION_DURATION)),
+                    initialContentExit = fadeOut(animationSpec = tween(ANIMATION_DURATION))
                 )
             }
         ) { isConnected ->
@@ -140,5 +140,4 @@ private class NetworkStatusRowPreviewProvider : PreviewParameterProvider<Network
                 networkConnectionState = NetworkConnectionState.Unavailable
             )
         )
-
 }

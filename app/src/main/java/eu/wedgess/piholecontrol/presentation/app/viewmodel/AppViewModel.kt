@@ -19,8 +19,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -40,8 +40,8 @@ class AppViewModel @Inject constructor(
     EventDrivenViewModel<AppContract.Event> {
 
     private val _uiState = MutableStateFlow(AppContract.UiState.initial())
-    private var currentConnectionState: NetworkConnectionState = NetworkConnectionState.Available
     private var timerJob: Job? = null
+    private var shouldShowNetworkStatus: Boolean = false
 
     val uiState = combine(
         fetchAppInfoUseCase(),
@@ -56,6 +56,9 @@ class AppViewModel @Inject constructor(
             )
         )
     }
+        .onCompletion {
+            shouldShowNetworkStatus = false
+        }
         .onStart {
             listenToNetworkChanges()
         }
@@ -97,32 +100,31 @@ class AppViewModel @Inject constructor(
     }
 
     private fun handleNetworkStatusChange(connectionState: NetworkConnectionState) {
-        val isVisible = currentConnectionState != connectionState
-        Timber.d("GARETH --> handleNetworkStatusChange($connectionState) isVisible=$isVisible")
         when (connectionState) {
             NetworkConnectionState.Available -> {
-                if (isVisible) {
-                    startTimer()
-                }
+                startTimer()
             }
 
-            NetworkConnectionState.Unavailable -> timerJob?.cancel()
+            NetworkConnectionState.Unavailable -> {
+                shouldShowNetworkStatus = true
+                timerJob?.cancel()
+            }
         }
         _uiState.update {
             it.copy(
                 networkConnectionState = it.networkConnectionState.copy(
                     networkConnectionState = connectionState,
-                    isVisible = isVisible
+                    isVisible = shouldShowNetworkStatus
                 )
             )
         }
-        currentConnectionState = connectionState
+        if (!shouldShowNetworkStatus) shouldShowNetworkStatus = true
     }
 
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            delay(3_000)
+            delay(CONNECTION_DISMISS_TIME)
             _uiState.update {
                 it.copy(networkConnectionState = it.networkConnectionState.copy(isVisible = false))
             }
@@ -142,7 +144,7 @@ class AppViewModel @Inject constructor(
             disableAdBlockingConditionalUseCase(duration)
                 .onFailure { }
                 .onSuccess {
-                    delay(300)
+                    delay(REFRESH_DELAY)
                     fetchAppInfoUseCase.refresh()
                 }
         }
@@ -154,9 +156,12 @@ class AppViewModel @Inject constructor(
             enableAdBlockingConditionalUseCase()
                 .onFailure { }
                 .onSuccess {
-                    delay(300)
+                    delay(REFRESH_DELAY)
                     fetchAppInfoUseCase.refresh()
                 }
         }
     }
 }
+
+private const val CONNECTION_DISMISS_TIME: Long = 3_000
+private const val REFRESH_DELAY: Long = 300

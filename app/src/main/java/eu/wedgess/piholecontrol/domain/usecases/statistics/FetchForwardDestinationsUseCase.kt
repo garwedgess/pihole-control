@@ -17,4 +17,6 @@ class FetchForwardDestinationsUseCase(
             }
         }
     }
+
+    fun refresh() = periodicRefreshUseCase.triggerRefresh()
 }

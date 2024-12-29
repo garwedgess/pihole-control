@@ -24,9 +24,10 @@ class TopDomainsStatsViewModel @Inject constructor(
         .map { result ->
             result.getOrElse {
                 return@map UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        UiText.StringResource(R.string.top_domains_error),
-                        UiText.DynamicString(it.message ?: "Unknown error")
+                    ResultType.Error.WithTitleAndSubTitleAndRetry(
+                        title = UiText.StringResource(R.string.top_domains_error),
+                        subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                        onRetry = fetchTopQueriesUseCase::refresh
                     )
                 )
             }.run {

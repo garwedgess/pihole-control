@@ -45,8 +45,6 @@
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
     <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
-    <ID>MagicNumber:AppViewModel.kt$AppViewModel$300</ID>
-    <ID>MagicNumber:AppViewModel.kt$AppViewModel$5000</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5f</ID>
@@ -92,9 +90,6 @@
     <ID>MagicNumber:UserPreferences.kt$10_000</ID>
     <ID>MagicNumber:UserPreferences.kt$500</ID>
     <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
-    <ID>MaxLineLength:AppViewModelTest.kt$AppViewModelTest$// fun `GIVEN network is available WHEN observeNetworkStatus is called THEN timer should start and set isVisible to false after 5 seconds`() =</ID>
-    <ID>MaxLineLength:AppViewModelTest.kt$AppViewModelTest$// fun `GIVEN network is available and then unavailable WHEN observeNetworkStatus is called THEN isVisible should be true`() =</ID>
-    <ID>MaxLineLength:AppViewModelTest.kt$AppViewModelTest$// fun `GIVEN network is unavailable and then available WHEN observeNetworkStatus is called THEN timer should start and set isVisible to false after 5 seconds`() =</ID>
     <ID>ModifierMissing:AnimatedIntText.kt$AnimatedIntText</ID>
     <ID>ModifierMissing:AnimatedLinearProgressIndicator.kt$AnimatedLinearProgressIndicator</ID>
     <ID>ModifierMissing:ApiTokenInput.kt$ApiTokenInput</ID>
@@ -145,7 +140,6 @@
     <ID>ModifierWithoutDefault:ErrorScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
-    <ID>NoBlankLineBeforeRbrace:NetworkStatusRow.kt$NetworkStatusRowPreviewProvider$ </ID>
     <ID>NoMultipleSpaces:HttpClientExt.kt$ </ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>

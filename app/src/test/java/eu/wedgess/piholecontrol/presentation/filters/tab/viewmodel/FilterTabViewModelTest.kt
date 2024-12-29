@@ -128,11 +128,11 @@ class FilterTabViewModelTest {
                 val result = awaitItem()
                 assertThat(result).isInstanceOf(UIResult.Error::class.java)
                 assertThat((result as UIResult.Error).errorType)
-                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title).isEqualTo(
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitleAndRetry::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).title).isEqualTo(
                     UiText.StringResource(R.string.filter_rules_fetch_error)
                 )
-                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).subTitle)
                     .isEqualTo(
                         UiText.DynamicString(exception.message ?: "Unknown error")
                     )

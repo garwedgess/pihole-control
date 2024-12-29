@@ -12,6 +12,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,38 +26,29 @@ class NetworkConnectivityObserverImpl @Inject constructor(
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private var currentNetworkState: NetworkConnectionState? = null
-
-    private fun networkCallback(callback: (NetworkConnectionState) -> Unit): ConnectivityManager.NetworkCallback =
+    private fun networkCallback(
+        callback: (NetworkConnectionState) -> Unit
+    ): ConnectivityManager.NetworkCallback =
         object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 Timber.d("GARETH --> onAvailable")
-                val newNetworkState = NetworkConnectionState.Available
-                if (currentNetworkState != newNetworkState) {
-                    currentNetworkState = newNetworkState
-                    Timber.d("GARETH --> onAvailable($newNetworkState)")
-                    callback(newNetworkState)
-                }
+                val newNetworkState = getCurrentConnectivityState()
+                Timber.d("GARETH --> onAvailable($newNetworkState)")
+                callback(newNetworkState)
             }
 
             override fun onLost(network: Network) {
                 Timber.d("GARETH --> onLost")
-                val newNetworkState = NetworkConnectionState.Unavailable
-                if (currentNetworkState != newNetworkState) {
-                    currentNetworkState = newNetworkState
-                    Timber.d("GARETH --> onLost($newNetworkState)")
-                    callback(newNetworkState)
-                }
+                val newNetworkState = getCurrentConnectivityState()
+                Timber.d("GARETH --> onLost($newNetworkState)")
+                callback(newNetworkState)
             }
 
             override fun onUnavailable() {
                 Timber.d("GARETH --> onUnavailable")
-                val newNetworkState = NetworkConnectionState.Unavailable
-                if (currentNetworkState != newNetworkState) {
-                    currentNetworkState = newNetworkState
-                    Timber.d("GARETH --> onUnavailable($newNetworkState)")
-                    callback(newNetworkState)
-                }
+                val newNetworkState = getCurrentConnectivityState()
+                Timber.d("GARETH --> onUnavailable($newNetworkState)")
+                callback(newNetworkState)
             }
         }
 
@@ -71,6 +63,7 @@ class NetworkConnectivityObserverImpl @Inject constructor(
 
     override fun observe(): Flow<NetworkConnectionState> = callbackFlow {
         val callback = networkCallback { connectionState ->
+            Timber.d("GARETH --> networkCallback sending: $connectionState")
             launch { send(connectionState) }
         }
 
@@ -82,14 +75,17 @@ class NetworkConnectivityObserverImpl @Inject constructor(
             .build()
 
         connectivityManager.registerNetworkCallback(networkRequest, callback)
+
         val currentState = getCurrentConnectivityState()
-        if (currentNetworkState != currentState) {
-            currentNetworkState = currentState
-            launch { send(currentState) }
+        launch {
+            send(currentState)
         }
 
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }.distinctUntilChanged()
+        .onEach {
+            Timber.d("GARETH --> observe sending: $it (${it.hashCode()})")
+        }
 }

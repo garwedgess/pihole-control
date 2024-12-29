@@ -48,9 +48,10 @@ class LogsViewModel @Inject constructor(
     ) { logsResult, uiState, bsUiState ->
         logsResult.getOrElse {
             return@combine UIResult.Error(
-                ResultType.Error.WithTitleAndSubTitle(
-                    UiText.DynamicString("Failed to fetch logs"),
-                    UiText.DynamicString(it.message ?: "Unknown error")
+                ResultType.Error.WithTitleAndSubTitleAndRetry(
+                    title = UiText.DynamicString("Failed to fetch logs"),
+                    subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                    onRetry = fetchLogsUseCase::refresh
                 )
             )
         }.run {

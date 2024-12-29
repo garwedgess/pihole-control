@@ -15,4 +15,6 @@ class FetchTopClientsUseCase(
             repository.fetchTopClients(connection)
         }
     }
+
+    fun refresh() = periodicRefreshUseCase.triggerRefresh()
 }
