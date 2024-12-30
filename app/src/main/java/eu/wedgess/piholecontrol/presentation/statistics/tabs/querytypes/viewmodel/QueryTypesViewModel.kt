@@ -30,9 +30,10 @@ class QueryTypesViewModel @Inject constructor(
         fetchQueryTypesUseCase().combine(selectedIndexFlow) { queryTypesResult, selectedIndex ->
             queryTypesResult.getOrElse {
                 return@combine UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        UiText.StringResource(R.string.query_types_error),
-                        UiText.DynamicString(it.message ?: "Unknown error")
+                    ResultType.Error.WithTitleAndSubTitleAndRetry(
+                        title = UiText.StringResource(R.string.query_types_error),
+                        subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                        onRetry = fetchQueryTypesUseCase::refresh
                     )
                 )
             }.run {

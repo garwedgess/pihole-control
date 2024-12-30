@@ -45,7 +45,6 @@
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
     <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
-    <ID>MagicNumber:AppViewModel.kt$AppViewModel$300</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5f</ID>

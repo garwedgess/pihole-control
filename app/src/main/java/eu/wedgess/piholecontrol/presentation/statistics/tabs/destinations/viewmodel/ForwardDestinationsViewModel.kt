@@ -31,9 +31,10 @@ class ForwardDestinationsViewModel @Inject constructor(
             .combine(selectedIndexFlow) { destinationsResult, selectedIndex ->
                 destinationsResult.getOrElse {
                     return@combine UIResult.Error(
-                        ResultType.Error.WithTitleAndSubTitle(
-                            UiText.StringResource(R.string.forward_destinations_error),
-                            UiText.DynamicString(it.message ?: "Unknown error")
+                        ResultType.Error.WithTitleAndSubTitleAndRetry(
+                            title = UiText.StringResource(R.string.forward_destinations_error),
+                            subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                            onRetry = fetchForwardDestinationsUseCase::refresh
                         )
                     )
                 }.run {

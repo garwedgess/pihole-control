@@ -75,7 +75,7 @@ class FetchDashboardInfoUseCaseTest {
         coEvery { fetchStatusSummaryUseCase(connection) } returns summary
         coEvery { fetchOverallTimeDataUseCase(connection) } returns overTimeData
         coEvery { fetchClientsOverallTimeDataUseCase(connection) } returns clientsOverTimeData
-        coEvery { periodicRefreshUseCase<Result<DashboardInfo>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<DashboardInfo>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<DashboardInfo>>(0)
                 emit(fetchBlock(connection))
@@ -121,7 +121,7 @@ class FetchDashboardInfoUseCaseTest {
         coEvery { fetchStatusSummaryUseCase(connection) } returns summary
         coEvery { fetchOverallTimeDataUseCase(connection) } returns overTimeData
         coEvery { fetchClientsOverallTimeDataUseCase(connection) } returns clientsOverTimeData
-        coEvery { periodicRefreshUseCase<Result<DashboardInfo>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<DashboardInfo>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<DashboardInfo>>(0)
                 emit(fetchBlock(connection))

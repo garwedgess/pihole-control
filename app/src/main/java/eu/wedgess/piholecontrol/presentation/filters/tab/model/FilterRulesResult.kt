@@ -13,9 +13,12 @@ data class FilterRulesResult(
     val rules: Result<List<FilterRuleEntity>>,
     val regexRules: Result<List<FilterRuleEntity>>,
 ) {
-    fun toUiResult(query: String): UIResult<FilterTabContract.UiState> {
+    fun toUiResult(query: String, onRetry: () -> Unit): UIResult<FilterTabContract.UiState> {
         return when {
-            rules.isFailure && regexRules.isFailure -> handleErrorThrowable(rules.exceptionOrNull())
+            rules.isFailure && regexRules.isFailure -> handleErrorThrowable(
+                throwable = rules.exceptionOrNull(),
+                onRetry = onRetry
+            )
 
             else -> {
                 val rulesList = rules.onFailure {
@@ -43,11 +46,12 @@ data class FilterRulesResult(
     }
 
     companion object {
-        fun handleErrorThrowable(throwable: Throwable?): UIResult.Error {
+        fun handleErrorThrowable(throwable: Throwable?, onRetry: () -> Unit): UIResult.Error {
             return UIResult.Error(
-                ResultType.Error.WithTitleAndSubTitle(
-                    UiText.StringResource(R.string.filter_rules_fetch_error),
-                    UiText.DynamicString(throwable?.message ?: "Unknown error")
+                ResultType.Error.WithTitleAndSubTitleAndRetry(
+                    title = UiText.StringResource(R.string.filter_rules_fetch_error),
+                    subTitle = UiText.DynamicString(throwable?.message ?: "Unknown error"),
+                    onRetry = onRetry
                 )
             )
         }

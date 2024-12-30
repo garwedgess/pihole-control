@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 fun ErrorContent(
     title: String,
     modifier: Modifier = Modifier,
+    onRetry: (() -> Unit)? = null,
     subTitle: String? = null
 ) {
     Column(
@@ -44,6 +46,12 @@ fun ErrorContent(
         subTitle?.run {
             Text(text = this, style = MaterialTheme.typography.bodyMedium)
         }
+
+        onRetry?.run {
+            Button(onClick = this@run) {
+                Text(text = "Retry")
+            }
+        }
     }
 }
 
@@ -54,7 +62,8 @@ private fun ErrorContentPreview() {
         ErrorContent(
             modifier = Modifier.fillMaxSize(),
             title = "Fetching info failed",
-            subTitle = "Incorrect data provided"
+            subTitle = "Incorrect data provided",
+            onRetry = {}
         )
     }
 }

@@ -15,5 +15,11 @@ fun ErrorScreen(modifier: Modifier, errorType: ResultType.Error) {
             subTitle = errorType.subTitle.asString(),
             modifier = modifier
         )
+        is ResultType.Error.WithTitleAndSubTitleAndRetry -> ErrorContent(
+            title = errorType.title.asString(),
+            subTitle = errorType.subTitle.asString(),
+            onRetry = errorType.onRetry,
+            modifier = modifier
+        )
     }
 }

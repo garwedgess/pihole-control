@@ -37,7 +37,6 @@ class FetchLogsUseCase @Inject constructor(
         return refresh()
     }
 
-    @VisibleForTesting
     fun refresh() = periodicRefreshUseCase.triggerRefresh()
 
     companion object {

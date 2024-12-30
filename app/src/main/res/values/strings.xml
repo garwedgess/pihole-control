@@ -176,4 +176,7 @@
     <string name="snackbar_msg_failed_to_set_active_connection">Failed to set %s as the active connection</string>
     <string name="log_results_title">Results: %d</string>
 
+    <string name="network_connected">Connected to network</string>
+    <string name="network_disconnected">Disconnected from network</string>
+
 </resources>

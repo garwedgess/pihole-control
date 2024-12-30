@@ -121,7 +121,7 @@ class DashboardViewModelTest {
                 val errorResult = awaitItem()
                 assertThat(errorResult).isInstanceOf(UIResult.Error::class.java)
                 assertThat((errorResult as UIResult.Error).errorType)
-                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitleAndRetry::class.java)
                 cancelAndConsumeRemainingEvents()
             }
         }

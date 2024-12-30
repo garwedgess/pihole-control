@@ -30,9 +30,18 @@ class DashboardViewModel @Inject constructor(
     val uiResult = fetchDashboardInfoUseCase()
         .map { result ->
             result.getOrElse { throwable ->
-                return@map DashboardInfo.handleErrorThrowable(throwable)
+                return@map DashboardInfo.handleErrorThrowable(
+                    throwable = throwable,
+                    onRetry = {
+                        fetchDashboardInfoUseCase.triggerRefresh()
+                    }
+                )
             }.run {
-                this.toUiInfo().toUiResult().also {
+                this.toUiInfo().toUiResult(
+                    onRetry = {
+                        fetchDashboardInfoUseCase.triggerRefresh()
+                    }
+                ).also {
                     if (it !is UIResult.Error && showErrorMessage) {
                         handleCombinedErrors(this)
                     }

@@ -36,7 +36,7 @@ class FetchStatusUseCaseTest {
         val connection = ConnectionEntity.default
         val status = StatusEntity.ENABLED
 
-        coEvery { periodicRefreshUseCase<Result<StatusEntity>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<StatusEntity>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<StatusEntity>>(0)
                 emit(fetchBlock(connection))
@@ -59,7 +59,7 @@ class FetchStatusUseCaseTest {
         val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch status")
 
-        coEvery { periodicRefreshUseCase<Result<StatusEntity>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<StatusEntity>(any()) } answers {
             flow {
                 val fetchBlock = arg<suspend (ConnectionEntity) -> Result<StatusEntity>>(0)
                 emit(fetchBlock(connection))
