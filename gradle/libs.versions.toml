@@ -12,20 +12,20 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.12.01"
 composeAnimations = "1.7.6"
-hilt = "2.53.1"
+hilt = "2.54"
 navigationCompose = "2.8.5"
 robolectric = "4.14"
-robolectricVersion = "4.14"
+robolectricVersion = "4.14.1"
 timber = "5.0.1"
 sqldelight = "2.0.2"
 hiltNavigationCompose = "1.2.0"
 androidxCompose = "1.7.6"
 protobufPlugin = "0.9.4"
-protobufJavaLite = "4.29.1"
+protobufJavaLite = "4.29.2"
 datastore = "1.1.1"
 splashscreen = "1.0.1"
 kotlinxSerializationJson = "1.7.3"
-ktorClient = "3.0.2"
+ktorClient = "3.0.3"
 androidXCamera = "1.4.1"
 mlkitBarcodeScanning = "17.3.0"
 truth = "1.4.4"
@@ -104,8 +104,8 @@ vicoCore = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "
 vicoM3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vicoComposeM3" }
 android-date-backport = { group = "com.jakewharton.threetenabp", name = "threetenabp", version = "1.4.8" }
 
-mockk = { module = "io.mockk:mockk", version = "1.13.13" }
-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.9.0" }
+mockk = { module = "io.mockk:mockk", version = "1.13.14" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.10.1" }
 
 [bundles]
 vico = ["vicoCompose", "vicoCore", "vicoM3"]
