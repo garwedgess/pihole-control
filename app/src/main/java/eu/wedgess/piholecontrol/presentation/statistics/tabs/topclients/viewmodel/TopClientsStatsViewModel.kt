@@ -23,9 +23,10 @@ class TopClientsStatsViewModel @Inject constructor(
         .map { result ->
             result.getOrElse {
                 return@map UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        UiText.StringResource(R.string.top_clients_error),
-                        UiText.DynamicString(it.message ?: "Unknown error")
+                    ResultType.Error.WithTitleAndSubTitleAndRetry(
+                        title = UiText.StringResource(R.string.top_clients_error),
+                        subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                        onRetry = fetchTopClientsUseCase::refresh
                     )
                 )
             }.run {

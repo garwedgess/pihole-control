@@ -4,18 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.NetworkConnectionState
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase
+import eu.wedgess.piholecontrol.domain.usecases.app.ObserveNetworkConnectivityUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,13 +34,19 @@ class AppViewModel @Inject constructor(
     private val fetchAppInfoUseCase: FetchAppInfoUseCase,
     private val enableAdBlockingConditionalUseCase: EnableAdBlockingConditionalUseCase,
     private val disableAdBlockingConditionalUseCase: DisableAdBlockingConditionalUseCase,
-    private val setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase
+    private val setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase,
+    private val observeNetworkConnectivityUseCase: ObserveNetworkConnectivityUseCase
 ) : ViewModel(),
     EventDrivenViewModel<AppContract.Event> {
 
     private val _uiState = MutableStateFlow(AppContract.UiState.initial())
+    private var timerJob: Job? = null
+    private var shouldShowNetworkStatus: Boolean = false
 
-    val uiState = fetchAppInfoUseCase().combine(_uiState) { appInfo, uiState ->
+    val uiState = combine(
+        fetchAppInfoUseCase(),
+        _uiState
+    ) { appInfo, uiState ->
         uiState.copy(
             appInfo = appInfo,
             appBarState = uiState.appBarState.copy(
@@ -43,6 +56,12 @@ class AppViewModel @Inject constructor(
             )
         )
     }
+        .onCompletion {
+            shouldShowNetworkStatus = false
+        }
+        .onStart {
+            listenToNetworkChanges()
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
@@ -74,6 +93,44 @@ class AppViewModel @Inject constructor(
         }
     }
 
+    private fun listenToNetworkChanges() {
+        observeNetworkConnectivityUseCase()
+            .onEach { handleNetworkStatusChange(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleNetworkStatusChange(connectionState: NetworkConnectionState) {
+        when (connectionState) {
+            NetworkConnectionState.Available -> {
+                startTimer()
+            }
+
+            NetworkConnectionState.Unavailable -> {
+                shouldShowNetworkStatus = true
+                timerJob?.cancel()
+            }
+        }
+        _uiState.update {
+            it.copy(
+                networkConnectionState = it.networkConnectionState.copy(
+                    networkConnectionState = connectionState,
+                    isVisible = shouldShowNetworkStatus
+                )
+            )
+        }
+        if (!shouldShowNetworkStatus) shouldShowNetworkStatus = true
+    }
+
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            delay(CONNECTION_DISMISS_TIME)
+            _uiState.update {
+                it.copy(networkConnectionState = it.networkConnectionState.copy(isVisible = false))
+            }
+        }
+    }
+
     private fun setConnectionActive(mihHole: ConnectionEntity) {
         viewModelScope.launch {
             setConnectionAsActiveUseCase(mihHole.id)
@@ -87,7 +144,7 @@ class AppViewModel @Inject constructor(
             disableAdBlockingConditionalUseCase(duration)
                 .onFailure { }
                 .onSuccess {
-                    delay(300)
+                    delay(REFRESH_DELAY)
                     fetchAppInfoUseCase.refresh()
                 }
         }
@@ -99,9 +156,12 @@ class AppViewModel @Inject constructor(
             enableAdBlockingConditionalUseCase()
                 .onFailure { }
                 .onSuccess {
-                    delay(300)
+                    delay(REFRESH_DELAY)
                     fetchAppInfoUseCase.refresh()
                 }
         }
     }
 }
+
+private const val CONNECTION_DISMISS_TIME: Long = 3_000
+private const val REFRESH_DELAY: Long = 300

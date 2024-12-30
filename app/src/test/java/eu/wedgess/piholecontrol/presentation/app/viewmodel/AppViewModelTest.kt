@@ -3,11 +3,14 @@ package eu.wedgess.piholecontrol.presentation.app.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.NetworkConnectionState
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.app.DisableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.EnableAdBlockingConditionalUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase
+import eu.wedgess.piholecontrol.domain.usecases.app.ObserveNetworkConnectivityUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
@@ -16,20 +19,18 @@ import eu.wedgess.piholecontrol.presentation.app.model.PiHoleAppInfo
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,7 +41,8 @@ class AppViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = StandardTestDispatcher(TestCoroutineScheduler())
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     @RelaxedMockK
     private lateinit var fetchAppInfoUseCase: FetchAppInfoUseCase
@@ -54,35 +56,47 @@ class AppViewModelTest {
     @RelaxedMockK
     private lateinit var setConnectionAsActiveUseCase: SetConnectionAsActiveUseCase
 
+    @RelaxedMockK
+    private lateinit var observeNetworkConnectivityUseCase: ObserveNetworkConnectivityUseCase
+
     private lateinit var viewModel: AppViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
     fun `WHEN viewmodel is initialized THEN uiState should emit initial state`() = runTest {
         // Given
-        coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+        coEvery { fetchAppInfoUseCase() } returns flowOf(
+            PiHoleAppInfo.initial().copy(status = StatusEntity.UNKNOWN)
+        )
+        every { observeNetworkConnectivityUseCase() } returns flowOf(
+            NetworkConnectionState.Available
+        )
 
         // When
         viewModel = AppViewModel(
             fetchAppInfoUseCase,
             enableAdBlockingConditionalUseCase,
             disableAdBlockingConditionalUseCase,
-            setConnectionAsActiveUseCase
+            setConnectionAsActiveUseCase,
+            observeNetworkConnectivityUseCase
         )
+        advanceUntilIdle()
 
         // Then
         viewModel.uiState.test {
-            assertThat(awaitItem()).isEqualTo(AppContract.UiState.initial())
+            val result = awaitItem()
+            val expected = AppContract.UiState.initial().copy(
+                appBarState = AppBarState(
+                    currentConnection = ConnectionEntity.default,
+                    connections = emptyList(),
+                    adBlockingEnabled = false
+                )
+            )
+            assertThat(result).isEqualTo(expected)
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -97,22 +111,22 @@ class AppViewModelTest {
                 connections = listOf(ConnectionEntity.default)
             )
             coEvery { fetchAppInfoUseCase() } returns flowOf(appInfo)
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
 
             // When
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // Then
             viewModel.uiState.test {
-                // Skip the initial state
-                skipItems(1)
                 // Await the updated state
                 with(awaitItem()) {
-                    assertThat(appInfo).isEqualTo(appInfo)
+                    assertThat(this.appInfo).isEqualTo(appInfo)
                     assertThat(appBarState.adBlockingEnabled).isTrue()
                     assertThat(appBarState.currentConnection).isEqualTo(appInfo.currentConnection)
                     assertThat(appBarState.connections).isEqualTo(appInfo.connections)
@@ -126,11 +140,13 @@ class AppViewModelTest {
         runTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // Track emitted states
@@ -146,8 +162,8 @@ class AppViewModelTest {
             runCurrent()
             job.cancel()
 
-            assertThat(emittedStates[1].dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
-            assertThat(emittedStates[2].dialogType).isEqualTo(AppDialogType.None)
+            assertThat(emittedStates[0].dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
+            assertThat(emittedStates[1].dialogType).isEqualTo(AppDialogType.None)
         }
 
     @Test
@@ -159,11 +175,13 @@ class AppViewModelTest {
             coEvery { disableAdBlockingConditionalUseCase(duration) } returns Result.success(
                 StatusEntity.ENABLED
             )
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -182,11 +200,13 @@ class AppViewModelTest {
             val connection = ConnectionEntity.default
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
             coEvery { setConnectionAsActiveUseCase(connection.id) } returns Result.success(Unit)
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -208,11 +228,13 @@ class AppViewModelTest {
                     status = StatusEntity.ENABLED
                 )
             )
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
             val newAppBarState = AppBarState(
                 adBlockingEnabled = true,
@@ -225,7 +247,6 @@ class AppViewModelTest {
 
             // Then
             viewModel.uiState.test {
-                skipItems(1)
                 val result = awaitItem()
                 assertThat(result.appBarState).isEqualTo(newAppBarState)
                 cancelAndConsumeRemainingEvents()
@@ -238,11 +259,13 @@ class AppViewModelTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
             coEvery { enableAdBlockingConditionalUseCase() } returns Result.success(StatusEntity.ENABLED)
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -263,11 +286,13 @@ class AppViewModelTest {
             coEvery { setConnectionAsActiveUseCase(connection.id) } returns Result.failure(
                 Exception("Test")
             )
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -287,11 +312,13 @@ class AppViewModelTest {
             coEvery { disableAdBlockingConditionalUseCase(duration) } returns Result.failure(
                 Exception("Test")
             )
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -308,11 +335,13 @@ class AppViewModelTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
             coEvery { enableAdBlockingConditionalUseCase() } returns Result.failure(Exception("Test"))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -328,11 +357,13 @@ class AppViewModelTest {
         runTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -340,7 +371,6 @@ class AppViewModelTest {
 
             // Then
             viewModel.uiState.test {
-                skipItems(1)
                 val result = awaitItem()
                 assertThat(result.dialogType).isEqualTo(AppDialogType.EnableAdBlocking)
                 cancelAndConsumeRemainingEvents()
@@ -352,11 +382,13 @@ class AppViewModelTest {
         runTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
             viewModel = AppViewModel(
                 fetchAppInfoUseCase,
                 enableAdBlockingConditionalUseCase,
                 disableAdBlockingConditionalUseCase,
-                setConnectionAsActiveUseCase
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
             )
 
             // When
@@ -364,9 +396,188 @@ class AppViewModelTest {
 
             // Then
             viewModel.uiState.test {
-                skipItems(1)
                 val result = awaitItem()
                 assertThat(result.dialogType).isEqualTo(AppDialogType.DisableAdBlocking)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN network is available WHEN observeNetworkStatus is called THEN uiState should update networkConnectionState`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                assertThat(result.networkConnectionState.isVisible).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN network is unavailable WHEN observeNetworkStatus is called THEN uiState should update networkConnectionState`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Unavailable)
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                assertThat(result.networkConnectionState.isVisible).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN network is available WHEN listenToConnectionChanges is called THEN handleNetworkStatusChange should be called with Available`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flowOf(NetworkConnectionState.Available)
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                awaitItem()
+            }
+            advanceUntilIdle()
+
+            // Then
+            coVerify { observeNetworkConnectivityUseCase() }
+        }
+
+    @Test
+    fun `GIVEN network is unavailable WHEN listenToConnectionChanges is called THEN handleNetworkStatusChange should be called with Unavailable`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flowOf(NetworkConnectionState.Unavailable)
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+
+            // Then
+            coVerify { observeNetworkConnectivityUseCase() }
+        }
+
+    @Test
+    fun `GIVEN network unavailable then available WHEN timer completes THEN isVisible is false`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            every { observeNetworkConnectivityUseCase() } returns flow {
+                emit(NetworkConnectionState.Unavailable)
+                delay(1_000)
+                emit(NetworkConnectionState.Available)
+            }
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                advanceTimeBy(1_000)
+                val secondState = awaitItem()
+                assertThat(secondState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                assertThat(secondState.networkConnectionState.isVisible).isTrue()
+                advanceTimeBy(3000)
+                val thirdState = awaitItem()
+                assertThat(thirdState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                assertThat(thirdState.networkConnectionState.isVisible).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN network becomes unavailable again WHEN timer is running THEN timer is cancelled`() =
+        runTest {
+            // Given
+            coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
+            val networkStateFlow = flow {
+                emit(NetworkConnectionState.Unavailable)
+                delay(1_000)
+                emit(NetworkConnectionState.Available)
+                delay(1_000)
+                emit(NetworkConnectionState.Unavailable)
+            }
+            every { observeNetworkConnectivityUseCase() } returns networkStateFlow
+            viewModel = AppViewModel(
+                fetchAppInfoUseCase,
+                enableAdBlockingConditionalUseCase,
+                disableAdBlockingConditionalUseCase,
+                setConnectionAsActiveUseCase,
+                observeNetworkConnectivityUseCase
+            )
+
+            // When
+            viewModel.uiState.test {
+                val firstState = awaitItem()
+                assertThat(firstState.networkConnectionState.isVisible).isTrue()
+                assertThat(firstState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
+                advanceTimeBy(1_000)
+                val secondState = awaitItem()
+                assertThat(secondState.networkConnectionState.isVisible).isTrue()
+                assertThat(secondState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Available)
+                advanceTimeBy(1_000)
+                val thirdState = awaitItem()
+                assertThat(thirdState.networkConnectionState.isVisible).isTrue()
+                assertThat(thirdState.networkConnectionState.networkConnectionState)
+                    .isEqualTo(NetworkConnectionState.Unavailable)
                 cancelAndConsumeRemainingEvents()
             }
         }

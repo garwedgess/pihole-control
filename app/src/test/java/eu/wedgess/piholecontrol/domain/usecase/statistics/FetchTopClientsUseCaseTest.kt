@@ -41,7 +41,7 @@ class FetchTopClientsUseCaseTest {
         val connection = ConnectionEntity.default
 
         coEvery {
-            periodicRefreshUseCase<Result<List<TopClientEntity>>>(any())
+            periodicRefreshUseCase<List<TopClientEntity>>(any())
         } answers {
             flow {
                 val fetchData = arg<suspend (ConnectionEntity) -> Result<List<TopClientEntity>>>(0)
@@ -66,7 +66,7 @@ class FetchTopClientsUseCaseTest {
         val exception = Exception("Failed to fetch top clients")
 
         coEvery {
-            periodicRefreshUseCase<Result<List<TopClientEntity>>>(any())
+            periodicRefreshUseCase<List<TopClientEntity>>(any())
         } answers {
             flow {
                 val fetchData = arg<suspend (ConnectionEntity) -> Result<List<TopClientEntity>>>(0)

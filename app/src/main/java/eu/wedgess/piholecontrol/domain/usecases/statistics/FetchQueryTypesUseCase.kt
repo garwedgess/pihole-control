@@ -17,4 +17,6 @@ class FetchQueryTypesUseCase(
             }
         }
     }
+
+    fun refresh() = periodicRefreshUseCase.triggerRefresh()
 }

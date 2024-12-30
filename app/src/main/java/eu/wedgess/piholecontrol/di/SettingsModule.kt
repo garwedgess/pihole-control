@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.usecases.settings.FetchAppPreferencesUseCase
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateDynamicThemeUseCase
@@ -12,7 +12,7 @@ import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateSelectedThemeUseC
 import eu.wedgess.piholecontrol.domain.usecases.settings.UpdateStatusChangeOnAllConnectionsUseCase
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object SettingsModule {
 
     @Provides
