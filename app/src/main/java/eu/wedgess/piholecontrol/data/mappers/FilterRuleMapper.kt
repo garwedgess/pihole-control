@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.mappers
 
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleFilterRules
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId

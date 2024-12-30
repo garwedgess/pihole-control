@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleModifyFilterRuleResponse
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleModifyFilterRuleResponse
 import org.junit.Test
 
 class ModifyFilterRuleResponseMapperTest {

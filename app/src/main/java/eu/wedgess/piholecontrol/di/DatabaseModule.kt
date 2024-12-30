@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
+import eu.wedgess.piholecontrol.data.utils.sqldelight.apiVersionAdapter
 import eu.wedgess.piholecontrol.data.utils.sqldelight.portAdapter
 import eu.wedgess.piholecontrol.data.utils.sqldelight.protocolAdapter
 import javax.inject.Singleton
@@ -30,7 +31,8 @@ object DatabaseModule {
         driver,
         ConnectionAdapter = Connection.Adapter(
             ProtocolAdapter = protocolAdapter,
-            PortAdapter = portAdapter
+            PortAdapter = portAdapter,
+            ApiVersionAdapter = apiVersionAdapter
         )
     )
 }

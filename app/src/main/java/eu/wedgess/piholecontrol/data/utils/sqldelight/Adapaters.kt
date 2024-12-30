@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.data.utils.sqldelight
 
 import app.cash.sqldelight.ColumnAdapter
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleApiVersionData
 import io.ktor.http.URLProtocol
 
 val protocolAdapter = object : ColumnAdapter<URLProtocol, String> {
@@ -14,4 +15,10 @@ val portAdapter = object : ColumnAdapter<Int, Long> {
     override fun decode(databaseValue: Long): Int = databaseValue.toInt()
 
     override fun encode(value: Int): Long = value.toLong()
+}
+
+val apiVersionAdapter = object : ColumnAdapter<PiHoleApiVersionData, Long> {
+    override fun decode(databaseValue: Long): PiHoleApiVersionData = PiHoleApiVersionData[databaseValue]
+
+    override fun encode(value: PiHoleApiVersionData): Long = value.key
 }

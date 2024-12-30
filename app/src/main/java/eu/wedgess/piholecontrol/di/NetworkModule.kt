@@ -42,10 +42,12 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient
         .Builder()
-        .dns(object : Dns {
-            override fun lookup(hostname: String): List<InetAddress> =
-                Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
-        }).build()
+        .dns(
+            object : Dns {
+                override fun lookup(hostname: String): List<InetAddress> =
+                    Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
+            }
+        ).build()
 
     @Provides
     @DefaultHttpClient

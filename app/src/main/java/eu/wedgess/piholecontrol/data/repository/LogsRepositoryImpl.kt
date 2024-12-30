@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.repository
 
-import eu.wedgess.piholecontrol.data.api.LogsApiService
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiService
 import eu.wedgess.piholecontrol.data.mappers.toLogEntryEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity

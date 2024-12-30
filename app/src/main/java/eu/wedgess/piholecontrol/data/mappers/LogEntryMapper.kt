@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.mappers
 
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId

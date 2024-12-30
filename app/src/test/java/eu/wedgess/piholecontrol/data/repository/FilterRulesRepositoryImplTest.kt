@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.repository
 
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
+import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleType
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity

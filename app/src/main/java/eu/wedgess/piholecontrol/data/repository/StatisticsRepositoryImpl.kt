@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.repository
 
-import eu.wedgess.piholecontrol.data.api.StatisticsApiService
+import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiService
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.domain.model.QueryTypeEntity

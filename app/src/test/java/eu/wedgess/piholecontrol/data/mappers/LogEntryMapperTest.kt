@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLog
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLog
 import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
 import org.junit.Test
 import org.threeten.bp.Instant

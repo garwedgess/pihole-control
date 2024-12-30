@@ -14,6 +14,7 @@ data class ConnectionEntity(
     val authPassword: String,
     val authRealm: String,
     val trustAllCerts: Boolean,
+    val apiVersion: PiHoleApiVersionEntity,
     val isDeleted: Boolean,
     val isActive: Boolean
 ) {
@@ -32,6 +33,7 @@ data class ConnectionEntity(
             authPassword = "",
             authRealm = "",
             trustAllCerts = false,
+            apiVersion = PiHoleApiVersionEntity.Version5,
             isDeleted = false,
             isActive = true
         )

@@ -66,9 +66,7 @@ fun ModifyConnectionAdvancedSettings(
                 checked = uiState.trustAllCerts,
                 onCheckedChange = {
                     onEvent(
-                        ModifyConnectionsContract.Event.OnTrustAllCertsChanged(
-                            it
-                        )
+                        ModifyConnectionsContract.Event.OnTrustAllCertsChanged(it)
                     )
                 }
             )

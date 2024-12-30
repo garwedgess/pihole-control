@@ -15,6 +15,7 @@ fun Connection.toConnectionInfo() = ConnectionEntity(
     authPassword = AuthPassword,
     authRealm = AuthRealm,
     trustAllCerts = TrustAllCerts,
+    apiVersion = this.ApiVersion.toEntity(),
     isDeleted = IsDeleted,
     isActive = Active
 )
@@ -31,6 +32,7 @@ fun ConnectionEntity.toConnection() = Connection(
     AuthPassword = authPassword,
     AuthRealm = authRealm,
     TrustAllCerts = trustAllCerts,
+    ApiVersion = apiVersion.fromEntity(),
     IsDeleted = isDeleted,
     Active = isActive
 )

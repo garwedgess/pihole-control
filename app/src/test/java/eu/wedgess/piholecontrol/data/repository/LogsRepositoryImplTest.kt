@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.data.repository
 
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.api.LogsApiService
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleLogsResponse
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiService
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLogsResponse
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider

@@ -1,0 +1,59 @@
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleApiVersionData;
+import io.ktor.http.URLProtocol;
+import kotlin.Boolean;
+import kotlin.Int;
+
+CREATE TABLE Connection_new (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    Name TEXT NOT NULL,
+    Protocol TEXT AS URLProtocol NOT NULL,
+    Host TEXT NOT NULL,
+    ApiPath TEXT NOT NULL,
+    Port INTEGER AS Int NOT NULL,
+    Token TEXT,
+    AuthUserName TEXT NOT NULL DEFAULT "",
+    AuthPassword TEXT NOT NULL DEFAULT "",
+    AuthRealm TEXT NOT NULL DEFAULT "",
+    TrustAllCerts INTEGER AS Boolean NOT NULL DEFAULT 0,
+    ApiVersion INTEGER AS PiHoleApiVersionData NOT NULL DEFAULT 1,
+    IsDeleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    Active INTEGER AS Boolean NOT NULL DEFAULT 0
+);
+
+INSERT INTO Connection_new (
+    Id, Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, Active
+)
+SELECT
+    Id, Name, Protocol, Host, ApiPath, Port, Token, AuthUserName, AuthPassword, AuthRealm, TrustAllCerts, Active
+FROM Connection;
+
+DROP TABLE Connection;
+
+ALTER TABLE Connection_new RENAME TO Connection;
+
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_update
+BEFORE UPDATE OF Active ON Connection
+BEGIN
+  UPDATE Connection
+  SET Active = 0
+  WHERE Connection.Id <> new.Id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_insert
+BEFORE INSERT ON Connection
+BEGIN
+  UPDATE Connection
+  SET Active = 0;
+END;
+
+CREATE TRIGGER IF NOT EXISTS next_connection_active_on_delete
+AFTER DELETE ON Connection
+WHEN old.Active = 1
+BEGIN
+    UPDATE Connection
+    SET Active = 1
+    WHERE Id = (
+        SELECT MAX(Id) FROM Connection
+        WHERE IsDeleted = 0 AND Active = 0
+    );
+END;

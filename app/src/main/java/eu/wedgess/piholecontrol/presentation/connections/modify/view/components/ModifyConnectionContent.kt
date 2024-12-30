@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
@@ -94,6 +95,23 @@ fun ModifyConnectionContent(
             showAdvancedSettings = uiState.showAdvancedSettings,
             onEvent = onEvent
         )
+
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(stringResource(R.string.modify_connection_label_api_version))
+            ApiSelectionRadioButtonGroup(
+                itemsList = PiHoleApiVersion.entries.toTypedArray(),
+                selectedItem = uiState.apiVersion,
+                onApiVersionChange = {
+                    onEvent(
+                        ModifyConnectionsContract.Event.OnApiVersionChanged(it)
+                    )
+                }
+            )
+        }
 
         Row(
             Modifier.fillMaxWidth(),

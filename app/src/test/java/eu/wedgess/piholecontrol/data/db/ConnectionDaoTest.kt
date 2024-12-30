@@ -8,6 +8,8 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
+import eu.wedgess.piholecontrol.data.model.enums.PiHoleApiVersionData
+import eu.wedgess.piholecontrol.data.utils.sqldelight.apiVersionAdapter
 import eu.wedgess.piholecontrol.data.utils.sqldelight.portAdapter
 import eu.wedgess.piholecontrol.data.utils.sqldelight.protocolAdapter
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -41,7 +43,8 @@ class ConnectionDaoTest {
             driver = driver,
             ConnectionAdapter = Connection.Adapter(
                 ProtocolAdapter = protocolAdapter,
-                PortAdapter = portAdapter
+                PortAdapter = portAdapter,
+                ApiVersionAdapter = apiVersionAdapter
             )
         )
         dispatcherProvider = TestDispatcherProvider()
@@ -67,6 +70,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -82,6 +86,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = true,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = true
         )
@@ -108,6 +113,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -132,6 +138,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -147,6 +154,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = true,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = true
         )
@@ -172,6 +180,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -187,6 +196,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = true,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = true
         )
@@ -212,6 +222,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -243,6 +254,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -268,6 +280,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -283,6 +296,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = true,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = true
         )
@@ -311,6 +325,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -326,6 +341,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = true,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = true
         )
@@ -352,6 +368,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -378,6 +395,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )
@@ -403,6 +421,7 @@ class ConnectionDaoTest {
             AuthPassword = "",
             AuthRealm = "",
             TrustAllCerts = false,
+            ApiVersion = PiHoleApiVersionData.Version5,
             IsDeleted = false,
             Active = false
         )

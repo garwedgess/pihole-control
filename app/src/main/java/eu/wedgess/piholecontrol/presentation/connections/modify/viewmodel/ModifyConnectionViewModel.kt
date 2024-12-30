@@ -15,6 +15,7 @@ import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModel
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
+import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.fromEntity
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ class ModifyConnectionViewModel @Inject constructor(
             is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState {
                 copy(apiPath = event.apiPath)
             }
+
             is ModifyConnectionsContract.Event.OnApiTokenChanged -> updateUiState {
                 copy(
                     apiToken = event.apiToken,
@@ -83,12 +85,15 @@ class ModifyConnectionViewModel @Inject constructor(
             is ModifyConnectionsContract.Event.OnHostChanged -> updateUiState {
                 copy(host = event.host)
             }
+
             is ModifyConnectionsContract.Event.OnNameChanged -> updateUiState {
                 copy(name = event.name)
             }
+
             is ModifyConnectionsContract.Event.OnPortChanged -> updateUiState {
                 copy(port = event.port)
             }
+
             is ModifyConnectionsContract.Event.OnProtocolChanged -> {
                 updateUiState {
                     copy(
@@ -97,17 +102,21 @@ class ModifyConnectionViewModel @Inject constructor(
                     )
                 }
             }
+
+            is ModifyConnectionsContract.Event.OnApiVersionChanged -> updateUiState {
+                copy(apiVersion = event.apiVersion)
+            }
         }
     }
 
     private fun saveConnection() {
         viewModelScope.launch {
             if (existingConnectionId != null) {
-                updateConnectionUseCase(uiState.value.toMiHoleInfo(id = existingConnectionId))
+                updateConnectionUseCase(uiState.value.toPiHoleConnectionEntity(id = existingConnectionId))
                     .onFailure { Timber.e("Updated connection failed ${it.message}", it) }
                     .onSuccess { navigateTo(ModifyConnectionsContract.Effect.Navigation.Back) }
             } else {
-                addConnectionUseCase(uiState.value.toMiHoleInfo())
+                addConnectionUseCase(uiState.value.toPiHoleConnectionEntity())
                     .onFailure { Timber.e("Save connection failed ${it.message}", it) }
                     .onSuccess { navigateTo(ModifyConnectionsContract.Effect.Navigation.Back) }
             }
@@ -132,6 +141,7 @@ class ModifyConnectionViewModel @Inject constructor(
                             protocol = this.protocol,
                             apiPath = this.apiPath,
                             apiToken = this.token,
+                            apiVersion = this.apiVersion.fromEntity(),
                             authUsername = this.authUsername,
                             authPassword = this.authPassword,
                             authRealm = this.authRealm,

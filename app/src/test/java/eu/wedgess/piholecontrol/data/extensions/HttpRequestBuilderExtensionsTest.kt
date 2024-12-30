@@ -28,7 +28,7 @@ class HttpRequestBuilderExtensionsTest {
         )
         val requestBuilder = HttpRequestBuilder()
 
-        requestBuilder.fetchBaseRequestInfo(connection)
+        requestBuilder.fetchBaseRequestInfoV5(connection)
         val requestData = requestBuilder.build()
 
         assertThat(requestData.url.protocol).isEqualTo(URLProtocol.HTTPS)
@@ -58,7 +58,7 @@ class HttpRequestBuilderExtensionsTest {
         )
         val requestBuilder = HttpRequestBuilder()
 
-        requestBuilder.fetchBaseRequestInfo(connection)
+        requestBuilder.fetchBaseRequestInfoV5(connection)
         val requestData = requestBuilder.build()
 
         assertThat(requestData.url.protocol).isEqualTo(URLProtocol.HTTP)
@@ -88,7 +88,7 @@ class HttpRequestBuilderExtensionsTest {
         )
         val requestBuilder = HttpRequestBuilder()
 
-        requestBuilder.fetchBaseRequestInfo(connection)
+        requestBuilder.fetchBaseRequestInfoV5(connection)
         val requestData = requestBuilder.build()
 
         assertThat(requestData.url.protocol).isEqualTo(URLProtocol.HTTP)
@@ -118,7 +118,7 @@ class HttpRequestBuilderExtensionsTest {
         )
         val requestBuilder = HttpRequestBuilder()
 
-        requestBuilder.fetchBaseRequestInfo(connection)
+        requestBuilder.fetchBaseRequestInfoV5(connection)
         val requestData = requestBuilder.build()
 
         assertThat(requestData.url.protocol).isEqualTo(URLProtocol.HTTP)

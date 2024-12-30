@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.repository
 
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.api.DashboardApiService
+import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.QueriesOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
@@ -20,7 +20,7 @@ import org.junit.Test
 class DashboardRepositoryImplTest {
 
     @MockK
-    private lateinit var api: DashboardApiService
+    private lateinit var api: DashboardApiServiceV5
     private lateinit var dispatcherProvider: DispatcherProvider
     private lateinit var target: DashboardRepository
 

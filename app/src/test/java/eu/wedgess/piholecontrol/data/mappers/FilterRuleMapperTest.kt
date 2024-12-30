@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRules
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleFilterRules
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.initThreeTen
 import org.junit.Before

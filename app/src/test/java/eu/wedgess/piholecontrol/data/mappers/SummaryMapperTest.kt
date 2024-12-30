@@ -1,14 +1,14 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleSummary
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleSummaryV5Data
 import org.junit.Test
 
 class SummaryMapperTest {
 
     @Test
     fun `toSummaryEntity - maps PiHoleSummary to SummaryEntity correctly`() {
-        val piHoleSummary = PiHoleSummary(
+        val piHoleSummaryV5Data = PiHoleSummaryV5Data(
             domainsBeingBlocked = 100000,
             dnsQueriesToday = 5000,
             adsBlockedToday = 1000,
@@ -16,7 +16,7 @@ class SummaryMapperTest {
             uniqueClients = 50
         )
 
-        val summaryEntity = piHoleSummary.toSummaryEntity()
+        val summaryEntity = piHoleSummaryV5Data.toSummaryEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(100000)
         assertThat(summaryEntity.dnsQueries).isEqualTo(5000)
@@ -27,9 +27,9 @@ class SummaryMapperTest {
 
     @Test
     fun `toSummaryEntity - maps PiHoleSummary with default values`() {
-        val piHoleSummary = PiHoleSummary()
+        val piHoleSummaryV5Data = PiHoleSummaryV5Data()
 
-        val summaryEntity = piHoleSummary.toSummaryEntity()
+        val summaryEntity = piHoleSummaryV5Data.toSummaryEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(0)
         assertThat(summaryEntity.dnsQueries).isEqualTo(0)
@@ -40,7 +40,7 @@ class SummaryMapperTest {
 
     @Test
     fun `toSummaryEntity - maps PiHoleSummary with different values`() {
-        val piHoleSummary = PiHoleSummary(
+        val piHoleSummaryV5Data = PiHoleSummaryV5Data(
             domainsBeingBlocked = 200000,
             dnsQueriesToday = 10000,
             adsBlockedToday = 2000,
@@ -48,7 +48,7 @@ class SummaryMapperTest {
             uniqueClients = 100
         )
 
-        val summaryEntity = piHoleSummary.toSummaryEntity()
+        val summaryEntity = piHoleSummaryV5Data.toSummaryEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(200000)
         assertThat(summaryEntity.dnsQueries).isEqualTo(10000)

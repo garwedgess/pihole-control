@@ -2,11 +2,11 @@ package eu.wedgess.piholecontrol.data.repository
 
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.api.StatisticsApiService
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleForwardDestinations
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleQueryTypes
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopClients
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleTopQueries
+import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiService
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleForwardDestinations
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleQueryTypes
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleTopClients
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleTopQueries
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.TopQueriesEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository

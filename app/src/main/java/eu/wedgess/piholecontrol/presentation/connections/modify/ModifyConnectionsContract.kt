@@ -1,7 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.connections.modify
 
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.fromEntity
+import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.toEntity
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import io.ktor.http.URLProtocol
 
 interface ModifyConnectionsContract {
@@ -14,6 +17,7 @@ interface ModifyConnectionsContract {
         val protocol: URLProtocol,
         val apiPath: String,
         val apiToken: String,
+        val apiVersion: PiHoleApiVersion,
         val authUsername: String,
         val authPassword: String,
         val authRealm: String,
@@ -22,7 +26,7 @@ interface ModifyConnectionsContract {
         val showAdvancedSettings: Boolean
     ) {
 
-        fun toMiHoleInfo(id: Long? = null): ConnectionEntity =
+        fun toPiHoleConnectionEntity(id: Long? = null): ConnectionEntity =
             ConnectionEntity(
                 id = id ?: -1,
                 name = this.name,
@@ -35,6 +39,7 @@ interface ModifyConnectionsContract {
                 authPassword = this.authPassword,
                 authRealm = this.authRealm,
                 trustAllCerts = this.trustAllCerts,
+                apiVersion = this.apiVersion.toEntity(),
                 isDeleted = false,
                 isActive = false
             )
@@ -52,6 +57,7 @@ interface ModifyConnectionsContract {
                 protocol = DEFAULT_INFO.protocol,
                 apiPath = DEFAULT_INFO.apiPath,
                 apiToken = DEFAULT_INFO.token,
+                apiVersion = DEFAULT_INFO.apiVersion.fromEntity(),
                 authUsername = DEFAULT_INFO.authUsername,
                 authPassword = DEFAULT_INFO.authPassword,
                 trustAllCerts = DEFAULT_INFO.trustAllCerts,
@@ -78,6 +84,7 @@ interface ModifyConnectionsContract {
         data class OnAuthPasswordChanged(val authPassword: String) : Event
         data class OnAuthRealmChanged(val authRealm: String) : Event
         data class OnTrustAllCertsChanged(val trustAllCerts: Boolean) : Event
+        data class OnApiVersionChanged(val apiVersion: PiHoleApiVersion) : Event
         data class OnToggleAdvancedSettingsChanged(val showAdvancedSettings: Boolean) : Event
         data object OnOpenBarcodeScanner : Event
         data object OnDismissDialog : Event

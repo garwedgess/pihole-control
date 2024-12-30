@@ -1,6 +1,6 @@
 package eu.wedgess.piholecontrol.data.repository
 
-import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
+import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.mappers.toFilterRuleEntity
 import eu.wedgess.piholecontrol.data.mappers.toModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleType

@@ -2,6 +2,8 @@ package eu.wedgess.piholecontrol.data.api
 
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.api.fakes.LogsMockHttpClient
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiService
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiServiceImpl
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException

@@ -5,11 +5,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.data.api.DashboardApiService
-import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
-import eu.wedgess.piholecontrol.data.api.LogsApiService
-import eu.wedgess.piholecontrol.data.api.StatisticsApiService
-import eu.wedgess.piholecontrol.data.api.StatusApiService
+import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5
+import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiService
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiService
+import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiService
+import eu.wedgess.piholecontrol.data.api.v5.StatusApiService
+import eu.wedgess.piholecontrol.data.api.v6.DashboardApiServiceV6
 import eu.wedgess.piholecontrol.data.db.ConnectionDao
 import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
@@ -36,10 +37,11 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDashboardRepository(
-        api: DashboardApiService,
+        apiV5: DashboardApiServiceV5,
+        apiV6: DashboardApiServiceV6,
         dispatcherProvider: DispatcherProvider
     ): DashboardRepository =
-        DashboardRepositoryImpl(api, dispatcherProvider)
+        DashboardRepositoryImpl(apiV5, apiV6, dispatcherProvider)
 
     @Provides
     @Singleton

@@ -134,6 +134,7 @@
     <string name="modify_connection_label_basic_auth_password">Basic Auth Password</string>
     <string name="modify_connection_label_basic_auth_realm">Basic Auth Realm</string>
     <string name="modify_connection_label_show_advanced_settings">Show Advanced Settings</string>
+    <string name="modify_connection_label_api_version">API Version</string>
     <string name="modify_connection_label_port">Port</string>
     <string name="modify_connection_label_trust_all_certificates">Trust All Certificates</string>
     <string name="modify_connection_btn_save">Save</string>
@@ -178,5 +179,7 @@
 
     <string name="network_connected">Connected to network</string>
     <string name="network_disconnected">Disconnected from network</string>
+    <string name="label_api_version_5">Version 5</string>
+    <string name="label_api_version_6">Version 6</string>
 
 </resources>
