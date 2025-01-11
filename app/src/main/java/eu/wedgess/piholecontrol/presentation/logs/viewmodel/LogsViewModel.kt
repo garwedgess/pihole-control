@@ -3,8 +3,9 @@ package eu.wedgess.piholecontrol.presentation.logs.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
@@ -13,16 +14,21 @@ import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
+import eu.wedgess.piholecontrol.presentation.logs.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
 import eu.wedgess.piholecontrol.utils.UiText
 import eu.wedgess.piholecontrol.utils.extensions.toEpochSeconds
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,66 +44,65 @@ class LogsViewModel @Inject constructor(
     SideEffectViewModel<LogsContract.Effect> by SideEffectViewModelImpl() {
 
     private val _uiState = MutableStateFlow(LogsContract.UiState.initial())
+    private val searchQueryFlow = _uiState.map { it.searchQuery }
     private val _bottomSheetUiState = MutableStateFlow(LogsContract.BottomSheetUiState.initial())
     val bottomSheetUiState = _bottomSheetUiState.asStateFlow()
 
-    val uiResult = combine(
-        fetchLogsUseCase(),
-        _uiState,
-        _bottomSheetUiState
-    ) { logsResult, uiState, bsUiState ->
-        logsResult.getOrElse {
-            return@combine UIResult.Error(
-                ResultType.Error.WithTitleAndSubTitleAndRetry(
-                    title = UiText.DynamicString("Failed to fetch logs"),
-                    subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
-                    onRetry = fetchLogsUseCase::refresh
-                )
-            )
-        }.run {
-            if (this@run.isEmpty()) {
-                return@combine UIResult.Empty(
-                    ResultType.Empty.WithTitle(UiText.DynamicString("No logs found"))
-                )
-            } else {
-                return@combine UIResult.Loaded(
-                    uiState.copy(
-                        logs = this@run.sortBy(uiState.sorting)
-                            .run {
-                                val filteredByQuery = if (uiState.searchQuery.isNotBlank()) {
-                                    filter { it.requestedDomain.contains(uiState.searchQuery) }
-                                } else {
-                                    this
-                                }
-                                if (
-                                    bsUiState.filterFromTime != null ||
-                                    bsUiState.filterToTime != null
-                                ) {
-                                    filteredByQuery.filter { log ->
-                                        (bsUiState.filterFromTime == null ||
-                                                log.timestamp >= bsUiState.filterFromTime) &&
-                                                (bsUiState.filterToTime == null ||
-                                                        log.timestamp <= bsUiState.filterToTime)
-                                    }
-                                } else {
-                                    filteredByQuery
-                                }
-                            }
-                    )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiResult =
+        _bottomSheetUiState.onStart { emit(LogsContract.BottomSheetUiState.initial()) }
+            .combine(searchQueryFlow) { sheetState, searchQuery ->
+                fetchLogsUseCase(
+                    limit = sheetState.logsLimit,
+                    status = sheetState.selectedLogEntryStatus,
+                    query = searchQuery,
+                    from = sheetState.filterFromTime,
+                    until = sheetState.filterToTime
                 )
             }
-        }
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
-        UIResult.Loading(ResultType.Loading.WithTitle())
-    )
+            .flatMapLatest { result ->
+                _uiState.combine(result) { uiState, logsResult ->
+                    logsResult.fold(
+                        onSuccess = { logs ->
+                            if (logs.isEmpty()) {
+                                UIResult.Empty(
+                                    ResultType.Empty.WithTitle(
+                                        UiText.StringResource(R.string.logs_msg_empty)
+                                    )
+                                )
+                            } else {
+                                UIResult.Loaded(
+                                    uiState.copy(
+                                        logs = logs.sortBy(uiState.sorting).map { it.toInfo() }
+                                    )
+                                )
+                            }
+                        },
+                        onFailure = { error ->
+                            UIResult.Error(
+                                ResultType.Error.WithTitleAndSubTitleAndRetry(
+                                    title = UiText.DynamicString("Failed to fetch logs"),
+                                    subTitle = UiText.DynamicString(
+                                        error.message ?: "Unknown error"
+                                    ),
+                                    onRetry = fetchLogsUseCase::refresh
+                                )
+                            )
+                        }
+                    )
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                UIResult.Loading(ResultType.Loading.WithTitle())
+            )
 
-    private fun List<LogEntryEntity>.sortBy(sortType: LogSorting) = when (sortType) {
+    private fun List<PiHoleLogsEntity>.sortBy(sortType: LogSorting) = when (sortType) {
         LogSorting.DATE_DESC -> sortedByDescending { it.timestamp }
         LogSorting.DATE_ASC -> sortedBy { it.timestamp }
-        LogSorting.RESPONSE_TIME_ASC -> sortedBy { it.responseTime }
-        LogSorting.RESPONSE_TIME_DESC -> sortedByDescending { it.responseTime }
+        LogSorting.RESPONSE_TIME_ASC -> sortedBy { it.replyTime }
+        LogSorting.RESPONSE_TIME_DESC -> sortedByDescending { it.replyTime }
     }
 
     override fun onEvent(event: LogsContract.Event) {
@@ -114,8 +119,6 @@ class LogsViewModel @Inject constructor(
 
             is LogsContract.Event.OnLogLimitChanged -> _bottomSheetUiState.update {
                 it.copy(logsLimit = event.limit)
-            }.also {
-                fetchLogsUseCase.setLogLimit(event.limit)
             }
 
             is LogsContract.Event.OnLogSelected -> _uiState.update {
@@ -191,7 +194,6 @@ class LogsViewModel @Inject constructor(
     }
 
     private fun handleStatusFilterChanged(status: LogEntryStatus) {
-        fetchLogsUseCase.setLogStatusFilter(status)
         _bottomSheetUiState.update { it.copy(selectedLogEntryStatus = status) }
     }
 
@@ -205,7 +207,7 @@ class LogsViewModel @Inject constructor(
 
     private fun onAddToBlockList(domain: String) {
         viewModelScope.launch {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.BLOCK).onFailure {
+            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
             }
         }

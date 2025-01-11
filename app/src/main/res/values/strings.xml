@@ -29,6 +29,7 @@
 
     <!-- Logs Screen -->
     <string name="logs_msg_loading_query_logs">Loading query logs</string>
+    <string name="logs_msg_empty">No logs found...</string>
     <string name="log_label_all">All</string>
     <string name="log_label_allowed">Allowed</string>
     <string name="log_label_blocked">Blocked</string>
@@ -68,6 +69,15 @@
     <string name="logs_type_label_block_gravity_cname">Blocked (Gravity CNAME)</string>
     <string name="logs_type_label_block_regex_cname">Blocked (Regex CNAME)</string>
     <string name="logs_type_label_block_exact_cname">Blocked (Exact CNAME)</string>
+    <string name="logs_type_label_forwarded">OK (Forwarded)</string>
+    <string name="logs_type_label_block_list">Blocked (Deny List)</string>
+    <string name="logs_type_label_block_list_cname">Blocked (Deny List CNAME)</string>
+    <string name="logs_type_label_special_domain">OK (Special Domain)</string>
+    <string name="logs_type_label_cache_stale">OK (Cache Stale)</string>
+    <string name="logs_type_label_external_blocked_ede15">Blocked (External EDE15)</string>
+    <string name="logs_type_label_dnssed">Retried DNSSEC</string>
+    <string name="logs_type_label_dbbusy">DB Busy</string>
+    <string name="logs_type_label_inprogress">In Progress</string>
     <string name="logs_type_label_unknown">Unknown</string>
 
     <!-- Home Screen -->
@@ -101,16 +111,17 @@
     <string name="filters_label_regex">Regex</string>
     <string name="filters_msg_loading_filters">Loading filters</string>
     <string name="filters_label_allowlist">Allow</string>
-    <string name="filters_label_blocklist">Block</string>
+    <string name="filters_label_denylist">Deny</string>
     <string name="filters_label_allowlist_regex">Allow Regex</string>
-    <string name="filters_label_blocklist_regex">Block Regex</string>
+    <string name="filters_label_denylist_regex">Deny Regex</string>
     <string name="filter_rules_fetch_error">Failed to fetch filter rules</string>
 
 
     <!-- Statistics Screen -->
     <string name="statistics_title_top_blocked">Top Blocked</string>
     <string name="statistics_title_top_permitted">Top Permitted</string>
-    <string name="statistics_title_top_clients">Top Clients</string>
+    <string name="statistics_title_top_clients_all">Top Clients (all)</string>
+    <string name="statistics_title_top_clients_blocked">Top Clients (blocked)</string>
     <string name="statistics_msg_loading_server">Loading server statistics</string>
     <string name="statistics_msg_loading_query_type">Loading query type statistics</string>
     <string name="statistics_msg_loading_top_clients">Loading top clients</string>

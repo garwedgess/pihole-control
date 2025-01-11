@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +45,10 @@ class ForwardDestinationsViewModel @Inject constructor(
                             legendData = this.mapIndexed { index, serversChartData ->
                                 LegendData(
                                     title = serversChartData.title,
-                                    subTitle = "${serversChartData.percentage}%",
+                                    subTitle = "${
+                                        DecimalFormat("#.#")
+                                            .format(serversChartData.percentage)
+                                    }%",
                                     isSelected = selectedIndex == index
                                 )
                             }

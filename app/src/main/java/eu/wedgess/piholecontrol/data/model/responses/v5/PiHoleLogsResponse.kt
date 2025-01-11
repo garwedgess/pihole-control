@@ -1,8 +1,0 @@
-package eu.wedgess.piholecontrol.data.model.responses.v5
-
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class PiHoleLogsResponse(
-    val data: List<PiHoleLog> = listOf()
-)

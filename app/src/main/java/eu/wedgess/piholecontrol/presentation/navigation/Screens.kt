@@ -22,5 +22,5 @@ sealed interface Screens {
     data object Connections : Screens
 
     @Serializable
-    data class ModifyConnection(val connectionId: Long? = null) : Screens
+    data class ModifyConnection(val connectionId: String? = null) : Screens
 }

@@ -1,0 +1,27 @@
+{
+  "domains": [
+    {
+      "domain": "testdomain.com",
+      "unicode": "testdomain.com",
+      "type": "allow",
+      "kind": "exact",
+      "comment": "Some comment describing this domain",
+      "groups": [
+        0
+      ],
+      "enabled": true,
+      "id": 619,
+      "date_added": 1736526872,
+      "date_modified": 1736526872
+    }
+  ],
+  "processed": {
+    "errors": [],
+    "success": [
+      {
+        "item": "testdomain.com"
+      }
+    ]
+  },
+  "took": 0.014996767044067383
+}

@@ -32,16 +32,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.model.LogAnswerCategoryEntity
-import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import java.text.DateFormat
 
 @Composable
 fun LogDetailsDialog(
-    piHoleLog: LogEntryEntity,
+    piHoleLog: LogEntryInfo,
     addToAllowList: (domain: String) -> Unit,
     addToBlockList: (domain: String) -> Unit,
     onDismiss: () -> Unit
@@ -58,7 +57,7 @@ fun LogDetailsDialog(
 
 @Composable
 private fun LogDetailsDialogContent(
-    log: LogEntryEntity,
+    log: LogEntryInfo,
     addToAllowList: (domain: String) -> Unit,
     addToBlockList: (domain: String) -> Unit,
     onDismiss: () -> Unit
@@ -89,12 +88,12 @@ private fun LogDetailsDialogContent(
             LogDetailsRow(
                 icon = Icons.Default.Link,
                 title = stringResource(R.string.log_dialog_details_label_url),
-                value = log.requestedDomain
+                value = log.domain
             )
             LogDetailsRow(
                 icon = Icons.Default.Http,
                 title = stringResource(R.string.log_dialog_details_label_type),
-                value = log.queryType
+                value = log.queryTypeString
             )
             LogDetailsRow(
                 icon = Icons.Default.Devices,
@@ -109,31 +108,28 @@ private fun LogDetailsDialogContent(
             LogDetailsRow(
                 icon = Icons.Default.Shield,
                 title = stringResource(R.string.log_dialog_details_label_status),
-                value = log.answerType.category.name
+                value = log.statusString
             )
             LogDetailsRow(
                 icon = Icons.Default.Publish,
                 title = stringResource(R.string.log_dialog_details_label_response_time),
-                value = "%.1f ms".format(log.responseTime * 0.1)
+                value = "%.1f ms".format(log.replyTime)
             )
 
-            AnimatedVisibility(visible = log.answerType.category == LogAnswerCategoryEntity.BLOCK) {
+            AnimatedVisibility(visible = log.isBlocked) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { addToAllowList(log.requestedDomain) }
+                    onClick = { addToAllowList(log.domain) }
                 ) {
                     Text(text = "Add to Allow List")
                 }
             }
-            AnimatedVisibility(
-                visible = log.answerType.category == LogAnswerCategoryEntity.ALLOW ||
-                        log.answerType.category == LogAnswerCategoryEntity.CACHE
-            ) {
+            AnimatedVisibility(visible = log.isAllowed) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = PiHoleControlTheme.dimens.padding.itemContent),
-                    onClick = { addToBlockList(log.requestedDomain) }
+                    onClick = { addToBlockList(log.domain) }
                 ) {
                     Text(text = "Add to Block List")
                 }
@@ -182,12 +178,12 @@ private fun LogDetailsRow(
 private fun DisplayFilterRuleDialogPreview() {
     PiHoleControlTheme {
         LogDetailsDialog(
-            piHoleLog = LogEntryEntity(
-                answerType = LogAnswerTypeEntity.LOCAL_CACHE,
+            piHoleLog = LogEntryInfo.Version5(
+                answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                 queryType = "A",
-                requestedDomain = "www.google.com",
+                domain = "www.google.com",
                 client = "192.168.1.1",
-                responseTime = 1000,
+                replyTime = 1.0,
                 timestamp = 1689425287,
                 time = "10:12"
             ),

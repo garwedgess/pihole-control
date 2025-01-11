@@ -4,17 +4,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
+import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.initThreeTen
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
-import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
+import eu.wedgess.piholecontrol.presentation.logs.extensions.toInfo
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
@@ -22,7 +23,6 @@ import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,17 +81,25 @@ class LogsViewModelTest {
         runTest {
             // Given
             val logs = listOf(
-                LogEntryEntity(
+                PiHoleLogsEntity.Version5(
                     timestamp = 1672531200,
                     time = "23:53:25",
                     queryType = "query",
-                    requestedDomain = "test.com",
-                    answerType = LogAnswerTypeEntity.LOCAL_CACHE,
+                    domain = "test.com",
+                    answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                     client = "192.168.1.1",
-                    responseTime = 10
+                    replyTime = 1.0
                 )
             )
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(logs))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(logs))
 
             // When
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
@@ -100,7 +108,8 @@ class LogsViewModelTest {
             viewModel.uiResult.test {
                 val loadedResult = awaitItem()
                 assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
-                assertThat((loadedResult as UIResult.Loaded).data.logs).isEqualTo(logs)
+                assertThat((loadedResult as UIResult.Loaded).data.logs)
+                    .isEqualTo(logs.map { it.toInfo() })
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -110,7 +119,15 @@ class LogsViewModelTest {
         runTest {
             // Given
             val exception = Exception("Test Exception")
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.failure(exception))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.failure(exception))
 
             // When
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
@@ -133,7 +150,15 @@ class LogsViewModelTest {
     fun `GIVEN usecase returns empty list WHEN viewmodel is initialized THEN uiResult should emit Empty state`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(emptyList()))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(emptyList()))
 
             // When
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
@@ -145,7 +170,7 @@ class LogsViewModelTest {
                 assertThat((emptyResult as UIResult.Empty).emptyType)
                     .isInstanceOf(ResultType.Empty.WithTitle::class.java)
                 assertThat((emptyResult.emptyType as ResultType.Empty.WithTitle).title).isEqualTo(
-                    UiText.DynamicString("No logs found")
+                    UiText.StringResource(R.string.logs_msg_empty)
                 )
                 cancelAndConsumeRemainingEvents()
             }
@@ -155,7 +180,15 @@ class LogsViewModelTest {
     fun `WHEN AddToAllowList event is received THEN addFilterRuleUseCase should be called with correct parameters`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(emptyList()))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(emptyList()))
             val domain = "test.com"
             coEvery {
                 addFilterRuleUseCase(
@@ -179,12 +212,20 @@ class LogsViewModelTest {
     fun `WHEN AddToBlockList event is received THEN addFilterRuleUseCase should be called with correct parameters`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(emptyList()))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(emptyList()))
             val domain = "test.com"
             coEvery {
                 addFilterRuleUseCase(
                     domain,
-                    FilterRuleTypeEntity.BLOCK
+                    FilterRuleTypeEntity.DENY
                 )
             } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
@@ -196,45 +237,30 @@ class LogsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            coVerify { addFilterRuleUseCase(domain, FilterRuleTypeEntity.BLOCK) }
-        }
-
-    @Test
-    fun `WHEN OnLogLimitChanged event is received THEN bottomSheetUiState should be updated and setLogLimit should be called`() =
-        runTest {
-            // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(emptyList()))
-            val limit = 100
-            every { fetchLogsUseCase.refresh() } returns true
-            coEvery { fetchLogsUseCase.setLogLimit(limit) } returns true
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
-
-            // When
-            viewModel.onEvent(LogsContract.Event.OnLogLimitChanged(limit))
-            advanceUntilIdle()
-
-            // Then
-            viewModel.bottomSheetUiState.test {
-                val bottomSheetUiState = awaitItem()
-                assertThat(bottomSheetUiState.logsLimit).isEqualTo(limit)
-                cancelAndConsumeRemainingEvents()
-            }
-            coVerify { fetchLogsUseCase.setLogLimit(limit) }
+            coVerify { addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY) }
         }
 
     @Test
     fun `WHEN OnLogSelected event is received THEN uiState should be updated with ShowDetailsDialog`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
-            val log = LogEntryEntity(
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+            val log = LogEntryInfo.Version5(
                 timestamp = 1672531200,
                 time = "23:53:25",
                 queryType = "query",
-                requestedDomain = "test.com",
-                answerType = LogAnswerTypeEntity.LOCAL_CACHE,
+                domain = "test.com",
+                answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                 client = "192.168.1.1",
-                responseTime = 10
+                replyTime = 1.0
             )
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
@@ -257,7 +283,15 @@ class LogsViewModelTest {
     fun `WHEN OnDateConfirmed event is received THEN uiState should be updated with ShowTimePickerDialog`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             val date = LocalDate.now()
             val type = PickerType.FromTime
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
@@ -284,7 +318,15 @@ class LogsViewModelTest {
     fun `WHEN OnShowDatePicker event is received THEN uiState should be updated with ShowDatePickerDialog`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             val type = PickerType.FromTime
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
@@ -309,7 +351,15 @@ class LogsViewModelTest {
     fun `WHEN OnTimeConfirmed event is received THEN uiState should be updated and bottomSheetUiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             val time = LocalDateTime.now()
             val type = PickerType.FromTime
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
@@ -337,7 +387,15 @@ class LogsViewModelTest {
     fun `WHEN OnSortTypeSelected event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             val sorting = LogSorting.DATE_ASC
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
@@ -356,33 +414,18 @@ class LogsViewModelTest {
         }
 
     @Test
-    fun `WHEN OnStatusChanged event is received THEN fetchLogsUseCase should be called and bottomSheetUiState should be updated`() =
-        runTest {
-            // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(emptyList()))
-            val status = LogEntryStatus.BLOCKED
-            every { fetchLogsUseCase.refresh() } returns true
-            coEvery { fetchLogsUseCase.setLogStatusFilter(status) } returns true
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
-
-            // When
-            viewModel.onEvent(LogsContract.Event.OnStatusChanged(status))
-            advanceUntilIdle()
-
-            // Then
-            coVerify { fetchLogsUseCase.setLogStatusFilter(status) }
-            viewModel.bottomSheetUiState.test {
-                val bottomSheetUiState = awaitItem()
-                assertThat(bottomSheetUiState.selectedLogEntryStatus).isEqualTo(status)
-                cancelAndConsumeRemainingEvents()
-            }
-        }
-
-    @Test
     fun `WHEN OnClearSearchQuery event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val query = "test"
 
@@ -406,7 +449,15 @@ class LogsViewModelTest {
     fun `WHEN OnClearSearchQuery event is received and query is empty THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val query = ""
 
@@ -430,7 +481,15 @@ class LogsViewModelTest {
     fun `WHEN OnSearchClick event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
             val emittedStates = mutableListOf<UIResult<LogsContract.UiState>>()
@@ -454,7 +513,15 @@ class LogsViewModelTest {
     fun `WHEN OnSearchExpandedChanged event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val expanded = true
 
@@ -479,7 +546,15 @@ class LogsViewModelTest {
     fun `WHEN OnFromTimeCleared event is received THEN bottomSheetUiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             viewModel.onEvent(
                 LogsContract.Event.OnTimeConfirmed(
@@ -505,7 +580,15 @@ class LogsViewModelTest {
     fun `WHEN OnToTimeCleared event is received THEN bottomSheetUiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             viewModel.onEvent(
                 LogsContract.Event.OnTimeConfirmed(
@@ -531,7 +614,15 @@ class LogsViewModelTest {
     fun `WHEN OnSearchQueryChanged event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val query = "test"
 
@@ -552,7 +643,15 @@ class LogsViewModelTest {
     fun `WHEN OnSortingDismissed event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
             advanceUntilIdle()
@@ -574,7 +673,15 @@ class LogsViewModelTest {
     fun `WHEN OnShowSortingMenu event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
             // When
@@ -594,7 +701,15 @@ class LogsViewModelTest {
     fun `WHEN OnHideSortingMenu event is received THEN uiState should be updated`() =
         runTest {
             // Given
-            coEvery { fetchLogsUseCase() } returns flowOf(Result.success(mockk(relaxed = true)))
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
             advanceUntilIdle()

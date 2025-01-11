@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.logs
 
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
@@ -30,7 +30,7 @@ interface LogsContract {
     }
 
     data class UiState(
-        val logs: List<LogEntryEntity>,
+        val logs: List<LogEntryInfo>,
         val sorting: LogSorting,
         val searchQuery: String,
         val showSearchView: Boolean,
@@ -76,7 +76,7 @@ interface LogsContract {
         data class OnTimeConfirmed(val type: PickerType, val time: LocalDateTime) : Event
         data class OnShowDatePicker(val type: PickerType) : Event
         data class OnSortTypeSelected(val sorting: LogSorting) : Event
-        data class OnLogSelected(val log: LogEntryEntity) : Event
+        data class OnLogSelected(val log: LogEntryInfo) : Event
         data class AddToAllowList(val domain: String) : Event
         data class AddToBlockList(val domain: String) : Event
         data class OnClearSearchQuery(val query: String) : Event

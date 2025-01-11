@@ -7,15 +7,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.view.components.dialogs.LogsDialogs
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LogsListContent(
-    logsList: List<LogEntryEntity>,
+    logsList: List<LogEntryInfo>,
     dialogType: LogsDialogType,
     onEvent: (LogsContract.Event) -> Unit
 ) {

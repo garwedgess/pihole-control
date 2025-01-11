@@ -1,14 +1,14 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleModifyFilterRuleResponse
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleModifyFilterRuleResponseDataV5
 import org.junit.Test
 
 class ModifyFilterRuleResponseMapperTest {
 
     @Test
     fun `toModifyFilterRuleResponseEntity - maps PiHoleModifyFilterRuleResponse to ModifyFilterRuleResponseEntity correctly`() {
-        val piHoleResponse = PiHoleModifyFilterRuleResponse(
+        val piHoleResponse = PiHoleModifyFilterRuleResponseDataV5(
             success = true,
             message = "Rule modified successfully"
         )
@@ -21,7 +21,7 @@ class ModifyFilterRuleResponseMapperTest {
 
     @Test
     fun `toModifyFilterRuleResponseEntity - maps PiHoleModifyFilterRuleResponse with failure`() {
-        val piHoleResponse = PiHoleModifyFilterRuleResponse(
+        val piHoleResponse = PiHoleModifyFilterRuleResponseDataV5(
             success = false,
             message = "Failed to modify rule"
         )
@@ -34,7 +34,7 @@ class ModifyFilterRuleResponseMapperTest {
 
     @Test
     fun `toModifyFilterRuleResponseEntity - maps PiHoleModifyFilterRuleResponse with null message`() {
-        val piHoleResponse = PiHoleModifyFilterRuleResponse(
+        val piHoleResponse = PiHoleModifyFilterRuleResponseDataV5(
             success = true,
             message = null
         )
@@ -47,7 +47,7 @@ class ModifyFilterRuleResponseMapperTest {
 
     @Test
     fun `toModifyFilterRuleResponseEntity - maps PiHoleModifyFilterRuleResponse with default values`() {
-        val piHoleResponse = PiHoleModifyFilterRuleResponse()
+        val piHoleResponse = PiHoleModifyFilterRuleResponseDataV5()
 
         val responseEntity = piHoleResponse.toModifyFilterRuleResponseEntity()
 

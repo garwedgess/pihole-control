@@ -1,9 +1,10 @@
 package eu.wedgess.piholecontrol.data.api.v6
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfoV6
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleClientsOverTimeV6Data
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleOverTimeV6Data
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleSummaryV6Data
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleClientsOverTimeResponseDataV6
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleOverTimeResponseDataV6
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleSummaryResponseDataV6
 import eu.wedgess.piholecontrol.data.utils.requestResult
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
@@ -16,28 +17,29 @@ class DashboardApiServiceV6Impl @Inject constructor(
     @TrustAllCertificatesHttpClient private val trustAllCertsHttpClient: HttpClient
 ) : DashboardApiServiceV6 {
 
-    override suspend fun fetchStatusSummary(connection: ConnectionEntity): Result<PiHoleSummaryV6Data> {
+    override suspend fun fetchStatusSummary(
+        connection: ConnectionEntity.Version6
+    ): PiHoleApiResult<PiHoleSummaryResponseDataV6> {
         val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.requestResult<PiHoleSummaryV6Data, String> {
+        return client.requestResult {
             fetchBaseRequestInfoV6(connection, path = SUMMARY_ENDPOINT)
-
         }
     }
 
     override suspend fun fetchOverTimeData10Minutes(
-        connection: ConnectionEntity
-    ): Result<PiHoleOverTimeV6Data> {
+        connection: ConnectionEntity.Version6
+    ): PiHoleApiResult<PiHoleOverTimeResponseDataV6> {
         val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.requestResult<PiHoleOverTimeV6Data, String> {
+        return client.requestResult {
             fetchBaseRequestInfoV6(connection, path = OVERTIME_DATA_ENDPOINT)
         }
     }
 
     override suspend fun fetchOverTimeDataClients(
-        connection: ConnectionEntity
-    ): Result<PiHoleClientsOverTimeV6Data> {
+        connection: ConnectionEntity.Version6
+    ): PiHoleApiResult<PiHoleClientsOverTimeResponseDataV6> {
         val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
-        return client.requestResult<PiHoleClientsOverTimeV6Data, String> {
+        return client.requestResult {
             fetchBaseRequestInfoV6(connection, path = CLIENTS_OVERTIME_DATA_ENDPOINT)
         }
     }

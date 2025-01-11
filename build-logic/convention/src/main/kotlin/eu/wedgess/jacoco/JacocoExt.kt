@@ -18,6 +18,7 @@ private val coverageExclusions = listOf(
     "**/Manifest*.*",
     "**/*_Hilt*.class",
     "**/Hilt_*.class",
+    "**/data/api/**/fakes/**",
     "**/presentation/**/view/**",
     "**/presentation/**/components/**",
     "**/presentation/compose/**",
@@ -65,7 +66,10 @@ internal fun Project.configureJacoco() {
                         }
                     )
                 )
-                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+                sourceDirectories.setFrom(
+                    layout.projectDirectory.dir("src/main/java"),
+                    layout.projectDirectory.dir("src/main/kotlin")
+                )
                 executionData.setFrom(
                     files(
                         fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }

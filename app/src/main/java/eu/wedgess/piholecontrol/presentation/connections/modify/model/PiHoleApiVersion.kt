@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.connections.modify.model;
+package eu.wedgess.piholecontrol.presentation.connections.modify.model
 
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.utils.UiText

@@ -73,11 +73,11 @@ fun TopDomainsContent(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                topPermittedDomains.topDomains.forEach { (permittedDomain, hits) ->
+                topPermittedDomains.topDomains.forEach { (permittedDomain, hits, percentage) ->
                     StatisticsListItem(
                         domain = permittedDomain,
                         hits = hits,
-                        progress = hits.toFloat().div(topPermittedDomains.allHits.toFloat())
+                        progress = percentage
                     )
                 }
             }
@@ -113,11 +113,11 @@ fun TopDomainsContent(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    topBlockedDomains.topDomains.forEach { (blockedDomain, hits) ->
+                    topBlockedDomains.topDomains.forEach { (blockedDomain, hits, percentage) ->
                         StatisticsListItem(
                             domain = blockedDomain,
                             hits = hits,
-                            progress = hits.toFloat().div(topBlockedDomains.allHits.toFloat())
+                            progress = percentage
                         )
                     }
                 }
@@ -134,30 +134,30 @@ private fun TopDomainsContentPreview() {
             TopDomainsContent(
                 topPermittedDomains = TopDomainsInfo(
                     listOf(
-                        TopDomainEntity("www.google.com", 5765),
-                        TopDomainEntity("www.google.com", 3456),
-                        TopDomainEntity("www.google.com", 3213),
-                        TopDomainEntity("www.google.com", 2435),
-                        TopDomainEntity("www.google.com", 2345),
-                        TopDomainEntity("www.google.com", 1890),
-                        TopDomainEntity("www.google.com", 1678),
-                        TopDomainEntity("www.google.com", 900),
-                        TopDomainEntity("www.google.com", 500),
-                        TopDomainEntity("www.google.com", 165)
+                        TopDomainEntity("www.google.com", 5765, 10f),
+                        TopDomainEntity("www.google.com", 3456, 10f),
+                        TopDomainEntity("www.google.com", 3213, 10f),
+                        TopDomainEntity("www.google.com", 2435, 10f),
+                        TopDomainEntity("www.google.com", 2345, 10f),
+                        TopDomainEntity("www.google.com", 1890, 10f),
+                        TopDomainEntity("www.google.com", 1678, 10f),
+                        TopDomainEntity("www.google.com", 900, 10f),
+                        TopDomainEntity("www.google.com", 500, 10f),
+                        TopDomainEntity("www.google.com", 165, 10f)
                     )
                 ),
                 topBlockedDomains = TopDomainsInfo(
                     topDomains = listOf(
-                        TopDomainEntity("www.google.com", 5765),
-                        TopDomainEntity("www.google.com", 3456),
-                        TopDomainEntity("www.google.com", 3213),
-                        TopDomainEntity("www.google.com", 2435),
-                        TopDomainEntity("www.google.com", 2345),
-                        TopDomainEntity("www.google.com", 1890),
-                        TopDomainEntity("www.google.com", 1678),
-                        TopDomainEntity("www.google.com", 900),
-                        TopDomainEntity("www.google.com", 500),
-                        TopDomainEntity("www.google.com", 165)
+                        TopDomainEntity("www.google.com", 5765, 10f),
+                        TopDomainEntity("www.google.com", 3456, 10f),
+                        TopDomainEntity("www.google.com", 3213, 10f),
+                        TopDomainEntity("www.google.com", 2435, 10f),
+                        TopDomainEntity("www.google.com", 2345, 10f),
+                        TopDomainEntity("www.google.com", 1890, 10f),
+                        TopDomainEntity("www.google.com", 1678, 10f),
+                        TopDomainEntity("www.google.com", 900, 10f),
+                        TopDomainEntity("www.google.com", 500, 10f),
+                        TopDomainEntity("www.google.com", 165, 10f)
                     )
                 )
             )

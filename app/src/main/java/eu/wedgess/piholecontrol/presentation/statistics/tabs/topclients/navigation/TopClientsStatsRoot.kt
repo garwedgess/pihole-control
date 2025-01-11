@@ -18,7 +18,7 @@ fun TopClientsScreenRoot(viewModel: TopClientsStatsViewModel = hiltViewModel()) 
 
     uiResult.Compose(
         onLoading = { LoadingScreen(modifier = Modifier.fillMaxSize(), it) },
-        onLoaded = { TopClientsContent(it) },
+        onLoaded = { TopClientsContent(it.topQueries) },
         onError = { ErrorScreen(modifier = Modifier.fillMaxSize(), it) }
     )
 }

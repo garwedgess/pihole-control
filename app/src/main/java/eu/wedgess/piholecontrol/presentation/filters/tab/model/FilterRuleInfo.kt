@@ -25,21 +25,21 @@ data class FilterRuleInfo(
     val typeTitle: String
         @Composable get() = when (type) {
             FilterRuleTypeEntity.ALLOW -> stringResource(id = R.string.filters_label_allowlist)
-            FilterRuleTypeEntity.BLOCK -> stringResource(id = R.string.filters_label_blocklist)
+            FilterRuleTypeEntity.DENY -> stringResource(id = R.string.filters_label_denylist)
             FilterRuleTypeEntity.REGEX_ALLOW -> stringResource(
                 id = R.string.filters_label_allowlist_regex
             )
 
-            FilterRuleTypeEntity.REGEX_BLOCK -> stringResource(
-                id = R.string.filters_label_blocklist_regex
+            FilterRuleTypeEntity.REGEX_DENY -> stringResource(
+                id = R.string.filters_label_denylist_regex
             )
         }
 
     val typeColor: Color
         @Composable get() = when (type) {
             FilterRuleTypeEntity.ALLOW -> MaterialTheme.colorScheme.totalQueriesBackground
-            FilterRuleTypeEntity.BLOCK -> MaterialTheme.colorScheme.domainsOnAdListBackground
+            FilterRuleTypeEntity.DENY -> MaterialTheme.colorScheme.domainsOnAdListBackground
             FilterRuleTypeEntity.REGEX_ALLOW -> MaterialTheme.colorScheme.queriesBlockedBackground
-            FilterRuleTypeEntity.REGEX_BLOCK -> MaterialTheme.colorScheme.percentageBlockedBackground
+            FilterRuleTypeEntity.REGEX_DENY -> MaterialTheme.colorScheme.percentageBlockedBackground
         }
 }

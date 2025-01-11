@@ -27,6 +27,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class ConnectionsViewModelTest {
@@ -195,7 +196,7 @@ class ConnectionsViewModelTest {
     fun `WHEN SetActive event is received THEN setConnectionAsActiveUseCase should be called`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery { setConnectionAsActiveUseCase(connectionId) } returns Result.success(Unit)
@@ -219,7 +220,7 @@ class ConnectionsViewModelTest {
     fun `WHEN EditConnection event is received THEN Navigation Edit side effect should be emitted`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             viewModel = ConnectionsViewModel(
                 fetchAllConnectionsUseCase,
@@ -271,7 +272,7 @@ class ConnectionsViewModelTest {
     fun `WHEN UndoDeleteConnection event is received THEN unMarkConnectionForDeletionUseCase should be called`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery {
@@ -302,7 +303,7 @@ class ConnectionsViewModelTest {
     fun `GIVEN usecase returns failure WHEN SetActive event is received THEN SetActiveConnectionFailed side effect should be emitted`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery { setConnectionAsActiveUseCase(connectionId) } returns Result.failure(
@@ -341,7 +342,7 @@ class ConnectionsViewModelTest {
     fun `GIVEN usecase returns failure WHEN DeleteConnection event is received THEN DeleteConnectionFailed side effect should be emitted`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery { markConnectionForDeletionUseCase(connectionId) } returns Result.failure(
@@ -381,7 +382,7 @@ class ConnectionsViewModelTest {
     fun `GIVEN usecase returns success WHEN DeleteConnection event is received THEN DeleteConnection side effect should be emitted`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery { markConnectionForDeletionUseCase(connectionId) } returns Result.success(Unit)
@@ -455,7 +456,7 @@ class ConnectionsViewModelTest {
     fun `GIVEN usecase returns failure WHEN UndoDeleteConnection event is received THEN RestoreConnectionFailed side effect should be emitted`() =
         runTest {
             // Given
-            val connectionId = 1L
+            val connectionId = UUID.randomUUID()
             val connectionName = "Test Connection"
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyList()))
             coEvery { unMarkConnectionForDeletionUseCase(connectionId) } returns Result.failure(

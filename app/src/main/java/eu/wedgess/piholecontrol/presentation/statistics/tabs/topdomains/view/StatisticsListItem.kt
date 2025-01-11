@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
-import kotlin.math.roundToInt
 
 @Composable
 fun StatisticsListItem(
@@ -41,11 +40,11 @@ fun StatisticsListItem(
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "${progress.times(100).roundToInt()} %",
+                text = "$progress %",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            AnimatedLinearProgressIndicator(indicatorProgress = progress)
+            AnimatedLinearProgressIndicator(indicatorProgress = progress.div(100f))
         }
     }
 }

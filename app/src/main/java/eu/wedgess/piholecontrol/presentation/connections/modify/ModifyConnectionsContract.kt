@@ -1,11 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.connections.modify
 
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.fromEntity
-import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.toEntity
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import io.ktor.http.URLProtocol
+import java.util.UUID
 
 interface ModifyConnectionsContract {
 
@@ -26,26 +25,43 @@ interface ModifyConnectionsContract {
         val showAdvancedSettings: Boolean
     ) {
 
-        fun toPiHoleConnectionEntity(id: Long? = null): ConnectionEntity =
-            ConnectionEntity(
-                id = id ?: -1,
-                name = this.name,
-                host = this.host,
-                port = this.port,
-                protocol = this.protocol,
-                apiPath = this.apiPath,
-                token = this.apiToken,
-                authUsername = this.authUsername,
-                authPassword = this.authPassword,
-                authRealm = this.authRealm,
-                trustAllCerts = this.trustAllCerts,
-                apiVersion = this.apiVersion.toEntity(),
-                isDeleted = false,
-                isActive = false
-            )
+        fun toPiHoleConnectionEntity(id: UUID? = null): ConnectionEntity =
+            when (apiVersion) {
+                PiHoleApiVersion.Version5 -> ConnectionEntity.Version5(
+                    id = id ?: UUID.randomUUID(),
+                    name = this.name,
+                    host = this.host,
+                    port = this.port,
+                    protocol = this.protocol,
+                    apiPath = this.apiPath,
+                    token = this.apiToken,
+                    authUsername = this.authUsername,
+                    authPassword = this.authPassword,
+                    authRealm = this.authRealm,
+                    trustAllCerts = this.trustAllCerts,
+                    isDeleted = false,
+                    isActive = false
+                )
+
+                PiHoleApiVersion.Version6 -> ConnectionEntity.Version6(
+                    id = UUID.randomUUID(),
+                    name = this.name,
+                    host = this.host,
+                    port = this.port,
+                    protocol = this.protocol,
+                    sid = "",
+                    password = this.apiToken,
+                    authUsername = this.authUsername,
+                    authPassword = this.authPassword,
+                    authRealm = this.authRealm,
+                    trustAllCerts = this.trustAllCerts,
+                    isDeleted = false,
+                    isActive = false
+                )
+            }
 
         companion object {
-            private val DEFAULT_INFO = ConnectionEntity.default
+            private val DEFAULT_INFO = ConnectionEntity.Version5.default
 
             fun initial() = UiState(
                 currentConnection = null,
@@ -57,7 +73,7 @@ interface ModifyConnectionsContract {
                 protocol = DEFAULT_INFO.protocol,
                 apiPath = DEFAULT_INFO.apiPath,
                 apiToken = DEFAULT_INFO.token,
-                apiVersion = DEFAULT_INFO.apiVersion.fromEntity(),
+                apiVersion = PiHoleApiVersion.Version5,
                 authUsername = DEFAULT_INFO.authUsername,
                 authPassword = DEFAULT_INFO.authPassword,
                 trustAllCerts = DEFAULT_INFO.trustAllCerts,
@@ -68,7 +84,7 @@ interface ModifyConnectionsContract {
 
     sealed interface Effect {
         sealed interface Navigation : Effect {
-           data object Back : Navigation
+            data object Back : Navigation
         }
     }
 

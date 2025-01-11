@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class ModifyConnectionViewModelTest {
@@ -79,12 +80,12 @@ class ModifyConnectionViewModelTest {
         }
 
     @Test
-    fun `GIVEN connectionId WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
+    fun `GIVEN connectionId of Version5 WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
         runTest {
             // Given
-            val connectionId = 21L
-            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId))
-            val connection = ConnectionEntity.default.copy(id = connectionId)
+            val connectionId = UUID.randomUUID()
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId.toString()))
+            val connection = ConnectionEntity.Version5.default.copy(id = connectionId)
 
             coEvery { fetchConnectionByIdUseCase(connectionId) } returns Result.success(connection)
 
@@ -108,6 +109,44 @@ class ModifyConnectionViewModelTest {
                 assertThat(result.protocol).isEqualTo(connection.protocol)
                 assertThat(result.apiPath).isEqualTo(connection.apiPath)
                 assertThat(result.apiToken).isEqualTo(connection.token)
+                assertThat(result.authUsername).isEqualTo(connection.authUsername)
+                assertThat(result.authPassword).isEqualTo(connection.authPassword)
+                assertThat(result.authRealm).isEqualTo(connection.authRealm)
+                assertThat(result.trustAllCerts).isEqualTo(connection.trustAllCerts)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN connectionId of Version6 WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
+        runTest {
+            // Given
+            val connectionId = UUID.randomUUID()
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId.toString()))
+            val connection = ConnectionEntity.Version6.default.copy(id = connectionId)
+
+            coEvery { fetchConnectionByIdUseCase(connectionId) } returns Result.success(connection)
+
+            // When
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.currentConnection).isEqualTo(connection)
+                assertThat(result.name).isEqualTo(connection.name)
+                assertThat(result.host).isEqualTo(connection.host)
+                assertThat(result.port).isEqualTo(connection.port)
+                assertThat(result.protocol).isEqualTo(connection.protocol)
+                assertThat(result.apiPath).isEmpty()
+                assertThat(result.apiToken).isEmpty()
                 assertThat(result.authUsername).isEqualTo(connection.authUsername)
                 assertThat(result.authPassword).isEqualTo(connection.authPassword)
                 assertThat(result.authRealm).isEqualTo(connection.authRealm)
@@ -146,7 +185,7 @@ class ModifyConnectionViewModelTest {
     fun `WHEN SaveConnection event is received for updating THEN updateConnectionUseCase should be called and Navigation Back side effect should be emitted`() =
         runTest {
             // Given
-            savedStateHandleRule.setRoute(Screens.ModifyConnection(12))
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(UUID.randomUUID().toString()))
             coEvery { updateConnectionUseCase(any()) } returns Result.success(Unit)
             viewModel = ModifyConnectionViewModel(
                 fetchConnectionByIdUseCase,

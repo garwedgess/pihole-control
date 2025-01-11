@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.usecases.connections.AddConnectionUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchConnectionByIdUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.UpdateConnectionUseCase
@@ -15,11 +16,12 @@ import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModel
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
-import eu.wedgess.piholecontrol.presentation.connections.modify.extensions.fromEntity
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,8 +38,10 @@ class ModifyConnectionViewModel @Inject constructor(
         ModifyConnectionsContract.UiState.initial()
     ) {
 
-    private val existingConnectionId: Long? =
-        savedStateHandle.toRoute<Screens.ModifyConnection>().connectionId
+    private val existingConnectionId: UUID? =
+        savedStateHandle.toRoute<Screens.ModifyConnection>().connectionId?.run {
+            UUID.fromString(this@run)
+        }
 
     override fun onEvent(event: ModifyConnectionsContract.Event) {
         when (event) {
@@ -132,21 +136,44 @@ class ModifyConnectionViewModel @Inject constructor(
             viewModelScope.launch {
                 val connection = fetchConnectionByIdUseCase(this@run).getOrThrow()
                 updateUiState {
-                    with(connection) {
-                        copy(
-                            currentConnection = this,
-                            name = this.name,
-                            host = this.host,
-                            port = this.port,
-                            protocol = this.protocol,
-                            apiPath = this.apiPath,
-                            apiToken = this.token,
-                            apiVersion = this.apiVersion.fromEntity(),
-                            authUsername = this.authUsername,
-                            authPassword = this.authPassword,
-                            authRealm = this.authRealm,
-                            trustAllCerts = this.trustAllCerts
-                        )
+                    when (connection) {
+                        is ConnectionEntity.Version5 -> {
+                            with(connection) {
+                                copy(
+                                    currentConnection = this,
+                                    name = this.name,
+                                    host = this.host,
+                                    port = this.port,
+                                    protocol = this.protocol,
+                                    apiPath = this.apiPath,
+                                    apiToken = this.token,
+                                    apiVersion = PiHoleApiVersion.Version5,
+                                    authUsername = this.authUsername,
+                                    authPassword = this.authPassword,
+                                    authRealm = this.authRealm,
+                                    trustAllCerts = this.trustAllCerts
+                                )
+                            }
+                        }
+
+                        is ConnectionEntity.Version6 -> {
+                            with(connection) {
+                                copy(
+                                    currentConnection = this,
+                                    name = this.name,
+                                    host = this.host,
+                                    port = this.port,
+                                    protocol = this.protocol,
+                                    apiPath = "",
+                                    apiToken = this.password,
+                                    apiVersion = PiHoleApiVersion.Version5,
+                                    authUsername = this.authUsername,
+                                    authPassword = this.authPassword,
+                                    authRealm = this.authRealm,
+                                    trustAllCerts = this.trustAllCerts
+                                )
+                            }
+                        }
                     }
                 }
             }

@@ -17,7 +17,7 @@ interface SettingsContract {
 
         companion object {
             fun initial() = UiState(
-                currentConnection = ConnectionEntity.default,
+                currentConnection = ConnectionEntity.Version5.default,
                 currentTheme = AppThemePres.System,
                 refreshInterval = 10_000,
                 useDynamicThemeColors = false,

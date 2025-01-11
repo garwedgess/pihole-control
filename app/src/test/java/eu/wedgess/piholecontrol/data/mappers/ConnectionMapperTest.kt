@@ -5,13 +5,40 @@ import eu.wedgess.piholecontrol.Connection
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import io.ktor.http.URLProtocol
 import org.junit.Test
+import java.util.UUID
 
 class ConnectionMapperTest {
 
     @Test
-    fun `toConnectionInfo - maps Connection to ConnectionEntity correctly`() {
+    fun `toEntity - maps Connection to Version5`() {
         val connection = Connection(
-            Id = 1,
+            Id = UUID.randomUUID(),
+            Name = "My Pi-hole",
+            Protocol = URLProtocol.HTTP,
+            Host = "pi.hole",
+            Port = 80,
+            ApiPath = "/admin/api.php",
+            Token = "token",
+            AuthUserName = "admin",
+            AuthPassword = "password",
+            AuthRealm = "MyRealm",
+            TrustAllCerts = true,
+            IsDeleted = false,
+            Active = true,
+            Sid = null,
+            Password = null,
+            ApiVersion = 1
+        )
+
+        val connectionEntity = connection.toEntity()
+
+        assertThat(connectionEntity).isInstanceOf(ConnectionEntity.Version5::class.java)
+    }
+
+    @Test
+    fun `toEntityVersion5 - maps Connection to Version5 entity correctly`() {
+        val connection = Connection(
+            Id = UUID.randomUUID(),
             Name = "My Pi-hole",
             Protocol = URLProtocol.HTTP,
             Host = "pi.hole",
@@ -23,12 +50,16 @@ class ConnectionMapperTest {
             AuthRealm = "MyRealm",
             TrustAllCerts = true,
             IsDeleted = false,
-            Active = true
+            Active = true,
+            Sid = null,
+            Password = null,
+            ApiVersion = 1
         )
 
-        val connectionEntity = connection.toConnectionInfo()
+        val connectionEntity = connection.toEntityVersion5()
 
-        assertThat(connectionEntity.id).isEqualTo(1)
+        assertThat(connectionEntity).isInstanceOf(ConnectionEntity.Version5::class.java)
+        assertThat(connectionEntity.id).isEqualTo(connection.Id)
         assertThat(connectionEntity.name).isEqualTo("My Pi-hole")
         assertThat(connectionEntity.protocol).isEqualTo(URLProtocol.HTTP)
         assertThat(connectionEntity.host).isEqualTo("pi.hole")
@@ -44,83 +75,67 @@ class ConnectionMapperTest {
     }
 
     @Test
-    fun `toConnectionInfo - maps Connection with null token to ConnectionEntity with empty token`() {
+    fun `toEntity - maps Connection to Version6`() {
         val connection = Connection(
-            Id = 1,
+            Id = UUID.randomUUID(),
             Name = "My Pi-hole",
-            Protocol = URLProtocol.HTTP,
+            Protocol = URLProtocol.HTTPS,
             Host = "pi.hole",
             Port = 80,
-            ApiPath = "/admin/api.php",
+            ApiPath = null,
             Token = null,
             AuthUserName = "admin",
             AuthPassword = "password",
             AuthRealm = "MyRealm",
             TrustAllCerts = true,
             IsDeleted = false,
-            Active = true
+            Active = true,
+            Sid = "session-id",
+            Password = "password",
+            ApiVersion = 2
         )
 
-        val connectionEntity = connection.toConnectionInfo()
+        val connectionEntity = connection.toEntity()
 
-        assertThat(connectionEntity.token).isEmpty()
+        assertThat(connectionEntity).isInstanceOf(ConnectionEntity.Version6::class.java)
     }
 
     @Test
-    fun `toConnection - maps ConnectionEntity to Connection correctly`() {
-        val connectionEntity = ConnectionEntity(
-            id = 2,
-            name = "Another Pi-hole",
-            protocol = URLProtocol.HTTPS,
-            host = "192.168.1.10",
-            port = 443,
-            apiPath = "/admin/api.php",
-            token = "another-token",
-            authUsername = "user",
-            authPassword = "secret",
-            authRealm = "AnotherRealm",
-            trustAllCerts = false,
-            isDeleted = true,
-            isActive = false
+    fun `toEntityVersion6 - maps Connection to Version6 entity correctly`() {
+        val connection = Connection(
+            Id = UUID.randomUUID(),
+            Name = "My Pi-hole",
+            Protocol = URLProtocol.HTTP,
+            Host = "pi.hole",
+            Port = 80,
+            ApiPath = null,
+            Token = null,
+            AuthUserName = "admin",
+            AuthPassword = "password",
+            AuthRealm = "MyRealm",
+            TrustAllCerts = true,
+            IsDeleted = false,
+            Active = true,
+            Sid = "session-id",
+            Password = "password",
+            ApiVersion = 2
         )
 
-        val connection = connectionEntity.toConnection()
+        val connectionEntity = connection.toEntityVersion6()
 
-        assertThat(connection.Id).isEqualTo(2)
-        assertThat(connection.Name).isEqualTo("Another Pi-hole")
-        assertThat(connection.Protocol).isEqualTo(URLProtocol.HTTPS)
-        assertThat(connection.Host).isEqualTo("192.168.1.10")
-        assertThat(connection.Port).isEqualTo(443)
-        assertThat(connection.ApiPath).isEqualTo("/admin/api.php")
-        assertThat(connection.Token).isEqualTo("another-token")
-        assertThat(connection.AuthUserName).isEqualTo("user")
-        assertThat(connection.AuthPassword).isEqualTo("secret")
-        assertThat(connection.AuthRealm).isEqualTo("AnotherRealm")
-        assertThat(connection.TrustAllCerts).isFalse()
-        assertThat(connection.IsDeleted).isTrue()
-        assertThat(connection.Active).isFalse()
-    }
-
-    @Test
-    fun `toConnection - maps ConnectionEntity with empty token to Connection with empty token`() {
-        val connectionEntity = ConnectionEntity(
-            id = 2,
-            name = "Another Pi-hole",
-            protocol = URLProtocol.HTTPS,
-            host = "192.168.1.10",
-            port = 443,
-            apiPath = "/admin/api.php",
-            token = "",
-            authUsername = "user",
-            authPassword = "secret",
-            authRealm = "AnotherRealm",
-            trustAllCerts = false,
-            isDeleted = true,
-            isActive = false
-        )
-
-        val connection = connectionEntity.toConnection()
-
-        assertThat(connection.Token).isEmpty()
+        assertThat(connectionEntity).isInstanceOf(ConnectionEntity.Version6::class.java)
+        assertThat(connectionEntity.id).isEqualTo(connection.Id)
+        assertThat(connectionEntity.name).isEqualTo("My Pi-hole")
+        assertThat(connectionEntity.protocol).isEqualTo(URLProtocol.HTTP)
+        assertThat(connectionEntity.host).isEqualTo("pi.hole")
+        assertThat(connectionEntity.port).isEqualTo(80)
+        assertThat(connectionEntity.sid).isEqualTo("session-id")
+        assertThat(connectionEntity.password).isEqualTo("password")
+        assertThat(connectionEntity.authUsername).isEqualTo("admin")
+        assertThat(connectionEntity.authPassword).isEqualTo("password")
+        assertThat(connectionEntity.authRealm).isEqualTo("MyRealm")
+        assertThat(connectionEntity.trustAllCerts).isTrue()
+        assertThat(connectionEntity.isDeleted).isFalse()
+        assertThat(connectionEntity.isActive).isTrue()
     }
 }

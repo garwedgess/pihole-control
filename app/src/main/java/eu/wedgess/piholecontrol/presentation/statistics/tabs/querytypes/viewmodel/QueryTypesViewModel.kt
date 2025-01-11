@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +44,10 @@ class QueryTypesViewModel @Inject constructor(
                         legendData = this.mapIndexed { index, queryTypeChartData ->
                             LegendData(
                                 title = queryTypeChartData.title,
-                                subTitle = "${queryTypeChartData.percentage}%",
+                                subTitle = "${
+                                    DecimalFormat("#.#")
+                                        .format(queryTypeChartData.percentage)
+                                }%",
                                 isSelected = selectedIndex == index
                             )
                         }

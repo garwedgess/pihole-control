@@ -3,39 +3,95 @@
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
     <ID>ArgumentListWrapping:DisableStatusDialog.kt$(customTimeMinutes.text.ifBlank { "00" } .toLong() )</ID>
+    <ID>ArgumentListWrapping:LogsDialogs.kt$( dialogType.pickerType, dialogType.currentDate.atTime(hours, minutes) )</ID>
     <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( 16788864L to 5L, 16788900L to 8L )</ID>
     <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( timestamp = 16788864000L, hits = 10 )</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("DNSKEY") val DNSKey: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("DS") val DS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("HTTPS") val HTTPS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("MX") val MX: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("NAPTR") val NAPTR: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("NS") val NS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("PTR") val PTR: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("RRSIG") val RRSIG: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SOA") val SOA: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SRV") val SRV: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("SVCB") val SVCB: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypes.kt$QueryTypes$@SerialName("TXT") val TXT: Float = 0f</ID>
-    <ID>CyclomaticComplexMethod:LogAnswerTypeEntityExt.kt$@Composable fun LogAnswerTypeEntity.toStringValue()</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("DNSKEY") val DNSKey: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("DS") val DS: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("HTTPS") val HTTPS: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("MX") val MX: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("NAPTR") val NAPTR: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("NS") val NS: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("PTR") val PTR: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("RRSIG") val RRSIG: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SOA") val SOA: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SRV") val SRV: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SVCB") val SVCB: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("TXT") val TXT: Float = 0f</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("BLOB") val BLOB: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("CNAME") val CNAME: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("DNSSEC") val DNSSEC: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("DOMAIN") val DOMAIN: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("IP") val IP: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("NODATA") val NODATA: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("NONE") val NONE: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("NOTIMP") val NOTIMP: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("NXDOMAIN") val NXDOMAIN: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("OTHER") val OTHER: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("REFUSED") val REFUSED: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("RRNAME") val RRNAME: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("SERVFAIL") val SERVFAIL: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("UNKNOWN") val UNKNOWN: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("CACHE") val CACHE: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("CACHE_STALE") val CACHESTALE: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("DBBUSY") val DBBUSY: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("DENYLIST") val DENYLIST: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("DENYLIST_CNAME") val DENYLISTCNAME: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("EXTERNAL_BLOCKED_EDE15") val EXTERNALBLOCKEDEDE15: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("EXTERNAL_BLOCKED_IP") val EXTERNALBLOCKEDIP: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("EXTERNAL_BLOCKED_NULL") val EXTERNALBLOCKEDNULL: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("EXTERNAL_BLOCKED_NXRA") val EXTERNALBLOCKEDNXRA: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("FORWARDED") val FORWARDED: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("GRAVITY") val GRAVITY: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("GRAVITY_CNAME") val GRAVITYCNAME: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("IN_PROGRESS") val INPROGRESS: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("REGEX") val REGEX: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("REGEX_CNAME") val REGEXCNAME: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("RETRIED") val RETRIED: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("RETRIED_DNSSEC") val RETRIEDDNSSEC: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("SPECIAL_DOMAIN") val SPECIALDOMAIN: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryStatusData$@SerialName("UNKNOWN") val UNKNOWN: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("A") val A: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("AAAA") val AAAA: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("ANY") val ANY: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("DNSKEY") val DNSKEY: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("DS") val DS: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("HTTPS") val HTTPS: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("MX") val MX: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("NAPTR") val NAPTR: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("NS") val NS: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("OTHER") val OTHER: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("PTR") val PTR: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("RRSIG") val RRSIG: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("SOA") val SOA: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("SRV") val SRV: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("SVCB") val SVCB: Int = 0</ID>
+    <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("TXT") val TXT: Int = 0</ID>
+    <ID>CyclomaticComplexMethod:LogAnswerTypeEntityExt.kt$@Composable fun PiHoleLogsEntity.LogsAnswerTypeEntity.toStringValue()</ID>
     <ID>CyclomaticComplexMethod:LogAnswerTypeMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
+    <ID>CyclomaticComplexMethod:LogEntryStatusExt.kt$@Composable fun PiHoleLogsEntity.LogEntryStatusEntity.toStringValue()</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
+    <ID>FunctionTypeReferenceSpacing:ModifyFilterRuleResponseMapper.kt$fun PiHoleAddFilterRuleResponseDataV6 .toModifyFilterRuleResponseEntity(): ModifyFilterRuleResponseEntity</ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
     <ID>Indentation:DonutChart.kt$ </ID>
-    <ID>Indentation:LogDetailsDialog.kt$ </ID>
-    <ID>Indentation:LogsViewModel.kt$LogsViewModel$ </ID>
+    <ID>Indentation:LogEntryInfo.kt$LogEntryInfo$ </ID>
+    <ID>Indentation:LogsRepositoryImpl.kt$LogsRepositoryImpl$ </ID>
     <ID>Indentation:MarkerUtils.kt$&lt;no name provided&gt;$ </ID>
-    <ID>Indentation:ModifyConnectionsContract.kt$ModifyConnectionsContract.Effect.Navigation$ </ID>
+    <ID>Indentation:PiHoleApiVersion.kt$PiHoleApiVersion.Companion$ </ID>
+    <ID>Indentation:PiHoleApiVersionData.kt$PiHoleApiVersionData.Companion$ </ID>
+    <ID>Indentation:PiHoleApiVersionEntity.kt$PiHoleApiVersionEntity.Companion$ </ID>
     <ID>LambdaParameterEventTrailing:CurrentConnectionStatus.kt$onStatusClick</ID>
     <ID>LambdaParameterEventTrailing:DonutChart.kt$onSelectedIndexChange</ID>
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
     <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
+    <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and blank query - returns all entries`()</ID>
+    <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and status filter returns only blocked entries`()</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>LongParameterList:AlertMessageDialog.kt$( titleText: String, messageText: String, confirmText: String, dismissText: String, onDismiss: () -&gt; Unit, onConfirm: () -&gt; Unit )</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
@@ -43,6 +99,7 @@
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
+    <ID>LongParameterList:LogsRepository.kt$LogsRepository$( connection: ConnectionEntity, limit: Int, status: LogEntryStatus, query: String, from: Long?, until: Long? )</ID>
     <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
@@ -62,6 +119,7 @@
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$6f</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$727</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$9007199254740991</ID>
+    <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$1000</ID>
     <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$1000L</ID>
     <ID>MagicNumber:DisableStatusDialog.kt$30</ID>
     <ID>MagicNumber:DisableStatusDialog.kt$5</ID>
@@ -71,16 +129,24 @@
     <ID>MagicNumber:DonutChartUtils.kt$180</ID>
     <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
     <ID>MagicNumber:LineChart.kt$5</ID>
-    <ID>MagicNumber:LogDetailsDialog.kt$0.1</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
-    <ID>MagicNumber:LogItem.kt$0.1</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
+    <ID>MagicNumber:NetworkModule.kt$SessionIdAuthenticator$100</ID>
     <ID>MagicNumber:PiHoleControlApp.kt$500</ID>
-    <ID>MagicNumber:PiHoleFilterRuleType.kt$PiHoleFilterRuleType.REGEX_BLOCK$3</ID>
-    <ID>MagicNumber:PiHoleLogSerializer.kt$PiHoleLogSerializer$4</ID>
+    <ID>MagicNumber:PiHoleFilterRuleTypeV5.kt$PiHoleFilterRuleType.REGEX_DENY$3</ID>
+    <ID>MagicNumber:PiHoleLogsResponseDataV5.kt$PiHoleLogsResponseDataV5.PiHoleLogEntryData.PiHoleLogSerializer$4</ID>
+    <ID>MagicNumber:PiHoleQueryTypesResponseDataV6.kt$PiHoleQueryTypesResponseDataV6.QueryTypes$100</ID>
+    <ID>MagicNumber:PiHoleTopClientsCombinedResponseDataV6.kt$PiHoleTopClientsCombinedResponseDataV6$100</ID>
+    <ID>MagicNumber:PiHoleTopClientsCombinedResponseDataV6.kt$PiHoleTopClientsCombinedResponseDataV6$100f</ID>
+    <ID>MagicNumber:PiHoleTopClientsResponseDataV5.kt$PiHoleTopClientsResponseDataV5$100f</ID>
+    <ID>MagicNumber:PiHoleTopQueriesCombinedResponseV6Data.kt$PiHoleTopQueriesCombinedResponseV6Data$100</ID>
+    <ID>MagicNumber:PiHoleTopQueriesCombinedResponseV6Data.kt$PiHoleTopQueriesCombinedResponseV6Data$100f</ID>
+    <ID>MagicNumber:PiHoleTopQueriesResponseDataV5.kt$PiHoleTopQueriesResponseDataV5$100f</ID>
+    <ID>MagicNumber:PiHoleUpstreamsResponseDataV6.kt$PiHoleUpstreamsResponseDataV6$100</ID>
+    <ID>MagicNumber:PiHoleUpstreamsResponseDataV6.kt$PiHoleUpstreamsResponseDataV6$100f</ID>
     <ID>MagicNumber:QueriesOverTimeMapper.kt$1000L</ID>
-    <ID>MagicNumber:StatisticsListItem.kt$100</ID>
+    <ID>MagicNumber:StatisticsListItem.kt$100f</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$0.1f</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$200</ID>
     <ID>MagicNumber:TimeTextField.kt$3</ID>
@@ -140,7 +206,6 @@
     <ID>ModifierWithoutDefault:ErrorScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
-    <ID>NoMultipleSpaces:HttpClientExt.kt$ </ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
     <ID>ParameterNaming:UIResult.kt$onLoaded</ID>
@@ -150,18 +215,17 @@
     <ID>SpreadOperator:UiText.kt$UiText$(id, count, *formatArgs)</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: Exception</ID>
     <ID>SwallowedException:HttpClientExt.kt$e: SerializationException</ID>
-    <ID>ThrowsCount:HttpClientExt.kt$private suspend inline fun &lt;reified T, reified E&gt; HttpResponse.handleResponse(): T</ID>
+    <ID>ThrowsCount:HttpClientExt.kt$private suspend inline fun &lt;reified T&gt; HttpResponse.handleResponse(): T</ID>
     <ID>TooGenericExceptionCaught:CoroutineExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:HttpClientExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionThrown:CoroutinesExtTest.kt$CoroutinesExtTest$throw RuntimeException("Test Exception")</ID>
-    <ID>TooGenericExceptionThrown:HttpClientExt.kt$throw Exception("No content: HTTP $statusCode")</ID>
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
-    <ID>TooManyFunctions:ConnectionDao.kt$ConnectionDao</ID>
     <ID>TooManyFunctions:ConnectionRepository.kt$ConnectionRepository</ID>
     <ID>TooManyFunctions:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl : ConnectionRepository</ID>
+    <ID>TooManyFunctions:ServicesModule.kt$ServicesModule</ID>
+    <ID>UseRequire:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl$throw IllegalArgumentException("No connection found with Id: $id")</ID>
     <ID>ViewModelInjection:FilterTabScreenRoot.kt$viewModel</ID>
     <ID>Wrapping:DisableStatusDialog.kt$(</ID>
     <ID>Wrapping:LineChart.kt$(</ID>
-    <ID>Wrapping:LogsViewModel.kt$LogsViewModel$(</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -127,8 +127,8 @@ private fun CurrentConnectionStatusPreview() {
     PiHoleControlTheme {
         CurrentConnectionStatus(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            currentConnection = ConnectionEntity.default,
-            connections = listOf(ConnectionEntity.default),
+            currentConnection = ConnectionEntity.Version5.default,
+            connections = listOf(ConnectionEntity.Version5.default),
             adBlockingEnabled = true,
             onConnectionClick = {},
             onStatusClick = {}

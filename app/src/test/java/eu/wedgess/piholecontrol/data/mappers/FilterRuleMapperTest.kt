@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleFilterRules
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleFilterRulesResponseDataV5
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.initThreeTen
 import org.junit.Before
@@ -20,7 +20,7 @@ class FilterRuleMapperTest {
 
     @Test
     fun `toFilterRuleEntity - maps PiHoleFilterRule to FilterRuleEntity correctly`() {
-        val piHoleFilterRule = PiHoleFilterRules.PiHoleFilterRule(
+        val piHoleFilterRule = PiHoleFilterRulesResponseDataV5.PiHoleFilterRule(
             id = 1,
             enabled = 1,
             comment = "Test Rule",
@@ -55,7 +55,7 @@ class FilterRuleMapperTest {
 
     @Test
     fun `toFilterRuleEntity - maps PiHoleFilterRule with disabled rule`() {
-        val piHoleFilterRule = PiHoleFilterRules.PiHoleFilterRule(
+        val piHoleFilterRule = PiHoleFilterRulesResponseDataV5.PiHoleFilterRule(
             id = 2,
             enabled = 0,
             comment = "Disabled Rule",
@@ -63,21 +63,21 @@ class FilterRuleMapperTest {
             dateModified = 1678972800,
             domain = "disabled.com",
             groups = emptyList(),
-            type = PiHoleFilterRuleType.REGEX_BLOCK
+            type = PiHoleFilterRuleType.REGEX_DENY
         )
 
         val filterRuleEntity = piHoleFilterRule.toFilterRuleEntity()
 
         assertThat(filterRuleEntity.enabled).isFalse()
         assertThat(filterRuleEntity.groups).isEmpty()
-        assertThat(filterRuleEntity.type).isEqualTo(FilterRuleTypeEntity.REGEX_BLOCK)
+        assertThat(filterRuleEntity.type).isEqualTo(FilterRuleTypeEntity.REGEX_DENY)
     }
 
     @Test
     fun `toFilterRulesEntity - maps PiHoleFilterRules to List of FilterRuleEntity`() {
-        val piHoleFilterRules = PiHoleFilterRules(
+        val piHoleFilterRulesResponseDataV5 = PiHoleFilterRulesResponseDataV5(
             rulesList = listOf(
-                PiHoleFilterRules.PiHoleFilterRule(
+                PiHoleFilterRulesResponseDataV5.PiHoleFilterRule(
                     id = 1,
                     enabled = 1,
                     comment = "Rule 1",
@@ -87,7 +87,7 @@ class FilterRuleMapperTest {
                     groups = listOf(1),
                     type = PiHoleFilterRuleType.ALLOW
                 ),
-                PiHoleFilterRules.PiHoleFilterRule(
+                PiHoleFilterRulesResponseDataV5.PiHoleFilterRule(
                     id = 2,
                     enabled = 0,
                     comment = "Rule 2",
@@ -95,12 +95,12 @@ class FilterRuleMapperTest {
                     dateModified = 1678972800,
                     domain = "example2.com",
                     groups = listOf(2),
-                    type = PiHoleFilterRuleType.BLOCK
+                    type = PiHoleFilterRuleType.DENY
                 )
             )
         )
 
-        val filterRuleEntities = piHoleFilterRules.toFilterRulesEntity()
+        val filterRuleEntities = piHoleFilterRulesResponseDataV5.toFilterRulesEntity()
 
         assertThat(filterRuleEntities).hasSize(2)
         assertThat(filterRuleEntities[0].id).isEqualTo(1)
@@ -114,14 +114,14 @@ class FilterRuleMapperTest {
         assertThat(filterRuleEntities[1].comment).isEqualTo("Rule 2")
         assertThat(filterRuleEntities[1].domain).isEqualTo("example2.com")
         assertThat(filterRuleEntities[1].groups).isEqualTo(listOf(2))
-        assertThat(filterRuleEntities[1].type).isEqualTo(FilterRuleTypeEntity.BLOCK)
+        assertThat(filterRuleEntities[1].type).isEqualTo(FilterRuleTypeEntity.DENY)
     }
 
     @Test
     fun `toFilterRulesEntity - maps empty PiHoleFilterRules to empty List`() {
-        val piHoleFilterRules = PiHoleFilterRules(rulesList = emptyList())
+        val piHoleFilterRulesResponseDataV5 = PiHoleFilterRulesResponseDataV5(rulesList = emptyList())
 
-        val filterRuleEntities = piHoleFilterRules.toFilterRulesEntity()
+        val filterRuleEntities = piHoleFilterRulesResponseDataV5.toFilterRulesEntity()
 
         assertThat(filterRuleEntities).isEmpty()
     }

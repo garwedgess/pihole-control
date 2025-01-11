@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleOverTimeV5Data
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleOverTimeResponseDataV5
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
 import eu.wedgess.piholecontrol.initThreeTen
 import org.junit.Before
@@ -16,7 +16,7 @@ class OverTimeMapperTest {
 
     @Test
     fun `toQueriesOverTimeData - maps PiHoleOverTimeData to QueriesOverTimeEntity correctly`() {
-        val piHoleOverTimeV5Data = PiHoleOverTimeV5Data(
+        val piHoleOverTimeResponseDataV5 = PiHoleOverTimeResponseDataV5(
             domainsOverTime = mapOf(
                 16788864L to 10L,
                 16788900L to 20L
@@ -26,7 +26,7 @@ class OverTimeMapperTest {
             )
         )
 
-        val queriesOverTimeEntity = piHoleOverTimeV5Data.toEntity()
+        val queriesOverTimeEntity = piHoleOverTimeResponseDataV5.toEntity()
 
         assertThat(queriesOverTimeEntity.permitted).hasSize(2)
         assertThat(queriesOverTimeEntity.blocked).hasSize(2)
@@ -50,9 +50,9 @@ class OverTimeMapperTest {
 
     @Test
     fun `toQueriesOverTimeData - maps empty PiHoleOverTimeData`() {
-        val piHoleOverTimeV5Data = PiHoleOverTimeV5Data()
+        val piHoleOverTimeResponseDataV5 = PiHoleOverTimeResponseDataV5()
 
-        val queriesOverTimeEntity = piHoleOverTimeV5Data.toEntity()
+        val queriesOverTimeEntity = piHoleOverTimeResponseDataV5.toEntity()
 
         assertThat(queriesOverTimeEntity.permitted).isEmpty()
         assertThat(queriesOverTimeEntity.blocked).isEmpty()

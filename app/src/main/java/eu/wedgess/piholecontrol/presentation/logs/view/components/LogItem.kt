@@ -19,16 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
-import eu.wedgess.piholecontrol.presentation.logs.extensions.toColor
-import eu.wedgess.piholecontrol.presentation.logs.extensions.toIcon
-import eu.wedgess.piholecontrol.presentation.logs.extensions.toStringValue
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
-fun LogListItem(log: LogEntryEntity, onItemClick: () -> Unit) {
+fun LogListItem(log: LogEntryInfo, onItemClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,17 +54,17 @@ fun LogListItem(log: LogEntryEntity, onItemClick: () -> Unit) {
                     )
                 ) {
                     Icon(
-                        imageVector = log.answerType.toIcon(),
-                        contentDescription = log.answerType.name,
-                        tint = log.answerType.toColor()
+                        imageVector = log.icon(),
+                        contentDescription = log.stringValue(),
+                        tint = log.color()
                     )
                     Text(
-                        text = log.answerType.toStringValue(),
-                        color = log.answerType.toColor(),
+                        text = log.stringValue(),
+                        color = log.color(),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
-                Text(text = log.requestedDomain, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = log.domain, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(
                     text = log.client,
                     maxLines = 1,
@@ -95,7 +92,7 @@ fun LogListItem(log: LogEntryEntity, onItemClick: () -> Unit) {
                         .fillMaxWidth()
                         .padding(top = PiHoleControlTheme.dimens.padding.itemContent),
                     textAlign = TextAlign.End,
-                    text = "%.1f ms".format(log.responseTime * 0.1),
+                    text = "%.1f ms".format(log.replyTime),
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall
                 )
@@ -110,16 +107,16 @@ private fun LogListItemPreview() {
     PiHoleControlTheme {
         Surface {
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                LogAnswerTypeEntity.entries.forEach {
+                PiHoleLogsEntity.LogsAnswerTypeEntity.entries.forEach {
                     LogListItem(
-                        log = LogEntryEntity(
+                        log = LogEntryInfo.Version5(
                             timestamp = System.currentTimeMillis().div(1000L),
                             time = "10:12:01",
                             queryType = "IPv4",
-                            requestedDomain = "www.google.com",
+                            domain = "www.google.com",
                             client = "My Android",
                             answerType = it,
-                            responseTime = 1200
+                            replyTime = 1.2
                         ),
                         onItemClick = {}
                     )

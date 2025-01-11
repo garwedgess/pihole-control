@@ -326,7 +326,7 @@ class FiltersViewModelTest {
                 dateAdded = "11-01-2023",
                 domain = "test.com",
                 groups = emptyList(),
-                type = FilterRuleTypeEntity.BLOCK
+                type = FilterRuleTypeEntity.DENY
             )
             coEvery { removeFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
@@ -338,7 +338,7 @@ class FiltersViewModelTest {
                 FiltersContract.Event.OnDeleteFilterRuleConfirmed(
                     ModifyFilterRule.Delete(
                         domain = "test.com",
-                        type = FilterRuleTypeEntity.BLOCK
+                        type = FilterRuleTypeEntity.DENY
                     )
                 )
             )
@@ -462,7 +462,7 @@ class FiltersViewModelTest {
 
             // When
             viewModel.onEvent(
-                FiltersContract.Event.OnFilterTabChanged(FilterRuleTypeEntity.REGEX_BLOCK)
+                FiltersContract.Event.OnFilterTabChanged(FilterRuleTypeEntity.REGEX_DENY)
             )
 
             // Then
@@ -471,7 +471,7 @@ class FiltersViewModelTest {
                 viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
                 val result2 = awaitItem()
                 assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
-                        FilterRuleTypeEntity.REGEX_BLOCK
+                        FilterRuleTypeEntity.REGEX_DENY
                     )
                 cancelAndConsumeRemainingEvents()
             }

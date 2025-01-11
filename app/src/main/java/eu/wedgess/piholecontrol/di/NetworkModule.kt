@@ -9,9 +9,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import eu.wedgess.piholecontrol.data.repository.TokenRefresher
 import eu.wedgess.piholecontrol.data.utils.AllCertsTrustManager
+import eu.wedgess.piholecontrol.di.annotations.AuthHttpClient
+import eu.wedgess.piholecontrol.di.annotations.AuthOkHttpClient
+import eu.wedgess.piholecontrol.di.annotations.AuthTrustAllCertificatesHttpClient
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
+import eu.wedgess.piholecontrol.di.annotations.TokenRefreshOkHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
+import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngineConfig
@@ -22,15 +29,24 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import okhttp3.Authenticator
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.Route
+import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier
 import timber.log.Timber
 import java.io.File
 import java.net.Inet4Address
 import java.net.InetAddress
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 
@@ -40,7 +56,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient
+    fun provideSessionIdAuthenticator(
+        tokenRefresher: TokenRefresher,
+        connectionRepository: ConnectionRepository
+    ): SessionIdAuthenticator = SessionIdAuthenticator(tokenRefresher, connectionRepository)
+
+    @Provides
+    @AuthOkHttpClient
+    @Singleton
+    fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient
         .Builder()
         .dns(
             object : Dns {
@@ -50,10 +74,35 @@ object NetworkModule {
         ).build()
 
     @Provides
-    @DefaultHttpClient
+    @TokenRefreshOkHttpClient
     @Singleton
-    fun provideHttpClient(
-        okHttpClient: OkHttpClient,
+    fun provideOkHttpClient(
+        sessionIdAuthenticator: SessionIdAuthenticator,
+    ): OkHttpClient = OkHttpClient
+        .Builder()
+        .authenticator(sessionIdAuthenticator)
+        .addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.HEADERS
+            }
+        )
+        .addNetworkInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.HEADERS
+            }
+        )
+        .dns(
+            object : Dns {
+                override fun lookup(hostname: String): List<InetAddress> =
+                    Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
+            }
+        ).build()
+
+    @Provides
+    @AuthHttpClient
+    @Singleton
+    fun provideAuthHttpClient(
+        @AuthOkHttpClient okHttpClient: OkHttpClient,
         @ApplicationContext context: Context
     ): HttpClient {
         return HttpClient(OkHttp) {
@@ -71,10 +120,10 @@ object NetworkModule {
 
     @SuppressLint("AllowAllHostnameVerifier")
     @Provides
-    @TrustAllCertificatesHttpClient
+    @AuthTrustAllCertificatesHttpClient
     @Singleton
-    fun provideAllowSelfSignedCertsHttpClient(
-        okHttpClient: OkHttpClient,
+    fun provideAuthAllowSelfSignedCertsHttpClient(
+        @AuthOkHttpClient okHttpClient: OkHttpClient,
         @ApplicationContext context: Context
     ): HttpClient {
         val trustManager = AllCertsTrustManager()
@@ -101,6 +150,59 @@ object NetworkModule {
         }
     }
 
+    @Provides
+    @DefaultHttpClient
+    @Singleton
+    fun provideHttpClient(
+        @TokenRefreshOkHttpClient okHttpClient: OkHttpClient,
+        @ApplicationContext context: Context
+    ): HttpClient {
+        return HttpClient(OkHttp) {
+            engine {
+                config {
+                    cache(Cache(File(context.cacheDir, "ktor"), 10 * 1024 * 1024))
+                }
+                preconfigured = okHttpClient
+            }
+            installContentNegotiation()
+            installLogging()
+            installRedirect()
+        }
+    }
+
+    @SuppressLint("AllowAllHostnameVerifier")
+    @Provides
+    @TrustAllCertificatesHttpClient
+    @Singleton
+    fun provideAllowSelfSignedCertsHttpClient(
+        @TokenRefreshOkHttpClient okHttpClient: OkHttpClient,
+        @ApplicationContext context: Context
+    ): HttpClient {
+        val trustManager = AllCertsTrustManager()
+        val sslContext = SSLContext.getInstance("TLS").apply {
+            init(null, arrayOf(trustManager), null)
+        }
+
+        return HttpClient(OkHttp) {
+            engine {
+                config {
+                    cache(Cache(File(context.cacheDir, "ktor"), 10 * 1024 * 1024))
+                    retryOnConnectionFailure(true)
+                }
+                preconfigured = okHttpClient.newBuilder()
+                    .sslSocketFactory(
+                        sslSocketFactory = sslContext.socketFactory,
+                        trustManager = trustManager
+                    )
+                    .hostnameVerifier(AllowAllHostnameVerifier())
+                    .build()
+            }
+            installContentNegotiation()
+            installLogging()
+            installRedirect()
+        }
+    }
+
     fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installContentNegotiation() =
         install(ContentNegotiation) {
             json(
@@ -112,7 +214,7 @@ object NetworkModule {
             )
         }
 
-    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installLogging() =
+    private fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installLogging() =
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
@@ -122,8 +224,52 @@ object NetworkModule {
             level = LogLevel.ALL
         }
 
-    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installRedirect() =
+    private fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installRedirect() =
         install(HttpRedirect) {
             checkHttpMethod = false
         }
+}
+
+class SessionIdAuthenticator @Inject constructor(
+    private val tokenRefresher: TokenRefresher,
+    private val connectionRepository: ConnectionRepository
+) : Authenticator {
+
+    private var tokenRefreshInProgress: AtomicBoolean = AtomicBoolean(false)
+    private var request: Request? = null
+
+    override fun authenticate(route: Route?, response: Response): Request? {
+        return runBlocking {
+            request = null
+            if (!tokenRefreshInProgress.get()) {
+                tokenRefreshInProgress.set(true)
+                request = handleTokenRefresh(response.request.newBuilder())
+                tokenRefreshInProgress.set(false)
+            } else {
+                while (tokenRefreshInProgress.get()) {
+                    delay(100)
+                }
+                tokenRefreshInProgress.set(true)
+                request = handleTokenRefresh(response.request.newBuilder())
+                tokenRefreshInProgress.set(false)
+            }
+            request
+        }
+    }
+
+    private suspend fun handleTokenRefresh(requestBuilder: Request.Builder): Request? {
+        val activeConnection = connectionRepository.fetchActive()
+        val connection = activeConnection.getOrNull()
+        if (connection !is ConnectionEntity.Version6) {
+            return null
+        }
+
+        val newAuthSession = tokenRefresher.generateSessionId(connection).getOrNull() ?: return null
+        val newConnection = connection.copy(sid = newAuthSession.sid)
+        connectionRepository.update(newConnection)
+
+        return requestBuilder
+            .header("sid", newConnection.sid)
+            .build()
+    }
 }

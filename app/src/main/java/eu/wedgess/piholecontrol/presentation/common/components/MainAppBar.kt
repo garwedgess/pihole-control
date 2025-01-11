@@ -108,27 +108,27 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionEntity.default,
+            currentConnection = ConnectionEntity.Version5.default,
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionEntity.default),
+            connections = listOf(ConnectionEntity.Version5.default),
             actions = { FilterTopBarActions(onSearchClick = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionEntity.default,
+            currentConnection = ConnectionEntity.Version5.default,
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionEntity.default),
+            connections = listOf(ConnectionEntity.Version5.default),
             actions = { FilterTopBarActions(onSearchClick = {}) },
             searchContent = null,
             showSearchView = false
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_logs),
-            currentConnection = ConnectionEntity.default,
+            currentConnection = ConnectionEntity.Version5.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
             actions = { FilterTopBarActions(onSearchClick = {}) },

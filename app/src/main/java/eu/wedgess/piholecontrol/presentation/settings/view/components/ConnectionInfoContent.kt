@@ -44,16 +44,28 @@ fun ConnectionInfoContent(
             title = "Status",
             value = "Connected".takeIf { connection.isActive } ?: "Disconnected"
         )
-        ConnectionInfoRow(
-            icon = Icons.Default.Api,
-            title = "Api Path",
-            value = connection.apiPath
-        )
-        ConnectionInfoRow(
-            icon = Icons.Default.Token,
-            title = "Token",
-            value = "Set".takeIf { connection.token.isNotBlank() } ?: "Not Set"
-        )
+        if (connection is ConnectionEntity.Version5) {
+            ConnectionInfoRow(
+                icon = Icons.Default.Api,
+                title = "Api Path",
+                value = connection.apiPath
+            )
+        }
+        if (connection is ConnectionEntity.Version5) {
+            ConnectionInfoRow(
+                icon = Icons.Default.Token,
+                title = "Token",
+                value = "Set".takeIf { connection.token.isNotBlank() } ?: "Not Set"
+            )
+        }
+
+        if (connection is ConnectionEntity.Version6) {
+            ConnectionInfoRow(
+                icon = Icons.Default.Token,
+                title = "Password",
+                value = "Set".takeIf { connection.password.isNotBlank() } ?: "Not Set"
+            )
+        }
         ConnectionInfoRow(
             icon = Icons.Default.Lock,
             title = "Auth Credentials",
@@ -117,7 +129,7 @@ private fun ConnectionInfoContentPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionInfoContent(
-                connection = ConnectionEntity.default,
+                connection = ConnectionEntity.Version5.default,
                 onEditClick = {},
                 onDeleteClick = {},
                 onSetActiveClick = {}

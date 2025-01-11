@@ -4,16 +4,15 @@ import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v6.DashboardApiServiceV6
 import eu.wedgess.piholecontrol.data.mappers.toEntity
 import eu.wedgess.piholecontrol.data.mappers.toSummaryEntity
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleClientsOverTimeV5Data
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleOverTimeV5Data
-import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleSummaryV5Data
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleClientsOverTimeV6Data
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleOverTimeV6Data
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleSummaryV6Data
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleClientsOverTimeResponseDataV5
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleOverTimeResponseDataV5
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleSummaryResponseDataV5
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleClientsOverTimeResponseDataV6
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleOverTimeResponseDataV6
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleSummaryResponseDataV6
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
-import eu.wedgess.piholecontrol.domain.model.PiHoleApiVersionEntity
 import eu.wedgess.piholecontrol.domain.model.QueriesOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
 import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
@@ -30,13 +29,13 @@ class DashboardRepositoryImpl(
         activeMiHole: ConnectionEntity
     ): Result<SummaryEntity> = withContext(dispatcherProvider.io) {
         callVersionedEndpoint(
-            apiVersion = activeMiHole.apiVersion,
-            v5Call = { apiV5.fetchStatusSummary(activeMiHole) },
-            v6Call = { apiV6.fetchStatusSummary(activeMiHole) },
+            activeConnection = activeMiHole,
+            v5Call = { apiV5.fetchStatusSummary(it) },
+            v6Call = { apiV6.fetchStatusSummary(it) },
             mapper = {
                 when (it) {
-                    is PiHoleSummaryV5Data -> it.toSummaryEntity()
-                    is PiHoleSummaryV6Data -> it.toSummaryEntity()
+                    is PiHoleSummaryResponseDataV5 -> it.toSummaryEntity()
+                    is PiHoleSummaryResponseDataV6 -> it.toSummaryEntity()
                     else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                 }
             }
@@ -47,13 +46,13 @@ class DashboardRepositoryImpl(
         activeMiHole: ConnectionEntity
     ): Result<QueriesOverTimeEntity> = withContext(dispatcherProvider.io) {
         callVersionedEndpoint(
-            apiVersion = activeMiHole.apiVersion,
-            v5Call = { apiV5.fetchOverTimeData10Minutes(activeMiHole) },
-            v6Call = { apiV6.fetchOverTimeData10Minutes(activeMiHole) },
+            activeConnection = activeMiHole,
+            v5Call = { apiV5.fetchOverTimeData10Minutes(it) },
+            v6Call = { apiV6.fetchOverTimeData10Minutes(it) },
             mapper = {
                 when (it) {
-                    is PiHoleOverTimeV5Data -> it.toEntity()
-                    is PiHoleOverTimeV6Data -> it.toEntity()
+                    is PiHoleOverTimeResponseDataV5 -> it.toEntity()
+                    is PiHoleOverTimeResponseDataV6 -> it.toEntity()
                     else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                 }
             }
@@ -64,24 +63,24 @@ class DashboardRepositoryImpl(
         activeMiHole: ConnectionEntity
     ): Result<List<ClientOverTimeEntity>> = withContext(dispatcherProvider.io) {
         callVersionedEndpoint(
-            apiVersion = activeMiHole.apiVersion,
+            activeConnection = activeMiHole,
             v5Call = {
-                apiV5.fetchOverTimeDataClients(activeMiHole)
+                apiV5.fetchOverTimeDataClients(it)
             },
             v6Call = {
-                apiV6.fetchOverTimeDataClients(activeMiHole)
-                     },
+                apiV6.fetchOverTimeDataClients(it)
+            },
             mapper = {
                 when (it) {
-                    is PiHoleClientsOverTimeV5Data -> mapV5ClientsOverTime(it)
-                    is PiHoleClientsOverTimeV6Data -> mapV6ClientsOverTime(it)
+                    is PiHoleClientsOverTimeResponseDataV5 -> mapV5ClientsOverTime(it)
+                    is PiHoleClientsOverTimeResponseDataV6 -> mapV6ClientsOverTime(it)
                     else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                 }
             }
         )
     }
 
-    private fun mapV5ClientsOverTime(response: PiHoleClientsOverTimeV5Data): List<ClientOverTimeEntity> {
+    private fun mapV5ClientsOverTime(response: PiHoleClientsOverTimeResponseDataV5): List<ClientOverTimeEntity> {
         return response.clients
             .mapIndexed { index, client ->
                 client to response.clientsOverTime.map { (k, v) ->
@@ -108,10 +107,10 @@ class DashboardRepositoryImpl(
             }
     }
 
-    private fun mapV6ClientsOverTime(response: PiHoleClientsOverTimeV6Data): List<ClientOverTimeEntity> {
+    private fun mapV6ClientsOverTime(response: PiHoleClientsOverTimeResponseDataV6): List<ClientOverTimeEntity> {
         return response.clients.map { (ip, clientInfo) ->
             ClientOverTimeEntity(
-                clientName = clientInfo.name,
+                clientName = clientInfo.name ?: "",
                 clientIp = ip,
                 clientActivity = response.history.map { history ->
                     OverTimeEntity(
@@ -123,19 +122,5 @@ class DashboardRepositoryImpl(
         }.sortedByDescending { client ->
             client.clientActivity.sumOf { it.hits }
         }
-    }
-}
-
-inline suspend fun <T, R> callVersionedEndpoint(
-    apiVersion: PiHoleApiVersionEntity,
-    crossinline v5Call: suspend () -> Result<T>,
-    crossinline v6Call: suspend () -> Result<T>,
-    crossinline mapper: (T) -> R
-): Result<R> {
-    return when (apiVersion) {
-        PiHoleApiVersionEntity.Version5 -> v5Call()
-        PiHoleApiVersionEntity.Version6 -> v6Call()
-    }.mapCatching {
-        mapper(it)
     }
 }

@@ -8,7 +8,8 @@ enum class PiHoleApiVersionData(val key: Long) {
         operator fun get(key: Long): PiHoleApiVersionData = requireNotNull(
             PiHoleApiVersionData.entries.find { it.key == key },
             lazyMessage = {
-                "Failed to find ${PiHoleApiVersionData::class.simpleName} for $key, possible values: " +
+                "Failed to find ${PiHoleApiVersionData::class.simpleName} " +
+                        "for $key, possible values: " +
                         PiHoleApiVersionData.entries.joinToString { it.key.toString() }
             }
         )

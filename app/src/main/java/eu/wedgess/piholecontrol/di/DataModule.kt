@@ -14,7 +14,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
-import eu.wedgess.piholecontrol.data.db.ConnectionDao
+import eu.wedgess.piholecontrol.data.db.ConnectionVersion5Dao
+import eu.wedgess.piholecontrol.data.db.ConnectionVersion6Dao
+import eu.wedgess.piholecontrol.data.db.ConnectionViewDao
 import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.utils.serializers.UserPreferencesSerializer
 import eu.wedgess.piholecontrol.utils.DefaultDispatchers
@@ -33,8 +35,18 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: PiHoleControlDatabase, dispatcherProvider: DispatcherProvider) =
-        ConnectionDao(database, dispatcherProvider)
+    fun provideV5Dao(database: PiHoleControlDatabase) =
+        ConnectionVersion5Dao(database)
+
+    @Singleton
+    @Provides
+    fun provideV6Dao(database: PiHoleControlDatabase) =
+        ConnectionVersion6Dao(database)
+
+    @Singleton
+    @Provides
+    fun provideViewDao(database: PiHoleControlDatabase, dispatcherProvider: DispatcherProvider) =
+        ConnectionViewDao(database, dispatcherProvider)
 
     @Provides
     @Singleton

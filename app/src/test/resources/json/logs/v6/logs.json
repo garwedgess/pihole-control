@@ -1,0 +1,584 @@
+{
+  "queries": [
+    {
+      "id": 2974785,
+      "time": 1736354768.1824512,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "www.gstatic.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 3.8623809814453125e-05
+      },
+      "client": {
+        "ip": "192.169.1.144",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974784,
+      "time": 1736354768.1953332,
+      "type": "AAAA",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "www.gstatic.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 5.6982040405273438e-05
+      },
+      "client": {
+        "ip": "192.169.1.144",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974783,
+      "time": 1736354761.02528,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "clients3.google.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 1.4781951904296875e-05
+      },
+      "client": {
+        "ip": "192.169.1.144",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974782,
+      "time": 1736354761.0379238,
+      "type": "AAAA",
+      "status": "FORWARDED",
+      "dnssec": "UNKNOWN",
+      "domain": "clients3.google.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 0.000217437744140625
+      },
+      "client": {
+        "ip": "192.169.1.144",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974781,
+      "time": 1736354727.103513,
+      "type": "A",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 3.8862228393554688e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974780,
+      "time": 1736354727.307632,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 2.288818359375e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974779,
+      "time": 1736354727.60767,
+      "type": "A",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 3.8623809814453125e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974778,
+      "time": 1736354726.8039756,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 1.52587890625e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974777,
+      "time": 1736354725.4303226,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "deviceapi.nvts.co",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 6.3419342041015625e-05
+      },
+      "client": {
+        "ip": "192.169.1.165",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974776,
+      "time": 1736354720.6000712,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "clients4.google.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 3.719329833984375e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974775,
+      "time": 1736354720.6016128,
+      "type": "AAAA",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "clients4.google.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 2.4318695068359375e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974774,
+      "time": 1736354713.6037731,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "embeddedassistant.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 5.0067901611328125e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974773,
+      "time": 1736354713.6165781,
+      "type": "AAAA",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "embeddedassistant.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 2.9802322387695312e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974772,
+      "time": 1736354669.9194744,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "play.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 3.337860107421875e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974771,
+      "time": 1736354669.920449,
+      "type": "AAAA",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "play.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 1.6450881958007812e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974770,
+      "time": 1736354668.5340664,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "geller-pa.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 4.6014785766601562e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974769,
+      "time": 1736354668.5467176,
+      "type": "AAAA",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "geller-pa.googleapis.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "IP",
+        "time": 4.2676925659179688e-05
+      },
+      "client": {
+        "ip": "192.169.1.117",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974768,
+      "time": 1736354666.0514681,
+      "type": "A",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 3.8385391235351562e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974767,
+      "time": 1736354666.2701132,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 3.9577484130859375e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974766,
+      "time": 1736354666.5678155,
+      "type": "A",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 1.6689300537109375e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974765,
+      "time": 1736354665.764394,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 4.1484832763671875e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974764,
+      "time": 1736354635.6969631,
+      "type": "A",
+      "status": "CACHE_STALE",
+      "dnssec": "UNKNOWN",
+      "domain": "clients4.google.com",
+      "upstream": "127.0.0.1#5335",
+      "reply": {
+        "type": "CNAME",
+        "time": 0.0001373291015625
+      },
+      "client": {
+        "ip": "192.169.1.10",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974763,
+      "time": 1736354635.70919,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "clients4.google.com",
+      "upstream": null,
+      "reply": {
+        "type": "CNAME",
+        "time": 3.814697265625e-05
+      },
+      "client": {
+        "ip": "192.169.1.10",
+        "name": null
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974762,
+      "time": 1736354605.2989717,
+      "type": "AAAA",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 1.5020370483398438e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    },
+    {
+      "id": 2974761,
+      "time": 1736354605.5024266,
+      "type": "A",
+      "status": "CACHE",
+      "dnssec": "UNKNOWN",
+      "domain": "chat.avatar.ext.hp.com",
+      "upstream": null,
+      "reply": {
+        "type": "NXDOMAIN",
+        "time": 3.9339065551757812e-05
+      },
+      "client": {
+        "ip": "192.169.1.119",
+        "name": "Printer"
+      },
+      "list_id": null,
+      "ede": {
+        "code": -1,
+        "text": null
+      },
+      "cname": null
+    }
+  ],
+  "cursor": 2974785,
+  "recordsTotal": 12922,
+  "recordsFiltered": 12922,
+  "draw": 0,
+  "took": 0.000270843505859375
+}

@@ -8,7 +8,7 @@ import io.ktor.client.request.header
 import io.ktor.http.encodedPath
 
 suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV5(
-    activePiHole: ConnectionEntity
+    activePiHole: ConnectionEntity.Version5
 ): HttpRequestBuilder {
     url {
         protocol = activePiHole.protocol
@@ -36,7 +36,7 @@ suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV5(
 }
 
 suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV6(
-    activePiHole: ConnectionEntity,
+    activePiHole: ConnectionEntity.Version6,
     path: String
 ): HttpRequestBuilder {
     url {
@@ -44,6 +44,7 @@ suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV6(
         host = activePiHole.host
         encodedPath = path
         port = activePiHole.port
+        header("sid", activePiHole.sid)
     }
     if (activePiHole.hasAuthCredentials) {
         val basicAuthProvider = BasicAuthProvider(

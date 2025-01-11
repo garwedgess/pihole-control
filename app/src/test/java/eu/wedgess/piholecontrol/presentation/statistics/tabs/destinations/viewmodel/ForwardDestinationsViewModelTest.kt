@@ -81,14 +81,14 @@ class ForwardDestinationsViewModelTest {
         runTest {
             // Given
             val serversChartDataList = listOf(
-                mockk<ForwardDestinationsChartData>(relaxed = true) {
-                    coEvery { title } returns "Server 1"
-                    coEvery { percentage } returns 50f
-                },
-                mockk<ForwardDestinationsChartData>(relaxed = true) {
-                    coEvery { title } returns "Server 2"
-                    coEvery { percentage } returns 30f
-                }
+                ForwardDestinationsChartData(
+                    title = "Server 1",
+                    percentage = 50f
+                ),
+                ForwardDestinationsChartData(
+                    title = "Server 2",
+                    percentage = 30.233f
+                )
             )
             coEvery { fetchForwardDestinationsUseCase() } returns flowOf(
                 Result.success(
@@ -110,9 +110,9 @@ class ForwardDestinationsViewModelTest {
                     .isInstanceOf(DonutChartDataCollection::class.java)
                 assertThat(result.data.legendData).hasSize(serversChartDataList.size)
                 assertThat(result.data.legendData[0])
-                    .isEqualTo(LegendData("Server 1", "50.0%", false))
+                    .isEqualTo(LegendData("Server 1", "50%", false))
                 assertThat(result.data.legendData[1])
-                    .isEqualTo(LegendData("Server 2", "30.0%", false))
+                    .isEqualTo(LegendData("Server 2", "30.2%", false))
                 cancelAndConsumeRemainingEvents()
             }
         }

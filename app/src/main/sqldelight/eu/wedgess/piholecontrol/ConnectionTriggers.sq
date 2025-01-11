@@ -1,0 +1,119 @@
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_update_version5
+BEFORE UPDATE OF Active ON ConnectionVersion5
+WHEN new.Active = 1
+BEGIN
+    UPDATE ConnectionVersion5
+    SET Active = 0
+    WHERE Active = 1 AND Id <> new.Id;
+
+    UPDATE ConnectionVersion6
+    SET Active = 0
+    WHERE Active = 1;
+END;
+
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_update_version6
+BEFORE UPDATE OF Active ON ConnectionVersion6
+WHEN new.Active = 1
+BEGIN
+    UPDATE ConnectionVersion6
+    SET Active = 0
+    WHERE Active = 1 AND Id <> new.Id;
+
+    UPDATE ConnectionVersion5
+    SET Active = 0
+    WHERE Active = 1;
+END;
+
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_insert_version5
+BEFORE INSERT ON ConnectionVersion5
+BEGIN
+    UPDATE ConnectionVersion5
+    SET Active = 0
+    WHERE Active = 1;
+
+    UPDATE ConnectionVersion6
+    SET Active = 0
+    WHERE Active = 1;
+END;
+
+CREATE TRIGGER IF NOT EXISTS change_to_not_active_on_insert_version6
+BEFORE INSERT ON ConnectionVersion6
+BEGIN
+    UPDATE ConnectionVersion6
+    SET Active = 0
+    WHERE Active = 1;
+
+    UPDATE ConnectionVersion5
+    SET Active = 0
+    WHERE Active = 1;
+END;
+
+CREATE TRIGGER IF NOT EXISTS next_connection_active_on_delete_version5
+AFTER DELETE ON ConnectionVersion5
+WHEN old.Active = 1
+BEGIN
+    -- Deactivate all connections in ConnectionVersion5
+    UPDATE ConnectionVersion5
+    SET Active = 0;
+
+    -- Attempt to activate the next available inactive connection in ConnectionVersion5
+    UPDATE ConnectionVersion5
+    SET Active = 1
+    WHERE Id = (
+        SELECT Id
+        FROM ConnectionVersion5
+        WHERE IsDeleted = 0 AND Active = 0
+        LIMIT 1
+    );
+
+    -- If there are no inactive connections in ConnectionVersion5, activate one from ConnectionVersion6
+    -- only if there are no active connections in ConnectionVersion5
+    UPDATE ConnectionVersion6
+    SET Active = 1
+    WHERE Id = (
+        SELECT Id
+        FROM ConnectionVersion6
+        WHERE IsDeleted = 0 AND Active = 0
+        LIMIT 1
+    )
+    AND NOT EXISTS (
+        SELECT 1 FROM ConnectionVersion5
+        WHERE Active = 1
+    );
+END;
+
+CREATE TRIGGER IF NOT EXISTS next_connection_active_on_delete_version6
+AFTER DELETE ON ConnectionVersion6
+WHEN old.Active = 1
+BEGIN
+    -- Deactivate all connections in ConnectionVersion6
+    UPDATE ConnectionVersion6
+    SET Active = 0;
+
+    -- Attempt to activate the next available inactive connection in ConnectionVersion6
+    UPDATE ConnectionVersion6
+    SET Active = 1
+    WHERE Id = (
+        SELECT Id
+        FROM ConnectionVersion6
+        WHERE IsDeleted = 0 AND Active = 0
+        LIMIT 1
+    );
+
+    -- If there are no inactive connections in ConnectionVersion6, activate one from ConnectionVersion5
+    -- only if there are no active connections in ConnectionVersion6
+    UPDATE ConnectionVersion5
+    SET Active = 1
+    WHERE Id = (
+        SELECT Id
+        FROM ConnectionVersion5
+        WHERE IsDeleted = 0 AND Active = 0
+        LIMIT 1
+    )
+    AND NOT EXISTS (
+        SELECT 1 FROM ConnectionVersion6
+        WHERE Active = 1
+    );
+END;
+
+

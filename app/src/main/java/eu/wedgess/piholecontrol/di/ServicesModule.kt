@@ -6,16 +6,28 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5Impl
-import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiService
-import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiServiceImpl
-import eu.wedgess.piholecontrol.data.api.v5.LogsApiService
-import eu.wedgess.piholecontrol.data.api.v5.LogsApiServiceImpl
-import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiService
-import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiServiceImpl
-import eu.wedgess.piholecontrol.data.api.v5.StatusApiService
-import eu.wedgess.piholecontrol.data.api.v5.StatusApiServiceImpl
+import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiServiceV5
+import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiServiceV5Impl
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiServiceV5
+import eu.wedgess.piholecontrol.data.api.v5.LogsApiServiceV5Impl
+import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiServiceV5
+import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiServiceV5Impl
+import eu.wedgess.piholecontrol.data.api.v5.StatusApiServiceV5
+import eu.wedgess.piholecontrol.data.api.v5.StatusApiServiceV5Impl
+import eu.wedgess.piholecontrol.data.api.v6.AuthApiServiceV6
+import eu.wedgess.piholecontrol.data.api.v6.AuthApiServiceV6Impl
 import eu.wedgess.piholecontrol.data.api.v6.DashboardApiServiceV6
 import eu.wedgess.piholecontrol.data.api.v6.DashboardApiServiceV6Impl
+import eu.wedgess.piholecontrol.data.api.v6.FilterRulesApiServiceV6
+import eu.wedgess.piholecontrol.data.api.v6.FilterRulesApiServiceV6Impl
+import eu.wedgess.piholecontrol.data.api.v6.LogsApiServiceV6
+import eu.wedgess.piholecontrol.data.api.v6.LogsApiServiceV6Impl
+import eu.wedgess.piholecontrol.data.api.v6.StatisticsApiServiceV6
+import eu.wedgess.piholecontrol.data.api.v6.StatisticsApiServiceV6Impl
+import eu.wedgess.piholecontrol.data.api.v6.StatusApiServiceV6
+import eu.wedgess.piholecontrol.data.api.v6.StatusApiServiceV6Impl
+import eu.wedgess.piholecontrol.di.annotations.AuthHttpClient
+import eu.wedgess.piholecontrol.di.annotations.AuthTrustAllCertificatesHttpClient
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
 import io.ktor.client.HttpClient
@@ -27,10 +39,17 @@ object ServicesModule {
 
     @Provides
     @Singleton
-    fun provideStatusApiService(
+    fun provideStatusApiServiceV5(
         @DefaultHttpClient defaultHttpClient: HttpClient,
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): StatusApiService = StatusApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+    ): StatusApiServiceV5 = StatusApiServiceV5Impl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideStatusApiServiceV6(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): StatusApiServiceV6 = StatusApiServiceV6Impl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     @Singleton
@@ -50,25 +69,57 @@ object ServicesModule {
 
     @Provides
     @Singleton
-    fun provideFiltersApi(
+    fun provideFiltersApiV5(
         @DefaultHttpClient defaultHttpClient: HttpClient,
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): FilterRulesApiService =
-        FilterRulesApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+    ): FilterRulesApiServiceV5 =
+        FilterRulesApiServiceV5Impl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     @Singleton
-    fun provideLogsApi(
+    fun provideFiltersApiV6(
         @DefaultHttpClient defaultHttpClient: HttpClient,
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): LogsApiService =
-        LogsApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+    ): FilterRulesApiServiceV6 =
+        FilterRulesApiServiceV6Impl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     @Singleton
-    fun provideStatisticsApi(
+    fun provideLogsApiV5(
         @DefaultHttpClient defaultHttpClient: HttpClient,
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): StatisticsApiService =
-        StatisticsApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+    ): LogsApiServiceV5 =
+        LogsApiServiceV5Impl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideLogsApiV6(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): LogsApiServiceV6 =
+        LogsApiServiceV6Impl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideStatisticsApiV5(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): StatisticsApiServiceV5 =
+        StatisticsApiServiceV5Impl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideStatisticsApiV6(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): StatisticsApiServiceV6 =
+        StatisticsApiServiceV6Impl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        @AuthHttpClient defaultHttpClient: HttpClient,
+        @AuthTrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): AuthApiServiceV6 =
+        AuthApiServiceV6Impl(defaultHttpClient, trustAllCertsHttpClient)
 }
