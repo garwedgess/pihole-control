@@ -5,8 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PiHoleErrorResponseDataV6(
-    @SerialName("error") val error: ErrorData? = null,
-    @SerialName("took") val took: Double
+    @SerialName("error")
+    val error: ErrorData? = null,
+    @SerialName("session")
+    val session: PiHoleAuthSessionStatusResponseDataV6.PiHoleAuthSession? = null,
+    @SerialName("took")
+    val took: Double
 ) {
     @Serializable
     data class ErrorData(

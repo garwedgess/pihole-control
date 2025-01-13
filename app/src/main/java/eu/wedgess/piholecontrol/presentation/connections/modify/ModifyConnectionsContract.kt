@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.connections.modify
 
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.ConnectionInputError
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import io.ktor.http.URLProtocol
@@ -12,17 +13,21 @@ interface ModifyConnectionsContract {
         val currentConnection: ConnectionEntity?,
         val name: String,
         val host: String,
-        val port: Int,
+        val port: String,
         val protocol: URLProtocol,
         val apiPath: String,
         val apiToken: String,
+        val password: String,
         val apiVersion: PiHoleApiVersion,
         val authUsername: String,
         val authPassword: String,
         val authRealm: String,
         val trustAllCerts: Boolean,
         val dialogType: ModifyConnectionDialogType,
-        val showAdvancedSettings: Boolean
+        val showAdvancedSettings: Boolean,
+        val apiKeyPasswordVisible: Boolean,
+        val basicAuthPasswordVisible: Boolean,
+        val inputErrors: List<ConnectionInputError>
     ) {
 
         fun toPiHoleConnectionEntity(id: UUID? = null): ConnectionEntity =
@@ -31,7 +36,7 @@ interface ModifyConnectionsContract {
                     id = id ?: UUID.randomUUID(),
                     name = this.name,
                     host = this.host,
-                    port = this.port,
+                    port = this.port.toInt(),
                     protocol = this.protocol,
                     apiPath = this.apiPath,
                     token = this.apiToken,
@@ -47,10 +52,10 @@ interface ModifyConnectionsContract {
                     id = UUID.randomUUID(),
                     name = this.name,
                     host = this.host,
-                    port = this.port,
+                    port = this.port.toInt(),
                     protocol = this.protocol,
                     sid = "",
-                    password = this.apiToken,
+                    password = this.password,
                     authUsername = this.authUsername,
                     authPassword = this.authPassword,
                     authRealm = this.authRealm,
@@ -61,24 +66,48 @@ interface ModifyConnectionsContract {
             }
 
         companion object {
-            private val DEFAULT_INFO = ConnectionEntity.Version5.default
 
-            fun initial() = UiState(
-                currentConnection = null,
-                dialogType = ModifyConnectionDialogType.None,
-                showAdvancedSettings = false,
-                name = DEFAULT_INFO.name,
-                host = DEFAULT_INFO.host,
-                port = DEFAULT_INFO.port,
-                protocol = DEFAULT_INFO.protocol,
-                apiPath = DEFAULT_INFO.apiPath,
-                apiToken = DEFAULT_INFO.token,
-                apiVersion = PiHoleApiVersion.Version5,
-                authUsername = DEFAULT_INFO.authUsername,
-                authPassword = DEFAULT_INFO.authPassword,
-                trustAllCerts = DEFAULT_INFO.trustAllCerts,
-                authRealm = DEFAULT_INFO.authRealm
-            )
+            fun initial(
+                defaultInfo: ConnectionEntity = ConnectionEntity.Version5.default
+            ): UiState {
+                val genericUiState = UiState(
+                    currentConnection = null,
+                    dialogType = ModifyConnectionDialogType.None,
+                    showAdvancedSettings = false,
+                    name = defaultInfo.name,
+                    host = defaultInfo.host,
+                    port = defaultInfo.port.toString(),
+                    protocol = defaultInfo.protocol,
+                    apiPath = "",
+                    apiToken = "",
+                    password = "",
+                    apiVersion = PiHoleApiVersion.Version5,
+                    authUsername = defaultInfo.authUsername,
+                    authPassword = defaultInfo.authPassword,
+                    trustAllCerts = defaultInfo.trustAllCerts,
+                    authRealm = defaultInfo.authRealm,
+                    inputErrors = emptyList(),
+                    apiKeyPasswordVisible = false,
+                    basicAuthPasswordVisible = false
+                )
+
+                return when (defaultInfo) {
+                    is ConnectionEntity.Version5 -> {
+                        genericUiState.copy(
+                            apiPath = defaultInfo.apiPath,
+                            apiToken = defaultInfo.token,
+                            apiVersion = PiHoleApiVersion.Version5
+                        )
+                    }
+
+                    is ConnectionEntity.Version6 -> {
+                        genericUiState.copy(
+                            password = defaultInfo.password,
+                            apiVersion = PiHoleApiVersion.Version6,
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -92,10 +121,13 @@ interface ModifyConnectionsContract {
         data object FetchCurrentConnection : Event
         data class OnNameChanged(val name: String) : Event
         data class OnHostChanged(val host: String) : Event
-        data class OnPortChanged(val port: Int) : Event
+        data class OnPortChanged(val port: String) : Event
         data class OnProtocolChanged(val protocol: URLProtocol) : Event
         data class OnApiPathChanged(val apiPath: String) : Event
         data class OnApiTokenChanged(val apiToken: String) : Event
+        data class OnPasswordChanged(val password: String) : Event
+        data class OnPasswordFieldVisibilityChanged(val visible: Boolean) : Event
+        data class OnBasicPasswordFieldVisibilityChanged(val visible: Boolean) : Event
         data class OnAuthUsernameChanged(val authUsername: String) : Event
         data class OnAuthPasswordChanged(val authPassword: String) : Event
         data class OnAuthRealmChanged(val authRealm: String) : Event

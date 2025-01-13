@@ -1,7 +1,5 @@
 package eu.wedgess.piholecontrol.presentation.dashboard.model
 
-import eu.wedgess.piholecontrol.data.model.responses.ApiErrorResponse
-import eu.wedgess.piholecontrol.data.model.responses.exceptions.ApiErrorThrowable
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.QueriesOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
@@ -60,14 +58,7 @@ data class DashboardInfo(
 
     companion object {
         fun handleErrorThrowable(throwable: Throwable?, onRetry: () -> Unit): UIResult.Error {
-            val message = if (throwable?.cause is ApiErrorThrowable) {
-                when (val error = (throwable.cause as ApiErrorThrowable).apiErrorResponse) {
-                    is ApiErrorResponse.V5 -> error.errorMessage
-                    is ApiErrorResponse.V6 -> error.serverError.error?.message
-                }
-            } else {
-                throwable?.message
-            } ?: "Unknown error"
+            val message = throwable?.message ?: "Unknown error"
             return UIResult.Error(
                 ResultType.Error.WithTitleAndSubTitleAndRetry(
                     title = UiText.DynamicString("Failed to fetch dashboard info"),

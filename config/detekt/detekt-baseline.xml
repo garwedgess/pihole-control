@@ -4,8 +4,11 @@
   <CurrentIssues>
     <ID>ArgumentListWrapping:DisableStatusDialog.kt$(customTimeMinutes.text.ifBlank { "00" } .toLong() )</ID>
     <ID>ArgumentListWrapping:LogsDialogs.kt$( dialogType.pickerType, dialogType.currentDate.atTime(hours, minutes) )</ID>
+    <ID>ArgumentListWrapping:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest$(ModifyConnectionDialogType.FailedToSaveConnection::class.java)</ID>
+    <ID>ArgumentListWrapping:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest$(result.dialogType)</ID>
     <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( 16788864L to 5L, 16788900L to 8L )</ID>
     <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( timestamp = 16788864000L, hits = 10 )</ID>
+    <ID>ArgumentListWrapping:PasswordTextField.kt$( imageVector = image, contentDescription = if (inputVisible) "Hide" else "Show")</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
@@ -81,6 +84,7 @@
     <ID>Indentation:LogEntryInfo.kt$LogEntryInfo$ </ID>
     <ID>Indentation:LogsRepositoryImpl.kt$LogsRepositoryImpl$ </ID>
     <ID>Indentation:MarkerUtils.kt$&lt;no name provided&gt;$ </ID>
+    <ID>Indentation:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$ </ID>
     <ID>Indentation:PiHoleApiVersion.kt$PiHoleApiVersion.Companion$ </ID>
     <ID>Indentation:PiHoleApiVersionData.kt$PiHoleApiVersionData.Companion$ </ID>
     <ID>Indentation:PiHoleApiVersionEntity.kt$PiHoleApiVersionEntity.Companion$ </ID>
@@ -90,10 +94,10 @@
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
     <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
+    <ID>LargeClass:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest</ID>
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and blank query - returns all entries`()</ID>
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and status filter returns only blocked entries`()</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
-    <ID>LongParameterList:AlertMessageDialog.kt$( titleText: String, messageText: String, confirmText: String, dismissText: String, onDismiss: () -&gt; Unit, onConfirm: () -&gt; Unit )</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
     <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
@@ -130,6 +134,7 @@
     <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
     <ID>MagicNumber:LineChart.kt$5</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
+    <ID>MagicNumber:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$65535</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
     <ID>MagicNumber:NetworkModule.kt$SessionIdAuthenticator$100</ID>
@@ -158,7 +163,6 @@
     <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
     <ID>ModifierMissing:AnimatedIntText.kt$AnimatedIntText</ID>
     <ID>ModifierMissing:AnimatedLinearProgressIndicator.kt$AnimatedLinearProgressIndicator</ID>
-    <ID>ModifierMissing:ApiTokenInput.kt$ApiTokenInput</ID>
     <ID>ModifierMissing:BottomNavigationBar.kt$BottomNavigationBar</ID>
     <ID>ModifierMissing:ClientQueriesOverTimeSection.kt$ClientQueriesOverTimeSection</ID>
     <ID>ModifierMissing:ClientQueriesOvertimeGraph.kt$ClientQueriesOvertimeGraph</ID>
@@ -186,6 +190,8 @@
     <ID>ModifierMissing:ModifyConnectionAdvancedSettings.kt$ModifyConnectionAdvancedSettings</ID>
     <ID>ModifierMissing:ModifyConnectionContent.kt$ModifyConnectionContent</ID>
     <ID>ModifierMissing:ModifyConnectionScreen.kt$ModifyConnectionScreen</ID>
+    <ID>ModifierMissing:ModifyConnectionTextField.kt$ModifyConnectionTextField</ID>
+    <ID>ModifierMissing:PasswordTextField.kt$PasswordTextField</ID>
     <ID>ModifierMissing:PiHoleControlApp.kt$PiHoleControlApp</ID>
     <ID>ModifierMissing:QueriesOverTimeSection.kt$QueriesOverTimeSection</ID>
     <ID>ModifierMissing:QueriesOvertimeGraph.kt$QueriesOvertimeGraph</ID>
@@ -206,8 +212,12 @@
     <ID>ModifierWithoutDefault:ErrorScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
+    <ID>NoBlankLineBeforeRbrace:PasswordTextField.kt$PasswordTextFieldPreviewParams$ </ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
+    <ID>ParameterNaming:ModifyConnectionTextField.kt$onValueChanged</ID>
+    <ID>ParameterNaming:PasswordTextField.kt$onValueChanged</ID>
+    <ID>ParameterNaming:PasswordTextField.kt$onVisibilityChanged</ID>
     <ID>ParameterNaming:UIResult.kt$onLoaded</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreview$ThemePreview</ID>
     <ID>PreviewAnnotationNaming:ThemePreview.kt$ThemePreviewWithBackground$ThemePreviewWithBackground</ID>
@@ -222,10 +232,15 @@
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
     <ID>TooManyFunctions:ConnectionRepository.kt$ConnectionRepository</ID>
     <ID>TooManyFunctions:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl : ConnectionRepository</ID>
+    <ID>TooManyFunctions:ModifyConnectionViewModel.kt$ModifyConnectionViewModel : ViewModelEventDrivenViewModelSideEffectViewModelUiStateViewModel</ID>
     <ID>TooManyFunctions:ServicesModule.kt$ServicesModule</ID>
     <ID>UseRequire:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl$throw IllegalArgumentException("No connection found with Id: $id")</ID>
     <ID>ViewModelInjection:FilterTabScreenRoot.kt$viewModel</ID>
+    <ID>Wrapping:ApiErrorThrowable.kt$ApiErrorThrowable$-&gt;</ID>
     <ID>Wrapping:DisableStatusDialog.kt$(</ID>
     <ID>Wrapping:LineChart.kt$(</ID>
+    <ID>Wrapping:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$-&gt;</ID>
+    <ID>Wrapping:PasswordTextField.kt$(</ID>
+    <ID>Wrapping:StringExt.kt$"""</ID>
   </CurrentIssues>
 </SmellBaseline>

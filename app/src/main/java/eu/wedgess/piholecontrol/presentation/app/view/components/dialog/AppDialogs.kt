@@ -10,7 +10,7 @@ fun AppDialogs(dialogType: AppDialogType, onEvent: (AppContract.Event) -> Unit) 
         AppDialogType.None -> Unit
         AppDialogType.EnableAdBlocking -> EnableStatusDialog(
             onEnabledStatus = { onEvent(AppContract.Event.SetEnabledStatus) },
-            onDismissDialog = { onEvent(AppContract.Event.DismissDialog) }
+            onDismiss = { onEvent(AppContract.Event.DismissDialog) }
         )
 
         AppDialogType.DisableAdBlocking -> DisableStatusDialog(

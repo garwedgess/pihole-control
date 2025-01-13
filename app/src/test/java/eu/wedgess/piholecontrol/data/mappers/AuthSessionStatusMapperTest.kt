@@ -46,7 +46,7 @@ class AuthSessionStatusMapperTest {
         assertThat(result.valid).isFalse()
         assertThat(result.totp).isFalse()
         assertThat(result.sid).isEmpty()
-        assertThat(result.validity).isEqualTo(0)
+        assertThat(result.validity).isEqualTo(-1)
         assertThat(result.message).isEmpty()
     }
 }

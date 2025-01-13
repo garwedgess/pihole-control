@@ -147,6 +147,7 @@
     <string name="modify_connection_label_show_advanced_settings">Show Advanced Settings</string>
     <string name="modify_connection_label_api_version">API Version</string>
     <string name="modify_connection_label_port">Port</string>
+    <string name="modify_connection_label_password">Password</string>
     <string name="modify_connection_label_trust_all_certificates">Trust All Certificates</string>
     <string name="modify_connection_btn_save">Save</string>
     <string name="modify_connection_btn_update">Update</string>
@@ -192,5 +193,18 @@
     <string name="network_disconnected">Disconnected from network</string>
     <string name="label_api_version_5">Version 5</string>
     <string name="label_api_version_6">Version 6</string>
+    <string name="connection_dialog_title_saving_failed">Error</string>
+    <string name="connection_dialog_message_update_failed">Failed to save update: %s</string>
+    <string name="connection_dialog_message_saving_failed">Failed to save connection: %s</string>
+    <string name="all_btn_ok">Ok</string>
+    <string name="connection_loading_dialog_updating_message">Updating connection...</string>
+    <string name="connection_loading_dialog_validating_password_message">Validating password...</string>
+    <string name="connection_loading_dialog_saving_message">Saving connection...</string>
+    <string name="connection_password_error_blank">Password cannot be blank</string>
+    <string name="connection_name_error_blank">Name cannot be blank</string>
+    <string name="connection_host_error_invalid">%s is not a valid host</string>
+    <string name="connection_port_error_blank">Port cannot be blank</string>
+    <string name="connection_port_error_invalid">Not a valid port number: $port</string>
+    <string name="connection_port_error_range">Port must be between 1 and 65535</string>
 
 </resources>

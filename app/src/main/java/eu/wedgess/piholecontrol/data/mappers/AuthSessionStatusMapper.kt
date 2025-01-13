@@ -6,7 +6,7 @@ import eu.wedgess.piholecontrol.domain.model.AuthSessionStatusEntity
 fun PiHoleAuthSessionStatusResponseDataV6.toEntity() = AuthSessionStatusEntity(
     valid = this.session.valid,
     totp = this.session.totp,
-    sid = this.session.sid,
+    sid = this.session.sid ?: "",
     validity = this.session.validity,
     message = this.session.message
 )
