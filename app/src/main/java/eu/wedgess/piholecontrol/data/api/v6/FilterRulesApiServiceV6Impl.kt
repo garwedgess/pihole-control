@@ -15,6 +15,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
+import io.ktor.http.encodeURLPath
 
 class FilterRulesApiServiceV6Impl(
     @DefaultHttpClient private val defaultHttpClient: HttpClient,
@@ -65,7 +66,7 @@ class FilterRulesApiServiceV6Impl(
             val path = FILTER_RULES_DELETE_ENDPOINT
                 .replace(TYPE_KEY, ruleType.type)
                 .replace(KIND_KEY, ruleType.kind)
-                .replace(DOMAIN_KEY, rule)
+                .replace(DOMAIN_KEY, rule.encodeURLPath())
             fetchBaseRequestInfoV6(connection, path = path)
             method = HttpMethod.Delete
         }

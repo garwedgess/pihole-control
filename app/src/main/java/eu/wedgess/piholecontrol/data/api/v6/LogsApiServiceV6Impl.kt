@@ -8,7 +8,6 @@ import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import io.ktor.client.HttpClient
-import io.ktor.http.parameters
 import javax.inject.Inject
 
 class LogsApiServiceV6Impl @Inject constructor(
@@ -24,16 +23,20 @@ class LogsApiServiceV6Impl @Inject constructor(
     ): PiHoleApiResult<PiHoleLogsResponseDataV6> {
         val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
         return client.requestResult {
-            fetchBaseRequestInfoV6(connection, path = QUERIES_ENDPOINT)
-            parameters {
-                append("length", limit.toString())
-                from?.let { append("from", it.toString()) }
-                until?.let { append("until", it.toString()) }
+            fetchBaseRequestInfoV6(connection, path = QUERIES_ENDPOINT) {
+                url {
+                    parameters.append(PARAM_LENGTH, limit.toString())
+                    from?.let { parameters.append(PARAM_FROM, it.toString()) }
+                    until?.let { parameters.append(PARAM_UNTIL, it.toString()) }
+                }
             }
         }
     }
 
     companion object {
         private const val QUERIES_ENDPOINT = "/api/queries"
+        private const val PARAM_LENGTH = "length"
+        private const val PARAM_FROM = "from"
+        private const val PARAM_UNTIL = "until"
     }
 }

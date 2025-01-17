@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import eu.wedgess.piholecontrol.data.network.SessionIdAuthenticator
 import eu.wedgess.piholecontrol.data.repository.TokenRefresher
 import eu.wedgess.piholecontrol.data.utils.AllCertsTrustManager
 import eu.wedgess.piholecontrol.di.annotations.AuthHttpClient
@@ -17,7 +18,6 @@ import eu.wedgess.piholecontrol.di.annotations.AuthTrustAllCertificatesHttpClien
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TokenRefreshOkHttpClient
 import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -29,30 +29,27 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import okhttp3.Authenticator
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier
 import timber.log.Timber
 import java.io.File
 import java.net.Inet4Address
 import java.net.InetAddress
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    private val ip4PreferredDns = object : Dns {
+        override fun lookup(hostname: String): List<InetAddress> =
+            Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
+    }
 
     @Provides
     @Singleton
@@ -66,12 +63,8 @@ object NetworkModule {
     @Singleton
     fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient
         .Builder()
-        .dns(
-            object : Dns {
-                override fun lookup(hostname: String): List<InetAddress> =
-                    Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
-            }
-        ).build()
+        .dns(ip4PreferredDns)
+        .build()
 
     @Provides
     @TokenRefreshOkHttpClient
@@ -91,12 +84,8 @@ object NetworkModule {
                 level = HttpLoggingInterceptor.Level.HEADERS
             }
         )
-        .dns(
-            object : Dns {
-                override fun lookup(hostname: String): List<InetAddress> =
-                    Dns.SYSTEM.lookup(hostname).sortedByDescending { it is Inet4Address }
-            }
-        ).build()
+        .dns(ip4PreferredDns)
+        .build()
 
     @Provides
     @AuthHttpClient
@@ -228,48 +217,4 @@ object NetworkModule {
         install(HttpRedirect) {
             checkHttpMethod = false
         }
-}
-
-class SessionIdAuthenticator @Inject constructor(
-    private val tokenRefresher: TokenRefresher,
-    private val connectionRepository: ConnectionRepository
-) : Authenticator {
-
-    private var tokenRefreshInProgress: AtomicBoolean = AtomicBoolean(false)
-    private var request: Request? = null
-
-    override fun authenticate(route: Route?, response: Response): Request? {
-        return runBlocking {
-            request = null
-            if (!tokenRefreshInProgress.get()) {
-                tokenRefreshInProgress.set(true)
-                request = handleTokenRefresh(response.request.newBuilder())
-                tokenRefreshInProgress.set(false)
-            } else {
-                while (tokenRefreshInProgress.get()) {
-                    delay(100)
-                }
-                tokenRefreshInProgress.set(true)
-                request = handleTokenRefresh(response.request.newBuilder())
-                tokenRefreshInProgress.set(false)
-            }
-            request
-        }
-    }
-
-    private suspend fun handleTokenRefresh(requestBuilder: Request.Builder): Request? {
-        val activeConnection = connectionRepository.fetchActive()
-        val connection = activeConnection.getOrNull()
-        if (connection !is ConnectionEntity.Version6) {
-            return null
-        }
-
-        val newAuthSession = tokenRefresher.generateSessionId(connection).getOrNull() ?: return null
-        val newConnection = connection.copy(sid = newAuthSession.sid)
-        connectionRepository.update(newConnection)
-
-        return requestBuilder
-            .header("sid", newConnection.sid)
-            .build()
-    }
 }

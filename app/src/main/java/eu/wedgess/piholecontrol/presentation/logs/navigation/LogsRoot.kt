@@ -1,8 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.logs.navigation
 
+import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -101,12 +103,18 @@ fun NavGraphBuilder.logsRoot(
         val scaffoldState = rememberBottomSheetScaffoldState()
         val snackbarHostState = remember { SnackbarHostState() }
 
-        CollectSideEffect(sideEffect = sideEffect) {
-            when (it) {
+        CollectSideEffect(sideEffect = sideEffect) { effect ->
+            when (effect) {
                 is LogsContract.Effect.Snackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = it.message.asString(context),
-                        duration = SnackbarDuration.Short
+                    effect.handleDisplayingSnackbar(
+                        snackbarHostState = snackbarHostState,
+                        context = context,
+                        onRetryAddToAllowList = { domain ->
+                            viewModel.onEvent(LogsContract.Event.AddToAllowList(domain))
+                        },
+                        onRetryAddToDenyList = { domain ->
+                            viewModel.onEvent(LogsContract.Event.AddToBlockList(domain))
+                        }
                     )
                 }
             }
@@ -119,5 +127,36 @@ fun NavGraphBuilder.logsRoot(
             snackbarHostState = snackbarHostState,
             onEvent = viewModel::onEvent
         )
+    }
+}
+
+private suspend fun LogsContract.Effect.Snackbar.handleDisplayingSnackbar(
+    snackbarHostState: SnackbarHostState,
+    context: Context,
+    onRetryAddToAllowList: (String) -> Unit,
+    onRetryAddToDenyList: (String) -> Unit,
+) {
+    val actionLabel = if (
+        this is LogsContract.Effect.Snackbar.AddDomainToAllowListFailed ||
+        this is LogsContract.Effect.Snackbar.AddDomainToDenyListFailed
+    ) {
+        context.getString(R.string.all_btn_retry)
+    } else {
+        null
+    }
+    val result = snackbarHostState.showSnackbar(
+        message = this.message.asString(context),
+        duration = SnackbarDuration.Short,
+        actionLabel = actionLabel
+    )
+
+    if (actionLabel != null) {
+        if (result == SnackbarResult.ActionPerformed) {
+            if (this is LogsContract.Effect.Snackbar.AddDomainToAllowListFailed) {
+                onRetryAddToAllowList(this.domain)
+            } else if (this is LogsContract.Effect.Snackbar.AddDomainToDenyListFailed) {
+                onRetryAddToDenyList(this.domain)
+            }
+        }
     }
 }

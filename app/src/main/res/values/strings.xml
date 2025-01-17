@@ -165,8 +165,10 @@
     <string name="all_btn_confirm">Confirm</string>
     <string name="statistics_query_types_title">Query Types</string>
     <string name="statistics_forward_destinations_title">Forward Destinations</string>
+    <string name="logs_adding_to_allow_list_failed">Failed to add domain to allow list: %s</string>
+    <string name="logs_adding_to_deny_list_failed">Failed to add domain to deny list: %s</string>
     <string name="logs_domain_added_to_allow_list">Domain added to allow list</string>
-    <string name="logs_domain_added_to_block_list">Domain added to block list</string>
+    <string name="logs_domain_added_to_deny_list">Domain added to deny list</string>
 
     <string name="filter_search_placeholder">Search for filter...</string>
     <string name="logs_search_placeholder">Search for logs...</string>

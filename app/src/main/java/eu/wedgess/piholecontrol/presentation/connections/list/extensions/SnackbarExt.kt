@@ -17,7 +17,7 @@ suspend fun ConnectionsContract.Effect.Snackbar.handle(
         message: UiText,
         actionLabel: Int? = null,
         withDismissAction: Boolean = false,
-        duration: SnackbarDuration = SnackbarDuration.Indefinite,
+        duration: SnackbarDuration = SnackbarDuration.Long,
         onDismissed: (() -> Unit)? = null,
         onActionPerformed: (() -> Unit)? = null
     ) {

@@ -1,7 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.statistics.view.donutchart
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -36,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.extensions.calculateGapAngle
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.extensions.findSweepAngle
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartState
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
@@ -63,9 +65,33 @@ fun DonutChart(
 ) {
     val isDarkTheme = MaterialTheme.colorScheme.isDark
     var selectedIndex by remember { mutableIntStateOf(-1) }
+
+    // Use tween with easing for smoother animations
+    val animationSpec = remember {
+        tween<Float>(
+            durationMillis = 500,
+            easing = FastOutSlowInEasing
+        )
+    }
+
+    // Track total percentage for smooth transitions when items are removed
+    val totalPercentage = remember(data) {
+        data.items.sumOf { it.percentage.toDouble() }.toFloat()
+    }
+
+    // Animate percentages with the new spec
+    val animatedPercentages = data.items.map { item ->
+        animateFloatAsState(
+            targetValue = item.percentage,
+            animationSpec = animationSpec,
+            label = "percentage animation"
+        )
+    }
+
     val animationTargetState = (0..data.items.size).map {
         remember { mutableStateOf(DonutChartState()) }
     }
+
     val animValues = (0..data.items.size).map {
         animateDpAsState(
             targetValue = animationTargetState[it].value.stroke,
@@ -78,19 +104,20 @@ fun DonutChart(
     var center = Offset(0f, 0f)
 
     val textMeasurer = rememberTextMeasurer()
-    val textMeasureResults: List<TextLayoutResult> = remember(data) {
-        data.items.map {
-            if (it.percentage < minDisplayPercentage) {
-                textMeasurer.measure(text = "")
-            } else {
-                textMeasurer.measure(
-                    text = "${it.percentage.roundToInt()}%",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+    val textMeasureResults: List<TextLayoutResult> = data.items.map { item ->
+        val index = data.items.indexOf(item)
+        val animatedPercentage = animatedPercentages[index].value
+
+        if (item.percentage < minDisplayPercentage) {
+            textMeasurer.measure(text = "")
+        } else {
+            textMeasurer.measure(
+                text = "${animatedPercentage.roundToInt()}%",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
                 )
-            }
+            )
         }
     }
 
@@ -137,9 +164,15 @@ fun DonutChart(
                 var lastAngle = 0f
 
                 data.items.forEachIndexed { ind, item ->
-                    val sweepAngle = data.findSweepAngle(ind, gapPercentage)
+                    val animatedPercentage = animatedPercentages[ind].value
+                    // Calculate sweep angle using total percentage for smoother transitions
+                    val sweepAngle = (animatedPercentage / totalPercentage) *
+                            (360f - (data.items.size * gapAngle))
+
                     anglesList.add(DrawingAngles(lastAngle, sweepAngle))
                     val strokeWidth = animValues[ind].value.toPx()
+
+                    // Draw the arc with the animated values
                     drawArc(
                         color = item.color(isDarkTheme),
                         startAngle = lastAngle,

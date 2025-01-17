@@ -37,15 +37,16 @@ suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV5(
 
 suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV6(
     activePiHole: ConnectionEntity.Version6,
-    path: String
+    path: String,
+    noinline configureRequest: (HttpRequestBuilder.() -> Unit)? = null
 ): HttpRequestBuilder {
     url {
         protocol = activePiHole.protocol
         host = activePiHole.host
         encodedPath = path
         port = activePiHole.port
-        header("sid", activePiHole.sid)
     }
+    header("sid", activePiHole.sid)
     if (activePiHole.hasAuthCredentials) {
         val basicAuthProvider = BasicAuthProvider(
             credentials = {
@@ -59,5 +60,6 @@ suspend inline fun HttpRequestBuilder.fetchBaseRequestInfoV6(
         )
         basicAuthProvider.addRequestHeaders(this)
     }
+    configureRequest?.invoke(this)
     return this
 }

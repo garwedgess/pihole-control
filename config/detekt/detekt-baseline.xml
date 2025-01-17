@@ -128,16 +128,16 @@
     <ID>MagicNumber:DisableStatusDialog.kt$30</ID>
     <ID>MagicNumber:DisableStatusDialog.kt$5</ID>
     <ID>MagicNumber:DonutChart.kt$0.1f</ID>
+    <ID>MagicNumber:DonutChart.kt$360f</ID>
     <ID>MagicNumber:DonutChart.kt$4</ID>
     <ID>MagicNumber:DonutChart.kt$700</ID>
     <ID>MagicNumber:DonutChartUtils.kt$180</ID>
     <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
-    <ID>MagicNumber:LineChart.kt$5</ID>
+    <ID>MagicNumber:LineChart.kt$6</ID>
     <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
     <ID>MagicNumber:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$65535</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
-    <ID>MagicNumber:NetworkModule.kt$SessionIdAuthenticator$100</ID>
     <ID>MagicNumber:PiHoleControlApp.kt$500</ID>
     <ID>MagicNumber:PiHoleFilterRuleTypeV5.kt$PiHoleFilterRuleType.REGEX_DENY$3</ID>
     <ID>MagicNumber:PiHoleLogsResponseDataV5.kt$PiHoleLogsResponseDataV5.PiHoleLogEntryData.PiHoleLogSerializer$4</ID>

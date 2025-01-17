@@ -19,7 +19,7 @@ interface LogsContract {
         val filterToTime: Long?,
     ) {
         companion object {
-            internal val availableLogLimits = listOf(500, 1000, 2500, 5000)
+            internal val availableLogLimits = listOf(100, 500, 1000, 2500)
             fun initial() = BottomSheetUiState(
                 logsLimit = availableLogLimits.first(),
                 selectedLogEntryStatus = LogEntryStatus.ALL,
@@ -55,9 +55,13 @@ interface LogsContract {
         sealed class Snackbar(val message: UiText) : Effect {
             data object DomainAddedToAllowList :
                 Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_allow_list))
+            data class AddDomainToAllowListFailed(val domain: String, val reason: UiText) :
+                Snackbar(message = reason)
 
             data object DomainAddedToBlockList :
-                Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_block_list))
+                Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_deny_list))
+            data class AddDomainToDenyListFailed(val domain: String, val reason: UiText) :
+                Snackbar(message = reason)
         }
     }
 

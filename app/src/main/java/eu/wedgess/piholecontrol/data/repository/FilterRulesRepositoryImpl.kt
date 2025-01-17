@@ -41,11 +41,15 @@ class FilterRulesRepositoryImpl(
             mapper = { response ->
                 when (response) {
                     is PiHoleCombinedFilterRulesResponseDataV5 -> {
-                        (response.rules + response.regexRules).map { it.toFilterRuleEntity() }
+                        (response.rules + response.regexRules)
+                            .sortedBy { it.dateAdded }
+                            .map { it.toFilterRuleEntity() }
                     }
 
                     is PiHoleFilterRulesResponseDataV6 -> {
-                        response.domains.map { it.toFilterRuleEntity() }
+                        response.domains
+                            .sortedBy { it.dateAdded }
+                            .map { it.toFilterRuleEntity() }
                     }
 
                     else -> {

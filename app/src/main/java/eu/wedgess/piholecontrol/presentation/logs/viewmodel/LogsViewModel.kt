@@ -201,6 +201,21 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW).onFailure {
                 Timber.e(it, "Failed to add domain to allow list: $domain")
+                emitSideEffect(
+                    LogsContract.Effect.Snackbar.AddDomainToAllowListFailed(
+                        domain = domain,
+                        reason = UiText.StringResourceWithArgs(
+                            R.string.logs_adding_to_allow_list_failed,
+                            it.message ?: "Unknown"
+                        )
+                    )
+                ).also {
+                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                }
+            }.onSuccess {
+                emitSideEffect(LogsContract.Effect.Snackbar.DomainAddedToAllowList).also {
+                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                }
             }
         }
     }
@@ -209,6 +224,21 @@ class LogsViewModel @Inject constructor(
         viewModelScope.launch {
             addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
+                emitSideEffect(
+                    LogsContract.Effect.Snackbar.AddDomainToDenyListFailed(
+                        domain = domain,
+                        reason = UiText.StringResourceWithArgs(
+                            R.string.logs_adding_to_deny_list_failed,
+                            it.message ?: "Unknown"
+                        )
+                    )
+                ).also {
+                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                }
+            }.onSuccess {
+                emitSideEffect(LogsContract.Effect.Snackbar.DomainAddedToBlockList).also {
+                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                }
             }
         }
     }
