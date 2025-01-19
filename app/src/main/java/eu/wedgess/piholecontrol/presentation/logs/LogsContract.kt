@@ -34,7 +34,7 @@ interface LogsContract {
         val showSearchView: Boolean,
     ) {
         companion object {
-            fun  initial() = SearchUiState(
+            fun initial() = SearchUiState(
                 searchQuery = "",
                 showSearchView = false
             )
@@ -63,11 +63,13 @@ interface LogsContract {
         sealed class Snackbar(val message: UiText) : Effect {
             data object DomainAddedToAllowList :
                 Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_allow_list))
+
             data class AddDomainToAllowListFailed(val domain: String, val reason: UiText) :
                 Snackbar(message = reason)
 
             data object DomainAddedToBlockList :
                 Snackbar(message = UiText.StringResource(R.string.logs_domain_added_to_deny_list))
+
             data class AddDomainToDenyListFailed(val domain: String, val reason: UiText) :
                 Snackbar(message = reason)
         }

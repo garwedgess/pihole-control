@@ -9,6 +9,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
@@ -34,11 +35,16 @@ fun FiltersScreen(
         },
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                AnimatedTabContainer(tabItems = FilterTab.all()) { item ->
-                    onEvent(FiltersContract.Event.OnFilterTabChanged(item.toFilterRuleType()))
+                AnimatedTabContainer(
+                    tabItems = uiState.tabOptionItems
+                ) { item ->
+                    LaunchedEffect(item) {
+                        onEvent(FiltersContract.Event.OnFilterTabChanged(item.toFilterRuleType()))
+                    }
                     when (item) {
                         FilterTab.AllowList -> FilterTabScreenRoot(
                             filterScreenTabType = FilterScreenTabType.ALLOW,
+                            filterByOptions = uiState.selectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
@@ -48,6 +54,7 @@ fun FiltersScreen(
 
                         FilterTab.BlockList -> FilterTabScreenRoot(
                             filterScreenTabType = FilterScreenTabType.BLOCK,
+                            filterByOptions = uiState.selectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))

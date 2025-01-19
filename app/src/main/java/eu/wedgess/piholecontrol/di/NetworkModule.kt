@@ -33,8 +33,8 @@ import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.Protocol
+import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier
 import timber.log.Timber
 import java.io.File

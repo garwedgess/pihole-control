@@ -73,8 +73,8 @@
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("SRV") val SRV: Int = 0</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("SVCB") val SVCB: Int = 0</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryTypesData$@SerialName("TXT") val TXT: Int = 0</ID>
+    <ID>CyclomaticComplexMethod:FiltersViewModel.kt$FiltersViewModel$override fun onEvent(event: FiltersContract.Event)</ID>
     <ID>CyclomaticComplexMethod:LogAnswerTypeEntityExt.kt$@Composable fun PiHoleLogsEntity.LogsAnswerTypeEntity.toStringValue()</ID>
-    <ID>CyclomaticComplexMethod:LogAnswerTypeMapper.kt$fun LogsAnswerType.toLogAnswerTypeEntity()</ID>
     <ID>CyclomaticComplexMethod:LogEntryStatusExt.kt$@Composable fun PiHoleLogsEntity.LogEntryStatusEntity.toStringValue()</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
@@ -93,6 +93,7 @@
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
+    <ID>LambdaParameterInRestartableEffect:FiltersScreen.kt$onEvent</ID>
     <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
     <ID>LargeClass:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest</ID>
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and blank query - returns all entries`()</ID>
@@ -103,6 +104,7 @@
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
+    <ID>LongParameterList:FilterTopBarActions.kt$( onSearchClick: () -&gt; Unit, onFilterByClick: () -&gt; Unit, isFilterByMenuVisible: Boolean, selectedFilterByOptions: List&lt;FilterByOption&gt;, availableFilterByOptions: List&lt;FilterByOption&gt;, onFilterByOptionSelected: (FilterByOption) -&gt; Unit, onDismissFiltering: () -&gt; Unit )</ID>
     <ID>LongParameterList:LogsRepository.kt$LogsRepository$( connection: ConnectionEntity, limit: Int, status: LogEntryStatus, query: String, from: Long?, until: Long? )</ID>
     <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
     <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
@@ -215,6 +217,7 @@
     <ID>NoBlankLineBeforeRbrace:PasswordTextField.kt$PasswordTextFieldPreviewParams$ </ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
+    <ID>ParameterNaming:FilterTopBarActions.kt$onFilterByOptionSelected</ID>
     <ID>ParameterNaming:ModifyConnectionTextField.kt$onValueChanged</ID>
     <ID>ParameterNaming:PasswordTextField.kt$onValueChanged</ID>
     <ID>ParameterNaming:PasswordTextField.kt$onVisibilityChanged</ID>

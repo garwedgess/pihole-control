@@ -12,6 +12,8 @@ import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption.Companion.containsEntityEquivalent
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
@@ -29,32 +31,39 @@ class FilterTabViewModel @AssistedInject constructor(
     EventDrivenViewModel<FilterTabContract.Event> {
 
     private val searchQuery = MutableStateFlow("")
+    private val filterByOptions = MutableStateFlow(
+        FilterByOption.getByType(filterRuleType.toFilterType())
+    )
 
-    val uiResult = filterRulesUseCase(filterRuleType.toFilterTypePair().first)
-        .combine(searchQuery) { filterRules, query ->
-            filterRules.fold(
-                onFailure = {
-                    handleErrorThrowable(
-                        throwable = it,
-                        onRetry = ::onRefreshData
+    val uiResult = combine(
+        filterRulesUseCase(filterRuleType.toFilterType()),
+        searchQuery,
+        filterByOptions
+    ) { filterRules, query, filterByOptions ->
+        filterRules.fold(
+            onFailure = {
+                handleErrorThrowable(
+                    throwable = it,
+                    onRetry = ::onRefreshData
+                )
+            },
+            onSuccess = { rules ->
+                val filteredRules =
+                    rules
+                        .filter { it.domain.contains(query.lowercase(), ignoreCase = true) }
+                        .filter { filterByOptions.containsEntityEquivalent(it.type) }
+                        .map { it.toInfo() }
+
+                if (filteredRules.isEmpty()) {
+                    UIResult.Empty(
+                        ResultType.Empty.WithTitle(UiText.DynamicString("No rules found"))
                     )
-                },
-                onSuccess = { rules ->
-                    val filteredRules =
-                        rules
-                            .filter { it.domain.contains(query.lowercase(), ignoreCase = true) }
-                            .map { it.toInfo() }
-
-                    if (filteredRules.isEmpty()) {
-                        UIResult.Empty(
-                            ResultType.Empty.WithTitle(UiText.DynamicString("No rules found"))
-                        )
-                    } else {
-                        UIResult.Loaded(FilterTabContract.UiState(filteredRules))
-                    }
+                } else {
+                    UIResult.Loaded(FilterTabContract.UiState(filteredRules))
                 }
-            )
-        }
+            }
+        )
+    }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
@@ -65,7 +74,12 @@ class FilterTabViewModel @AssistedInject constructor(
         when (event) {
             FilterTabContract.Event.OnRefresh -> onRefreshData()
             is FilterTabContract.Event.OnSearchQueryChanged -> setSearchQuery(event.query)
+            is FilterTabContract.Event.OnFilterByOptionsChanged -> setFilterByOptions(event.filterByOptions)
         }
+    }
+
+    private fun setFilterByOptions(options: List<FilterByOption>) {
+        viewModelScope.launch { filterByOptions.emit(options) }
     }
 
     private fun setSearchQuery(query: String?) {

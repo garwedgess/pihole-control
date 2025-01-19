@@ -41,7 +41,19 @@ fun NavGraphBuilder.filtersRoot(
                         FilterTopBarActions(
                             onSearchClick = {
                                 viewModel.onEvent(FiltersContract.Event.OnShowSearchView)
-                            }
+                            },
+                            onFilterByClick = {
+                                viewModel.onEvent((FiltersContract.Event.OnShowFilterByMenu))
+                            },
+                            onDismissFiltering = {
+                                viewModel.onEvent((FiltersContract.Event.OnDismissFilterBy))
+                            },
+                            onFilterByOptionSelected = {
+                                viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(it))
+                            },
+                            availableFilterByOptions = uiState.filterByOptions,
+                            isFilterByMenuVisible = uiState.showFilterByMenu,
+                            selectedFilterByOptions = uiState.selectedFilterBy
                         )
                     },
                     showSearchView = uiState.showSearchView,

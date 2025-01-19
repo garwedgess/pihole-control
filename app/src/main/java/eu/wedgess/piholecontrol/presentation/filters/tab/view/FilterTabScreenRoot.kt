@@ -12,6 +12,7 @@ import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
@@ -20,6 +21,7 @@ import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabView
 @Composable
 fun FilterTabScreenRoot(
     filterScreenTabType: FilterScreenTabType,
+    filterByOptions: List<FilterByOption>,
     onFilterRuleClick: (FilterRuleInfo) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
     searchQuery: String? = null
@@ -35,6 +37,10 @@ fun FilterTabScreenRoot(
 
     LaunchedEffect(searchQuery) {
         viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged(searchQuery ?: ""))
+    }
+
+    LaunchedEffect(filterByOptions) {
+        viewModel.onEvent(FilterTabContract.Event.OnFilterByOptionsChanged(filterByOptions))
     }
 
     LaunchedEffect(Unit) {

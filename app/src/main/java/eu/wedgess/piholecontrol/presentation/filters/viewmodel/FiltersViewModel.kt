@@ -12,6 +12,7 @@ import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModel
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -68,10 +69,59 @@ class FiltersViewModel @Inject constructor(
                 copy(dialogType = FilterDialogType.AddFilterRule(type = currentPiHoleFilterRuleType))
             }
 
-            is FiltersContract.Event.OnFilterTabChanged -> currentPiHoleFilterRuleType = event.type
+            is FiltersContract.Event.OnFilterTabChanged -> updateUiState {
+                with(FilterByOption.getByType(event.type)) {
+                    copy(filterByOptions = this, selectedFilterBy = this)
+                }
+            }.also { currentPiHoleFilterRuleType = event.type }
+
             is FiltersContract.Event.OnDeleteFilterRuleClick -> updateUiState {
                 copy(dialogType = FilterDialogType.OnConfirmFilterDelete(filterRule = event.rule))
             }
+
+            FiltersContract.Event.OnDismissFilterBy -> updateUiState {
+                copy(showFilterByMenu = false)
+            }
+
+            FiltersContract.Event.OnShowFilterByMenu -> updateUiState {
+                copy(showFilterByMenu = true)
+            }
+
+            is FiltersContract.Event.OnFilterByOptionClick -> {
+                updateUiState {
+                    val newOptions = toggleFilterOption(
+                        previouslySelectedOptions = selectedFilterBy,
+                        option = event.option,
+                        availableOptions = filterByOptions
+                    )
+                    copy(
+                        selectedFilterBy = newOptions,
+                        showFilterByMenu = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun toggleFilterOption(
+        previouslySelectedOptions: List<FilterByOption>,
+        option: FilterByOption,
+        availableOptions: List<FilterByOption>
+    ): List<FilterByOption> {
+        val newOptions = previouslySelectedOptions.toMutableList()
+        val otherOption = availableOptions.firstOrNull { it != option }
+
+        if (newOptions.contains(option)) {
+            newOptions.remove(option)
+        } else {
+            newOptions.add(option)
+        }
+
+        return if (newOptions.isEmpty() && otherOption != null) {
+            newOptions.add(otherOption)
+            newOptions.toList()
+        } else {
+            newOptions.toList()
         }
     }
 

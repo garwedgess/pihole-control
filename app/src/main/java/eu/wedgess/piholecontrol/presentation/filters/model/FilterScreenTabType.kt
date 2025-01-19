@@ -9,4 +9,9 @@ enum class FilterScreenTabType {
         ALLOW -> Pair(FilterRuleTypeEntity.ALLOW, FilterRuleTypeEntity.REGEX_ALLOW)
         BLOCK -> Pair(FilterRuleTypeEntity.DENY, FilterRuleTypeEntity.REGEX_DENY)
     }
+
+    fun toFilterType(): FilterRuleTypeEntity = when (this) {
+        ALLOW -> FilterRuleTypeEntity.ALLOW
+        BLOCK -> FilterRuleTypeEntity.DENY
+    }
 }

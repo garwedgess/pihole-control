@@ -11,11 +11,13 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRulesUseCase
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -193,4 +195,102 @@ class FilterTabViewModelTest {
                 cancelAndConsumeRemainingEvents()
             }
         }
+
+    @Test
+    fun `WHEN OnFilterByOptionsChanged event is received THEN filtered rules should be updated`() =
+        runTest {
+            // Given
+            val allowRule = FilterRuleEntity(
+                id = 1,
+                enabled = true,
+                comment = null,
+                dateModified = "12-01-2023",
+                dateAdded = "11-01-2023",
+                domain = "test.com",
+                groups = emptyList(),
+                type = FilterRuleTypeEntity.ALLOW
+            )
+            val regexRule = allowRule.copy(type = FilterRuleTypeEntity.REGEX_ALLOW)
+
+            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
+                Result.success(listOf(allowRule, regexRule))
+            )
+
+            viewModel = FilterTabViewModel(
+                fetchFilterRulesUseCase,
+                FilterScreenTabType.ALLOW
+            )
+
+            // When
+            viewModel.onEvent(
+                FilterTabContract.Event.OnFilterByOptionsChanged(
+                    listOf(FilterByOption.ALLOW_EXACT)
+                )
+            )
+
+            // Then
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.filterRules)
+                    .containsExactly(allowRule.toInfo())
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN empty filter results WHEN rules are filtered THEN Empty state should be emitted`() =
+        runTest {
+            // Given
+            val rules = listOf(
+                FilterRuleEntity(
+                    id = 1,
+                    enabled = true,
+                    comment = null,
+                    dateModified = "12-01-2023",
+                    dateAdded = "11-01-2023",
+                    domain = "test.com",
+                    groups = emptyList(),
+                    type = FilterRuleTypeEntity.ALLOW
+                )
+            )
+
+            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
+                Result.success(rules)
+            )
+
+            viewModel = FilterTabViewModel(
+                fetchFilterRulesUseCase,
+                FilterScreenTabType.ALLOW
+            )
+
+            // When - search for non-existent domain
+            viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged("nonexistent"))
+
+            // Then
+            viewModel.uiResult.test {
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Empty::class.java)
+                assertThat((result as UIResult.Empty).emptyType)
+                    .isInstanceOf(ResultType.Empty.WithTitle::class.java)
+                assertThat((result.emptyType as ResultType.Empty.WithTitle).title)
+                    .isEqualTo(UiText.DynamicString("No rules found"))
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnRefresh event is received THEN rules should be refreshed`() = runTest {
+        // Given
+        viewModel = FilterTabViewModel(
+            fetchFilterRulesUseCase,
+            FilterScreenTabType.ALLOW
+        )
+
+        // When
+        viewModel.onEvent(FilterTabContract.Event.OnRefresh)
+
+        // Then
+        coVerify { fetchFilterRulesUseCase.refreshRules() }
+    }
 }

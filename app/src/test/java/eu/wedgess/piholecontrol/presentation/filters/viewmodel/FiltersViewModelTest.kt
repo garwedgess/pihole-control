@@ -11,6 +11,7 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import io.mockk.MockKAnnotations
@@ -505,4 +506,76 @@ class FiltersViewModelTest {
                 cancelAndConsumeRemainingEvents()
             }
         }
+
+    @Test
+    fun `WHEN OnDismissFilterBy event is received THEN showFilterByMenu should be false`() = runTest {
+        // Given
+        viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+        viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
+
+        // When
+        viewModel.onEvent(FiltersContract.Event.OnDismissFilterBy)
+
+        // Then
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.showFilterByMenu).isFalse()
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN OnShowFilterByMenu event is received THEN showFilterByMenu should be true`() = runTest {
+        // Given
+        viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+
+        // When
+        viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
+
+        // Then
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.showFilterByMenu).isTrue()
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN OnFilterByOptionClick event is received THEN selected filter options should be updated`() = runTest {
+        // Given
+        viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+        val option = FilterByOption.ALLOW_EXACT
+
+        // When
+        viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(option))
+
+        // Then
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.selectedFilterBy).contains(option)
+            assertThat(result.showFilterByMenu).isFalse()
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `GIVEN only one filter option selected WHEN that option is deselected THEN other option should be automatically selected`() = runTest {
+        // Given
+        viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+        val firstOption = FilterByOption.ALLOW_EXACT
+        val secondOption = FilterByOption.ALLOW_REGEX
+
+        viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(secondOption))
+        viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
+
+        viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
+
+        // Then
+        viewModel.uiState.test {
+            val result = awaitItem()
+            assertThat(result.selectedFilterBy).containsExactly(secondOption)
+            assertThat(result.showFilterByMenu).isFalse()
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 }

@@ -20,8 +20,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.view.components.actions.FilterTopBarActions
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.utils.UiText
@@ -112,7 +114,17 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
             connections = listOf(ConnectionEntity.Version5.default),
-            actions = { FilterTopBarActions(onSearchClick = {}) },
+            actions = {
+                FilterTopBarActions(
+                    onSearchClick = {},
+                    onFilterByClick = {},
+                    onDismissFiltering = {},
+                    onFilterByOptionSelected = {},
+                    isFilterByMenuVisible = false,
+                    availableFilterByOptions = emptyList(),
+                    selectedFilterByOptions = emptyList()
+                )
+            },
             searchContent = null,
             showSearchView = false
         ),
@@ -122,7 +134,17 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
             connections = listOf(ConnectionEntity.Version5.default),
-            actions = { FilterTopBarActions(onSearchClick = {}) },
+            actions = {
+                FilterTopBarActions(
+                    onSearchClick = {},
+                    onFilterByClick = {},
+                    onDismissFiltering = {},
+                    onFilterByOptionSelected = {},
+                    isFilterByMenuVisible = true,
+                    availableFilterByOptions = FilterByOption.getByType(FilterRuleTypeEntity.ALLOW),
+                    selectedFilterByOptions = FilterByOption.getByType(FilterRuleTypeEntity.ALLOW)
+                )
+            },
             searchContent = null,
             showSearchView = false
         ),
@@ -131,7 +153,17 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             currentConnection = ConnectionEntity.Version5.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
-            actions = { FilterTopBarActions(onSearchClick = {}) },
+            actions = {
+                FilterTopBarActions(
+                    onSearchClick = {},
+                    onFilterByClick = {},
+                    onDismissFiltering = {},
+                    onFilterByOptionSelected = {},
+                    isFilterByMenuVisible = false,
+                    availableFilterByOptions = emptyList(),
+                    selectedFilterByOptions = emptyList()
+                )
+            },
             searchContent = {
                 SearchContent(
                     placeHolderText = "Search for filter...",
