@@ -44,25 +44,29 @@ class LogsViewModel @Inject constructor(
     SideEffectViewModel<LogsContract.Effect> by SideEffectViewModelImpl() {
 
     private val _uiState = MutableStateFlow(LogsContract.UiState.initial())
-    private val searchQueryFlow = _uiState.map { it.searchQuery }
     private val _bottomSheetUiState = MutableStateFlow(LogsContract.BottomSheetUiState.initial())
     val bottomSheetUiState = _bottomSheetUiState.asStateFlow()
+    private val _searchUiState = MutableStateFlow(LogsContract.SearchUiState.initial())
+    val searchUiState = _searchUiState.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiResult =
-        _bottomSheetUiState.onStart { emit(LogsContract.BottomSheetUiState.initial()) }
-            .combine(searchQueryFlow) { sheetState, searchQuery ->
+        combine(_bottomSheetUiState, _searchUiState) { sheetState, searchState ->
+            sheetState to searchState
+        }
+            .onStart { emit(LogsContract.BottomSheetUiState.initial() to LogsContract.SearchUiState.initial()) }
+            .map { (sheetState, searchState) ->
                 fetchLogsUseCase(
                     limit = sheetState.logsLimit,
                     status = sheetState.selectedLogEntryStatus,
-                    query = searchQuery,
+                    query = searchState.searchQuery,
                     from = sheetState.filterFromTime,
                     until = sheetState.filterToTime
                 )
             }
-            .flatMapLatest { result ->
-                _uiState.combine(result) { uiState, logsResult ->
-                    logsResult.fold(
+            .flatMapLatest { logsFlow ->
+                logsFlow.combine(_uiState) { result, uiState ->
+                    result.fold(
                         onSuccess = { logs ->
                             if (logs.isEmpty()) {
                                 UIResult.Empty(
@@ -125,11 +129,11 @@ class LogsViewModel @Inject constructor(
                 it.copy(dialogType = LogsDialogType.ShowDetailsDialog(event.log))
             }
 
-            is LogsContract.Event.OnSearchQueryChanged -> _uiState.update {
+            is LogsContract.Event.OnSearchQueryChanged -> _searchUiState.update {
                 it.copy(searchQuery = event.query)
             }
 
-            LogsContract.Event.OnShowSearchView -> _uiState.update {
+            LogsContract.Event.OnShowSearchView -> _searchUiState.update {
                 it.copy(showSearchView = true)
             }
 
@@ -183,11 +187,11 @@ class LogsViewModel @Inject constructor(
 
             is LogsContract.Event.OnStatusChanged -> handleStatusFilterChanged(event.status)
             is LogsContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
-            LogsContract.Event.OnSearchClick -> _uiState.update {
+            LogsContract.Event.OnSearchClick -> _searchUiState.update {
                 it.copy(showSearchView = false)
             }
 
-            is LogsContract.Event.OnSearchExpandedChanged -> _uiState.update {
+            is LogsContract.Event.OnSearchExpandedChanged -> _searchUiState.update {
                 it.copy(showSearchView = event.expanded)
             }
         }
@@ -210,7 +214,7 @@ class LogsViewModel @Inject constructor(
                         )
                     )
                 ).also {
-                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                    _uiState.update { state -> state.copy(dialogType = LogsDialogType.None) }
                 }
             }.onSuccess {
                 emitSideEffect(LogsContract.Effect.Snackbar.DomainAddedToAllowList).also {
@@ -233,7 +237,7 @@ class LogsViewModel @Inject constructor(
                         )
                     )
                 ).also {
-                    _uiState.update { it.copy(dialogType = LogsDialogType.None) }
+                    _uiState.update { state -> state.copy(dialogType = LogsDialogType.None) }
                 }
             }.onSuccess {
                 emitSideEffect(LogsContract.Effect.Snackbar.DomainAddedToBlockList).also {
@@ -245,9 +249,9 @@ class LogsViewModel @Inject constructor(
 
     private fun handleClearSearchQuery(query: String) {
         if (query.isEmpty()) {
-            _uiState.update { it.copy(showSearchView = false) }
+            _searchUiState.update { it.copy(showSearchView = false) }
         } else {
-            _uiState.update { it.copy(searchQuery = "") }
+            _searchUiState.update { it.copy(searchQuery = "") }
         }
     }
 }

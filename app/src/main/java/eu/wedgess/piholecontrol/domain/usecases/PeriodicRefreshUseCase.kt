@@ -24,13 +24,11 @@ class PeriodicRefreshUseCase(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun <T> invoke(fetchData: suspend (ConnectionEntity) -> Result<T>): Flow<Result<T>> {
-        val delayFlow = settingsRepository.getRefreshInterval()
-
         return refreshFlow.flatMapLatest {
             combine(
                 observeActiveUser(),
                 observeNetworkConnectivityUseCase(),
-                delayFlow
+                settingsRepository.getRefreshInterval()
             ) { pihole, networkStatus, delay ->
                 Triple(pihole, networkStatus, delay)
             }
@@ -42,17 +40,16 @@ class PeriodicRefreshUseCase(
 
                 when (currentRefreshMode) {
                     RefreshMode.Automatic -> {
-                        while (
-                            activePihole != null &&
-                            currentRefreshMode == RefreshMode.Automatic
-                        ) {
+                        if (activePihole != null) {
                             val result = fetchData(activePihole)
                             emit(result)
+
                             if (result.isFailure) {
                                 currentRefreshMode = RefreshMode.Manual
                             } else {
                                 lastResult = result
                                 delay(delay)
+                                refreshFlow.refresh()
                             }
                         }
                     }
@@ -61,6 +58,7 @@ class PeriodicRefreshUseCase(
                         if (activePihole != null) {
                             val result = fetchData(activePihole)
                             emit(result)
+
                             if (result.isSuccess) {
                                 lastResult = result
                                 currentRefreshMode = RefreshMode.Automatic
@@ -70,6 +68,7 @@ class PeriodicRefreshUseCase(
 
                     RefreshMode.None -> {
                         lastResult?.run {
+                            @Suppress("UNCHECKED_CAST")
                             emit(this@run as Result<T>)
                         } ?: emit(
                             Result.failure(Exception("Failed to connect to ${activePihole?.host}"))

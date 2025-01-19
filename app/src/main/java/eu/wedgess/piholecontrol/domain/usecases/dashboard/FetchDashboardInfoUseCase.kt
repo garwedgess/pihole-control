@@ -27,7 +27,11 @@ class FetchDashboardInfoUseCase(
                 val overTimeDataResult = deferredOverTimeData.await()
                 val clientsOverTimeDataResult = deferredClientsOverTimeData.await()
 
-                if (summaryResult.isFailure && overTimeDataResult.isFailure && clientsOverTimeDataResult.isFailure) {
+                if (
+                    summaryResult.isFailure &&
+                    overTimeDataResult.isFailure &&
+                    clientsOverTimeDataResult.isFailure
+                ) {
                     Result.failure(Throwable(summaryResult.exceptionOrNull()))
                 } else {
                     Result.success(

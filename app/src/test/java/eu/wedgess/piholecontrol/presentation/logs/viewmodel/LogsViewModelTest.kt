@@ -429,9 +429,9 @@ class LogsViewModelTest {
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val query = "test"
 
-            val emittedStates = mutableListOf<UIResult<LogsContract.UiState>>()
+            val emittedStates = mutableListOf<LogsContract.SearchUiState>()
             val job = backgroundScope.launch {
-                viewModel.uiResult.collect { emittedStates.add(it) }
+                viewModel.searchUiState.collect { emittedStates.add(it) }
             }
 
             // When
@@ -441,8 +441,8 @@ class LogsViewModelTest {
             runCurrent()
             job.cancel()
 
-            assertThat((emittedStates[0] as UIResult.Loaded).data.searchQuery).isEqualTo(query)
-            assertThat((emittedStates[1] as UIResult.Loaded).data.searchQuery).isEqualTo("")
+            assertThat(emittedStates[0].searchQuery).isEqualTo(query)
+            assertThat(emittedStates[1].searchQuery).isEqualTo("")
         }
 
     @Test
@@ -461,9 +461,9 @@ class LogsViewModelTest {
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val query = ""
 
-            val emittedStates = mutableListOf<UIResult<LogsContract.UiState>>()
+            val emittedStates = mutableListOf<LogsContract.SearchUiState>()
             val job = backgroundScope.launch {
-                viewModel.uiResult.collect { emittedStates.add(it) }
+                viewModel.searchUiState.collect { emittedStates.add(it) }
             }
 
             // When
@@ -473,8 +473,8 @@ class LogsViewModelTest {
             runCurrent()
             job.cancel()
 
-            assertThat((emittedStates[0] as UIResult.Loaded).data.searchQuery).isEqualTo(query)
-            assertThat((emittedStates[0] as UIResult.Loaded).data.showSearchView).isFalse()
+            assertThat(emittedStates[0].searchQuery).isEqualTo(query)
+            assertThat(emittedStates[0].showSearchView).isFalse()
         }
 
     @Test
@@ -492,9 +492,9 @@ class LogsViewModelTest {
             } returns flowOf(Result.success(mockk(relaxed = true)))
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
 
-            val emittedStates = mutableListOf<UIResult<LogsContract.UiState>>()
+            val emittedStates = mutableListOf<LogsContract.SearchUiState>()
             val job = backgroundScope.launch {
-                viewModel.uiResult.collect { emittedStates.add(it) }
+                viewModel.searchUiState.collect { emittedStates.add(it) }
             }
 
             // When
@@ -505,8 +505,9 @@ class LogsViewModelTest {
             job.cancel()
 
             // Then
-            assertThat((emittedStates[0] as UIResult.Loaded).data.showSearchView).isTrue()
-            assertThat((emittedStates[1] as UIResult.Loaded).data.showSearchView).isFalse()
+            assertThat(emittedStates).hasSize(2)
+            assertThat(emittedStates.first().showSearchView).isTrue()
+            assertThat(emittedStates.last().showSearchView).isFalse()
         }
 
     @Test
@@ -525,9 +526,9 @@ class LogsViewModelTest {
             viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
             val expanded = true
 
-            val emittedStates = mutableListOf<UIResult<LogsContract.UiState>>()
+            val emittedStates = mutableListOf<LogsContract.SearchUiState>()
             val job = backgroundScope.launch {
-                viewModel.uiResult.collect { emittedStates.add(it) }
+                viewModel.searchUiState.collect { emittedStates.add(it) }
             }
 
             // When
@@ -538,8 +539,9 @@ class LogsViewModelTest {
             job.cancel()
 
             // Then
-            assertThat((emittedStates[0] as UIResult.Loaded).data.showSearchView).isTrue()
-            assertThat((emittedStates[1] as UIResult.Loaded).data.showSearchView).isFalse()
+            assertThat(emittedStates).hasSize(2)
+            assertThat(emittedStates.first().showSearchView).isTrue()
+            assertThat(emittedStates.last().showSearchView).isFalse()
         }
 
     @Test
@@ -634,7 +636,7 @@ class LogsViewModelTest {
             viewModel.uiResult.test {
                 val loadedResult = awaitItem()
                 assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
-                assertThat((loadedResult as UIResult.Loaded).data.searchQuery).isEqualTo(query)
+                assertThat(viewModel.searchUiState.value.searchQuery).isEqualTo(query)
                 cancelAndConsumeRemainingEvents()
             }
         }

@@ -3,7 +3,6 @@ package eu.wedgess.piholecontrol.domain.usecases.logs
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
@@ -45,8 +44,8 @@ class FetchLogsUseCaseTest {
         coEvery { logsRepository.fetchLogs(connection, any(), any(), any(), any(), any()) } returns
                 Result.success(logEntries)
 
-        coEvery { periodicRefreshUseCase<List<LogEntryEntity>>(any()) } answers {
-            val fetchData = arg<suspend (ConnectionEntity) -> Result<List<LogEntryEntity>>>(0)
+        coEvery { periodicRefreshUseCase<List<PiHoleLogsEntity>>(any()) } answers {
+            val fetchData = arg<suspend (ConnectionEntity) -> Result<List<PiHoleLogsEntity>>>(0)
             flow {
                 emit(fetchData(connection))
             }
@@ -81,8 +80,8 @@ class FetchLogsUseCaseTest {
             )
         } returns expectedError
 
-        coEvery { periodicRefreshUseCase<List<LogEntryEntity>>(any()) } answers {
-            val fetchData = arg<suspend (ConnectionEntity) -> Result<List<LogEntryEntity>>>(0)
+        coEvery { periodicRefreshUseCase<List<PiHoleLogsEntity>>(any()) } answers {
+            val fetchData = arg<suspend (ConnectionEntity) -> Result<List<PiHoleLogsEntity>>>(0)
             flow {
                 emit(fetchData(connection))
             }

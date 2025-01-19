@@ -34,6 +34,7 @@ import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.Protocol
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier
 import timber.log.Timber
 import java.io.File
@@ -64,6 +65,7 @@ object NetworkModule {
     fun provideAuthOkHttpClient(): OkHttpClient = OkHttpClient
         .Builder()
         .dns(ip4PreferredDns)
+        .protocols(listOf(Protocol.HTTP_1_1))
         .build()
 
     @Provides
@@ -84,6 +86,7 @@ object NetworkModule {
                 level = HttpLoggingInterceptor.Level.HEADERS
             }
         )
+        .protocols(listOf(Protocol.HTTP_1_1))
         .dns(ip4PreferredDns)
         .build()
 

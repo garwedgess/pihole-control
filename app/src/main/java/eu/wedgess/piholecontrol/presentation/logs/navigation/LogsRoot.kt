@@ -8,7 +8,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,7 +26,6 @@ import eu.wedgess.piholecontrol.presentation.logs.view.LogsScreen
 import eu.wedgess.piholecontrol.presentation.logs.view.components.actions.LogsTopBarActions
 import eu.wedgess.piholecontrol.presentation.logs.viewmodel.LogsViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
-import eu.wedgess.piholecontrol.utils.UiText
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.logsRoot(
@@ -34,18 +35,19 @@ fun NavGraphBuilder.logsRoot(
         val viewModel: LogsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
         val bottomSheetUiState by viewModel.bottomSheetUiState.collectAsStateWithLifecycle()
+        val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
         val sideEffect = viewModel.sideEffect
         val context = LocalContext.current
+        var appbarState by remember { mutableStateOf(AppBarState()) }
+        val scaffoldState = rememberBottomSheetScaffoldState()
+        val snackbarHostState = remember { SnackbarHostState() }
 
-        LaunchedEffect(
-            key1 = (uiResult as? UIResult.Loaded)?.data?.showSearchView,
-            key2 = (uiResult as? UIResult.Loaded)?.data?.logs
-        ) {
-            onComposing(
-                AppBarState(
-                    title = UiText.StringResource(id = R.string.nav_title_logs),
-                    actions = {
-                        (uiResult as? UIResult.Loaded)?.data?.run {
+        uiResult.run {
+            if (this is UIResult.Loaded) {
+                val state = this.data
+                LaunchedEffect(state.showSortingDropdownMenu) {
+                    appbarState = appbarState.copy(
+                        actions = {
                             LogsTopBarActions(
                                 onSearchClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSearchView)
@@ -54,54 +56,50 @@ fun NavGraphBuilder.logsRoot(
                                     viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
                                 },
                                 onSortItemClick = {
-                                    viewModel.onEvent(
-                                        LogsContract.Event.OnSortTypeSelected(
-                                            it
-                                        )
-                                    )
+                                    viewModel.onEvent(LogsContract.Event.OnSortTypeSelected(it))
                                 },
                                 onDismissSort = {
                                     viewModel.onEvent(LogsContract.Event.OnSortingDismissed)
                                 },
-                                isSortingMenuVisible = this.showSortingDropdownMenu,
-                                selectedSorting = this.sorting
+                                isSortingMenuVisible = state.showSortingDropdownMenu,
+                                selectedSorting = state.sorting
                             )
                         }
-                    },
-                    showSearchView = (uiResult as? UIResult.Loaded)?.data?.showSearchView == true,
-                    searchContent = {
-                        (uiResult as? UIResult.Loaded)?.data?.run {
-                            SearchContent(
-                                placeHolderText = context.getString(R.string.logs_search_placeholder),
-                                searchQuery = this.searchQuery,
-                                showSearchView = this.showSearchView,
-                                onExpandedChange = {
-                                    viewModel.onEvent(
-                                        LogsContract.Event.OnSearchExpandedChanged(
-                                            it
-                                        )
-                                    )
-                                },
-                                onSearch = { viewModel.onEvent(LogsContract.Event.OnSearchClick) },
-                                onQueryChange = {
-                                    viewModel.onEvent(
-                                        LogsContract.Event.OnSearchQueryChanged(
-                                            it
-                                        )
-                                    )
-                                },
-                                onClearSearchQuery = {
-                                    viewModel.onEvent(LogsContract.Event.OnClearSearchQuery(it))
-                                }
-                            )
-                        }
-                    }
-                )
-            )
+                    )
+                    onComposing(appbarState)
+                }
+            }
         }
 
-        val scaffoldState = rememberBottomSheetScaffoldState()
-        val snackbarHostState = remember { SnackbarHostState() }
+        LaunchedEffect(searchUiState.showSearchView, searchUiState.searchQuery) {
+            appbarState = appbarState.copy(
+                showSearchView = searchUiState.showSearchView,
+                searchContent = {
+                    SearchContent(
+                        placeHolderText = context.getString(
+                            R.string.logs_search_placeholder
+                        ),
+                        searchQuery = searchUiState.searchQuery,
+                        showSearchView = searchUiState.showSearchView,
+                        onExpandedChange = {
+                            viewModel.onEvent(
+                                LogsContract.Event.OnSearchExpandedChanged(it)
+                            )
+                        },
+                        onSearch = {
+                            viewModel.onEvent(LogsContract.Event.OnSearchClick)
+                        },
+                        onQueryChange = {
+                            viewModel.onEvent(LogsContract.Event.OnSearchQueryChanged(it))
+                        },
+                        onClearSearchQuery = {
+                            viewModel.onEvent(LogsContract.Event.OnClearSearchQuery(it))
+                        }
+                    )
+                }
+            )
+            onComposing(appbarState)
+        }
 
         CollectSideEffect(sideEffect = sideEffect) { effect ->
             when (effect) {

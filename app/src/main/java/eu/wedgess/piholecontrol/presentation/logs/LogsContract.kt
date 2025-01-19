@@ -29,11 +29,21 @@ interface LogsContract {
         }
     }
 
+    data class SearchUiState(
+        val searchQuery: String,
+        val showSearchView: Boolean,
+    ) {
+        companion object {
+            fun  initial() = SearchUiState(
+                searchQuery = "",
+                showSearchView = false
+            )
+        }
+    }
+
     data class UiState(
         val logs: List<LogEntryInfo>,
         val sorting: LogSorting,
-        val searchQuery: String,
-        val showSearchView: Boolean,
         val showSortingDropdownMenu: Boolean,
         val dialogType: LogsDialogType
     ) {
@@ -42,8 +52,6 @@ interface LogsContract {
 
             fun initial() = UiState(
                 logs = emptyList(),
-                searchQuery = "",
-                showSearchView = false,
                 showSortingDropdownMenu = false,
                 sorting = LogSorting.DATE_DESC,
                 dialogType = LogsDialogType.None
