@@ -86,9 +86,6 @@ fun NavGraphBuilder.logsRoot(
                                 LogsContract.Event.OnSearchExpandedChanged(it)
                             )
                         },
-                        onSearch = {
-                            viewModel.onEvent(LogsContract.Event.OnSearchClick)
-                        },
                         onQueryChange = {
                             viewModel.onEvent(LogsContract.Event.OnSearchQueryChanged(it))
                         },

@@ -35,8 +35,6 @@ class FiltersViewModel @Inject constructor(
         when (event) {
             is FiltersContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
 
-            FiltersContract.Event.OnSearchClick -> updateUiState { copy(showSearchView = false) }
-
             is FiltersContract.Event.OnSearchExpandedChanged -> updateUiState {
                 copy(showSearchView = event.expanded)
             }

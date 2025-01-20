@@ -187,9 +187,6 @@ class LogsViewModel @Inject constructor(
 
             is LogsContract.Event.OnStatusChanged -> handleStatusFilterChanged(event.status)
             is LogsContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
-            LogsContract.Event.OnSearchClick -> _searchUiState.update {
-                it.copy(showSearchView = false)
-            }
 
             is LogsContract.Event.OnSearchExpandedChanged -> _searchUiState.update {
                 it.copy(showSearchView = event.expanded)

@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -67,7 +68,6 @@ fun NavGraphBuilder.filtersRoot(
                                     FiltersContract.Event.OnSearchExpandedChanged(it)
                                 )
                             },
-                            onSearch = { viewModel.onEvent(FiltersContract.Event.OnSearchClick) },
                             onQueryChange = {
                                 viewModel.onEvent(
                                     FiltersContract.Event.OnSearchQueryChanged(it)

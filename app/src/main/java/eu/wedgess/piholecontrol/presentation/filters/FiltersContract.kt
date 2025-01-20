@@ -44,7 +44,6 @@ interface FiltersContract {
 
     sealed interface Event {
         data object OnShowSearchView : Event
-        data object OnSearchClick : Event
         data object OnDismissDialog : Event
         data object AddFilterRuleClick : Event
         data object OnShowFilterByMenu : Event

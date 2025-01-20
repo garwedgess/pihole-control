@@ -77,7 +77,6 @@ interface LogsContract {
 
     sealed interface Event {
         data object OnShowSearchView : Event
-        data object OnSearchClick : Event
         data object OnShowSortingMenu : Event
         data object OnHideSortingMenu : Event
         data object OnDismissDialog : Event
