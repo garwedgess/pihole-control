@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +35,6 @@ import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
-import java.text.DateFormat
 
 @Composable
 fun LogDetailsDialog(
@@ -62,8 +60,6 @@ private fun LogDetailsDialogContent(
     addToBlockList: (domain: String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val dateTimeInstance = remember { DateFormat.getTimeInstance() }
-
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = MaterialTheme.shapes.extraLarge
@@ -103,7 +99,7 @@ private fun LogDetailsDialogContent(
             LogDetailsRow(
                 icon = Icons.Default.Schedule,
                 title = stringResource(R.string.log_dialog_details_label_time),
-                value = dateTimeInstance.format(log.timestamp * 1000L)
+                value = log.time
             )
             LogDetailsRow(
                 icon = Icons.Default.Shield,
@@ -113,7 +109,7 @@ private fun LogDetailsDialogContent(
             LogDetailsRow(
                 icon = Icons.Default.Publish,
                 title = stringResource(R.string.log_dialog_details_label_response_time),
-                value = "%.1f ms".format(log.replyTime)
+                value = log.formattedReplyTime.asString()
             )
 
             AnimatedVisibility(visible = log.isBlocked) {

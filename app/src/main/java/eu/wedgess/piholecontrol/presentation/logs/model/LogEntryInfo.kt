@@ -1,11 +1,14 @@
 package eu.wedgess.piholecontrol.presentation.logs.model
 
 import androidx.compose.runtime.Composable
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.LogAnswerCategoryEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.logs.extensions.toColor
 import eu.wedgess.piholecontrol.presentation.logs.extensions.toIcon
 import eu.wedgess.piholecontrol.presentation.logs.extensions.toStringValue
+import eu.wedgess.piholecontrol.utils.UiText
+import java.util.Locale
 
 sealed class LogEntryInfo {
 
@@ -14,6 +17,7 @@ sealed class LogEntryInfo {
     abstract val domain: String
     abstract val time: String
     abstract val replyTime: Double
+    abstract val formattedReplyTime: UiText
 
     data class Version5(
         override val timestamp: Long,
@@ -23,7 +27,14 @@ sealed class LogEntryInfo {
         override val replyTime: Double,
         val queryType: String,
         val answerType: PiHoleLogsEntity.LogsAnswerTypeEntity,
-    ) : LogEntryInfo()
+    ) : LogEntryInfo() {
+        override val formattedReplyTime: UiText
+            get() =
+                UiText.StringResourceWithArgs(
+                    R.string.log_version_5_response_time_postfix,
+                    String.format(Locale.UK, "%.1f", replyTime * 0.1)
+                )
+    }
 
     data class Version6(
         override val timestamp: Long,
@@ -40,7 +51,31 @@ sealed class LogEntryInfo {
         val edeCode: Int,
         val edeText: String?,
         val cname: String?
-    ) : LogEntryInfo()
+    ) : LogEntryInfo() {
+        override val formattedReplyTime: UiText
+            get() =
+                UiText.DynamicString(convertToSeconds(replyTime))
+
+        private fun convertToSeconds(value: Double): String {
+            if (value == 0.0) return "0.0 s"
+            val valueInMs = value * 1000
+
+            return when {
+                valueInMs < 0.095 -> {
+                    val microseconds = value * 1000000
+                    String.format(Locale.UK, "%.1f µs", microseconds)
+                }
+
+                valueInMs < 1000 -> {
+                    String.format(Locale.UK, "%.1f ms", valueInMs)
+                }
+
+                else -> {
+                    String.format(Locale.UK, "%.1f s", value)
+                }
+            }
+        }
+    }
 
     @Composable
     fun icon() = when (this) {

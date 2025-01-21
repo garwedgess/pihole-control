@@ -1,11 +1,11 @@
-package eu.wedgess.piholecontrol.data.utils
+package eu.wedgess.piholecontrol.data.extensions
 
 import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.model.UserPreferences.Theme
 
 fun UserPreferences.Builder.defaultValues(): UserPreferences.Builder =
     this.setThemeValue(Theme.DARK_VALUE)
-        .setDefaultLogEntries(500)
+        .setDefaultLogEntries(100)
         .setUseDynamicColors(false)
-        .setRefreshTime(10_000)
+        .setRefreshTime(5_000)
         .setChangeStatusOnAllConnection(false)

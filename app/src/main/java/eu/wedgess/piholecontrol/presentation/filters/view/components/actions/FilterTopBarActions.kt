@@ -25,16 +25,16 @@ fun FilterTopBarActions(
     onDismissFiltering: () -> Unit
 ) {
     Row {
-        IconButton(onClick = onSearchClick) {
+        IconButton(onClick = onFilterByClick) {
             Icon(
-                imageVector = Icons.Outlined.Search,
+                imageVector = Icons.Outlined.FilterAlt,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
         }
-        IconButton(onClick = onFilterByClick) {
+        IconButton(onClick = onSearchClick) {
             Icon(
-                imageVector = Icons.Outlined.FilterAlt,
+                imageVector = Icons.Outlined.Search,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )

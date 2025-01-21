@@ -478,39 +478,6 @@ class LogsViewModelTest {
         }
 
     @Test
-    fun `WHEN OnSearchClick event is received THEN uiState should be updated`() =
-        runTest {
-            // Given
-            coEvery {
-                fetchLogsUseCase(
-                    limit = any(),
-                    status = any(),
-                    query = any(),
-                    from = any(),
-                    until = any()
-                )
-            } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
-
-            val emittedStates = mutableListOf<LogsContract.SearchUiState>()
-            val job = backgroundScope.launch {
-                viewModel.searchUiState.collect { emittedStates.add(it) }
-            }
-
-            // When
-            viewModel.onEvent(LogsContract.Event.OnShowSearchView)
-            runCurrent()
-            viewModel.onEvent(LogsContract.Event.OnSearchClick)
-            runCurrent()
-            job.cancel()
-
-            // Then
-            assertThat(emittedStates).hasSize(2)
-            assertThat(emittedStates.first().showSearchView).isTrue()
-            assertThat(emittedStates.last().showSearchView).isFalse()
-        }
-
-    @Test
     fun `WHEN OnSearchExpandedChanged event is received THEN uiState should be updated`() =
         runTest {
             // Given

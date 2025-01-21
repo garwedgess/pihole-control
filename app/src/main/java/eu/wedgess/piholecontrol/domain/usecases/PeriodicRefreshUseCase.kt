@@ -19,7 +19,7 @@ class PeriodicRefreshUseCase(
     private val settingsRepository: SettingsRepository
 ) {
     private val refreshFlow = RefreshFlow()
-    private var currentRefreshMode: RefreshMode = RefreshMode.Automatic
+    private var currentRefreshMode: RefreshMode = RefreshMode.Automatic()
     private var lastResult: Result<*>? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -38,8 +38,8 @@ class PeriodicRefreshUseCase(
 
                 setRefreshModeBasedOnNetworkStatus(networkStatus)
 
-                when (currentRefreshMode) {
-                    RefreshMode.Automatic -> {
+                when (val refreshMode = currentRefreshMode) {
+                    is RefreshMode.Automatic -> {
                         if (activePihole != null) {
                             val result = fetchData(activePihole)
                             emit(result)
@@ -48,7 +48,7 @@ class PeriodicRefreshUseCase(
                                 currentRefreshMode = RefreshMode.Manual
                             } else {
                                 lastResult = result
-                                delay(delay)
+                                delay(refreshMode.refreshDelay ?: delay)
                                 refreshFlow.refresh()
                             }
                         }
@@ -61,7 +61,7 @@ class PeriodicRefreshUseCase(
 
                             if (result.isSuccess) {
                                 lastResult = result
-                                currentRefreshMode = RefreshMode.Automatic
+                                currentRefreshMode = RefreshMode.Automatic()
                             }
                         }
                     }
@@ -83,7 +83,7 @@ class PeriodicRefreshUseCase(
         when (networkStatus) {
             NetworkConnectionState.Available -> {
                 if (currentRefreshMode == RefreshMode.None) {
-                    currentRefreshMode = RefreshMode.Automatic
+                    currentRefreshMode = RefreshMode.Automatic()
                 }
             }
 
@@ -93,6 +93,10 @@ class PeriodicRefreshUseCase(
                 }
             }
         }
+    }
+
+    fun setRefreshMode(refreshMode: RefreshMode) {
+        this.currentRefreshMode = refreshMode
     }
 
     fun triggerRefresh() = refreshFlow.refresh()

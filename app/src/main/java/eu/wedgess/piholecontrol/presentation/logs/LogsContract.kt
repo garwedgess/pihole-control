@@ -13,6 +13,7 @@ import org.threeten.bp.LocalDateTime
 interface LogsContract {
 
     data class BottomSheetUiState(
+        val liveLogging: Boolean,
         val logsLimit: Int,
         val selectedLogEntryStatus: LogEntryStatus,
         val filterFromTime: Long?,
@@ -21,6 +22,7 @@ interface LogsContract {
         companion object {
             internal val availableLogLimits = listOf(100, 500, 1000, 2500)
             fun initial() = BottomSheetUiState(
+                liveLogging = false,
                 logsLimit = availableLogLimits.first(),
                 selectedLogEntryStatus = LogEntryStatus.ALL,
                 filterFromTime = null,
@@ -95,5 +97,6 @@ interface LogsContract {
         data class OnClearSearchQuery(val query: String) : Event
         data class OnSearchExpandedChanged(val expanded: Boolean) : Event
         data class OnSearchQueryChanged(val query: String) : Event
+        data class OnLiveLoggingChanged(val isLive: Boolean) : Event
     }
 }

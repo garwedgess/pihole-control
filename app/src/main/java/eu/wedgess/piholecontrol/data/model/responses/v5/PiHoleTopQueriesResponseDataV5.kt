@@ -16,6 +16,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
+import kotlin.math.floor
 
 @Serializable
 data class PiHoleTopQueriesResponseDataV5(
@@ -41,7 +42,8 @@ data class PiHoleTopQueriesResponseDataV5(
             } else {
                 (count / globalTotal.toFloat()) * 100f
             }
-            TopQueryData(key, count, percentage)
+            val truncatedPercentage = floor(percentage * 100) / 100
+            TopQueryData(key, count, truncatedPercentage)
         }.sortedByDescending { it.percentage }
     }
 

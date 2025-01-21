@@ -1,6 +1,7 @@
 package eu.wedgess.piholecontrol.domain.usecases.logs
 
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
+import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
@@ -25,4 +26,7 @@ class FetchLogsUseCase @Inject constructor(
     }
 
     fun refresh() = periodicRefreshUseCase.triggerRefresh()
+
+    fun setRefreshMode(refreshMode: RefreshMode) =
+        periodicRefreshUseCase.setRefreshMode(refreshMode)
 }

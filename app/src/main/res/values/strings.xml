@@ -29,7 +29,7 @@
 
     <!-- Logs Screen -->
     <string name="logs_msg_loading_query_logs">Loading query logs</string>
-    <string name="logs_msg_empty">No logs found...</string>
+    <string name="logs_msg_empty">No logs found&#8230;</string>
     <string name="log_label_all">All</string>
     <string name="log_label_allowed">Allowed</string>
     <string name="log_label_blocked">Blocked</string>
@@ -37,6 +37,8 @@
     <string name="log_label_date_sort_asc">Date Ascending</string>
     <string name="log_label_response_time_sort_asc">Response Time Ascending</string>
     <string name="log_label_response_time_sort_desc">Response Time Descending</string>
+    <string name="log_version_5_response_time_postfix">%s ms</string>
+    <string name="log_version_6_response_time_postfix">%s µs</string>
 
     <string name="log_dialog_details_title">Log Details</string>
     <string name="log_dialog_details_label_url">URL</string>
@@ -170,8 +172,8 @@
     <string name="logs_domain_added_to_allow_list">Domain added to allow list</string>
     <string name="logs_domain_added_to_deny_list">Domain added to deny list</string>
 
-    <string name="filter_search_placeholder">Search for filter...</string>
-    <string name="logs_search_placeholder">Search for logs...</string>
+    <string name="filter_search_placeholder">Search for filter&#8230;</string>
+    <string name="logs_search_placeholder">Search for logs&#8230;</string>
     <string name="snackbar_dismiss">dismiss</string>
     <string name="title_activity_initial_connection">InitialConnectionActivity</string>
     <string name="initial_setup_title">Setup Connection</string>
@@ -199,9 +201,9 @@
     <string name="connection_dialog_message_update_failed">Failed to save update: %s</string>
     <string name="connection_dialog_message_saving_failed">Failed to save connection: %s</string>
     <string name="all_btn_ok">Ok</string>
-    <string name="connection_loading_dialog_updating_message">Updating connection...</string>
-    <string name="connection_loading_dialog_validating_password_message">Validating password...</string>
-    <string name="connection_loading_dialog_saving_message">Saving connection...</string>
+    <string name="connection_loading_dialog_updating_message">Updating connection&#8230;</string>
+    <string name="connection_loading_dialog_validating_password_message">Validating password&#8230;</string>
+    <string name="connection_loading_dialog_saving_message">Saving connection&#8230;</string>
     <string name="connection_password_error_blank">Password cannot be blank</string>
     <string name="connection_name_error_blank">Name cannot be blank</string>
     <string name="connection_host_error_invalid">%s is not a valid host</string>

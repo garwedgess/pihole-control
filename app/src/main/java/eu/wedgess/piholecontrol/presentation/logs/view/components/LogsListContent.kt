@@ -23,8 +23,14 @@ fun LogsListContent(
         stickyHeader {
             LogsListStickyHeader(listSize = logsList.size)
         }
-        items(logsList) { log ->
-            LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+        if (logsList.firstOrNull() is LogEntryInfo.Version6) {
+            items(logsList, key = { (it as LogEntryInfo.Version6).id }) { log ->
+                LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+            }
+        } else {
+            items(logsList) { log ->
+                LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
+            }
         }
     }
     LogsDialogs(dialogType, onEvent)

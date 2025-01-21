@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
+import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
@@ -135,6 +136,8 @@ class LogsViewModel @Inject constructor(
 
             LogsContract.Event.OnShowSearchView -> _searchUiState.update {
                 it.copy(showSearchView = true)
+            }.also {
+                fetchLogsUseCase.setRefreshMode(RefreshMode.Manual)
             }
 
             LogsContract.Event.OnShowSortingMenu -> _uiState.update {
@@ -190,6 +193,15 @@ class LogsViewModel @Inject constructor(
 
             is LogsContract.Event.OnSearchExpandedChanged -> _searchUiState.update {
                 it.copy(showSearchView = event.expanded)
+            }
+
+            is LogsContract.Event.OnLiveLoggingChanged -> _bottomSheetUiState.update {
+                it.copy(liveLogging = event.isLive)
+            }.also {
+                fetchLogsUseCase.setRefreshMode(
+                    RefreshMode.Automatic(if (event.isLive) 1_000 else null)
+                )
+                fetchLogsUseCase.refresh()
             }
         }
     }
@@ -249,6 +261,10 @@ class LogsViewModel @Inject constructor(
             _searchUiState.update { it.copy(showSearchView = false) }
         } else {
             _searchUiState.update { it.copy(searchQuery = "") }
+        }.also {
+            fetchLogsUseCase.setRefreshMode(
+                RefreshMode.Automatic(if (_bottomSheetUiState.value.liveLogging) 1_000 else null)
+            )
         }
     }
 }

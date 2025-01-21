@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.data.model.responses.v5
 import eu.wedgess.piholecontrol.data.model.TopClientData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.math.floor
 
 @Serializable
 data class PiHoleTopClientsResponseDataV5(
@@ -21,7 +22,8 @@ data class PiHoleTopClientsResponseDataV5(
             } else {
                 (count / globalTotal.toFloat()) * 100f
             }
-            TopClientData(key, count, percentage)
+            val truncatedPercentage = floor(percentage * 100) / 100
+            TopClientData(key, count, truncatedPercentage)
         }.sortedByDescending { it.percentage }
     }
 }

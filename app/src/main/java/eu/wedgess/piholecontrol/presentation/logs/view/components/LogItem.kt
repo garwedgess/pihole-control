@@ -92,7 +92,7 @@ fun LogListItem(log: LogEntryInfo, onItemClick: () -> Unit) {
                         .fillMaxWidth()
                         .padding(top = PiHoleControlTheme.dimens.padding.itemContent),
                     textAlign = TextAlign.End,
-                    text = "%.1f ms".format(log.replyTime),
+                    text = log.formattedReplyTime.asString(),
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall
                 )
