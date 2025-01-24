@@ -8,6 +8,7 @@ import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
+import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogFilterSuggestionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
@@ -28,7 +29,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -39,6 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LogsViewModel @Inject constructor(
     private val fetchLogsUseCase: FetchLogsUseCase,
+    private val fetchLogsFilterSuggestionsUseCase: FetchLogFilterSuggestionsUseCase,
     private val addFilterRuleUseCase: AddFilterRuleUseCase
 ) : ViewModel(),
     EventDrivenViewModel<LogsContract.Event>,
@@ -52,15 +56,20 @@ class LogsViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiResult =
-        combine(_bottomSheetUiState, _searchUiState) { sheetState, searchState ->
-            sheetState to searchState
-        }
-            .onStart { emit(LogsContract.BottomSheetUiState.initial() to LogsContract.SearchUiState.initial()) }
+        _bottomSheetUiState
+            .combine(searchUiState) { sheetState, searchState ->
+                sheetState to searchState
+            }
+            .onStart { fetchLogFilterSuggestions() }
             .map { (sheetState, searchState) ->
                 fetchLogsUseCase(
                     limit = sheetState.logsLimit,
                     status = sheetState.selectedLogEntryStatus,
                     query = searchState.searchQuery,
+                    clientIp = sheetState.selectedClientIp,
+                    clientName = sheetState.selectedClientName,
+                    queryType = sheetState.selectedQueryType,
+                    advancedStatus = sheetState.selectedAdvancedStatus,
                     from = sheetState.filterFromTime,
                     until = sheetState.filterToTime
                 )
@@ -102,6 +111,23 @@ class LogsViewModel @Inject constructor(
                 SharingStarted.WhileSubscribed(5_000),
                 UIResult.Loading(ResultType.Loading.WithTitle())
             )
+
+    private fun fetchLogFilterSuggestions() {
+        fetchLogsFilterSuggestionsUseCase()
+            .onEach { suggestionsResult ->
+                suggestionsResult.onSuccess { suggestions ->
+                    _bottomSheetUiState.update { current ->
+                        current.copy(
+                            availableClientNames = suggestions.clientNames,
+                            availableClientIps = suggestions.clientIpAddresses,
+                            availableQueryTypes = suggestions.queryTypes,
+                            availableStatuses = suggestions.statuses
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     private fun List<PiHoleLogsEntity>.sortBy(sortType: LogSorting) = when (sortType) {
         LogSorting.DATE_DESC -> sortedByDescending { it.timestamp }
@@ -195,13 +221,47 @@ class LogsViewModel @Inject constructor(
                 it.copy(showSearchView = event.expanded)
             }
 
-            is LogsContract.Event.OnLiveLoggingChanged -> _bottomSheetUiState.update {
+            is LogsContract.Event.OnLiveLoggingChanged -> _uiState.update {
                 it.copy(liveLogging = event.isLive)
             }.also {
                 fetchLogsUseCase.setRefreshMode(
                     RefreshMode.Automatic(if (event.isLive) 1_000 else null)
                 )
                 fetchLogsUseCase.refresh()
+            }
+
+            is LogsContract.Event.OnToggleFiltersBottomSheet -> _bottomSheetUiState.update {
+                it.copy(showFilterBottomSheet = event.show)
+            }
+
+            is LogsContract.Event.OnToggleAdvancedFilteringOptions -> _bottomSheetUiState.update {
+                it.copy(
+                    showAdvancedFiltering = event.show,
+                    showBasicFiltering = if (event.show) false else it.showBasicFiltering
+                )
+            }
+
+            is LogsContract.Event.OnToggleBasicFilteringOptions -> _bottomSheetUiState.update {
+                it.copy(
+                    showBasicFiltering = event.show,
+                    showAdvancedFiltering = if (event.show) false else it.showAdvancedFiltering
+                )
+            }
+
+            is LogsContract.Event.OnAdvancedStatusFilterChanged -> _bottomSheetUiState.update {
+                it.copy(selectedAdvancedStatus = event.advancedStatus)
+            }
+
+            is LogsContract.Event.OnClientIpFilterChanged -> _bottomSheetUiState.update {
+                it.copy(selectedClientIp = event.ip)
+            }
+
+            is LogsContract.Event.OnClientNameFilterChanged -> _bottomSheetUiState.update {
+                it.copy(selectedClientName = event.name)
+            }
+
+            is LogsContract.Event.OnQueryTypeFilterChanged -> _bottomSheetUiState.update {
+                it.copy(selectedQueryType = event.type)
             }
         }
     }
@@ -263,7 +323,7 @@ class LogsViewModel @Inject constructor(
             _searchUiState.update { it.copy(searchQuery = "") }
         }.also {
             fetchLogsUseCase.setRefreshMode(
-                RefreshMode.Automatic(if (_bottomSheetUiState.value.liveLogging) 1_000 else null)
+                RefreshMode.Automatic(if (_uiState.value.liveLogging) 1_000 else null)
             )
         }
     }

@@ -112,7 +112,7 @@ private fun LogListItemPreview() {
                         log = LogEntryInfo.Version5(
                             timestamp = System.currentTimeMillis().div(1000L),
                             time = "10:12:01",
-                            queryType = "IPv4",
+                            queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
                             domain = "www.google.com",
                             client = "My Android",
                             answerType = it,

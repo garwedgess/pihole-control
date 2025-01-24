@@ -7,6 +7,7 @@ sealed class PiHoleLogsEntity {
     abstract val domain: String
     abstract val time: String
     abstract val replyTime: Double
+    abstract val queryType: LogEntryQueryTypeEntity
 
     data class Version5(
         override val timestamp: Long,
@@ -14,7 +15,7 @@ sealed class PiHoleLogsEntity {
         override val domain: String,
         override val time: String,
         override val replyTime: Double,
-        val queryType: String,
+        override val queryType: LogEntryQueryTypeEntity,
         val answerType: LogsAnswerTypeEntity,
     ) : PiHoleLogsEntity()
 
@@ -24,8 +25,8 @@ sealed class PiHoleLogsEntity {
         override val domain: String,
         override val time: String,
         override val replyTime: Double,
+        override val queryType: LogEntryQueryTypeEntity,
         val id: Int,
-        val type: LogEntryTypeEntity,
         val status: LogEntryStatusEntity,
         val dnssec: LogEntryDnssecEntity,
         val replyType: LogEntryReplyTypeEntity,
@@ -105,7 +106,7 @@ sealed class PiHoleLogsEntity {
         }
     }
 
-    enum class LogEntryTypeEntity(val key: String) {
+    enum class LogEntryQueryTypeEntity(val key: String) {
         A("A"),
         AAAA("AAAA"),
         ANY("ANY"),
@@ -125,8 +126,8 @@ sealed class PiHoleLogsEntity {
 
         companion object {
             operator fun get(key: String) =
-                requireNotNull(LogEntryTypeEntity.entries.find { it.key == key }) {
-                    "No value found for ${LogEntryTypeEntity::class.java.simpleName} with key: $key"
+                requireNotNull(LogEntryQueryTypeEntity.entries.find { it.key == key }) {
+                    "No value found for ${LogEntryQueryTypeEntity::class.java.simpleName} with key: $key"
                 }
         }
     }

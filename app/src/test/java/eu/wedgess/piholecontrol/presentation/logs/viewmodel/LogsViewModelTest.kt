@@ -8,7 +8,9 @@ import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
+import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
+import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogFilterSuggestionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.logs.FetchLogsUseCase
 import eu.wedgess.piholecontrol.initThreeTen
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
@@ -16,6 +18,7 @@ import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.logs.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
 import eu.wedgess.piholecontrol.presentation.logs.model.LogSorting
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
@@ -50,6 +53,9 @@ class LogsViewModelTest {
     private lateinit var fetchLogsUseCase: FetchLogsUseCase
 
     @RelaxedMockK
+    private lateinit var fetchLogFilterSuggestionsUseCase: FetchLogFilterSuggestionsUseCase
+
+    @RelaxedMockK
     private lateinit var addFilterRuleUseCase: AddFilterRuleUseCase
 
     private lateinit var viewModel: LogsViewModel
@@ -64,7 +70,11 @@ class LogsViewModelTest {
     fun `WHEN viewmodel is initialized THEN uiResult should emit Loading state initially`() =
         runTest {
             // When
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // Then
             viewModel.uiResult.test {
@@ -84,7 +94,7 @@ class LogsViewModelTest {
                 PiHoleLogsEntity.Version5(
                     timestamp = 1672531200,
                     time = "23:53:25",
-                    queryType = "query",
+                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
                     domain = "test.com",
                     answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                     client = "192.168.1.1",
@@ -96,13 +106,22 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(logs))
+            coEvery { fetchLogFilterSuggestionsUseCase() } returns mockk(relaxed = true)
 
             // When
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // Then
             viewModel.uiResult.test {
@@ -124,13 +143,21 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.failure(exception))
 
             // When
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // Then
             viewModel.uiResult.test {
@@ -155,13 +182,21 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(emptyList()))
 
             // When
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // Then
             viewModel.uiResult.test {
@@ -185,6 +220,10 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
@@ -198,7 +237,11 @@ class LogsViewModelTest {
             } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.AddToAllowList(domain))
@@ -217,6 +260,10 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
@@ -230,7 +277,11 @@ class LogsViewModelTest {
             } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.AddToBlockList(domain))
@@ -249,6 +300,10 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
@@ -256,13 +311,17 @@ class LogsViewModelTest {
             val log = LogEntryInfo.Version5(
                 timestamp = 1672531200,
                 time = "23:53:25",
-                queryType = "query",
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
                 domain = "test.com",
                 answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                 client = "192.168.1.1",
                 replyTime = 1.0
             )
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnLogSelected(log))
@@ -288,13 +347,21 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
             val date = LocalDate.now()
             val type = PickerType.FromTime
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnDateConfirmed(type, date))
@@ -323,12 +390,20 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
             val type = PickerType.FromTime
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnShowDatePicker(type))
@@ -356,13 +431,21 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
             val time = LocalDateTime.now()
             val type = PickerType.FromTime
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnTimeConfirmed(type, time))
@@ -392,12 +475,20 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
             val sorting = LogSorting.DATE_ASC
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnSortTypeSelected(sorting))
@@ -422,11 +513,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             val query = "test"
 
             val emittedStates = mutableListOf<LogsContract.SearchUiState>()
@@ -454,11 +553,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             val query = ""
 
             val emittedStates = mutableListOf<LogsContract.SearchUiState>()
@@ -486,11 +593,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             val expanded = true
 
             val emittedStates = mutableListOf<LogsContract.SearchUiState>()
@@ -520,11 +635,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             viewModel.onEvent(
                 LogsContract.Event.OnTimeConfirmed(
                     PickerType.FromTime,
@@ -554,11 +677,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             viewModel.onEvent(
                 LogsContract.Event.OnTimeConfirmed(
                     PickerType.ToTime,
@@ -580,6 +711,42 @@ class LogsViewModelTest {
         }
 
     @Test
+    fun `WHEN OnShowSearchView event is received THEN searchUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnShowSearchView)
+            advanceUntilIdle()
+
+            // Then
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat(viewModel.searchUiState.value.showSearchView).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
     fun `WHEN OnSearchQueryChanged event is received THEN uiState should be updated`() =
         runTest {
             // Given
@@ -588,11 +755,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             val query = "test"
 
             // When
@@ -617,11 +792,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
             advanceUntilIdle()
 
@@ -647,11 +830,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
 
             // When
             viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
@@ -675,11 +866,19 @@ class LogsViewModelTest {
                     limit = any(),
                     status = any(),
                     query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
                     from = any(),
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            viewModel = LogsViewModel(fetchLogsUseCase, addFilterRuleUseCase)
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
             viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
             advanceUntilIdle()
 
@@ -695,4 +894,637 @@ class LogsViewModelTest {
                 cancelAndConsumeRemainingEvents()
             }
         }
+
+    @Test
+    fun `WHEN OnLiveLoggingChanged event is received THEN uiState should be updated and refresh mode should be set`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val isLive = true
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnLiveLoggingChanged(isLive))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((loadedResult as UIResult.Loaded).data.liveLogging).isEqualTo(isLive)
+                cancelAndConsumeRemainingEvents()
+            }
+
+            coVerify { fetchLogsUseCase.setRefreshMode(RefreshMode.Automatic(1_000)) }
+            coVerify { fetchLogsUseCase.refresh() }
+        }
+
+    @Test
+    fun `WHEN OnLiveLoggingChanged event is received with false THEN refresh mode should be set to null`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val isLive = false
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnLiveLoggingChanged(isLive))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.uiResult.test {
+                val loadedResult = awaitItem()
+                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((loadedResult as UIResult.Loaded).data.liveLogging).isEqualTo(isLive)
+                cancelAndConsumeRemainingEvents()
+            }
+
+            coVerify { fetchLogsUseCase.setRefreshMode(RefreshMode.Automatic(null)) }
+            coVerify { fetchLogsUseCase.refresh() }
+        }
+
+    @Test
+    fun `WHEN OnToggleFiltersBottomSheet event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnToggleFiltersBottomSheet(true))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.showFilterBottomSheet).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnToggleAdvancedFilteringOptions event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnToggleAdvancedFilteringOptions(true))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.showAdvancedFiltering).isTrue()
+                assertThat(bottomSheetUiState.showBasicFiltering).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnToggleBasicFilteringOptions event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnToggleBasicFilteringOptions(true))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.showBasicFiltering).isTrue()
+                assertThat(bottomSheetUiState.showAdvancedFiltering).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN AddToAllowList event fails THEN side effect should be emitted`() = runTest {
+        // Given
+        coEvery {
+            fetchLogsUseCase(
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientName = any(),
+                clientIp = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns flowOf(Result.success(emptyList()))
+
+        val domain = "test.com"
+        val errorMessage = "Add to allow list failed"
+        coEvery {
+            addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW)
+        } returns Result.failure(Exception(errorMessage))
+
+        viewModel =
+            LogsViewModel(fetchLogsUseCase, fetchLogFilterSuggestionsUseCase, addFilterRuleUseCase)
+
+        val sideEffects = mutableListOf<LogsContract.Effect>()
+        val job = backgroundScope.launch {
+            viewModel.sideEffect.collect { sideEffects.add(it) }
+        }
+
+        // When
+        viewModel.onEvent(LogsContract.Event.AddToAllowList(domain))
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(sideEffects).hasSize(1)
+        assertThat(sideEffects[0]).isInstanceOf(LogsContract.Effect.Snackbar.AddDomainToAllowListFailed::class.java)
+
+        val failedEffect = sideEffects[0] as LogsContract.Effect.Snackbar.AddDomainToAllowListFailed
+        assertThat(failedEffect.domain).isEqualTo(domain)
+    }
+
+    @Test
+    fun `WHEN AddToBlockList event fails THEN side effect should be emitted`() = runTest {
+        // Given
+        coEvery {
+            fetchLogsUseCase(
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientName = any(),
+                clientIp = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns flowOf(Result.success(emptyList()))
+
+        val domain = "test.com"
+        val errorMessage = "Add to block list failed"
+        coEvery {
+            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY)
+        } returns Result.failure(Exception(errorMessage))
+
+        viewModel =
+            LogsViewModel(fetchLogsUseCase, fetchLogFilterSuggestionsUseCase, addFilterRuleUseCase)
+
+        val sideEffects = mutableListOf<LogsContract.Effect>()
+        val job = backgroundScope.launch {
+            viewModel.sideEffect.collect { sideEffects.add(it) }
+        }
+
+        // When
+        viewModel.onEvent(LogsContract.Event.AddToBlockList(domain))
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(sideEffects).hasSize(1)
+        assertThat(sideEffects[0]).isInstanceOf(LogsContract.Effect.Snackbar.AddDomainToDenyListFailed::class.java)
+
+        val failedEffect = sideEffects[0] as LogsContract.Effect.Snackbar.AddDomainToDenyListFailed
+        assertThat(failedEffect.domain).isEqualTo(domain)
+    }
+
+    @Test
+    fun `WHEN OnStatusChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val status = LogEntryStatus.BLOCKED
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnStatusChanged(status))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.selectedLogEntryStatus).isEqualTo(status)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnLogLimitChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val limit = 100
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnLogLimitChanged(limit))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.logsLimit).isEqualTo(limit)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnAdvancedStatusFilterChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val advancedStatus = "example_status"
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnAdvancedStatusFilterChanged(advancedStatus))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.selectedAdvancedStatus).isEqualTo(advancedStatus)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnClientIpFilterChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val clientIp = "192.168.1.1"
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnClientIpFilterChanged(clientIp))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.selectedClientIp).isEqualTo(clientIp)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnClientNameFilterChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val clientName = "example_client"
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnClientNameFilterChanged(clientName))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.selectedClientName).isEqualTo(clientName)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnQueryTypeFilterChanged event is received THEN bottomSheetUiState should be updated`() =
+        runTest {
+            // Given
+            coEvery {
+                fetchLogsUseCase(
+                    limit = any(),
+                    status = any(),
+                    query = any(),
+                    clientName = any(),
+                    clientIp = any(),
+                    queryType = any(),
+                    advancedStatus = any(),
+                    from = any(),
+                    until = any()
+                )
+            } returns flowOf(Result.success(mockk(relaxed = true)))
+
+            viewModel = LogsViewModel(
+                fetchLogsUseCase,
+                fetchLogFilterSuggestionsUseCase,
+                addFilterRuleUseCase
+            )
+
+            val queryType = "example_query_type"
+
+            // When
+            viewModel.onEvent(LogsContract.Event.OnQueryTypeFilterChanged(queryType))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.bottomSheetUiState.test {
+                val bottomSheetUiState = awaitItem()
+                assertThat(bottomSheetUiState.selectedQueryType).isEqualTo(queryType)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    // Continuing from the previous tests...
+
+    @Test
+    fun `WHEN OnDismissDialog event is received THEN uiState should be updated`() = runTest {
+        // Given
+        coEvery {
+            fetchLogsUseCase(
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientName = any(),
+                clientIp = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns flowOf(Result.success(mockk(relaxed = true)))
+
+        viewModel =
+            LogsViewModel(fetchLogsUseCase, fetchLogFilterSuggestionsUseCase, addFilterRuleUseCase)
+
+        // When
+        viewModel.onEvent(LogsContract.Event.OnShowDatePicker(PickerType.FromTime))
+        advanceUntilIdle()
+
+        viewModel.onEvent(LogsContract.Event.OnDismissDialog)
+        advanceUntilIdle()
+
+        // Then
+        viewModel.uiResult.test {
+            val loadedResult = awaitItem()
+            assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
+            assertThat((loadedResult as UIResult.Loaded).data.dialogType)
+                .isEqualTo(LogsDialogType.None)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN AddToAllowList event is successful THEN side effect should be emitted`() = runTest {
+        // Given
+        coEvery {
+            fetchLogsUseCase(
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientName = any(),
+                clientIp = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns flowOf(Result.success(emptyList()))
+
+        val domain = "test.com"
+        coEvery {
+            addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW)
+        } returns Result.success(
+            ModifyFilterRuleResponseEntity(success = true, message = null)
+        )
+
+        viewModel =
+            LogsViewModel(fetchLogsUseCase, fetchLogFilterSuggestionsUseCase, addFilterRuleUseCase)
+
+        val sideEffects = mutableListOf<LogsContract.Effect>()
+        val job = backgroundScope.launch {
+            viewModel.sideEffect.collect { sideEffects.add(it) }
+        }
+
+        // When
+        viewModel.onEvent(LogsContract.Event.AddToAllowList(domain))
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(sideEffects).hasSize(1)
+        assertThat(sideEffects[0]).isInstanceOf(LogsContract.Effect.Snackbar.DomainAddedToAllowList::class.java)
+    }
+
+    @Test
+    fun `WHEN AddToBlockList event is successful THEN side effect should be emitted`() = runTest {
+        // Given
+        coEvery {
+            fetchLogsUseCase(
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientName = any(),
+                clientIp = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns flowOf(Result.success(emptyList()))
+
+        val domain = "test.com"
+        coEvery {
+            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY)
+        } returns Result.success(
+            ModifyFilterRuleResponseEntity(success = true, message = null)
+        )
+
+        viewModel =
+            LogsViewModel(fetchLogsUseCase, fetchLogFilterSuggestionsUseCase, addFilterRuleUseCase)
+
+        val sideEffects = mutableListOf<LogsContract.Effect>()
+        val job = backgroundScope.launch {
+            viewModel.sideEffect.collect { sideEffects.add(it) }
+        }
+
+        // When
+        viewModel.onEvent(LogsContract.Event.AddToBlockList(domain))
+        advanceUntilIdle()
+        job.cancel()
+
+        // Then
+        assertThat(sideEffects).hasSize(1)
+        assertThat(sideEffects[0]).isInstanceOf(LogsContract.Effect.Snackbar.DomainAddedToBlockList::class.java)
+    }
 }

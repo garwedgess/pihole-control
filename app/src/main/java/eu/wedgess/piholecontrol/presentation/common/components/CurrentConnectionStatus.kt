@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
@@ -68,11 +69,12 @@ fun CurrentConnectionStatus(
 
         Box {
             Column(
-                modifier = Modifier.clickable { showConnectionsDropdown = true },
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                modifier = Modifier.clickable { showConnectionsDropdown = true }
             ) {
                 Text(
                     text = currentConnection.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Normal,
@@ -84,6 +86,8 @@ fun CurrentConnectionStatus(
                     color = MaterialTheme.colorScheme.onBackground.copy(
                         alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
                     ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Normal
                     )

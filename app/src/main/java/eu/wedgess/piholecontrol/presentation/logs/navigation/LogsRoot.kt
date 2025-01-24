@@ -2,10 +2,12 @@ package eu.wedgess.piholecontrol.presentation.logs.navigation
 
 import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +28,7 @@ import eu.wedgess.piholecontrol.presentation.logs.view.LogsScreen
 import eu.wedgess.piholecontrol.presentation.logs.view.components.actions.LogsTopBarActions
 import eu.wedgess.piholecontrol.presentation.logs.viewmodel.LogsViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.logsRoot(
@@ -39,7 +42,18 @@ fun NavGraphBuilder.logsRoot(
         val sideEffect = viewModel.sideEffect
         val context = LocalContext.current
         var appbarState by remember { mutableStateOf(AppBarState()) }
-        val scaffoldState = rememberBottomSheetScaffoldState()
+        val scaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = rememberStandardBottomSheetState(
+                skipHiddenState = false,
+                confirmValueChange = {
+                    Timber.d("GARETH SHEETSTATE confirmValueChange $it")
+                    if (it == SheetValue.PartiallyExpanded) {
+                        viewModel.onEvent(LogsContract.Event.OnToggleFiltersBottomSheet(false))
+                    }
+                    true
+                }
+            )
+        )
         val snackbarHostState = remember { SnackbarHostState() }
 
         uiResult.run {
@@ -51,6 +65,13 @@ fun NavGraphBuilder.logsRoot(
                             LogsTopBarActions(
                                 onSearchClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSearchView)
+                                },
+                                onFilterClick = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnToggleFiltersBottomSheet(
+                                            !bottomSheetUiState.showFilterBottomSheet
+                                        )
+                                    )
                                 },
                                 onSortClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
@@ -96,6 +117,13 @@ fun NavGraphBuilder.logsRoot(
                 }
             )
             onComposing(appbarState)
+        }
+        LaunchedEffect(bottomSheetUiState.showFilterBottomSheet) {
+            if (bottomSheetUiState.showFilterBottomSheet) {
+                scaffoldState.bottomSheetState.expand()
+            } else {
+                scaffoldState.bottomSheetState.hide()
+            }
         }
 
         CollectSideEffect(sideEffect = sideEffect) { effect ->

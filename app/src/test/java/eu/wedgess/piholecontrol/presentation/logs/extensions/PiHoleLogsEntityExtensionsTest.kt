@@ -12,7 +12,7 @@ class PiHoleLogsEntityExtensionsTest {
     fun `toInfo() should return correct LogEntryInfo for Version5`() {
         // Arrange
         val version5Log = PiHoleLogsEntity.Version5(
-            queryType = "queryType",
+            queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
             client = "client",
             domain = "domain",
             replyTime = 10.0,
@@ -27,7 +27,7 @@ class PiHoleLogsEntityExtensionsTest {
         // Assert
         assertThat(
             LogEntryInfo.Version5(
-                queryType = "queryType",
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
                 client = "client",
                 domain = "domain",
                 replyTime = 10.0,
@@ -46,7 +46,7 @@ class PiHoleLogsEntityExtensionsTest {
             client = "client",
             domain = "domain",
             id = 123,
-            type = PiHoleLogsEntity.LogEntryTypeEntity.PTR,
+            queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.PTR,
             status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
             dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
             replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
@@ -68,7 +68,7 @@ class PiHoleLogsEntityExtensionsTest {
                 client = "client",
                 domain = "domain",
                 id = 123,
-                type = PiHoleLogsEntity.LogEntryTypeEntity.PTR,
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.PTR,
                 status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
                 dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
                 replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,

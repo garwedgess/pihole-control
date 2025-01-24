@@ -8,7 +8,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 
 fun PiHoleLogsResponseDataV5.PiHoleLogEntryData.toLogEntryEntity() = PiHoleLogsEntity.Version5(
-    queryType = this.queryType,
+    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity[this.queryType],
     client = this.client,
     domain = this.requestedDomain,
     replyTime = this.responseTime.toDouble(),
@@ -24,7 +24,7 @@ fun PiHoleLogsResponseDataV6.PiHoleLogEntryData.toLogEntryEntity() = PiHoleLogsE
     client = this.client.combinedName,
     domain = this.domain,
     id = this.id,
-    type = PiHoleLogsEntity.LogEntryTypeEntity[this.type.key],
+    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity[this.type.key],
     status = PiHoleLogsEntity.LogEntryStatusEntity[this.status.key],
     dnssec = PiHoleLogsEntity.LogEntryDnssecEntity[this.dnssec.key],
     replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity[this.reply.type.key],

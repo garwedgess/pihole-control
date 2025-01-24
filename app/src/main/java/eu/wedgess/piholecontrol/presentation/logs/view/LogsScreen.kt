@@ -3,7 +3,6 @@ package eu.wedgess.piholecontrol.presentation.logs.view
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,6 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
@@ -43,7 +43,7 @@ fun LogsScreen(
             }
         },
         scaffoldState = scaffoldState,
-        sheetPeekHeight = BottomSheetDefaults.SheetPeekHeight,
+        sheetPeekHeight = 0.dp,
         sheetContent = {
             LogFiltersBottomSheet(bottomSheetUiState, onEvent)
         },
@@ -60,6 +60,7 @@ fun LogsScreen(
                         LogsListContent(
                             logsList = it.logs,
                             dialogType = it.dialogType,
+                            liveLoggingEnabled = it.liveLogging,
                             onEvent = onEvent
                         )
                     },

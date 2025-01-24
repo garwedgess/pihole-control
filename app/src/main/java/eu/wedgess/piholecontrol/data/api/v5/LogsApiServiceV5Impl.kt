@@ -2,6 +2,7 @@ package eu.wedgess.piholecontrol.data.api.v5
 
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfoV5
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLogSuggestionsResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLogsResponseDataV5
 import eu.wedgess.piholecontrol.data.utils.requestResult
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
@@ -24,6 +25,18 @@ class LogsApiServiceV5Impl @Inject constructor(
             fetchBaseRequestInfoV5(connection)
             url {
                 parameters["getAllQueries"] = limit.toString()
+            }
+        }
+    }
+
+    override suspend fun fetchLogFilterSuggestions(
+        connection: ConnectionEntity.Version5
+    ): PiHoleApiResult<PiHoleLogSuggestionsResponseDataV5> {
+        val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.requestResult {
+            fetchBaseRequestInfoV5(connection)
+            url {
+                parameters["getClientNames"] = true.toString()
             }
         }
     }

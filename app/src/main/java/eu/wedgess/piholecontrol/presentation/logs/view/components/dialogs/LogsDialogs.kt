@@ -65,7 +65,7 @@ private class LogsDialogsPreviewParameters : PreviewParameterProvider<LogsDialog
                 details = LogEntryInfo.Version5(
                     timestamp = System.currentTimeMillis().div(1000L),
                     time = "10:12",
-                    queryType = "IPv4",
+                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
                     domain = "www.google.com",
                     client = "My Android",
                     answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,

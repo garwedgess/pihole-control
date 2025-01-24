@@ -49,4 +49,31 @@ class LogsApiServiceV5ImplTest {
                         "invalid: 400 Bad Request. Text: \"[]\""
             )
     }
+
+    @Test
+    fun `fetchLogFilterSuggestions - returns success`() = runTest {
+        val connection = ConnectionEntity.Version5.default.copy(trustAllCerts = false)
+
+        val result = target.fetchLogFilterSuggestions(connection)
+
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `fetchLogFilterSuggestions - returns failure`() = runTest {
+        val connection = ConnectionEntity.Version5.default.copy(trustAllCerts = true)
+
+        val result = target.fetchLogFilterSuggestions(connection)
+
+        assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(ApiErrorThrowable::class.java)
+        assertThat((exception as ApiErrorThrowable).apiErrorResponse)
+            .isInstanceOf(ApiErrorResponse.V5::class.java)
+        assertThat((exception.apiErrorResponse as ApiErrorResponse.V5).errorMessage)
+            .isEqualTo(
+                "Client request(GET http://pi.hole/admin/api.php?getClientNames=true) " +
+                        "invalid: 400 Bad Request. Text: \"[]\""
+            )
+    }
 }

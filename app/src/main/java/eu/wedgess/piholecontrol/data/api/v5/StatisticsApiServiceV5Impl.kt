@@ -62,6 +62,7 @@ class StatisticsApiServiceV5Impl @Inject constructor(
             fetchBaseRequestInfoV5(connection)
             url {
                 parameters["topClients"] = true.toString()
+                parameters["topClientsBlocked"] = true.toString()
             }
         }
     }

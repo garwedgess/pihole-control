@@ -131,7 +131,10 @@ class StatisticsRepositoryImpl(
                                 .map { client ->
                                     TopClientEntity(client.client, client.hits, client.percentage)
                                 },
-                            blocked = emptyList()
+                            blocked = it.topClientsBlockedWithPercentages
+                                .map { client ->
+                                    TopClientEntity(client.client, client.hits, client.percentage)
+                                }
                         )
 
                         is PiHoleTopClientsCombinedResponseDataV6 -> TopClientQueriesEntity(

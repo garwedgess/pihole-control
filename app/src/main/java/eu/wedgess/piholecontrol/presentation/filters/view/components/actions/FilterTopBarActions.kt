@@ -2,7 +2,7 @@ package eu.wedgess.piholecontrol.presentation.filters.view.components.actions
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FilterAlt
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,7 +27,7 @@ fun FilterTopBarActions(
     Row {
         IconButton(onClick = onFilterByClick) {
             Icon(
-                imageVector = Icons.Outlined.FilterAlt,
+                imageVector = Icons.Outlined.FilterList,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )

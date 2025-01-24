@@ -16,12 +16,17 @@ import eu.wedgess.piholecontrol.presentation.logs.view.components.dialogs.LogsDi
 @Composable
 fun LogsListContent(
     logsList: List<LogEntryInfo>,
+    liveLoggingEnabled: Boolean,
     dialogType: LogsDialogType,
     onEvent: (LogsContract.Event) -> Unit
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize(), state = rememberLazyListState()) {
         stickyHeader {
-            LogsListStickyHeader(listSize = logsList.size)
+            LogsListStickyHeader(
+                listSize = logsList.size,
+                liveLoggingEnabled = liveLoggingEnabled,
+                onLiveLoggingChange = { onEvent(LogsContract.Event.OnLiveLoggingChanged(it)) }
+            )
         }
         if (logsList.firstOrNull() is LogEntryInfo.Version6) {
             items(logsList, key = { (it as LogEntryInfo.Version6).id }) { log ->

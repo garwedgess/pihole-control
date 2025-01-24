@@ -191,7 +191,7 @@
     <string name="snackbar_msg_connection_deleted">Connection %s has been deleted</string>
     <string name="snackbar_msg_failed_connection_restore">Failed to restore connection %s</string>
     <string name="snackbar_msg_failed_to_set_active_connection">Failed to set %s as the active connection</string>
-    <string name="log_results_title">Results: %d</string>
+    <string name="log_results_title">%d Results</string>
 
     <string name="network_connected">Connected to network</string>
     <string name="network_disconnected">Disconnected from network</string>
@@ -210,5 +210,11 @@
     <string name="connection_port_error_blank">Port cannot be blank</string>
     <string name="connection_port_error_invalid">Not a valid port number: $port</string>
     <string name="connection_port_error_range">Port must be between 1 and 65535</string>
+    <string name="logs_filter_title_advanced_filter">Advanced Filter</string>
+    <string name="logs_filter_title_basic_filter">Basic Filter</string>
+    <string name="logs_advanced_filter_label_client_ip">Client IP</string>
+    <string name="logs_advanced_filter_label_client_name">Client Name</string>
+    <string name="logs_advanced_filter_label_query_type">Query Type</string>
+    <string name="logs_advanced_filter_label_advanced_status">Advanced Status</string>
 
 </resources>

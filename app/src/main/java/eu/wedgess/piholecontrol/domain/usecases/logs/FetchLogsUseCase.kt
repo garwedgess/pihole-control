@@ -17,11 +17,26 @@ class FetchLogsUseCase @Inject constructor(
         limit: Int,
         status: LogEntryStatus,
         query: String,
+        clientIp: String?,
+        clientName: String?,
+        queryType: String?,
+        advancedStatus: String?,
         from: Long?,
         until: Long?
     ): Flow<Result<List<PiHoleLogsEntity>>> {
         return periodicRefreshUseCase { connection ->
-            logsRepository.fetchLogs(connection, limit, status, query, from, until)
+            logsRepository.fetchLogs(
+                connection = connection,
+                limit = limit,
+                status = status,
+                query = query,
+                clientIp = clientIp,
+                clientName = clientName,
+                queryType = queryType,
+                advancedStatus = advancedStatus,
+                from = from,
+                until = until
+            )
         }
     }
 

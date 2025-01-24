@@ -176,7 +176,7 @@ private fun DisplayFilterRuleDialogPreview() {
         LogDetailsDialog(
             piHoleLog = LogEntryInfo.Version5(
                 answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
-                queryType = "A",
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
                 domain = "www.google.com",
                 client = "192.168.1.1",
                 replyTime = 1.0,

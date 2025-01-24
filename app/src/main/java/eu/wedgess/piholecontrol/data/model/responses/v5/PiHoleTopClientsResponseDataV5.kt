@@ -8,10 +8,15 @@ import kotlin.math.floor
 @Serializable
 data class PiHoleTopClientsResponseDataV5(
     @SerialName("top_sources")
-    val topSources: Map<String, Int> = mapOf()
+    val topSources: Map<String, Int> = mapOf(),
+    @SerialName("top_sources_blocked")
+    val topSourcesBlocked: Map<String, Int> = mapOf()
 ) {
     val topClientsWithPercentages: List<TopClientData>
         get() = calculatePercentages(topSources)
+
+    val topClientsBlockedWithPercentages: List<TopClientData>
+        get() = calculatePercentages(topSourcesBlocked)
 
     private fun calculatePercentages(data: Map<String, Int>): List<TopClientData> {
         val globalTotal = data.values.sum()

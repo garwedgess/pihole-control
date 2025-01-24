@@ -28,7 +28,18 @@ class LogsApiServiceV6ImplTest {
     fun `fetchLogs - returns success`() = runTest {
         val connection = ConnectionEntity.Version6.default.copy(trustAllCerts = false)
 
-        val result = target.fetchLogs(connection, 500, 1234567L, 12345678L)
+        val result =
+            target.fetchLogs(
+                connection = connection,
+                limit = 500,
+                domain = null,
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = 1234567L,
+                until = 12345678L
+            )
 
         assertThat(result.isSuccess).isTrue()
     }
@@ -37,7 +48,44 @@ class LogsApiServiceV6ImplTest {
     fun `fetchLogs - returns failure`() = runTest {
         val connection = ConnectionEntity.Version6.default.copy(trustAllCerts = true)
 
-        val result = target.fetchLogs(connection, 500, 1234567L, 12345678L)
+        val result =
+            target.fetchLogs(
+                connection = connection,
+                limit = 500,
+                domain = null,
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = 1234567L,
+                until = 12345678L
+            )
+
+        assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        assertThat(exception).isInstanceOf(ApiErrorThrowable::class.java)
+        assertThat((exception as ApiErrorThrowable).apiErrorResponse)
+            .isInstanceOf(ApiErrorResponse.V6::class.java)
+        assertThat((exception.apiErrorResponse as ApiErrorResponse.V6).serverError)
+            .isEqualTo(PiHoleErrorResponseDataV6.notFound)
+    }
+
+    @Test
+    fun `fetchLogFilterSuggestions - returns success`() = runTest {
+        val connection = ConnectionEntity.Version6.default.copy(trustAllCerts = false)
+
+        val result =
+            target.fetchLogFilterSuggestions(connection = connection)
+
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `fetchLogFilterSuggestions - returns failure`() = runTest {
+        val connection = ConnectionEntity.Version6.default.copy(trustAllCerts = true)
+
+        val result =
+            target.fetchLogFilterSuggestions(connection = connection)
 
         assertThat(result.isFailure).isTrue()
         val exception = result.exceptionOrNull()

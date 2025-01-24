@@ -17,6 +17,7 @@ sealed class LogEntryInfo {
     abstract val domain: String
     abstract val time: String
     abstract val replyTime: Double
+    abstract val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity
     abstract val formattedReplyTime: UiText
 
     data class Version5(
@@ -25,7 +26,7 @@ sealed class LogEntryInfo {
         override val domain: String,
         override val time: String,
         override val replyTime: Double,
-        val queryType: String,
+        override val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity,
         val answerType: PiHoleLogsEntity.LogsAnswerTypeEntity,
     ) : LogEntryInfo() {
         override val formattedReplyTime: UiText
@@ -42,8 +43,8 @@ sealed class LogEntryInfo {
         override val domain: String,
         override val time: String,
         override val replyTime: Double,
+        override val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity,
         val id: Int,
-        val type: PiHoleLogsEntity.LogEntryTypeEntity,
         val status: PiHoleLogsEntity.LogEntryStatusEntity,
         val dnssec: PiHoleLogsEntity.LogEntryDnssecEntity,
         val replyType: PiHoleLogsEntity.LogEntryReplyTypeEntity,
@@ -97,8 +98,8 @@ sealed class LogEntryInfo {
 
     val queryTypeString: String
         get() = when (this) {
-            is Version5 -> this.queryType
-            is Version6 -> this.type.key
+            is Version5 -> this.queryType.key
+            is Version6 -> this.queryType.key
         }
 
     val statusString: String

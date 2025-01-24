@@ -5,11 +5,13 @@ import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.api.v5.LogsApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v6.LogsApiServiceV6
 import eu.wedgess.piholecontrol.data.model.enums.LogsAnswerType
+import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLogSuggestionsResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleLogsResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogEntryDnssecV6
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogEntryReplyTypeV6
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogEntryStatusV6
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogEntryTypeV6
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogSuggestionsResponseDataV6
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleLogsResponseDataV6
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
@@ -70,6 +72,10 @@ class LogsRepositoryImplTest {
             limit = limit,
             status = LogEntryStatus.ALL,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -80,7 +86,19 @@ class LogsRepositoryImplTest {
         assertThat(resultList).hasSize(1)
         assertThat(resultList?.first()?.domain).isEqualTo("example.com")
         coVerify { apiServiceV5.fetchLogs(activeConnection, limit) }
-        coVerify(exactly = 0) { apiServiceV6.fetchLogs(any(), any(), any(), any()) }
+        coVerify(exactly = 0) {
+            apiServiceV6.fetchLogs(
+                connection = any(),
+                limit = any(),
+                domain = any(),
+                clientIp = any(),
+                clientName = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        }
     }
 
     @Test
@@ -99,6 +117,10 @@ class LogsRepositoryImplTest {
             limit = limit,
             status = LogEntryStatus.ALL,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -107,7 +129,19 @@ class LogsRepositoryImplTest {
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { apiServiceV5.fetchLogs(activeConnection, limit) }
-        coVerify(exactly = 0) { apiServiceV6.fetchLogs(any(), any(), any(), any()) }
+        coVerify(exactly = 0) {
+            apiServiceV6.fetchLogs(
+                connection = any(),
+                limit = any(),
+                domain = any(),
+                clientIp = any(),
+                clientName = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        }
     }
 
     @Test
@@ -145,7 +179,17 @@ class LogsRepositoryImplTest {
             took = 0.1
         )
         coEvery {
-            apiServiceV6.fetchLogs(activeConnection, limit, null, null)
+            apiServiceV6.fetchLogs(
+                connection = activeConnection,
+                limit = limit,
+                domain = null,
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = null,
+                until = null
+            )
         } returns Result.success(responseData)
 
         // When
@@ -154,6 +198,10 @@ class LogsRepositoryImplTest {
             limit = limit,
             status = LogEntryStatus.ALL,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -163,7 +211,19 @@ class LogsRepositoryImplTest {
         val resultList = result.getOrNull()
         assertThat(resultList).hasSize(1)
         assertThat(resultList?.first()?.domain).isEqualTo("example.com")
-        coVerify { apiServiceV6.fetchLogs(activeConnection, limit, null, null) }
+        coVerify {
+            apiServiceV6.fetchLogs(
+                connection = activeConnection,
+                limit = limit,
+                domain = null,
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = null,
+                until = null
+            )
+        }
         coVerify(exactly = 0) { apiServiceV5.fetchLogs(any(), any()) }
     }
 
@@ -207,6 +267,10 @@ class LogsRepositoryImplTest {
             limit = 10,
             status = LogEntryStatus.BLOCKED,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -259,6 +323,10 @@ class LogsRepositoryImplTest {
                 limit = 10,
                 status = LogEntryStatus.ALL,
                 query = "example",
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
                 from = null,
                 until = null
             )
@@ -311,6 +379,10 @@ class LogsRepositoryImplTest {
                 limit = 10,
                 status = LogEntryStatus.ALL,
                 query = "",
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
                 from = 1500L,
                 until = 2500L
             )
@@ -372,7 +444,19 @@ class LogsRepositoryImplTest {
             draw = 1,
             took = 0.1
         )
-        coEvery { apiServiceV6.fetchLogs(any(), any(), any(), any()) } returns Result.success(
+        coEvery {
+            apiServiceV6.fetchLogs(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Result.success(
             responseData
         )
 
@@ -382,6 +466,10 @@ class LogsRepositoryImplTest {
             limit = 10,
             status = LogEntryStatus.BLOCKED,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -443,7 +531,19 @@ class LogsRepositoryImplTest {
             draw = 1,
             took = 0.1
         )
-        coEvery { apiServiceV6.fetchLogs(any(), any(), any(), any()) } returns Result.success(
+        coEvery {
+            apiServiceV6.fetchLogs(
+                connection = any(),
+                limit = any(),
+                domain = any(),
+                clientIp = any(),
+                clientName = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns Result.success(
             responseData
         )
 
@@ -453,6 +553,10 @@ class LogsRepositoryImplTest {
             limit = 10,
             status = LogEntryStatus.ALL,
             query = "   ",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         )
@@ -462,5 +566,39 @@ class LogsRepositoryImplTest {
             "blocked.example.com",
             "allowed.example.com"
         )
+    }
+
+    @Test
+    fun `fetchLogFilterSuggestions - with V5 connection returns success`() = runTest {
+        // Given
+        val activeConnection = mockk<ConnectionEntity.Version5>(relaxed = true)
+        val responseData = mockk<PiHoleLogSuggestionsResponseDataV5>(relaxed = true)
+        coEvery { apiServiceV5.fetchLogFilterSuggestions(activeConnection) } returns Result.success(
+            responseData
+        )
+
+        // When
+        val result = target.fetchLogFilterSuggestions(activeConnection)
+
+        // Then
+        assertThat(result.isSuccess).isTrue()
+        coVerify { apiServiceV5.fetchLogFilterSuggestions(activeConnection) }
+    }
+
+    @Test
+    fun `fetchLogFilterSuggestions - with V6 connection returns success`() = runTest {
+        // Given
+        val activeConnection = mockk<ConnectionEntity.Version6>(relaxed = true)
+        val responseData = mockk<PiHoleLogSuggestionsResponseDataV6>(relaxed = true)
+        coEvery { apiServiceV6.fetchLogFilterSuggestions(activeConnection) } returns Result.success(
+            responseData
+        )
+
+        // When
+        val result = target.fetchLogFilterSuggestions(activeConnection)
+
+        // Then
+        assertThat(result.isSuccess).isTrue()
+        coVerify { apiServiceV6.fetchLogFilterSuggestions(activeConnection) }
     }
 }

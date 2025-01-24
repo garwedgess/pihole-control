@@ -15,8 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.requestFocus
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import kotlinx.coroutines.delay
 
@@ -33,7 +31,6 @@ fun SearchContent(
 ) {
     val focusRequester = remember { FocusRequester() }
     val localKeyboardController = LocalSoftwareKeyboardController.current
-
 
     SearchBar(
         modifier = Modifier.focusRequester(focusRequester),

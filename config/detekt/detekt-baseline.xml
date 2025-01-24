@@ -10,20 +10,6 @@
     <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( timestamp = 16788864000L, hits = 10 )</ID>
     <ID>ArgumentListWrapping:PasswordTextField.kt$( imageVector = image, contentDescription = if (inputVisible) "Hide" else "Show")</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("A (IPv4)") val AIPv4: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("AAAA (IPv6)") val AAAAIPv6: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("DNSKEY") val DNSKey: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("DS") val DS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("HTTPS") val HTTPS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("MX") val MX: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("NAPTR") val NAPTR: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("NS") val NS: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("PTR") val PTR: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("RRSIG") val RRSIG: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SOA") val SOA: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SRV") val SRV: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("SVCB") val SVCB: Float = 0f</ID>
-    <ID>ConstructorParameterNaming:PiHoleQueryTypesResponseDataV5.kt$PiHoleQueryTypesResponseDataV5.QueryTypeData$@SerialName("TXT") val TXT: Float = 0f</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("BLOB") val BLOB: Int = 0</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("CNAME") val CNAME: Int = 0</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("DNSSEC") val DNSSEC: Int = 0</ID>
@@ -95,19 +81,23 @@
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
     <ID>LambdaParameterInRestartableEffect:FiltersScreen.kt$onEvent</ID>
     <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
+    <ID>LargeClass:LogsViewModelTest.kt$LogsViewModelTest</ID>
     <ID>LargeClass:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest</ID>
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and blank query - returns all entries`()</ID>
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 and status filter returns only blocked entries`()</ID>
+    <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 connection - invokes V6 API and returns success`()</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
     <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
+    <ID>LongParameterList:FetchLogsUseCase.kt$FetchLogsUseCase$( limit: Int, status: LogEntryStatus, query: String, clientIp: String?, clientName: String?, queryType: String?, advancedStatus: String?, from: Long?, until: Long? )</ID>
     <ID>LongParameterList:FilterTopBarActions.kt$( onSearchClick: () -&gt; Unit, onFilterByClick: () -&gt; Unit, isFilterByMenuVisible: Boolean, selectedFilterByOptions: List&lt;FilterByOption&gt;, availableFilterByOptions: List&lt;FilterByOption&gt;, onFilterByOptionSelected: (FilterByOption) -&gt; Unit, onDismissFiltering: () -&gt; Unit )</ID>
-    <ID>LongParameterList:LogsRepository.kt$LogsRepository$( connection: ConnectionEntity, limit: Int, status: LogEntryStatus, query: String, from: Long?, until: Long? )</ID>
-    <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
-    <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onSearch: (String) -&gt; Unit, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, )</ID>
+    <ID>LongParameterList:LogsApiServiceV6.kt$LogsApiServiceV6$( connection: ConnectionEntity.Version6, limit: Int, domain: String?, clientIp: String?, clientName: String?, queryType: String?, advancedStatus: String?, from: Long?, until: Long? )</ID>
+    <ID>LongParameterList:LogsRepository.kt$LogsRepository$( connection: ConnectionEntity, limit: Int, status: LogEntryStatus, query: String, clientIp: String?, clientName: String?, queryType: String?, advancedStatus: String?, from: Long?, until: Long? )</ID>
+    <ID>LongParameterList:LogsTopBarActions.kt$( selectedSorting: LogSorting, isSortingMenuVisible: Boolean, onSearchClick: () -&gt; Unit, onSortClick: () -&gt; Unit, onFilterClick: () -&gt; Unit, onDismissSort: () -&gt; Unit, onSortItemClick: (LogSorting) -&gt; Unit )</ID>
+    <ID>LongParameterList:SearchContent.kt$( placeHolderText: String, searchQuery: String, showSearchView: Boolean, onQueryChange: (String) -&gt; Unit, onExpandedChange: (Boolean) -&gt; Unit, onClearSearchQuery: (String) -&gt; Unit, onSearch: ((String) -&gt; Unit)? = null, )</ID>
     <ID>MagicNumber:ColorExt.kt$255</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$0.5f</ID>
@@ -136,7 +126,10 @@
     <ID>MagicNumber:DonutChartUtils.kt$180</ID>
     <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
     <ID>MagicNumber:LineChart.kt$6</ID>
-    <ID>MagicNumber:LogDetailsDialog.kt$1000L</ID>
+    <ID>MagicNumber:LogEntryInfo.kt$LogEntryInfo.Version6$0.095</ID>
+    <ID>MagicNumber:LogEntryInfo.kt$LogEntryInfo.Version6$1000</ID>
+    <ID>MagicNumber:LogEntryInfo.kt$LogEntryInfo.Version6$1000000</ID>
+    <ID>MagicNumber:LogsViewModel.kt$LogsViewModel$1_000</ID>
     <ID>MagicNumber:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$65535</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$10</ID>
     <ID>MagicNumber:NetworkModule.kt$NetworkModule$1024</ID>
@@ -146,13 +139,16 @@
     <ID>MagicNumber:PiHoleQueryTypesResponseDataV6.kt$PiHoleQueryTypesResponseDataV6.QueryTypes$100</ID>
     <ID>MagicNumber:PiHoleTopClientsCombinedResponseDataV6.kt$PiHoleTopClientsCombinedResponseDataV6$100</ID>
     <ID>MagicNumber:PiHoleTopClientsCombinedResponseDataV6.kt$PiHoleTopClientsCombinedResponseDataV6$100f</ID>
+    <ID>MagicNumber:PiHoleTopClientsResponseDataV5.kt$PiHoleTopClientsResponseDataV5$100</ID>
     <ID>MagicNumber:PiHoleTopClientsResponseDataV5.kt$PiHoleTopClientsResponseDataV5$100f</ID>
     <ID>MagicNumber:PiHoleTopQueriesCombinedResponseV6Data.kt$PiHoleTopQueriesCombinedResponseV6Data$100</ID>
     <ID>MagicNumber:PiHoleTopQueriesCombinedResponseV6Data.kt$PiHoleTopQueriesCombinedResponseV6Data$100f</ID>
+    <ID>MagicNumber:PiHoleTopQueriesResponseDataV5.kt$PiHoleTopQueriesResponseDataV5$100</ID>
     <ID>MagicNumber:PiHoleTopQueriesResponseDataV5.kt$PiHoleTopQueriesResponseDataV5$100f</ID>
     <ID>MagicNumber:PiHoleUpstreamsResponseDataV6.kt$PiHoleUpstreamsResponseDataV6$100</ID>
     <ID>MagicNumber:PiHoleUpstreamsResponseDataV6.kt$PiHoleUpstreamsResponseDataV6$100f</ID>
     <ID>MagicNumber:QueriesOverTimeMapper.kt$1000L</ID>
+    <ID>MagicNumber:SearchContent.kt$100</ID>
     <ID>MagicNumber:StatisticsListItem.kt$100f</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$0.1f</ID>
     <ID>MagicNumber:SwipeToDeleteItem.kt$200</ID>
@@ -160,8 +156,8 @@
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Hours$99</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Minutes$60</ID>
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Seconds$60</ID>
-    <ID>MagicNumber:UserPreferences.kt$10_000</ID>
-    <ID>MagicNumber:UserPreferences.kt$500</ID>
+    <ID>MagicNumber:UserPreferencesBuilderExt.kt$100</ID>
+    <ID>MagicNumber:UserPreferencesBuilderExt.kt$5_000</ID>
     <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
     <ID>ModifierMissing:AnimatedIntText.kt$AnimatedIntText</ID>
     <ID>ModifierMissing:AnimatedLinearProgressIndicator.kt$AnimatedLinearProgressIndicator</ID>
@@ -175,6 +171,7 @@
     <ID>ModifierMissing:CustomTimePicker.kt$CustomTimePicker</ID>
     <ID>ModifierMissing:DashboardScreen.kt$DashboardScreen</ID>
     <ID>ModifierMissing:DisableButtonRow.kt$DisableButtonRow</ID>
+    <ID>ModifierMissing:FilterSection.kt$FilterSection</ID>
     <ID>ModifierMissing:FilterTabContent.kt$FilterListContent</ID>
     <ID>ModifierMissing:FilterTabScreenRoot.kt$FilterTabScreenRoot</ID>
     <ID>ModifierMissing:FilterTopBarActions.kt$FilterTopBarActions</ID>
@@ -215,8 +212,10 @@
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
     <ID>NoBlankLineBeforeRbrace:PasswordTextField.kt$PasswordTextFieldPreviewParams$ </ID>
+    <ID>ParameterListWrapping:LogFiltersBottomSheet.kt$( uiState: LogsContract.BottomSheetUiState, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
+    <ID>ParameterNaming:FilterSection.kt$onExpandedStateChanged</ID>
     <ID>ParameterNaming:FilterTopBarActions.kt$onFilterByOptionSelected</ID>
     <ID>ParameterNaming:ModifyConnectionTextField.kt$onValueChanged</ID>
     <ID>ParameterNaming:PasswordTextField.kt$onValueChanged</ID>
@@ -232,6 +231,7 @@
     <ID>TooGenericExceptionCaught:CoroutineExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:HttpClientExt.kt$e: Exception</ID>
     <ID>TooGenericExceptionThrown:CoroutinesExtTest.kt$CoroutinesExtTest$throw RuntimeException("Test Exception")</ID>
+    <ID>TooGenericExceptionThrown:UserPreferencesSerializerTest.kt$UserPreferencesSerializerTest.&lt;no name provided&gt;$throw Exception()</ID>
     <ID>TooManyFunctions:ColorGenerator.kt$ColorGenerator</ID>
     <ID>TooManyFunctions:ConnectionRepository.kt$ConnectionRepository</ID>
     <ID>TooManyFunctions:ConnectionRepositoryImpl.kt$ConnectionRepositoryImpl : ConnectionRepository</ID>

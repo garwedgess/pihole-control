@@ -13,15 +13,27 @@ object LogsMockHttpClientV6 {
     private const val DIRECTORY = "logs/v6"
 
     private val logs = loadJson(DIRECTORY, "logs.json")
+    private val logSuggestions = loadJson(DIRECTORY, "suggestions.json")
     private val notFoundErrorData = loadJson("", "api_404_error_v6.json")
 
     fun mockSuccessHttpClient(): HttpClient {
-        val mockEngine = MockEngine { _ ->
-            respond(
-                content = logs,
-                status = HttpStatusCode.OK,
-                headers = headersOf("Content-Type", "application/json")
-            )
+        val mockEngine = MockEngine { request ->
+            val url = request.url
+            val path = url.segments
+            when (path.size) {
+                2 -> respond(
+                    content = logs,
+                    status = HttpStatusCode.OK,
+                    headers = headersOf("Content-Type", "application/json")
+                )
+
+                // size = 3 for suggestions
+                else -> respond(
+                    content = logSuggestions,
+                    status = HttpStatusCode.OK,
+                    headers = headersOf("Content-Type", "application/json")
+                )
+            }
         }
         return HttpClient(mockEngine) {
             installContentNegotiation()

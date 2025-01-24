@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
+import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryStatus
@@ -41,7 +42,20 @@ class FetchLogsUseCaseTest {
         )
         val expectedResult = Result.success(logEntries)
 
-        coEvery { logsRepository.fetchLogs(connection, any(), any(), any(), any(), any()) } returns
+        coEvery {
+            logsRepository.fetchLogs(
+                connection = connection,
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientIp = any(),
+                clientName = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
+            )
+        } returns
                 Result.success(logEntries)
 
         coEvery { periodicRefreshUseCase<List<PiHoleLogsEntity>>(any()) } answers {
@@ -55,13 +69,30 @@ class FetchLogsUseCaseTest {
             limit = 50,
             status = LogEntryStatus.ALL,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         ).test {
             assertThat(awaitItem()).isEqualTo(expectedResult)
             awaitComplete()
         }
-        coVerify { logsRepository.fetchLogs(connection, 50, LogEntryStatus.ALL, "", null, null) }
+        coVerify {
+            logsRepository.fetchLogs(
+                connection = connection,
+                limit = 50,
+                status = LogEntryStatus.ALL,
+                query = "",
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = null,
+                until = null
+            )
+        }
     }
 
     @Test
@@ -71,12 +102,16 @@ class FetchLogsUseCaseTest {
 
         coEvery {
             logsRepository.fetchLogs(
-                connection,
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                connection = connection,
+                limit = any(),
+                status = any(),
+                query = any(),
+                clientIp = any(),
+                clientName = any(),
+                queryType = any(),
+                advancedStatus = any(),
+                from = any(),
+                until = any()
             )
         } returns expectedError
 
@@ -91,12 +126,45 @@ class FetchLogsUseCaseTest {
             limit = 50,
             status = LogEntryStatus.ALL,
             query = "",
+            clientIp = null,
+            clientName = null,
+            queryType = null,
+            advancedStatus = null,
             from = null,
             until = null
         ).test {
             assertThat(awaitItem()).isEqualTo(expectedError)
             awaitComplete()
         }
-        coVerify { logsRepository.fetchLogs(connection, 50, LogEntryStatus.ALL, "", null, null) }
+        coVerify {
+            logsRepository.fetchLogs(
+                connection = connection,
+                limit = 50,
+                status = LogEntryStatus.ALL,
+                query = "",
+                clientIp = null,
+                clientName = null,
+                queryType = null,
+                advancedStatus = null,
+                from = null,
+                until = null
+            )
+        }
+    }
+
+    @Test
+    fun `refresh - triggers periodic refresh`() {
+        target.refresh()
+
+        coVerify { periodicRefreshUseCase.triggerRefresh() }
+    }
+
+    @Test
+    fun `setRefreshMode - sets refresh mode on periodic refresh use case`() {
+        val refreshMode = RefreshMode.Manual
+
+        target.setRefreshMode(refreshMode)
+
+        coVerify { periodicRefreshUseCase.setRefreshMode(refreshMode) }
     }
 }

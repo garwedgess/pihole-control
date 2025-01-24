@@ -13,20 +13,40 @@ import org.threeten.bp.LocalDateTime
 interface LogsContract {
 
     data class BottomSheetUiState(
-        val liveLogging: Boolean,
+        val showFilterBottomSheet: Boolean,
         val logsLimit: Int,
         val selectedLogEntryStatus: LogEntryStatus,
         val filterFromTime: Long?,
         val filterToTime: Long?,
+        val availableClientIps: List<String>,
+        val selectedClientIp: String,
+        val availableClientNames: List<String>,
+        val selectedClientName: String,
+        val availableQueryTypes: List<String>,
+        val selectedQueryType: String,
+        val availableStatuses: List<String>,
+        val selectedAdvancedStatus: String,
+        val showBasicFiltering: Boolean,
+        val showAdvancedFiltering: Boolean,
     ) {
         companion object {
             internal val availableLogLimits = listOf(100, 500, 1000, 2500)
             fun initial() = BottomSheetUiState(
-                liveLogging = false,
+                showFilterBottomSheet = false,
                 logsLimit = availableLogLimits.first(),
                 selectedLogEntryStatus = LogEntryStatus.ALL,
                 filterFromTime = null,
                 filterToTime = null,
+                availableClientIps = emptyList(),
+                availableClientNames = emptyList(),
+                availableQueryTypes = emptyList(),
+                availableStatuses = emptyList(),
+                selectedClientIp = "ALL",
+                selectedClientName = "ALL",
+                selectedQueryType = "ALL",
+                selectedAdvancedStatus = "ALL",
+                showBasicFiltering = true,
+                showAdvancedFiltering = false
             )
         }
     }
@@ -47,6 +67,7 @@ interface LogsContract {
         val logs: List<LogEntryInfo>,
         val sorting: LogSorting,
         val showSortingDropdownMenu: Boolean,
+        val liveLogging: Boolean,
         val dialogType: LogsDialogType
     ) {
 
@@ -56,7 +77,8 @@ interface LogsContract {
                 logs = emptyList(),
                 showSortingDropdownMenu = false,
                 sorting = LogSorting.DATE_DESC,
-                dialogType = LogsDialogType.None
+                dialogType = LogsDialogType.None,
+                liveLogging = false,
             )
         }
     }
@@ -98,5 +120,12 @@ interface LogsContract {
         data class OnSearchExpandedChanged(val expanded: Boolean) : Event
         data class OnSearchQueryChanged(val query: String) : Event
         data class OnLiveLoggingChanged(val isLive: Boolean) : Event
+        data class OnToggleFiltersBottomSheet(val show: Boolean) : Event
+        data class OnToggleBasicFilteringOptions(val show: Boolean) : Event
+        data class OnToggleAdvancedFilteringOptions(val show: Boolean) : Event
+        data class OnClientIpFilterChanged(val ip: String) : Event
+        data class OnClientNameFilterChanged(val name: String) : Event
+        data class OnQueryTypeFilterChanged(val type: String) : Event
+        data class OnAdvancedStatusFilterChanged(val advancedStatus: String) : Event
     }
 }
