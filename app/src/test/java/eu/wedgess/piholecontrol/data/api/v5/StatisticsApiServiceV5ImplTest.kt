@@ -128,7 +128,7 @@ class StatisticsApiServiceV5ImplTest {
         assertThat((exception.apiErrorResponse as ApiErrorResponse.V5).errorMessage)
             .isEqualTo(
                 "Client request(GET http://pi.hole/admin/api.php" +
-                        "?topClients=true) invalid: 400 Bad Request. " +
+                        "?topClients=true&topClientsBlocked=true) invalid: 400 Bad Request. " +
                         "Text: \"[]\""
             )
     }

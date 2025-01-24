@@ -27,7 +27,7 @@ class PiHoleLogsEntityExtensionsTest {
         // Assert
         assertThat(
             LogEntryInfo.Version5(
-                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
                 client = "client",
                 domain = "domain",
                 replyTime = 10.0,

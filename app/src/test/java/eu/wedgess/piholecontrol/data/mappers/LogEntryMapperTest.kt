@@ -26,13 +26,13 @@ class LogEntryMapperTest {
             requestedDomain = "example.com",
             client = "192.168.1.10",
             answerType = LogsAnswerType.UPSTREAM,
-            responseTime = 150
+            responseTime = 15
         )
 
         val logEntryEntity = piHoleLogEntryDataV5.toLogEntryEntity()
 
         assertThat(logEntryEntity.timestamp).isEqualTo(1678886400)
-        assertThat(logEntryEntity.queryType).isEqualTo("A")
+        assertThat(logEntryEntity.queryType).isEqualTo(PiHoleLogsEntity.LogEntryQueryTypeEntity.A)
         assertThat(logEntryEntity.domain).isEqualTo("example.com")
         assertThat(logEntryEntity.client).isEqualTo("192.168.1.10")
         assertThat(logEntryEntity.answerType)

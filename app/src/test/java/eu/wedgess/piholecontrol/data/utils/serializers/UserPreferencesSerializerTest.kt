@@ -17,9 +17,9 @@ class UserPreferencesSerializerTest {
         // Arrange
         val expectedDefault = UserPreferences.newBuilder()
             .setThemeValue(UserPreferences.Theme.DARK_VALUE)
-            .setDefaultLogEntries(500)
+            .setDefaultLogEntries(100)
             .setUseDynamicColors(false)
-            .setRefreshTime(10_000)
+            .setRefreshTime(5_000)
             .setChangeStatusOnAllConnection(false)
             .build()
 
