@@ -3,6 +3,8 @@ package eu.wedgess.piholecontrol.data.model.responses.v5
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+typealias QueryTypeValueDataV5 = Pair<String, Float>
+
 @Serializable
 data class PiHoleQueryTypesResponseDataV5(
     @SerialName("querytypes")
@@ -45,22 +47,22 @@ data class PiHoleQueryTypesResponseDataV5(
         val http: Float = 0f
     ) {
         fun asList(): List<Pair<String, Float>> = listOf(
-            Pair("A (IPv4)", aipV4),
-            Pair("AAAA (IPv6)", aaaaIpV6),
-            Pair("ANY", any),
-            Pair("SRV", srv),
-            Pair("SOA", soa),
-            Pair("PTR", ptr),
-            Pair("TXT", txt),
-            Pair("NAPTR", naptr),
-            Pair("MX", mx),
-            Pair("DS", ds),
-            Pair("RRSIG", rrsig),
-            Pair("DNSKey", dnsKey),
-            Pair("NS", ns),
-            Pair("OTHER", other),
-            Pair("SVCB", svcb),
-            Pair("HTTPS", http)
+            QueryTypeValueDataV5("A (IPv4)", aipV4),
+            QueryTypeValueDataV5("AAAA (IPv6)", aaaaIpV6),
+            QueryTypeValueDataV5("ANY", any),
+            QueryTypeValueDataV5("SRV", srv),
+            QueryTypeValueDataV5("SOA", soa),
+            QueryTypeValueDataV5("PTR", ptr),
+            QueryTypeValueDataV5("TXT", txt),
+            QueryTypeValueDataV5("NAPTR", naptr),
+            QueryTypeValueDataV5("MX", mx),
+            QueryTypeValueDataV5("DS", ds),
+            QueryTypeValueDataV5("RRSIG", rrsig),
+            QueryTypeValueDataV5("DNSKey", dnsKey),
+            QueryTypeValueDataV5("NS", ns),
+            QueryTypeValueDataV5("OTHER", other),
+            QueryTypeValueDataV5("SVCB", svcb),
+            QueryTypeValueDataV5("HTTPS", http)
         ).filterNot { it.second == 0f }
     }
 }

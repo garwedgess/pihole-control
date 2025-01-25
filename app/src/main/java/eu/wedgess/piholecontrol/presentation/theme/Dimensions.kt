@@ -84,7 +84,7 @@ class AppDimens : Dimensions {
             summaryIcon = 52.dp,
             dialogTonalElevation = 6.dp,
             logsStickyHeaderHeight = 44.dp,
-            topBarHeight = 80.dp,
+            topBarHeight = 56.dp,
             bottomNavHeight = 80.dp,
             statusBarHeight = 32.dp,
             timeButtonWidth = 164.dp,

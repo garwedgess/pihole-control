@@ -14,12 +14,14 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
@@ -46,7 +48,7 @@ fun FilterSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(title)
+            Text(title, style = MaterialTheme.typography.titleSmall)
             IconButton(onClick = { onExpandedStateChanged(!expanded) }) {
                 Icon(
                     modifier = Modifier.graphicsLayer { rotationZ = animatedRotation },
@@ -57,6 +59,18 @@ fun FilterSection(
         }
         AnimatedVisibility(visible = expanded) {
             content()
+        }
+    }
+}
+
+@ThemePreview
+@Composable
+private fun FilterSectionPreview() {
+    PiHoleControlTheme {
+        Surface {
+            FilterSection("Section 1", expanded = true, onExpandedStateChanged = {}) {
+                Text("Content")
+            }
         }
     }
 }

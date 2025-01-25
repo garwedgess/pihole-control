@@ -16,7 +16,7 @@ class SummaryMapperTest {
             uniqueClients = 50
         )
 
-        val summaryEntity = piHoleSummaryResponseDataV5.toSummaryEntity()
+        val summaryEntity = piHoleSummaryResponseDataV5.toEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(100000)
         assertThat(summaryEntity.dnsQueries).isEqualTo(5000)
@@ -29,7 +29,7 @@ class SummaryMapperTest {
     fun `toSummaryEntity - maps PiHoleSummary with default values`() {
         val piHoleSummaryResponseDataV5 = PiHoleSummaryResponseDataV5()
 
-        val summaryEntity = piHoleSummaryResponseDataV5.toSummaryEntity()
+        val summaryEntity = piHoleSummaryResponseDataV5.toEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(0)
         assertThat(summaryEntity.dnsQueries).isEqualTo(0)
@@ -48,7 +48,7 @@ class SummaryMapperTest {
             uniqueClients = 100
         )
 
-        val summaryEntity = piHoleSummaryResponseDataV5.toSummaryEntity()
+        val summaryEntity = piHoleSummaryResponseDataV5.toEntity()
 
         assertThat(summaryEntity.domainsBlocked).isEqualTo(200000)
         assertThat(summaryEntity.dnsQueries).isEqualTo(10000)

@@ -6,7 +6,7 @@ import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleStatusResponseData
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import org.junit.Test
 
-class PiHoleSummaryStatusDataMapperTest {
+class StatusMapperTest {
 
     @Test
     fun `toPiHoleStatusResponse - maps ENABLED correctly`() {

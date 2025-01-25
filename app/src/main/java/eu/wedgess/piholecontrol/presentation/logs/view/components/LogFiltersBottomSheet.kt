@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -28,7 +31,8 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun LogFiltersBottomSheet(
-    uiState: LogsContract.BottomSheetUiState, onEvent: (LogsContract.Event) -> Unit
+    uiState: LogsContract.BottomSheetUiState,
+    onEvent: (LogsContract.Event) -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -151,6 +155,19 @@ fun LogFiltersBottomSheet(
                             }
                         )
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = { onEvent(LogsContract.Event.OnClearFiltersClick) }) {
+                    Text(text = stringResource(R.string.filters_clear_btn))
                 }
             }
         }

@@ -214,6 +214,18 @@ class LogsViewModel @Inject constructor(
                 it.copy(showSortingDropdownMenu = false)
             }
 
+            LogsContract.Event.OnClearFiltersClick -> _bottomSheetUiState.update {
+                it.copy(
+                    selectedLogEntryStatus = LogEntryStatus.ALL,
+                    selectedClientIp = "ALL",
+                    selectedClientName = "ALL",
+                    selectedQueryType = "ALL",
+                    selectedAdvancedStatus = "ALL",
+                    filterToTime = null,
+                    filterFromTime = null
+                )
+            }
+
             is LogsContract.Event.OnStatusChanged -> handleStatusFilterChanged(event.status)
             is LogsContract.Event.OnClearSearchQuery -> handleClearSearchQuery(event.query)
 

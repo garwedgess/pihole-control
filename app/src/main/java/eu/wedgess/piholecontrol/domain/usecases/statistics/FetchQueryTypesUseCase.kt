@@ -13,7 +13,7 @@ class FetchQueryTypesUseCase(
     operator fun invoke(): Flow<Result<List<QueryTypeChartData>>> {
         return periodicRefreshUseCase { connection ->
             repository.fetchQueryTypes(connection).mapCatching { list ->
-                list.map { QueryTypeChartData(it.key, it.value) }
+                list.map { QueryTypeChartData(it.type, it.percentage) }
             }
         }
     }

@@ -4,7 +4,7 @@ import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleSummaryResponseDat
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleSummaryResponseDataV6
 import eu.wedgess.piholecontrol.domain.model.SummaryEntity
 
-fun PiHoleSummaryResponseDataV5.toSummaryEntity() = SummaryEntity(
+fun PiHoleSummaryResponseDataV5.toEntity() = SummaryEntity(
     dnsQueries = this.dnsQueriesToday,
     adsBlocked = this.adsBlockedToday,
     domainsBlocked = this.domainsBeingBlocked,
@@ -12,7 +12,7 @@ fun PiHoleSummaryResponseDataV5.toSummaryEntity() = SummaryEntity(
     uniqueClients = uniqueClients
 )
 
-fun PiHoleSummaryResponseDataV6.toSummaryEntity() = SummaryEntity(
+fun PiHoleSummaryResponseDataV6.toEntity() = SummaryEntity(
     dnsQueries = this.queries.total,
     adsBlocked = this.queries.blocked,
     domainsBlocked = this.gravity.domainsBeingBlocked,

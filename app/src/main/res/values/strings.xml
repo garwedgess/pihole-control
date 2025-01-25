@@ -216,5 +216,6 @@
     <string name="logs_advanced_filter_label_client_name">Client Name</string>
     <string name="logs_advanced_filter_label_query_type">Query Type</string>
     <string name="logs_advanced_filter_label_advanced_status">Advanced Status</string>
+    <string name="filters_clear_btn">Clear Filters</string>
 
 </resources>

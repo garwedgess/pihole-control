@@ -3,7 +3,6 @@ package eu.wedgess.piholecontrol.data.repository
 import eu.wedgess.piholecontrol.data.api.v5.DashboardApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v6.DashboardApiServiceV6
 import eu.wedgess.piholecontrol.data.mappers.toEntity
-import eu.wedgess.piholecontrol.data.mappers.toSummaryEntity
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleClientsOverTimeResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleOverTimeResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleSummaryResponseDataV5
@@ -34,8 +33,8 @@ class DashboardRepositoryImpl(
             v6Call = { apiV6.fetchStatusSummary(it) },
             mapper = {
                 when (it) {
-                    is PiHoleSummaryResponseDataV5 -> it.toSummaryEntity()
-                    is PiHoleSummaryResponseDataV6 -> it.toSummaryEntity()
+                    is PiHoleSummaryResponseDataV5 -> it.toEntity()
+                    is PiHoleSummaryResponseDataV6 -> it.toEntity()
                     else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                 }
             }

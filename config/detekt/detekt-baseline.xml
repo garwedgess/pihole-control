@@ -158,7 +158,7 @@
     <ID>MagicNumber:TimeTextField.kt$TimePickerType.Seconds$60</ID>
     <ID>MagicNumber:UserPreferencesBuilderExt.kt$100</ID>
     <ID>MagicNumber:UserPreferencesBuilderExt.kt$5_000</ID>
-    <ID>MatchingDeclarationName:BorderExtensions.kt$Border</ID>
+    <ID>MatchingDeclarationName:BorderExt.kt$Border</ID>
     <ID>ModifierMissing:AnimatedIntText.kt$AnimatedIntText</ID>
     <ID>ModifierMissing:AnimatedLinearProgressIndicator.kt$AnimatedLinearProgressIndicator</ID>
     <ID>ModifierMissing:BottomNavigationBar.kt$BottomNavigationBar</ID>

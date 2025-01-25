@@ -13,7 +13,7 @@ class FetchForwardDestinationsUseCase(
     operator fun invoke(): Flow<Result<List<ForwardDestinationsChartData>>> {
         return periodicRefreshUseCase { connection ->
             repository.fetchForwardDestinations(connection).mapCatching { list ->
-                list.map { ForwardDestinationsChartData(it.key, it.value) }
+                list.map { ForwardDestinationsChartData(it.destination, it.percentage) }
             }
         }
     }

@@ -2,8 +2,8 @@ package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.v5.FilterRulesApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v6.FilterRulesApiServiceV6
+import eu.wedgess.piholecontrol.data.mappers.toEntity
 import eu.wedgess.piholecontrol.data.mappers.toFilterRuleEntity
-import eu.wedgess.piholecontrol.data.mappers.toModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleType
 import eu.wedgess.piholecontrol.data.mappers.toPiHoleFilterRuleTypeV6
 import eu.wedgess.piholecontrol.data.model.requests.PiHoleAddFilterRuleRequestDataV6
@@ -88,17 +88,9 @@ class FilterRulesRepositoryImpl(
             },
             mapper = { response ->
                 when (response) {
-                    is PiHoleModifyFilterRuleResponseDataV5 -> {
-                        response.toModifyFilterRuleResponseEntity()
-                    }
-
-                    is PiHoleAddFilterRuleResponseDataV6 -> {
-                        response.toModifyFilterRuleResponseEntity()
-                    }
-
-                    else -> {
-                        throw IllegalArgumentException("Unknown type: ${response.javaClass.name}")
-                    }
+                    is PiHoleModifyFilterRuleResponseDataV5 -> response.toEntity()
+                    is PiHoleAddFilterRuleResponseDataV6 -> response.toEntity()
+                    else -> throw IllegalArgumentException("Unknown type: ${response.javaClass.name}")
                 }
             }
         )
@@ -127,18 +119,15 @@ class FilterRulesRepositoryImpl(
             },
             mapper = { response ->
                 when (response) {
-                    is PiHoleModifyFilterRuleResponseDataV5 -> {
-                        response.toModifyFilterRuleResponseEntity()
-                    }
-
+                    is PiHoleModifyFilterRuleResponseDataV5 -> response.toEntity()
                     is Unit -> ModifyFilterRuleResponseEntity(
                         success = true,
                         message = null
                     )
 
-                    else -> {
-                        throw IllegalArgumentException("Unknown type: ${response.javaClass.name}")
-                    }
+                    else -> throw IllegalArgumentException(
+                        "Unknown type: ${response.javaClass.name}"
+                    )
                 }
             }
         )

@@ -2,10 +2,10 @@ package eu.wedgess.piholecontrol.domain.repository
 
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.domain.model.QueryTypeEntity
 import eu.wedgess.piholecontrol.domain.model.TopClientQueriesEntity
 import eu.wedgess.piholecontrol.domain.model.TopQueriesEntity
+import eu.wedgess.piholecontrol.domain.model.UpstreamDestinationEntity
 
 interface StatisticsRepository {
     suspend fun fetchQueryTypes(
@@ -14,7 +14,7 @@ interface StatisticsRepository {
 
     suspend fun fetchForwardDestinations(
         activeConnection: ConnectionEntity
-    ): PiHoleApiResult<List<ForwardDestinationEntity>>
+    ): PiHoleApiResult<List<UpstreamDestinationEntity>>
 
     suspend fun fetchTopQueries(
         activeConnection: ConnectionEntity

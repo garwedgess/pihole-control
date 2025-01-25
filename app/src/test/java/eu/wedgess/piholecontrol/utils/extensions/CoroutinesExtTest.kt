@@ -11,6 +11,30 @@ import org.junit.Test
 class CoroutinesExtTest {
 
     @Test
+    fun `resultOf - returns success when block does not throw`() {
+        val obj = 42
+        val result = obj.resultOf { toString() }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrNull()).isEqualTo("42")
+    }
+
+    @Test
+    fun `resultOf - works with null return type`() {
+        val obj = "Test"
+        val result = obj.resultOf { if (length > 10) null else this }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrNull()).isEqualTo("Test")
+    }
+
+    @Test
+    fun `resultOf - handles exception from object method`() {
+        val list = listOf(1, 2, 3)
+        val result = list.resultOf { get(10) }
+        assertThat(result.isFailure).isTrue()
+        assertThat(result.exceptionOrNull()).isInstanceOf(IndexOutOfBoundsException::class.java)
+    }
+
+    @Test
     fun `resultOf - returns success when block succeeds`() {
         val result = "Hello".resultOf { this.length }
         assertThat(result.isSuccess).isTrue()

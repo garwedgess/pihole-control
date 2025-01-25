@@ -4,32 +4,35 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.math.floor
 
+typealias QueryTypeValueDataV6 = Pair<String, Float>
+
 @Serializable
 data class PiHoleQueryTypesResponseDataV6(
-    val types: QueryTypes,
+    @SerialName("types")
+    val queryTypes: QueryTypes,
     val took: Double
 ) {
 
     @Serializable
     data class QueryTypes(
-        @SerialName("A") val a: Float,
-        @SerialName("AAAA") val aaaa: Float,
-        @SerialName("ANY") val any: Float,
-        @SerialName("SRV") val srv: Float,
-        @SerialName("SOA") val soa: Float,
-        @SerialName("PTR") val ptr: Float,
-        @SerialName("TXT") val txt: Float,
-        @SerialName("NAPTR") val naptr: Float,
-        @SerialName("MX") val mx: Float,
-        @SerialName("DS") val ds: Float,
-        @SerialName("RRSIG") val rrsig: Float,
-        @SerialName("DNSKEY") val dnskey: Float,
-        @SerialName("NS") val ns: Float,
-        @SerialName("SVCB") val svcb: Float,
-        @SerialName("HTTPS") val https: Float,
-        @SerialName("OTHER") val other: Float
+        @SerialName("A") val a: Int,
+        @SerialName("AAAA") val aaaa: Int,
+        @SerialName("ANY") val any: Int,
+        @SerialName("SRV") val srv: Int,
+        @SerialName("SOA") val soa: Int,
+        @SerialName("PTR") val ptr: Int,
+        @SerialName("TXT") val txt: Int,
+        @SerialName("NAPTR") val naptr: Int,
+        @SerialName("MX") val mx: Int,
+        @SerialName("DS") val ds: Int,
+        @SerialName("RRSIG") val rrsig: Int,
+        @SerialName("DNSKEY") val dnskey: Int,
+        @SerialName("NS") val ns: Int,
+        @SerialName("SVCB") val svcb: Int,
+        @SerialName("HTTPS") val https: Int,
+        @SerialName("OTHER") val other: Int
     ) {
-        fun asList(): List<Pair<String, Float>> {
+        fun asList(): List<QueryTypeValueDataV6> {
             val queryTypePairs = listOf(
                 Pair("A (IPv4)", a),
                 Pair("AAAA (IPv6)", aaaa),
@@ -49,7 +52,7 @@ data class PiHoleQueryTypesResponseDataV6(
                 Pair("HTTPS", https)
             )
 
-            val total = queryTypePairs.sumOf { it.second.toDouble() }.toFloat()
+            val total = queryTypePairs.sumOf { it.second }.toFloat()
 
             return if (total == 0f) {
                 emptyList()

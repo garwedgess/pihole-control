@@ -2,6 +2,8 @@ package eu.wedgess.piholecontrol.data.repository
 
 import eu.wedgess.piholecontrol.data.api.v5.StatisticsApiServiceV5
 import eu.wedgess.piholecontrol.data.api.v6.StatisticsApiServiceV6
+import eu.wedgess.piholecontrol.data.mappers.toEntity
+import eu.wedgess.piholecontrol.data.mappers.toEntityList
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleQueryTypesResponseDataV5
 import eu.wedgess.piholecontrol.data.model.responses.v5.PiHoleTopClientsResponseDataV5
@@ -12,12 +14,10 @@ import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleTopClientsCombined
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleTopQueriesCombinedResponseV6Data
 import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleUpstreamsResponseDataV6
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
 import eu.wedgess.piholecontrol.domain.model.QueryTypeEntity
-import eu.wedgess.piholecontrol.domain.model.TopClientEntity
 import eu.wedgess.piholecontrol.domain.model.TopClientQueriesEntity
-import eu.wedgess.piholecontrol.domain.model.TopDomainEntity
 import eu.wedgess.piholecontrol.domain.model.TopQueriesEntity
+import eu.wedgess.piholecontrol.domain.model.UpstreamDestinationEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
 import kotlinx.coroutines.withContext
@@ -38,15 +38,8 @@ class StatisticsRepositoryImpl(
                 v6Call = { apiV6.fetchQueryTypes(it) },
                 mapper = {
                     when (it) {
-                        is PiHoleQueryTypesResponseDataV5 -> it.queryTypes.asList()
-                            .map { (key, value) ->
-                                QueryTypeEntity(key, value)
-                            }
-
-                        is PiHoleQueryTypesResponseDataV6 -> it.types.asList().map { (key, value) ->
-                            QueryTypeEntity(key, value)
-                        }
-
+                        is PiHoleQueryTypesResponseDataV5 -> it.toEntityList()
+                        is PiHoleQueryTypesResponseDataV6 -> it.toEntityList()
                         else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                     }
                 }
@@ -55,7 +48,7 @@ class StatisticsRepositoryImpl(
 
     override suspend fun fetchForwardDestinations(
         activeConnection: ConnectionEntity
-    ): PiHoleApiResult<List<ForwardDestinationEntity>> =
+    ): PiHoleApiResult<List<UpstreamDestinationEntity>> =
         withContext(dispatcherProvider.io) {
             callVersionedEndpoint(
                 activeConnection = activeConnection,
@@ -64,15 +57,11 @@ class StatisticsRepositoryImpl(
                 mapper = {
                     when (it) {
                         is PiHoleUpstreamsResponseDataV5 -> {
-                            it.forwardDestinations.map { (key, value) ->
-                                ForwardDestinationEntity(key, value)
-                            }
+                            it.upstreamDestinations.toEntityList()
                         }
 
                         is PiHoleUpstreamsResponseDataV6 -> {
-                            it.combinedUpstreamPercentages.map { (key, value) ->
-                                ForwardDestinationEntity(key.combinedName, value)
-                            }
+                            it.combinedUpstreamPercentages.toEntityList()
                         }
 
                         else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
@@ -91,25 +80,8 @@ class StatisticsRepositoryImpl(
                 v6Call = { apiV6.fetchTopCombinedQueries(it) },
                 mapper = {
                     when (it) {
-                        is PiHoleTopQueriesResponseDataV5 ->
-                            TopQueriesEntity(
-                                allowed = it.topQueriesPercentages.map { query ->
-                                    TopDomainEntity(query.domain, query.hits, query.percentage)
-                                },
-                                blocked = it.topAdsPercentages.map { query ->
-                                    TopDomainEntity(query.domain, query.hits, query.percentage)
-                                }
-                            )
-
-                        is PiHoleTopQueriesCombinedResponseV6Data -> TopQueriesEntity(
-                            allowed = it.permittedWithPercentages.map { query ->
-                                TopDomainEntity(query.domain, query.hits, query.percentage)
-                            },
-                            blocked = it.blockedWithPercentages.map { query ->
-                                TopDomainEntity(query.domain, query.hits, query.percentage)
-                            }
-                        )
-
+                        is PiHoleTopQueriesResponseDataV5 -> it.toEntity()
+                        is PiHoleTopQueriesCombinedResponseV6Data -> it.toEntity()
                         else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                     }
                 }
@@ -126,28 +98,8 @@ class StatisticsRepositoryImpl(
                 v6Call = { apiV6.fetchTopCombinedClients(it) },
                 mapper = {
                     when (it) {
-                        is PiHoleTopClientsResponseDataV5 -> TopClientQueriesEntity(
-                            all = it.topClientsWithPercentages
-                                .map { client ->
-                                    TopClientEntity(client.client, client.hits, client.percentage)
-                                },
-                            blocked = it.topClientsBlockedWithPercentages
-                                .map { client ->
-                                    TopClientEntity(client.client, client.hits, client.percentage)
-                                }
-                        )
-
-                        is PiHoleTopClientsCombinedResponseDataV6 -> TopClientQueriesEntity(
-                            all = it.allWithPercentages
-                                .map { client ->
-                                    TopClientEntity(client.client, client.hits, client.percentage)
-                                },
-                            blocked = it.blockedWithPercentages
-                                .map { client ->
-                                    TopClientEntity(client.client, client.hits, client.percentage)
-                                }
-                        )
-
+                        is PiHoleTopClientsResponseDataV5 -> it.toEntity()
+                        is PiHoleTopClientsCombinedResponseDataV6 -> it.toEntity()
                         else -> throw IllegalArgumentException("Unknown type: ${it.javaClass.name}")
                     }
                 }

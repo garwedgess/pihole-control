@@ -4,6 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.math.floor
 
+typealias UpstreamDestinationsWithPercentagesV6 = Pair<PiHoleUpstreamV6Data, Float>
+
 @Serializable
 data class PiHoleUpstreamsResponseDataV6(
     val upstreams: List<PiHoleUpstreamV6Data>,
@@ -12,7 +14,7 @@ data class PiHoleUpstreamsResponseDataV6(
     val took: Double
 ) {
 
-    val combinedUpstreamPercentages: List<Pair<PiHoleUpstreamV6Data, Float>>
+    val combinedUpstreamPercentages: List<UpstreamDestinationsWithPercentagesV6>
         get() {
             val combinedUpstreams = upstreams.groupBy { it.combinedName }
                 .mapValues { (_, group) ->

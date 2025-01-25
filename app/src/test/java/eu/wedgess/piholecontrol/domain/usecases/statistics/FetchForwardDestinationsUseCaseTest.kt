@@ -3,7 +3,7 @@ package eu.wedgess.piholecontrol.domain.usecases.statistics
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.model.ForwardDestinationEntity
+import eu.wedgess.piholecontrol.domain.model.UpstreamDestinationEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.ForwardDestinationsChartData
@@ -36,8 +36,8 @@ class FetchForwardDestinationsUseCaseTest {
     fun `invoke - emits forward destinations successfully`() = runTest {
         val connection = ConnectionEntity.Version5.default
         val destinations = listOf(
-            ForwardDestinationEntity("destination1", 123f),
-            ForwardDestinationEntity("destination2", 456f)
+            UpstreamDestinationEntity("destination1", 123f),
+            UpstreamDestinationEntity("destination2", 456f)
         )
         val expectedResult = Result.success(
             listOf(
@@ -61,15 +61,15 @@ class FetchForwardDestinationsUseCaseTest {
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
         val connection = ConnectionEntity.Version5.default
-        val expectedError = Result.failure<List<ForwardDestinationEntity>>(
+        val expectedError = Result.failure<List<UpstreamDestinationEntity>>(
             Exception("Error fetching forward destinations")
         )
 
         coEvery { repository.fetchForwardDestinations(connection) } returns expectedError
-        coEvery { periodicRefreshUseCase<List<ForwardDestinationEntity>>(any()) } answers {
+        coEvery { periodicRefreshUseCase<List<UpstreamDestinationEntity>>(any()) } answers {
             flow {
                 val fetchData =
-                    arg<suspend (ConnectionEntity) -> Result<List<ForwardDestinationEntity>>>(0)
+                    arg<suspend (ConnectionEntity) -> Result<List<UpstreamDestinationEntity>>>(0)
                 emit(fetchData(connection))
             }
         }

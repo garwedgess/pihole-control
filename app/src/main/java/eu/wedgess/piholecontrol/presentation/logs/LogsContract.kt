@@ -107,6 +107,7 @@ interface LogsContract {
         data object OnFromTimeCleared : Event
         data object OnToTimeCleared : Event
         data object OnSortingDismissed : Event
+        data object OnClearFiltersClick : Event
         data class OnLogLimitChanged(val limit: Int) : Event
         data class OnStatusChanged(val status: LogEntryStatus) : Event
         data class OnDateConfirmed(val type: PickerType, val date: LocalDate) : Event
