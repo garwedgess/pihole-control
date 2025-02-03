@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.core.view.isVisible
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -88,6 +87,7 @@ fun PiHoleControlApp(
     })
 
     val bottomBarHeight = remember { mutableFloatStateOf(0f) }
+    Timber.d("GARETH DP: $bottomBarHeight")
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetOriginal by animateFloatAsState(targetValue = 0f, label = "")
     val nestedScrollConnection = remember {

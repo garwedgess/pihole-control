@@ -50,7 +50,7 @@ class SettingsViewModel @Inject constructor(
     ) { connection, preferences, uiState ->
         UIResult.Loaded(
             uiState.copy(
-                currentConnection = connection.getOrNull() ?: ConnectionEntity.default,
+                currentConnection = connection.getOrNull() ?: ConnectionEntity.Version5.default,
                 currentTheme = preferences.theme.mapToAppThemePres(),
                 refreshInterval = preferences.refreshInterval,
                 useDynamicThemeColors = preferences.useDynamicColors,

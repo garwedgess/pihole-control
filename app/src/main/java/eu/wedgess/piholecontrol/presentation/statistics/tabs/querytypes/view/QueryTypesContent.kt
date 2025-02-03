@@ -6,21 +6,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.common.components.LegendGrid
+import eu.wedgess.piholecontrol.presentation.common.components.SectionTitle
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ScrollAdaptiveColumn
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.DonutChart
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.DonutChart
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.QueryTypeChartData
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
@@ -43,10 +42,8 @@ fun QueryTypesContent(
                 Alignment.CenterVertically
             )
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.statistics_query_types_title),
-                style = MaterialTheme.typography.titleMedium
+            SectionTitle.TitleOnly(
+                title = stringResource(R.string.statistics_query_types_title)
             )
             DonutChart(
                 data = chartDataCollection,

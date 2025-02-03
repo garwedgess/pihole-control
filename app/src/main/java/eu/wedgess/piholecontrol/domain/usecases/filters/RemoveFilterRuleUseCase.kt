@@ -15,6 +15,10 @@ class RemoveFilterRuleUseCase(
         ruleType: FilterRuleTypeEntity
     ): Result<ModifyFilterRuleResponseEntity> = resultOf {
         val activeConnection = connectionRepository.fetchActive().getOrThrow()
-        filterRuleRepository.removeFilterRule(activeConnection, rule, ruleType).getOrThrow()
+        filterRuleRepository.removeFilterRule(
+            activeConnection,
+            rule,
+            ruleType
+        ).getOrThrow()
     }
 }

@@ -6,10 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
-import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchForwardDestinationsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchQueryTypesUseCase
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchTopClientsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchTopQueriesUseCase
+import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchUpstreamDestinationsUseCase
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -26,8 +26,8 @@ object StatisticsModule {
     fun provideFetchForwardDestinationsUseCase(
         statisticsRepository: StatisticsRepository,
         periodicRefreshUseCase: PeriodicRefreshUseCase
-    ): FetchForwardDestinationsUseCase =
-        FetchForwardDestinationsUseCase(statisticsRepository, periodicRefreshUseCase)
+    ): FetchUpstreamDestinationsUseCase =
+        FetchUpstreamDestinationsUseCase(statisticsRepository, periodicRefreshUseCase)
 
     @Provides
     fun provideFetchTopQueriesUseCase(

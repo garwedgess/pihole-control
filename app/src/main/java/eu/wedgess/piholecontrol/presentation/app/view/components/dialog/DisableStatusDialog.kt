@@ -35,7 +35,7 @@ fun DisableStatusDialog(
     Dialog(onDismissRequest = { onDismissDialog() }) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            contentColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             DisableStatusDialogContent(
                 onDisableStatus = { onDisableStatus(it) },

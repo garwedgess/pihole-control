@@ -3,10 +3,10 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components.dialogs
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import eu.wedgess.piholecontrol.domain.model.LogAnswerTypeEntity
-import eu.wedgess.piholecontrol.domain.model.LogEntryEntity
+import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
+import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import eu.wedgess.piholecontrol.presentation.logs.model.LogsDialogType
 import eu.wedgess.piholecontrol.presentation.logs.model.PickerType
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -16,17 +16,24 @@ fun LogsDialogs(dialogType: LogsDialogType, onEvent: (LogsContract.Event) -> Uni
     when (dialogType) {
         LogsDialogType.None -> Unit
         is LogsDialogType.ShowDatePickerDialog -> LogsDatePickerDialog(
-            onDismiss = { onEvent(LogsContract.Event.OnDismissDialog) },
+            onDismiss = {
+                onEvent(
+                    LogsContract.Event.OnDismissDialog
+                )
+            },
             onConfirm = { onEvent(LogsContract.Event.OnDateConfirmed(dialogType.pickerType, it)) }
         )
 
         is LogsDialogType.ShowTimePickerDialog -> LogsTimePickerDialog(
-            onDismiss = { onEvent(LogsContract.Event.OnDismissDialog) },
+            onDismiss = {
+                onEvent(
+                    LogsContract.Event.OnDismissDialog
+                )
+            },
             onConfirmTime = { hours, minutes ->
                 onEvent(
                     LogsContract.Event.OnTimeConfirmed(
-                        dialogType.pickerType,
-                        dialogType.currentDate.atTime(hours, minutes)
+                        dialogType.pickerType, dialogType.currentDate.atTime(hours, minutes)
                     )
                 )
             }
@@ -55,14 +62,14 @@ private class LogsDialogsPreviewParameters : PreviewParameterProvider<LogsDialog
     override val values: Sequence<LogsDialogType>
         get() = sequenceOf(
             LogsDialogType.ShowDetailsDialog(
-                details = LogEntryEntity(
+                details = LogEntryInfo.Version5(
                     timestamp = System.currentTimeMillis().div(1000L),
                     time = "10:12",
-                    queryType = "IPv4",
-                    requestedDomain = "www.google.com",
+                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
+                    domain = "www.google.com",
                     client = "My Android",
-                    answerType = LogAnswerTypeEntity.LOCAL_CACHE,
-                    responseTime = 1200
+                    answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
+                    replyTime = 1.2
                 )
             ),
             LogsDialogType.ShowDatePickerDialog(pickerType = PickerType.ToTime),

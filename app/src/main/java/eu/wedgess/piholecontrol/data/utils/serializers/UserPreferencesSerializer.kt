@@ -3,8 +3,8 @@ package eu.wedgess.piholecontrol.data.utils.serializers
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
+import eu.wedgess.piholecontrol.data.extensions.defaultValues
 import eu.wedgess.piholecontrol.data.model.UserPreferences
-import eu.wedgess.piholecontrol.data.utils.defaultValues
 import java.io.InputStream
 import java.io.OutputStream
 

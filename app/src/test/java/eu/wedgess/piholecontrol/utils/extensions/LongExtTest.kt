@@ -48,6 +48,48 @@ class LongExtTest {
     }
 
     @Test
+    fun `toDateString - handles future date correctly`() {
+        val epochSeconds: Long = 2145916800 // 2038-01-01 00:00:00 UTC
+        val expected = "01/01/2038 - 00:00"
+
+        val result = epochSeconds.toDateString(utcZoneId)
+
+        assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `toDateString - handles different time zones`() {
+        val epochSeconds: Long = 1672531200 // 2023-01-01 00:00:00 UTC
+        val differentZone = ZoneId.of("America/New_York")
+        val expected = "31/12/2022 - 19:00" // Due to time zone difference
+
+        val result = epochSeconds.toDateString(differentZone)
+
+        assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
+    fun `toEpochSeconds - handles different time zones`() {
+        val localDateTime = LocalDateTime.of(2023, 1, 1, 0, 0, 0)
+        val newYorkZone = ZoneId.of("America/New_York")
+
+        val result = localDateTime.toEpochSeconds(newYorkZone)
+
+        // The exact value might vary slightly due to DST, so we'll check the general vicinity
+        assertThat(result).isIn(1672549200L..1672552800L)
+    }
+
+    @Test
+    fun `toEpochSeconds - handles future date`() {
+        val localDateTime = LocalDateTime.of(2038, 1, 1, 0, 0, 0)
+        val expected: Long = 2145916800
+
+        val result = localDateTime.toEpochSeconds(utcZoneId)
+
+        assertThat(result).isEqualTo(expected)
+    }
+
+    @Test
     fun `toEpochSeconds - converts correctly with default zone`() {
         val localDateTime = LocalDateTime.of(2023, 1, 1, 0, 0, 0)
         val expected: Long = 1672531200 // 2023-01-01 00:00:00 UTC

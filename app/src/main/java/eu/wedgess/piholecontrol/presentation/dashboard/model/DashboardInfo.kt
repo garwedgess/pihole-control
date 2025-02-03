@@ -58,12 +58,11 @@ data class DashboardInfo(
 
     companion object {
         fun handleErrorThrowable(throwable: Throwable?, onRetry: () -> Unit): UIResult.Error {
+            val message = throwable?.message ?: "Unknown error"
             return UIResult.Error(
                 ResultType.Error.WithTitleAndSubTitleAndRetry(
                     title = UiText.DynamicString("Failed to fetch dashboard info"),
-                    subTitle = UiText.DynamicString(
-                        throwable?.message ?: "Unknown error"
-                    ),
+                    subTitle = UiText.DynamicString(message),
                     onRetry = onRetry
                 )
             )

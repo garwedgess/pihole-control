@@ -1,0 +1,47 @@
+{
+  "domains": [
+    {
+      "domain": "chat.avatar.ext.hp.com",
+      "count": 2640
+    },
+    {
+      "domain": "clients3.google.com",
+      "count": 2075
+    },
+    {
+      "domain": "play.googleapis.com",
+      "count": 1526
+    },
+    {
+      "domain": "www.gstatic.com",
+      "count": 1505
+    },
+    {
+      "domain": "clients4.google.com",
+      "count": 1184
+    },
+    {
+      "domain": "www.google.com",
+      "count": 444
+    },
+    {
+      "domain": "embeddedassistant.googleapis.com",
+      "count": 406
+    },
+    {
+      "domain": "lycraservice-pa.googleapis.com",
+      "count": 243
+    },
+    {
+      "domain": "geller-pa.googleapis.com",
+      "count": 236
+    },
+    {
+      "domain": "connectivitycheck.gstatic.com",
+      "count": 154
+    }
+  ],
+  "total_queries": 12907,
+  "blocked_queries": 693,
+  "took": 0.00076270103454589844
+}

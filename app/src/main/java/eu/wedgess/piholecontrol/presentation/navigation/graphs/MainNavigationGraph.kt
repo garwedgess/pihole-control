@@ -30,7 +30,7 @@ fun MainNavigationGraph(
     ) {
         dashboardRoot(onComposing, showSnackbarMessage)
         statisticsRoot(onComposing, onResetBottomAppBarOffset)
-        filtersRoot(onComposing, showSnackbarMessage)
+        filtersRoot(onComposing)
         logsRoot(onComposing)
         settingsNavigationGraph(navController, onComposing)
     }

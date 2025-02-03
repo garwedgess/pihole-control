@@ -96,7 +96,7 @@ class SettingsViewModelTest {
         runTest {
             // Given
             val connection =
-                ConnectionEntity.default.copy(
+                ConnectionEntity.Version5.default.copy(
                     name = "Test",
                     host = "test.com",
                     port = 80,
@@ -141,7 +141,7 @@ class SettingsViewModelTest {
     fun `WHEN OnRefreshIntervalClicked event is received THEN uiState should be updated`() =
         runTest {
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.default)
+                Result.success(ConnectionEntity.Version5.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
 
@@ -173,7 +173,7 @@ class SettingsViewModelTest {
     fun `WHEN OnServerClicked event is received THEN side effect should be emitted`() =
         runTest {
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.default)
+                Result.success(ConnectionEntity.Version5.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
             // Given
@@ -203,7 +203,7 @@ class SettingsViewModelTest {
         runTest {
             // Given
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.default)
+                Result.success(ConnectionEntity.Version5.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
 

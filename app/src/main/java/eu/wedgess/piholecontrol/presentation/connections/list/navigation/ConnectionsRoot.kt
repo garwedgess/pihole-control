@@ -18,10 +18,11 @@ import eu.wedgess.piholecontrol.presentation.connections.list.view.ConnectionsSc
 import eu.wedgess.piholecontrol.presentation.connections.list.viewmodel.ConnectionsViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
+import java.util.UUID
 
 fun NavGraphBuilder.connectionsRoot(
     onComposing: (AppBarState) -> Unit,
-    navigateToModifyConnection: (id: Long?) -> Unit,
+    navigateToModifyConnection: (id: UUID?) -> Unit,
     navigateToCreateConnection: () -> Unit
 ) {
     composable<Screens.Connections> {

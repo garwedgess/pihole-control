@@ -17,17 +17,17 @@ sealed class FilterTab(override val title: UiText, override val icon: ImageVecto
         icon = Icons.Default.CheckCircleOutline
     )
 
-    data object BlockList : FilterTab(
-        title = UiText.StringResource(R.string.filters_tab_title_block_list),
+    data object DenyList : FilterTab(
+        title = UiText.StringResource(R.string.filters_tab_title_deny_list),
         icon = Icons.Default.Block
     )
 
     fun toFilterRuleType() = when (this) {
         AllowList -> FilterRuleTypeEntity.ALLOW
-        BlockList -> FilterRuleTypeEntity.BLOCK
+        DenyList -> FilterRuleTypeEntity.DENY
     }
 
     companion object {
-        fun all() = listOf(AllowList, BlockList)
+        fun all() = listOf(AllowList, DenyList)
     }
 }

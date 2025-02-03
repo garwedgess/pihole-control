@@ -4,13 +4,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
+import eu.wedgess.piholecontrol.presentation.common.components.DoublePressToExitBackHandler
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.StatisticsTab
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.navigation.ForwardDestinationsRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.navigation.QueryTypesRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.navigation.TopClientsScreenRoot
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.navigation.TopDomainsRoot
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams.navigation.UpstreamDestinationsRoot
 
 fun NavGraphBuilder.statisticsRoot(
     onComposing: (AppBarState) -> Unit,
@@ -29,10 +30,11 @@ fun NavGraphBuilder.statisticsRoot(
         ) {
             when (it) {
                 StatisticsTab.Queries -> QueryTypesRoot()
-                StatisticsTab.Servers -> ForwardDestinationsRoot()
+                StatisticsTab.Servers -> UpstreamDestinationsRoot()
                 StatisticsTab.Domains -> TopDomainsRoot()
                 StatisticsTab.Clients -> TopClientsScreenRoot()
             }
         }
+        DoublePressToExitBackHandler()
     }
 }

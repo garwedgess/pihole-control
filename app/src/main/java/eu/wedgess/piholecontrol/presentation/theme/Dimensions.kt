@@ -18,6 +18,7 @@ class Padding(
     val itemContent: Dp,
     val itemContentSmall: Dp,
     val itemContentXSmall: Dp,
+    val itemContentXXSmall: Dp,
     val itemContentLarge: Dp,
     val itemContentXLarge: Dp,
 )
@@ -41,8 +42,14 @@ class Size(
     val statisticsTitleIcon: Dp,
     val timeInputWidth: Dp,
 ) {
-    fun logsBottomSheetHeight(screenHeight: Dp): Dp =
-        screenHeight.minus(logsStickyHeaderHeight.plus(topBarHeight).plus(bottomNavHeight.plus(statusBarHeight)))
+    fun logsBottomSheetHeight(screenHeight: Dp, statusBarHeightDp: Dp): Dp =
+        screenHeight.minus(
+            logsStickyHeaderHeight
+                .times(2)
+                .plus(topBarHeight)
+                .plus(bottomNavHeight)
+                .plus(statusBarHeightDp)
+        )
 }
 
 class Weight(
@@ -50,6 +57,7 @@ class Weight(
     val minAlpha: Float,
     val full: Float,
     val point8: Float,
+    val point2: Float,
     val half: Float,
     val bottomNavUnselectedAlpha: Float,
     val secondaryTextAlpha: Float,
@@ -70,6 +78,7 @@ class AppDimens : Dimensions {
             itemContent = 12.dp,
             itemContentSmall = 8.dp,
             itemContentXSmall = 4.dp,
+            itemContentXXSmall = 2.dp,
             itemContentLarge = 16.dp,
             itemContentXLarge = 24.dp
         )
@@ -84,12 +93,12 @@ class AppDimens : Dimensions {
             summaryIcon = 52.dp,
             dialogTonalElevation = 6.dp,
             logsStickyHeaderHeight = 44.dp,
-            topBarHeight = 80.dp,
+            topBarHeight = 64.dp,
             bottomNavHeight = 80.dp,
             statusBarHeight = 32.dp,
             timeButtonWidth = 164.dp,
             listPercentageBarWidth = 100.dp,
-            statisticsTitleIcon = 32.dp,
+            statisticsTitleIcon = 28.dp,
             timeInputWidth = 84.dp,
             defaultIcon = 24.dp
         )
@@ -101,6 +110,7 @@ class AppDimens : Dimensions {
             full = 1f,
             half = 0.5f,
             point8 = 0.8f,
+            point2 = 0.2f,
             bottomNavUnselectedAlpha = 0.6f,
             disabledTextAlpha = 0.4f,
             tertiaryTextAlpha = 0.6f

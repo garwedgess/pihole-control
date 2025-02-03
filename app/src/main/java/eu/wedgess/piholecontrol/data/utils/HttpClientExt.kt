@@ -1,5 +1,8 @@
 package eu.wedgess.piholecontrol.data.utils
 
+import eu.wedgess.piholecontrol.data.model.responses.ApiErrorResponse
+import eu.wedgess.piholecontrol.data.model.responses.exceptions.ApiErrorThrowable
+import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleErrorResponseDataV6
 import eu.wedgess.piholecontrol.utils.extensions.resultOf
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,61 +12,67 @@ import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
-// Safe request function that uses Result<T> and catches exceptions, supports error deserialization with E
-internal suspend inline fun <reified T, reified E> HttpClient.requestResult(
+// Safe request function that uses Result<T> and catches exceptions, supports error deserialization with ApiError
+internal suspend inline fun <reified T> HttpClient.requestResult(
     block: HttpRequestBuilder.() -> Unit
 ): Result<T> {
     return resultOf {
         val response = request { block() }
-        response.handleResponse<T, E>()
+        response.handleResponse<T>()
     }.recoverCatching { e ->
-        throw handleRecovery<E>(e)
+        throw handleRecovery(e)
     }
 }
 
 // Extracted recoverCatching logic to handle different types of exceptions
-private suspend inline fun <reified E> handleRecovery(e: Throwable): Throwable {
+private suspend fun handleRecovery(e: Throwable): Throwable {
     return when (e) {
-        is ClientRequestException -> handleClientError(e, e.errorBody<E>())
-        is ServerResponseException -> handleServerError(e, e.errorBody<E>())
+        is ClientRequestException -> handleClientError(e)
+        is ServerResponseException -> handleServerError(e)
         is IOException -> Exception("Network error occurred: ${e.message}", e)
         is SerializationException -> Exception("Serialization error: ${e.message}", e)
         else -> Exception("Unknown error occurred: ${e.message}", e)
     }
 }
 
-// Logic to handle client errors (4xx), customize based on requirements
-private fun <E> handleClientError(e: ClientRequestException, errorBody: E?): ClientRequestException {
-    println("Client error: ${e.response.status}, Body: $errorBody")
-    return ClientRequestException(e.response, "Client error: ${e.response.status}, Body: $errorBody")
+// Logic to handle client errors (4xx)
+private suspend fun handleClientError(e: ClientRequestException): Throwable {
+    val errorBody = e.errorBody<PiHoleErrorResponseDataV6>()
+    return if (errorBody != null) {
+        ApiErrorThrowable(ApiErrorResponse.V6(errorBody))
+    } else {
+        ApiErrorThrowable(ApiErrorResponse.V5(e.message))
+    }
 }
 
-// Logic to handle server errors (5xx), customize based on requirements
-private fun <E> handleServerError(e: ServerResponseException, errorBody: E?): ServerResponseException {
-    println("Server error: ${e.response.status}, Body: $errorBody")
-    return ServerResponseException(e.response, "Server error: ${e.response.status}, Body: $errorBody")
+// Logic to handle server errors (5xx)
+private suspend fun handleServerError(e: ServerResponseException): Throwable {
+    val errorBody = e.errorBody<PiHoleErrorResponseDataV6>()
+    return if (errorBody != null) {
+        ApiErrorThrowable(ApiErrorResponse.V6(errorBody))
+    } else {
+        ApiErrorThrowable(ApiErrorResponse.V5(e.message))
+    }
 }
 
-private suspend inline fun <reified T, reified E> HttpResponse.handleResponse(): T {
-    when (val statusCode = this.status.value) {
+private suspend inline fun <reified T> HttpResponse.handleResponse(): T {
+    return when (this.status.value) {
         in HttpStatusCode.BadRequest.value..HttpStatusCode.TooManyRequests.value -> {
-            throw ClientRequestException(this, "Client error: HTTP $statusCode").also {
-                it.errorBody<E>()
-            }
+            throw ClientRequestException(this, this.bodyAsText())
         }
 
         in HttpStatusCode.InternalServerError.value..HttpStatusCode.InsufficientStorage.value -> {
-            throw ServerResponseException(this, "Server error: HTTP $statusCode").also {
-                it.errorBody<E>()
-            }
+            throw ServerResponseException(this, this.bodyAsText())
         }
-        HttpStatusCode.NoContent.value -> throw Exception("No content: HTTP $statusCode")
-        HttpStatusCode.OK.value, HttpStatusCode.Created.value -> return this.body()
-        else ->  throw ResponseException(this, "Unexpected HTTP status: $statusCode")
+
+        HttpStatusCode.NoContent.value -> Unit as T
+        HttpStatusCode.OK.value, HttpStatusCode.Created.value -> this.body()
+        else -> throw ResponseException(this, this.bodyAsText())
     }
 }
 

@@ -27,7 +27,7 @@ class ObserveActiveUserUseCaseTest {
 
     @Test
     fun `invoke - emits active connection successfully`() = runTest {
-        val activeConnection = ConnectionEntity.default
+        val activeConnection = ConnectionEntity.Version5.default
         val expectedResult = Result.success(activeConnection)
 
         every { repository.fetchActiveFlow() } returns flowOf(expectedResult)
