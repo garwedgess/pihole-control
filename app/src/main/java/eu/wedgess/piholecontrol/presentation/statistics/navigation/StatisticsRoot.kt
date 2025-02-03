@@ -4,6 +4,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
+import eu.wedgess.piholecontrol.presentation.common.components.DoublePressToExitBackHandler
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.StatisticsTab
@@ -34,5 +35,6 @@ fun NavGraphBuilder.statisticsRoot(
                 StatisticsTab.Clients -> TopClientsScreenRoot()
             }
         }
+        DoublePressToExitBackHandler()
     }
 }

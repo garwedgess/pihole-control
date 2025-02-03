@@ -20,6 +20,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
+import eu.wedgess.piholecontrol.presentation.common.components.DoublePressToExitBackHandler
 import eu.wedgess.piholecontrol.presentation.common.components.SearchContent
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
@@ -150,6 +151,7 @@ fun NavGraphBuilder.logsRoot(
             snackbarHostState = snackbarHostState,
             onEvent = viewModel::onEvent
         )
+        DoublePressToExitBackHandler()
     }
 }
 
