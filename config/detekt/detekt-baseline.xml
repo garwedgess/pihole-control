@@ -6,8 +6,6 @@
     <ID>ArgumentListWrapping:LogsDialogs.kt$( dialogType.pickerType, dialogType.currentDate.atTime(hours, minutes) )</ID>
     <ID>ArgumentListWrapping:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest$(ModifyConnectionDialogType.FailedToSaveConnection::class.java)</ID>
     <ID>ArgumentListWrapping:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest$(result.dialogType)</ID>
-    <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( 16788864L to 5L, 16788900L to 8L )</ID>
-    <ID>ArgumentListWrapping:OverTimeMapperTest.kt$OverTimeMapperTest$( timestamp = 16788864000L, hits = 10 )</ID>
     <ID>ArgumentListWrapping:PasswordTextField.kt$( imageVector = image, contentDescription = if (inputVisible) "Hide" else "Show")</ID>
     <ID>CompositionLocalAllowlist:Theme.kt$LocalAppDimens</ID>
     <ID>ConstructorParameterNaming:PiHoleSummaryResponseDataV6.kt$PiHoleSummaryResponseDataV6.PiHoleSummaryQueriesData.PiHoleSummaryRepliesData$@SerialName("BLOB") val BLOB: Int = 0</ID>
@@ -64,7 +62,6 @@
     <ID>CyclomaticComplexMethod:LogEntryStatusExt.kt$@Composable fun PiHoleLogsEntity.LogEntryStatusEntity.toStringValue()</ID>
     <ID>CyclomaticComplexMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>CyclomaticComplexMethod:ModifyConnectionViewModel.kt$ModifyConnectionViewModel$override fun onEvent(event: ModifyConnectionsContract.Event)</ID>
-    <ID>FunctionTypeReferenceSpacing:ModifyFilterRuleResponseMapper.kt$fun PiHoleAddFilterRuleResponseDataV6 .toModifyFilterRuleResponseEntity(): ModifyFilterRuleResponseEntity</ID>
     <ID>Indentation:DashboardInfo.kt$DashboardInfo$ </ID>
     <ID>Indentation:DonutChart.kt$ </ID>
     <ID>Indentation:LogEntryInfo.kt$LogEntryInfo$ </ID>
@@ -79,7 +76,6 @@
     <ID>LambdaParameterEventTrailing:Scanner.kt$onBarcodeScanSuccess</ID>
     <ID>LambdaParameterInRestartableEffect:CollectSideEffect.kt$onSideEffect</ID>
     <ID>LambdaParameterInRestartableEffect:FilterTabScreenRoot.kt$onRefreshFilters</ID>
-    <ID>LambdaParameterInRestartableEffect:FiltersScreen.kt$onEvent</ID>
     <ID>LambdaParameterInRestartableEffect:SwipeToDeleteItem.kt$onDelete</ID>
     <ID>LargeClass:LogsViewModelTest.kt$LogsViewModelTest</ID>
     <ID>LargeClass:ModifyConnectionViewModelTest.kt$ModifyConnectionViewModelTest</ID>
@@ -88,9 +84,9 @@
     <ID>LongMethod:LogsRepositoryImplTest.kt$LogsRepositoryImplTest$@Test fun `fetchLogs - with V6 connection - invokes V6 API and returns success`()</ID>
     <ID>LongMethod:LogsViewModel.kt$LogsViewModel$override fun onEvent(event: LogsContract.Event)</ID>
     <ID>LongParameterList:CurrentConnectionStatus.kt$( modifier: Modifier, currentConnection: ConnectionEntity, adBlockingEnabled: Boolean, connections: List&lt;ConnectionEntity&gt;, onConnectionClick: (ConnectionEntity) -&gt; Unit, onStatusClick: () -&gt; Unit )</ID>
-    <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Padding$( val screenContent: Dp, val dialogContent: Dp, val itemContent: Dp, val itemContentSmall: Dp, val itemContentXSmall: Dp, val itemContentXXSmall: Dp, val itemContentLarge: Dp, val itemContentXLarge: Dp, )</ID>
     <ID>LongParameterList:Dimensions.kt$Size$( val pieChart: Dp, val lineChartHeight: Dp, val legendIcon: Dp, val cornerRadiusLarge: Dp, val cornerRadius: Dp, val radioGroupSelectedIcon: Dp, val summaryIcon: Dp, val defaultIcon: Dp, val dialogTonalElevation: Dp, val logsStickyHeaderHeight: Dp, val topBarHeight: Dp, val bottomNavHeight: Dp, val statusBarHeight: Dp, val timeButtonWidth: Dp, val listPercentageBarWidth: Dp, val statisticsTitleIcon: Dp, val timeInputWidth: Dp, )</ID>
-    <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
+    <ID>LongParameterList:Dimensions.kt$Weight$( val radioGroupUnSelectedBorderAlpha: Float, val minAlpha: Float, val full: Float, val point8: Float, val point2: Float, val half: Float, val bottomNavUnselectedAlpha: Float, val secondaryTextAlpha: Float, val tertiaryTextAlpha: Float, val disabledTextAlpha: Float, )</ID>
     <ID>LongParameterList:DisableButtonRow.kt$( selectedTime: Long, leftButtonTextResId: Int, leftValue: Long, rightButtonTextResId: Int, rightValue: Long, onTimeClick: (Long) -&gt; Unit )</ID>
     <ID>LongParameterList:FetchLogsUseCase.kt$FetchLogsUseCase$( limit: Int, status: LogEntryStatus, query: String, clientIp: String?, clientName: String?, queryType: String?, advancedStatus: String?, from: Long?, until: Long? )</ID>
     <ID>LongParameterList:FilterTopBarActions.kt$( onSearchClick: () -&gt; Unit, onFilterByClick: () -&gt; Unit, isFilterByMenuVisible: Boolean, selectedFilterByOptions: List&lt;FilterByOption&gt;, availableFilterByOptions: List&lt;FilterByOption&gt;, onFilterByOptionSelected: (FilterByOption) -&gt; Unit, onDismissFiltering: () -&gt; Unit )</ID>
@@ -115,8 +111,10 @@
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$6f</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$727</ID>
     <ID>MagicNumber:ColorGenerator.kt$ColorGenerator$9007199254740991</ID>
+    <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$10</ID>
     <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$1000</ID>
     <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$1000L</ID>
+    <ID>MagicNumber:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$9</ID>
     <ID>MagicNumber:DisableStatusDialog.kt$30</ID>
     <ID>MagicNumber:DisableStatusDialog.kt$5</ID>
     <ID>MagicNumber:DonutChart.kt$0.1f</ID>
@@ -124,7 +122,6 @@
     <ID>MagicNumber:DonutChart.kt$4</ID>
     <ID>MagicNumber:DonutChart.kt$700</ID>
     <ID>MagicNumber:DonutChartUtils.kt$180</ID>
-    <ID>MagicNumber:FilterRuleItem.kt$0.8f</ID>
     <ID>MagicNumber:LineChart.kt$6</ID>
     <ID>MagicNumber:LogEntryInfo.kt$LogEntryInfo.Version6$0.095</ID>
     <ID>MagicNumber:LogEntryInfo.kt$LogEntryInfo.Version6$1000</ID>
@@ -172,15 +169,12 @@
     <ID>ModifierMissing:DashboardScreen.kt$DashboardScreen</ID>
     <ID>ModifierMissing:DisableButtonRow.kt$DisableButtonRow</ID>
     <ID>ModifierMissing:FilterSection.kt$FilterSection</ID>
-    <ID>ModifierMissing:FilterTabContent.kt$FilterListContent</ID>
     <ID>ModifierMissing:FilterTabScreenRoot.kt$FilterTabScreenRoot</ID>
     <ID>ModifierMissing:FilterTopBarActions.kt$FilterTopBarActions</ID>
     <ID>ModifierMissing:FiltersScreen.kt$FiltersScreen</ID>
-    <ID>ModifierMissing:ForwardDestinationsContent.kt$ForwardDestinationsContent</ID>
-    <ID>ModifierMissing:ForwardDestinationsScreen.kt$ForwardDestinationsScreen</ID>
     <ID>ModifierMissing:LegendItem.kt$LegendItem</ID>
     <ID>ModifierMissing:LogFiltersBottomSheet.kt$LogFiltersBottomSheet</ID>
-    <ID>ModifierMissing:LogItem.kt$LogListItem</ID>
+    <ID>ModifierMissing:LogListItem.kt$LogListItem</ID>
     <ID>ModifierMissing:LogsListContent.kt$LogsListContent</ID>
     <ID>ModifierMissing:LogsListStickyHeader.kt$LogsListStickyHeader</ID>
     <ID>ModifierMissing:LogsScreen.kt$LogsScreen</ID>
@@ -197,6 +191,7 @@
     <ID>ModifierMissing:QueryTypesContent.kt$QueryTypesContent</ID>
     <ID>ModifierMissing:QueryTypesScreen.kt$QueryTypesScreen</ID>
     <ID>ModifierMissing:SearchContent.kt$SearchContent</ID>
+    <ID>ModifierMissing:SectionTitle.kt$SectionTitle$invoke</ID>
     <ID>ModifierMissing:SettingsScreen.kt$SettingsScreen</ID>
     <ID>ModifierMissing:StatisticsListItem.kt$StatisticsListItem</ID>
     <ID>ModifierMissing:SummarySection.kt$SummarySection</ID>
@@ -206,13 +201,15 @@
     <ID>ModifierMissing:TopClientsStatsRoot.kt$TopClientsScreenRoot</ID>
     <ID>ModifierMissing:TopDomainsContent.kt$TopDomainsContent</ID>
     <ID>ModifierMissing:TopDomainsStatsScreen.kt$TopDomainsScreen</ID>
+    <ID>ModifierMissing:UpstreamDestinationsContent.kt$UpstreamDestinationsContent</ID>
+    <ID>ModifierMissing:UpstreamDestinationsScreen.kt$UpstreamDestinationsScreen</ID>
     <ID>ModifierWithoutDefault:CurrentConnectionStatus.kt$modifier</ID>
     <ID>ModifierWithoutDefault:EmptyScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:ErrorScreen.kt$modifier</ID>
     <ID>ModifierWithoutDefault:LoadingScreen.kt$modifier</ID>
     <ID>MultipleEmitters:DropDownPreference.kt$DropDownPreference</ID>
     <ID>NoBlankLineBeforeRbrace:PasswordTextField.kt$PasswordTextFieldPreviewParams$ </ID>
-    <ID>ParameterListWrapping:LogFiltersBottomSheet.kt$( uiState: LogsContract.BottomSheetUiState, onEvent: (LogsContract.Event) -&gt; Unit )</ID>
+    <ID>NoConsecutiveBlankLines:DashboardRepositoryImpl.kt$DashboardRepositoryImpl$ </ID>
     <ID>ParameterNaming:AnimatedTabContainer.kt$onTabSelected</ID>
     <ID>ParameterNaming:ApiTokenScannerDialog.kt$onApiTokenScanFailed</ID>
     <ID>ParameterNaming:FilterSection.kt$onExpandedStateChanged</ID>

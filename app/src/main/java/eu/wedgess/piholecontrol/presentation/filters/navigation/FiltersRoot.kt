@@ -33,7 +33,7 @@ fun NavGraphBuilder.filtersRoot(
             mutableStateOf({})
         }
 
-        LaunchedEffect(uiState.showSearchView) {
+        LaunchedEffect(uiState.showSearchView, uiState.showFilterByMenu) {
             onComposing(
                 AppBarState(
                     title = UiText.StringResource(id = R.string.nav_title_filters),
@@ -53,7 +53,7 @@ fun NavGraphBuilder.filtersRoot(
                             },
                             availableFilterByOptions = uiState.filterByOptions,
                             isFilterByMenuVisible = uiState.showFilterByMenu,
-                            selectedFilterByOptions = uiState.selectedFilterBy
+                            selectedFilterByOptions = uiState.selectedFilterByOptions
                         )
                     },
                     showSearchView = uiState.showSearchView,

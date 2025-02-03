@@ -51,6 +51,7 @@ class FetchFilterRulesUseCaseTest {
                 emit(fetchBlock(connection))
             }
         }
+        every { periodicRefreshUseCase.setRefreshMode(any()) } returns Unit
 
         target(ruleType).test {
             val result = awaitItem()
@@ -76,6 +77,7 @@ class FetchFilterRulesUseCaseTest {
                 emit(fetchBlock(connection))
             }
         }
+        every { periodicRefreshUseCase.setRefreshMode(any()) } returns Unit
 
         target(ruleType).test {
             val result = awaitItem()

@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.view
+package eu.wedgess.piholecontrol.presentation.statistics.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ fun StatisticsListItem(
                 .weight(PiHoleControlTheme.dimens.weight.point8)
                 .padding(end = PiHoleControlTheme.dimens.padding.screenContent),
             verticalArrangement = Arrangement.spacedBy(
-                PiHoleControlTheme.dimens.padding.itemContentXSmall
+                PiHoleControlTheme.dimens.padding.itemContentXXSmall
             )
         ) {
             Text(

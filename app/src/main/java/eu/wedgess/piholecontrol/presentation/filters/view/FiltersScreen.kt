@@ -9,11 +9,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.view.FilterTabScreenRoot
 import eu.wedgess.piholecontrol.presentation.filters.view.components.FilterDialogs
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
@@ -36,15 +34,19 @@ fun FiltersScreen(
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
                 AnimatedTabContainer(
-                    tabItems = uiState.tabOptionItems
-                ) { item ->
-                    LaunchedEffect(item) {
-                        onEvent(FiltersContract.Event.OnFilterTabChanged(item.toFilterRuleType()))
+                    tabItems = uiState.tabOptionItems,
+                    onTabIndexChange = {
+                        onEvent(
+                            FiltersContract.Event.OnFilterTabChanged(
+                                uiState.tabOptionItems[it]
+                            )
+                        )
                     }
-                    when (item) {
+                ) { tabType ->
+                    when (tabType) {
                         FilterTab.AllowList -> FilterTabScreenRoot(
-                            filterScreenTabType = FilterScreenTabType.ALLOW,
-                            filterByOptions = uiState.selectedFilterBy,
+                            filterScreenTabType = tabType,
+                            filterByOptions = uiState.allowSelectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
@@ -52,9 +54,9 @@ fun FiltersScreen(
                             onRefreshFilters = triggerRefreshEvent
                         )
 
-                        FilterTab.BlockList -> FilterTabScreenRoot(
-                            filterScreenTabType = FilterScreenTabType.BLOCK,
-                            filterByOptions = uiState.selectedFilterBy,
+                        FilterTab.DenyList -> FilterTabScreenRoot(
+                            filterScreenTabType = tabType,
+                            filterByOptions = uiState.denySelectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))

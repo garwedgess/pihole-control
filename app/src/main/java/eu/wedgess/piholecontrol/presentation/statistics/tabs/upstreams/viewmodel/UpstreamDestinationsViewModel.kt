@@ -1,16 +1,16 @@
-package eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.viewmodel
+package eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchForwardDestinationsUseCase
+import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchUpstreamDestinationsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.ForwardDestinationsContract
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams.UpstreamDestinationsContract
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,26 +21,26 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
-class ForwardDestinationsViewModel @Inject constructor(
-    fetchForwardDestinationsUseCase: FetchForwardDestinationsUseCase
-) : EventDrivenViewModel<ForwardDestinationsContract.Event>, ViewModel() {
+class UpstreamDestinationsViewModel @Inject constructor(
+    fetchUpstreamDestinationsUseCase: FetchUpstreamDestinationsUseCase
+) : EventDrivenViewModel<UpstreamDestinationsContract.Event>, ViewModel() {
 
     private val selectedIndexFlow = MutableStateFlow(-1)
 
     val uiResult =
-        fetchForwardDestinationsUseCase()
+        fetchUpstreamDestinationsUseCase()
             .combine(selectedIndexFlow) { destinationsResult, selectedIndex ->
                 destinationsResult.getOrElse {
                     return@combine UIResult.Error(
                         ResultType.Error.WithTitleAndSubTitleAndRetry(
-                            title = UiText.StringResource(R.string.forward_destinations_error),
+                            title = UiText.StringResource(R.string.upstream_destinations_error),
                             subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
-                            onRetry = fetchForwardDestinationsUseCase::refresh
+                            onRetry = fetchUpstreamDestinationsUseCase::refresh
                         )
                     )
                 }.run {
                     return@combine UIResult.Loaded(
-                        ForwardDestinationsContract.UiState(
+                        UpstreamDestinationsContract.UiState(
                             donutChartDataCollection = DonutChartDataCollection(this),
                             legendData = this.mapIndexed { index, serversChartData ->
                                 LegendData(
@@ -62,9 +62,9 @@ class ForwardDestinationsViewModel @Inject constructor(
                 UIResult.Loading(ResultType.Loading.WithTitle())
             )
 
-    override fun onEvent(event: ForwardDestinationsContract.Event) {
+    override fun onEvent(event: UpstreamDestinationsContract.Event) {
         when (event) {
-            is ForwardDestinationsContract.Event.OnLegendItemSelected -> selectedIndexFlow.update {
+            is UpstreamDestinationsContract.Event.OnLegendItemSelected -> selectedIndexFlow.update {
                 event.index
             }
         }

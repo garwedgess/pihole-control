@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,56 +30,54 @@ fun FilterRuleItem(
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .clickable { onItemClick() }
             .padding(
                 horizontal = PiHoleControlTheme.dimens.padding.screenContent,
-                vertical = PiHoleControlTheme.dimens.padding.itemContent
-            )
+                vertical = PiHoleControlTheme.dimens.padding.itemContentSmall
+            ),
+        verticalArrangement = Arrangement.spacedBy(
+            PiHoleControlTheme.dimens.padding.itemContentXXSmall
+        )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .padding(end = PiHoleControlTheme.dimens.padding.itemContent),
-            verticalArrangement = Arrangement.spacedBy(
-                PiHoleControlTheme.dimens.padding.itemContentXSmall
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = rule.typeTitle,
                 color = rule.typeColor,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelLarge
             )
             Text(
-                text = rule.domain,
+                textAlign = TextAlign.End,
+                text = rule.dateAdded,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.labelMedium
             )
-            rule.comment?.takeIf { it.isNotBlank() }?.run {
-                Text(
-                    text = this@run,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.Normal,
-                        color = LocalContentColor.current.copy(
-                            alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
-                        )
-                    )
-                )
-            }
         }
         Text(
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.End,
-            text = rule.dateAdded,
+            text = rule.domain,
             maxLines = 1,
-            style = MaterialTheme.typography.labelSmall
+            overflow = TextOverflow.Ellipsis
         )
+        rule.comment?.takeIf { it.isNotBlank() }?.run {
+            Text(
+                text = this@run,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.Normal,
+                    color = LocalContentColor.current.copy(
+                        alpha = PiHoleControlTheme.dimens.weight.secondaryTextAlpha
+                    )
+                )
+            )
+        }
     }
 }
 

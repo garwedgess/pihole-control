@@ -9,8 +9,8 @@ import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.QueryTypesContract
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

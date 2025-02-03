@@ -20,11 +20,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
-import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.view.components.actions.FilterTopBarActions
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.utils.UiText
 
@@ -141,8 +141,8 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
                     onDismissFiltering = {},
                     onFilterByOptionSelected = {},
                     isFilterByMenuVisible = true,
-                    availableFilterByOptions = FilterByOption.getByType(FilterRuleTypeEntity.ALLOW),
-                    selectedFilterByOptions = FilterByOption.getByType(FilterRuleTypeEntity.ALLOW)
+                    availableFilterByOptions = FilterByOption.getByTab(FilterTab.AllowList),
+                    selectedFilterByOptions = FilterByOption.getByTab(FilterTab.AllowList)
                 )
             },
             searchContent = null,

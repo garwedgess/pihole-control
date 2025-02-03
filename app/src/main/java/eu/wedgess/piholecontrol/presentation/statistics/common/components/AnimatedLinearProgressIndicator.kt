@@ -1,4 +1,4 @@
-package eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.view
+package eu.wedgess.piholecontrol.presentation.statistics.common.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.widthIn

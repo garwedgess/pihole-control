@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Pattern
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import eu.wedgess.piholecontrol.utils.UiText
 
 enum class FilterByOption(val label: UiText, val icon: ImageVector) {
@@ -28,13 +29,10 @@ enum class FilterByOption(val label: UiText, val icon: ImageVector) {
     );
 
     companion object {
-        fun getByType(type: FilterRuleTypeEntity): List<FilterByOption> {
+        fun getByTab(type: FilterTab): List<FilterByOption> {
             return when (type) {
-                FilterRuleTypeEntity.ALLOW,
-                FilterRuleTypeEntity.REGEX_ALLOW -> listOf(ALLOW_EXACT, ALLOW_REGEX)
-
-                FilterRuleTypeEntity.DENY,
-                FilterRuleTypeEntity.REGEX_DENY -> listOf(DENY_EXACT, DENY_REGEX)
+                is FilterTab.AllowList -> listOf(ALLOW_EXACT, ALLOW_REGEX)
+                is FilterTab.DenyList -> listOf(DENY_EXACT, DENY_REGEX)
             }
         }
 
@@ -47,5 +45,7 @@ enum class FilterByOption(val label: UiText, val icon: ImageVector) {
             }
             return this.contains(option)
         }
+
+        fun FilterByOption.isAllow(): Boolean = this == ALLOW_EXACT || this == ALLOW_REGEX
     }
 }

@@ -3,20 +3,17 @@ package eu.wedgess.piholecontrol.presentation.statistics.tabs.topclients.view
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,8 +21,9 @@ import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.TopClientEntity
 import eu.wedgess.piholecontrol.domain.model.TopClientQueriesEntity
+import eu.wedgess.piholecontrol.presentation.common.components.SectionTitle
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.topdomains.view.StatisticsListItem
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.StatisticsListItem
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import eu.wedgess.piholecontrol.presentation.theme.domainsOnAdListBackground
 import eu.wedgess.piholecontrol.presentation.theme.totalQueriesBackground
@@ -43,81 +41,60 @@ fun TopClientsContent(clientQueries: TopClientQueriesEntity) {
         )
     ) {
         Card {
-            Column(
-                modifier = Modifier
-                    .padding(PiHoleControlTheme.dimens.padding.itemContent),
-                verticalArrangement = Arrangement.spacedBy(
-                    PiHoleControlTheme.dimens.padding.itemContentSmall
+            Column(modifier = Modifier.padding(PiHoleControlTheme.dimens.padding.itemContent)) {
+                SectionTitle.TitleWithIcon(
+                    title = stringResource(R.string.statistics_title_top_clients_all),
+                    icon = Icons.Default.Devices,
+                    iconTint = MaterialTheme.colorScheme.totalQueriesBackground
                 )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        PiHoleControlTheme.dimens.padding.itemContentLarge,
-                        Alignment.Start
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier.size(
-                            PiHoleControlTheme.dimens.size.statisticsTitleIcon
-                        ),
-                        tint = MaterialTheme.colorScheme.totalQueriesBackground,
-                        imageVector = Icons.Default.Devices,
-                        contentDescription = "icon"
+                Spacer(
+                    modifier = Modifier.height(
+                        PiHoleControlTheme.dimens.padding.itemContentSmall
                     )
-                    Text(
-                        text = stringResource(id = R.string.statistics_title_top_clients_all),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                clientQueries.all.forEach { (permittedDomain, hits, percentage) ->
+                )
+                clientQueries.all.forEachIndexed { index, (permittedDomain, hits, percentage) ->
                     StatisticsListItem(
                         domain = permittedDomain,
                         hits = hits,
                         progress = percentage
                     )
+                    if (index < clientQueries.all.size - 1) {
+                        Spacer(
+                            modifier = Modifier.height(
+                                PiHoleControlTheme.dimens.padding.screenContent
+                            )
+                        )
+                    }
                 }
             }
         }
 
         AnimatedVisibility(visible = clientQueries.blocked.isNotEmpty()) {
             Card {
-                Column(
-                    modifier = Modifier
-                        .padding(PiHoleControlTheme.dimens.padding.itemContent),
-                    verticalArrangement = Arrangement.spacedBy(
-                        PiHoleControlTheme.dimens.padding.itemContentSmall
+                Column(modifier = Modifier.padding(PiHoleControlTheme.dimens.padding.itemContent)) {
+                    SectionTitle.TitleWithIcon(
+                        title = stringResource(R.string.statistics_title_top_clients_blocked),
+                        icon = Icons.Default.Devices,
+                        iconTint = MaterialTheme.colorScheme.domainsOnAdListBackground
                     )
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(
-                            PiHoleControlTheme.dimens.padding.itemContentLarge
-                        ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(
-                                PiHoleControlTheme.dimens.size.statisticsTitleIcon
-                            ),
-                            tint = MaterialTheme.colorScheme.domainsOnAdListBackground,
-                            imageVector = Icons.Default.Devices,
-                            contentDescription = "icon"
+                    Spacer(
+                        modifier = Modifier.height(
+                            PiHoleControlTheme.dimens.padding.itemContentSmall
                         )
-                        Text(
-                            text = stringResource(id = R.string.statistics_title_top_clients_blocked),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    clientQueries.blocked.forEach { (blockedDomain, hits, percentage) ->
+                    )
+                    clientQueries.blocked.forEachIndexed { index, (blockedDomain, hits, percentage) ->
                         StatisticsListItem(
                             domain = blockedDomain,
                             hits = hits,
                             progress = percentage
                         )
+                        if (index < clientQueries.blocked.size - 1) {
+                            Spacer(
+                                modifier = Modifier.height(
+                                    PiHoleControlTheme.dimens.padding.screenContent
+                                )
+                            )
+                        }
                     }
                 }
             }

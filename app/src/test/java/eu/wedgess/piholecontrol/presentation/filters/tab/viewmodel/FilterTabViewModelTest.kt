@@ -12,8 +12,8 @@ import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -51,7 +51,7 @@ class FilterTabViewModelTest {
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -89,7 +89,7 @@ class FilterTabViewModelTest {
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -116,7 +116,7 @@ class FilterTabViewModelTest {
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -156,7 +156,7 @@ class FilterTabViewModelTest {
             )
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
             val query = "test"
 
@@ -185,7 +185,7 @@ class FilterTabViewModelTest {
             )
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -218,7 +218,7 @@ class FilterTabViewModelTest {
 
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // When
@@ -261,7 +261,7 @@ class FilterTabViewModelTest {
 
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // When - search for non-existent domain
@@ -284,7 +284,7 @@ class FilterTabViewModelTest {
         // Given
         viewModel = FilterTabViewModel(
             fetchFilterRulesUseCase,
-            FilterScreenTabType.ALLOW
+            FilterTab.AllowList
         )
 
         // When

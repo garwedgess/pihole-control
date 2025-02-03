@@ -95,7 +95,7 @@
 
     <!-- Filters Screen -->
     <string name="filters_tab_title_allow_list">Allow List</string>
-    <string name="filters_tab_title_block_list">Block List</string>
+    <string name="filters_tab_title_deny_list">Deny List</string>
     <string name="filters_add_rule_dialog_title">Add rule</string>
     <string name="filters_add_rule_dialog_label_as_wildcard">Add as wildcard</string>
     <string name="filters_add_rule_dialog_btn_add">Add</string>
@@ -135,7 +135,7 @@
     <string name="top_domains_error">Failed to fetch top domains</string>
     <string name="top_clients_error">Failed to fetch top clients</string>
     <string name="query_types_error">Failed to fetch query types</string>
-    <string name="forward_destinations_error">Failed to fetch forward destinations</string>
+    <string name="upstream_destinations_error">Failed to fetch upstream destinations</string>
 
 
     <string name="modify_connection_label_name">Name</string>
@@ -217,5 +217,6 @@
     <string name="logs_advanced_filter_label_query_type">Query Type</string>
     <string name="logs_advanced_filter_label_advanced_status">Advanced Status</string>
     <string name="filters_clear_btn">Clear Filters</string>
+    <string name="statistics_label_requests">Requests:</string>
 
 </resources>

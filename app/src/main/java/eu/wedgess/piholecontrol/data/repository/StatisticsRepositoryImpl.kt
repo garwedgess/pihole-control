@@ -46,7 +46,7 @@ class StatisticsRepositoryImpl(
             )
         }
 
-    override suspend fun fetchForwardDestinations(
+    override suspend fun fetchUpstreamDestinations(
         activeConnection: ConnectionEntity
     ): PiHoleApiResult<List<UpstreamDestinationEntity>> =
         withContext(dispatcherProvider.io) {

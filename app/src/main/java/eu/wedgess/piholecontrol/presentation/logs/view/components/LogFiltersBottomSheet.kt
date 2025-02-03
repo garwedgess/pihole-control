@@ -20,8 +20,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
@@ -40,7 +45,8 @@ fun LogFiltersBottomSheet(
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .height(
                 PiHoleControlTheme.dimens.size.logsBottomSheetHeight(
-                    LocalConfiguration.current.screenHeightDp.dp
+                    LocalConfiguration.current.screenHeightDp.dp,
+                    getStatusBarHeight()
                 )
             )
             .padding(PiHoleControlTheme.dimens.padding.itemContent),
@@ -172,6 +178,18 @@ fun LogFiltersBottomSheet(
             }
         }
     }
+}
+
+@Composable
+private fun getStatusBarHeight(): Dp {
+    val density = LocalDensity.current
+    val view = LocalView.current
+
+    // Calculate the status bar height
+    val statusBarHeightPx = ViewCompat.getRootWindowInsets(view)
+        ?.getInsets(WindowInsetsCompat.Type.statusBars())?.top ?: 0
+
+    return with(density) { statusBarHeightPx.toDp() }
 }
 
 @ThemePreview

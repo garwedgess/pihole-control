@@ -84,7 +84,7 @@ class StatisticsRepositoryImplTest {
                 mockResponse
             )
 
-            val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchUpstreamDestinations(activeConnection)
 
             assertThat(result.isSuccess).isTrue()
             val resultList = result.getOrNull()
@@ -102,7 +102,7 @@ class StatisticsRepositoryImplTest {
                 exception
             )
 
-            val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchUpstreamDestinations(activeConnection)
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
@@ -208,7 +208,7 @@ class StatisticsRepositoryImplTest {
                 mockResponse
             )
 
-            val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchUpstreamDestinations(activeConnection)
 
             assertThat(result.isSuccess).isTrue()
             val resultList = result.getOrNull()
@@ -226,7 +226,7 @@ class StatisticsRepositoryImplTest {
                 exception
             )
 
-            val result = target.fetchForwardDestinations(activeConnection)
+            val result = target.fetchUpstreamDestinations(activeConnection)
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)

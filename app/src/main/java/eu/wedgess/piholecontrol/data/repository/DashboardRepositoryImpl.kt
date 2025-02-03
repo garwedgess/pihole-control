@@ -80,7 +80,7 @@ class DashboardRepositoryImpl(
     }
 
     private fun mapV5ClientsOverTime(response: PiHoleClientsOverTimeResponseDataV5): List<ClientOverTimeEntity> {
-        return response.clients
+        val allClients = response.clients
             .mapIndexed { index, client ->
                 client to response.clientsOverTime.map { (k, v) ->
                     k to v[index]
@@ -104,9 +104,48 @@ class DashboardRepositoryImpl(
             .sortedByDescending { client ->
                 client.clientActivity.sumOf { it.hits }
             }
+
+
+        return aggregateClientOverTimeDataV5(allClients)
     }
 
-    private fun mapV6ClientsOverTime(response: PiHoleClientsOverTimeResponseDataV6): List<ClientOverTimeEntity> {
+    private fun aggregateClientOverTimeDataV5(allClients: List<ClientOverTimeEntity>): List<ClientOverTimeEntity> {
+        return buildList {
+            val sortedClients = allClients.sortedByDescending { client ->
+                client.clientActivity.sumOf { it.hits }
+            }
+
+            if (sortedClients.size <= 10) {
+                addAll(sortedClients)
+            } else {
+                addAll(sortedClients.take(9))
+
+                val aggregatedActivity = sortedClients.drop(9)
+                    .flatMap { it.clientActivity }
+                    .groupBy { it.timestamp }
+                    .map { (timestamp, hitsList) ->
+                        OverTimeEntity(
+                            timestamp = timestamp,
+                            hits = hitsList.sumOf { it.hits }
+                        )
+                    }
+
+                add(
+                    ClientOverTimeEntity(
+                        clientName = "other clients",
+                        clientIp = "",
+                        clientActivity = aggregatedActivity
+                    )
+                )
+            }
+        }.sortedByDescending { client ->
+            client.clientActivity.sumOf { it.hits }
+        }
+    }
+
+    private fun mapV6ClientsOverTime(
+        response: PiHoleClientsOverTimeResponseDataV6
+    ): List<ClientOverTimeEntity> {
         return response.clients.map { (ip, clientInfo) ->
             ClientOverTimeEntity(
                 clientName = clientInfo.name ?: "",

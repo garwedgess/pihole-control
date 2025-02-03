@@ -12,7 +12,7 @@ interface StatisticsRepository {
         activeConnection: ConnectionEntity
     ): PiHoleApiResult<List<QueryTypeEntity>>
 
-    suspend fun fetchForwardDestinations(
+    suspend fun fetchUpstreamDestinations(
         activeConnection: ConnectionEntity
     ): PiHoleApiResult<List<UpstreamDestinationEntity>>
 

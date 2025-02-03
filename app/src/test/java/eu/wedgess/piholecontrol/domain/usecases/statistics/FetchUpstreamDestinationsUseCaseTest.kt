@@ -6,7 +6,7 @@ import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.UpstreamDestinationEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.ForwardDestinationsChartData
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.UpstreamDestinationsChartData
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -16,7 +16,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class FetchForwardDestinationsUseCaseTest {
+class FetchUpstreamDestinationsUseCaseTest {
 
     @MockK
     private lateinit var repository: StatisticsRepository
@@ -24,12 +24,12 @@ class FetchForwardDestinationsUseCaseTest {
     @MockK
     private lateinit var periodicRefreshUseCase: PeriodicRefreshUseCase
 
-    private lateinit var target: FetchForwardDestinationsUseCase
+    private lateinit var target: FetchUpstreamDestinationsUseCase
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        target = FetchForwardDestinationsUseCase(repository, periodicRefreshUseCase)
+        target = FetchUpstreamDestinationsUseCase(repository, periodicRefreshUseCase)
     }
 
     @Test
@@ -41,15 +41,15 @@ class FetchForwardDestinationsUseCaseTest {
         )
         val expectedResult = Result.success(
             listOf(
-                ForwardDestinationsChartData("destination1", 123f),
-                ForwardDestinationsChartData("destination2", 456f)
+                UpstreamDestinationsChartData("destination1", 123f),
+                UpstreamDestinationsChartData("destination2", 456f)
             )
         )
 
-        coEvery { repository.fetchForwardDestinations(connection) } returns Result.success(
+        coEvery { repository.fetchUpstreamDestinations(connection) } returns Result.success(
             destinations
         )
-        coEvery { periodicRefreshUseCase<List<ForwardDestinationsChartData>>(any()) } returns
+        coEvery { periodicRefreshUseCase<List<UpstreamDestinationsChartData>>(any()) } returns
                 flowOf(expectedResult)
 
         target().test {
@@ -65,7 +65,7 @@ class FetchForwardDestinationsUseCaseTest {
             Exception("Error fetching forward destinations")
         )
 
-        coEvery { repository.fetchForwardDestinations(connection) } returns expectedError
+        coEvery { repository.fetchUpstreamDestinations(connection) } returns expectedError
         coEvery { periodicRefreshUseCase<List<UpstreamDestinationEntity>>(any()) } answers {
             flow {
                 val fetchData =

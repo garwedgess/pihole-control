@@ -13,21 +13,21 @@ import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabViewModel
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 
 @Composable
 fun FilterTabScreenRoot(
-    filterScreenTabType: FilterScreenTabType,
+    filterScreenTabType: FilterTab,
     filterByOptions: List<FilterByOption>,
     onFilterRuleClick: (FilterRuleInfo) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
     searchQuery: String? = null
 ) {
     val viewModel: FilterTabViewModel = hiltViewModel(
-        key = "FilterTabViewModel-${filterScreenTabType.name}",
+        key = filterScreenTabType.title.asString(),
         creationCallback = { factory: FilterTabViewModelFactory ->
             factory.create(filterScreenTabType)
         }

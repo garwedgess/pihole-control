@@ -6,7 +6,7 @@ import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.QueryTypeEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.QueryTypeChartData
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.QueryTypeChartData
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK

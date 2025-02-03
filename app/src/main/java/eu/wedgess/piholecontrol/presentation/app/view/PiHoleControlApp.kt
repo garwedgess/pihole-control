@@ -87,6 +87,7 @@ fun PiHoleControlApp(
     })
 
     val bottomBarHeight = remember { mutableFloatStateOf(0f) }
+    Timber.d("GARETH DP: $bottomBarHeight")
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetOriginal by animateFloatAsState(targetValue = 0f, label = "")
     val nestedScrollConnection = remember {

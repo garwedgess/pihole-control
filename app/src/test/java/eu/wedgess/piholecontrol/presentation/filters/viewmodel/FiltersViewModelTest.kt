@@ -14,6 +14,7 @@ import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -444,9 +445,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
 
             // When
-            viewModel.onEvent(
-                FiltersContract.Event.OnFilterTabChanged(FilterRuleTypeEntity.REGEX_DENY)
-            )
+            viewModel.onEvent(FiltersContract.Event.OnFilterTabChanged(FilterTab.DenyList))
 
             // Then
             viewModel.uiState.test {
@@ -454,7 +453,7 @@ class FiltersViewModelTest {
                 viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
                 val result2 = awaitItem()
                 assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
-                    FilterRuleTypeEntity.REGEX_DENY
+                    FilterRuleTypeEntity.DENY
                 )
                 cancelAndConsumeRemainingEvents()
             }
@@ -537,7 +536,7 @@ class FiltersViewModelTest {
             // Then
             viewModel.uiState.test {
                 val result = awaitItem()
-                assertThat(result.selectedFilterBy).contains(option)
+                assertThat(result.selectedFilterByOptions).doesNotContain(option)
                 assertThat(result.showFilterByMenu).isFalse()
                 cancelAndConsumeRemainingEvents()
             }
@@ -551,15 +550,16 @@ class FiltersViewModelTest {
             val firstOption = FilterByOption.ALLOW_EXACT
             val secondOption = FilterByOption.ALLOW_REGEX
 
+            viewModel.onEvent(FiltersContract.Event.OnFilterTabChanged(FilterTab.AllowList))
+            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
+            advanceUntilIdle()
             viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(secondOption))
-            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
-
-            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
+            advanceUntilIdle()
 
             // Then
             viewModel.uiState.test {
                 val result = awaitItem()
-                assertThat(result.selectedFilterBy).containsExactly(secondOption)
+                assertThat(result.selectedFilterByOptions).containsExactly(firstOption)
                 assertThat(result.showFilterByMenu).isFalse()
                 cancelAndConsumeRemainingEvents()
             }

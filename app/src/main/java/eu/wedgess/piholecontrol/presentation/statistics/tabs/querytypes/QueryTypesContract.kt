@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes
 
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
 
 interface QueryTypesContract {
 

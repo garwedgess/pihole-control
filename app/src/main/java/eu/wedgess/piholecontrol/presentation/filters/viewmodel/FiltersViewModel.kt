@@ -14,6 +14,7 @@ import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class FiltersViewModel @Inject constructor(
         FiltersContract.UiState.initial()
     ) {
 
-    private var currentPiHoleFilterRuleType: FilterRuleTypeEntity = FilterRuleTypeEntity.ALLOW
+    private var currentTabType: FilterTab = FilterTab.AllowList
 
     override fun onEvent(event: FiltersContract.Event) {
         when (event) {
@@ -64,14 +65,14 @@ class FiltersViewModel @Inject constructor(
             }
 
             FiltersContract.Event.AddFilterRuleClick -> updateUiState {
-                copy(dialogType = FilterDialogType.AddFilterRule(type = currentPiHoleFilterRuleType))
+                copy(
+                    dialogType = FilterDialogType.AddFilterRule(
+                        type = currentTabType.toFilterRuleType()
+                    )
+                )
             }
 
-            is FiltersContract.Event.OnFilterTabChanged -> updateUiState {
-                with(FilterByOption.getByType(event.type)) {
-                    copy(filterByOptions = this, selectedFilterBy = this)
-                }
-            }.also { currentPiHoleFilterRuleType = event.type }
+            is FiltersContract.Event.OnFilterTabChanged -> handleTabChange(event.type)
 
             is FiltersContract.Event.OnDeleteFilterRuleClick -> updateUiState {
                 copy(dialogType = FilterDialogType.OnConfirmFilterDelete(filterRule = event.rule))
@@ -85,19 +86,40 @@ class FiltersViewModel @Inject constructor(
                 copy(showFilterByMenu = true)
             }
 
-            is FiltersContract.Event.OnFilterByOptionClick -> {
-                updateUiState {
-                    val newOptions = toggleFilterOption(
-                        previouslySelectedOptions = selectedFilterBy,
-                        option = event.option,
-                        availableOptions = filterByOptions
-                    )
-                    copy(
-                        selectedFilterBy = newOptions,
-                        showFilterByMenu = false
-                    )
-                }
+            is FiltersContract.Event.OnFilterByOptionClick -> handleFilterOptionClick(event.option)
+        }
+    }
+
+    private fun handleFilterOptionClick(option: FilterByOption) {
+        updateUiState {
+            val newOptions = toggleFilterOption(
+                previouslySelectedOptions = when (currentTabType) {
+                    is FilterTab.AllowList -> allowSelectedFilterBy
+                    is FilterTab.DenyList -> denySelectedFilterBy
+                },
+                option = option,
+                availableOptions = filterByOptions,
+            )
+            when (currentTabType) {
+                is FilterTab.AllowList -> copy(
+                    allowSelectedFilterBy = newOptions,
+                    showFilterByMenu = false
+                )
+
+                is FilterTab.DenyList -> copy(
+                    denySelectedFilterBy = newOptions,
+                    showFilterByMenu = false
+                )
             }
+        }
+    }
+
+    private fun handleTabChange(tabType: FilterTab) {
+        this.currentTabType = tabType
+        val newOptions = FilterByOption.getByTab(tabType)
+
+        updateUiState {
+            copy(filterByOptions = newOptions, selectedTabType = tabType)
         }
     }
 

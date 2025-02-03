@@ -1,16 +1,16 @@
-package eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.viewmodel
+package eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchForwardDestinationsUseCase
+import eu.wedgess.piholecontrol.domain.usecases.statistics.FetchUpstreamDestinationsUseCase
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
-import eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations.ForwardDestinationsContract
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.ForwardDestinationsChartData
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.UpstreamDestinationsChartData
+import eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams.UpstreamDestinationsContract
 import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -32,7 +32,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ForwardDestinationsViewModelTest {
+class UpstreamDestinationsViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -40,9 +40,9 @@ class ForwardDestinationsViewModelTest {
     private val testDispatcher = StandardTestDispatcher(TestCoroutineScheduler())
 
     @RelaxedMockK
-    private lateinit var fetchForwardDestinationsUseCase: FetchForwardDestinationsUseCase
+    private lateinit var fetchForwardDestinationsUseCase: FetchUpstreamDestinationsUseCase
 
-    private lateinit var viewModel: ForwardDestinationsViewModel
+    private lateinit var viewModel: UpstreamDestinationsViewModel
 
     @Before
     fun setUp() {
@@ -64,7 +64,7 @@ class ForwardDestinationsViewModelTest {
             )
 
             // When
-            viewModel = ForwardDestinationsViewModel(fetchForwardDestinationsUseCase)
+            viewModel = UpstreamDestinationsViewModel(fetchForwardDestinationsUseCase)
 
             // Then
             viewModel.uiResult.test {
@@ -81,11 +81,11 @@ class ForwardDestinationsViewModelTest {
         runTest {
             // Given
             val serversChartDataList = listOf(
-                ForwardDestinationsChartData(
+                UpstreamDestinationsChartData(
                     title = "Server 1",
                     percentage = 50f
                 ),
-                ForwardDestinationsChartData(
+                UpstreamDestinationsChartData(
                     title = "Server 2",
                     percentage = 30.233f
                 )
@@ -97,7 +97,7 @@ class ForwardDestinationsViewModelTest {
             )
 
             // When
-            viewModel = ForwardDestinationsViewModel(fetchForwardDestinationsUseCase)
+            viewModel = UpstreamDestinationsViewModel(fetchForwardDestinationsUseCase)
 
             // Then
             viewModel.uiResult.test {
@@ -105,7 +105,7 @@ class ForwardDestinationsViewModelTest {
                 val result = awaitItem()
                 assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
                 assertThat((result as UIResult.Loaded).data)
-                    .isInstanceOf(ForwardDestinationsContract.UiState::class.java)
+                    .isInstanceOf(UpstreamDestinationsContract.UiState::class.java)
                 assertThat(result.data.donutChartDataCollection)
                     .isInstanceOf(DonutChartDataCollection::class.java)
                 assertThat(result.data.legendData).hasSize(serversChartDataList.size)
@@ -125,7 +125,7 @@ class ForwardDestinationsViewModelTest {
             coEvery { fetchForwardDestinationsUseCase() } returns flowOf(Result.failure(exception))
 
             // When
-            viewModel = ForwardDestinationsViewModel(fetchForwardDestinationsUseCase)
+            viewModel = UpstreamDestinationsViewModel(fetchForwardDestinationsUseCase)
 
             // Then
             viewModel.uiResult.test {
@@ -135,7 +135,7 @@ class ForwardDestinationsViewModelTest {
                 assertThat((result as UIResult.Error).errorType)
                     .isInstanceOf(ResultType.Error.WithTitleAndSubTitleAndRetry::class.java)
                 assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).title)
-                    .isEqualTo(UiText.StringResource(R.string.forward_destinations_error))
+                    .isEqualTo(UiText.StringResource(R.string.upstream_destinations_error))
                 assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).subTitle)
                     .isEqualTo(UiText.DynamicString(exception.message ?: "Unknown error"))
                 cancelAndConsumeRemainingEvents()
@@ -147,11 +147,11 @@ class ForwardDestinationsViewModelTest {
         runTest {
             // Given
             val serversChartDataList = listOf(
-                mockk<ForwardDestinationsChartData>(relaxed = true) {
+                mockk<UpstreamDestinationsChartData>(relaxed = true) {
                     coEvery { title } returns "Server 1"
                     coEvery { percentage } returns 50f
                 },
-                mockk<ForwardDestinationsChartData>(relaxed = true) {
+                mockk<UpstreamDestinationsChartData>(relaxed = true) {
                     coEvery { title } returns "Server 2"
                     coEvery { percentage } returns 30f
                 }
@@ -161,11 +161,11 @@ class ForwardDestinationsViewModelTest {
                     serversChartDataList
                 )
             )
-            viewModel = ForwardDestinationsViewModel(fetchForwardDestinationsUseCase)
+            viewModel = UpstreamDestinationsViewModel(fetchForwardDestinationsUseCase)
             viewModel.uiResult.first { it is UIResult.Loaded }
 
             // When
-            viewModel.onEvent(ForwardDestinationsContract.Event.OnLegendItemSelected(1))
+            viewModel.onEvent(UpstreamDestinationsContract.Event.OnLegendItemSelected(1))
             advanceUntilIdle()
 
             // Then

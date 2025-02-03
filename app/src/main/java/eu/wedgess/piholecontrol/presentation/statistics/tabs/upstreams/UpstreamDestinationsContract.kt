@@ -1,9 +1,9 @@
-package eu.wedgess.piholecontrol.presentation.statistics.tabs.destinations
+package eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams
 
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
 
-interface ForwardDestinationsContract {
+interface UpstreamDestinationsContract {
 
     data class UiState(
         val donutChartDataCollection: DonutChartDataCollection,

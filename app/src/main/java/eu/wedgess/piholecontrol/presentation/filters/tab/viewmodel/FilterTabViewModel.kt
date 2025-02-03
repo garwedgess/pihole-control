@@ -14,8 +14,8 @@ import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption.Companion.containsEntityEquivalent
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,17 +26,17 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = FilterTabViewModelFactory::class)
 class FilterTabViewModel @AssistedInject constructor(
     private val filterRulesUseCase: FetchFilterRulesUseCase,
-    @Assisted val filterRuleType: FilterScreenTabType
+    @Assisted val filterTab: FilterTab
 ) : ViewModel(),
     EventDrivenViewModel<FilterTabContract.Event> {
 
     private val searchQuery = MutableStateFlow("")
     private val filterByOptions = MutableStateFlow(
-        FilterByOption.getByType(filterRuleType.toFilterType())
+        FilterByOption.getByTab(filterTab)
     )
 
     val uiResult = combine(
-        filterRulesUseCase(filterRuleType.toFilterType()),
+        filterRulesUseCase(filterTab.toFilterRuleType()),
         searchQuery,
         filterByOptions
     ) { filterRules, query, filterByOptions ->

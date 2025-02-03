@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.presentation.filters
 
-import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
@@ -16,9 +15,17 @@ interface FiltersContract {
         val showSearchView: Boolean,
         val showFilterByMenu: Boolean,
         val filterByOptions: List<FilterByOption>,
-        val selectedFilterBy: List<FilterByOption>,
-        val tabOptionItems: List<FilterTab>
+        val allowSelectedFilterBy: List<FilterByOption>,
+        val denySelectedFilterBy: List<FilterByOption>,
+        val tabOptionItems: List<FilterTab>,
+        val selectedTabType: FilterTab
     ) {
+
+        val selectedFilterByOptions: List<FilterByOption>
+            get() = when (selectedTabType) {
+                is FilterTab.AllowList -> allowSelectedFilterBy
+                is FilterTab.DenyList -> denySelectedFilterBy
+            }
 
         companion object {
             fun initial() = UiState(
@@ -27,8 +34,10 @@ interface FiltersContract {
                 showSearchView = false,
                 showFilterByMenu = false,
                 filterByOptions = emptyList(),
-                selectedFilterBy = emptyList(),
-                tabOptionItems = FilterTab.all()
+                allowSelectedFilterBy = FilterByOption.getByTab(FilterTab.AllowList),
+                denySelectedFilterBy = FilterByOption.getByTab(FilterTab.DenyList),
+                tabOptionItems = FilterTab.all(),
+                selectedTabType = FilterTab.AllowList
             )
         }
     }
@@ -50,7 +59,7 @@ interface FiltersContract {
         data class OnFilterByOptionClick(val option: FilterByOption) : Event
         data object OnDismissFilterBy : Event
         data class OnFilterRuleItemClick(val item: FilterRuleInfo) : Event
-        data class OnFilterTabChanged(val type: FilterRuleTypeEntity) : Event
+        data class OnFilterTabChanged(val type: FilterTab) : Event
         data class OnAddFilterRule(val rule: ModifyFilterRule.Add) : Event
         data class OnDeleteFilterRuleClick(val rule: FilterRuleInfo) : Event
         data class OnDeleteFilterRuleConfirmed(val rule: ModifyFilterRule.Delete) : Event
