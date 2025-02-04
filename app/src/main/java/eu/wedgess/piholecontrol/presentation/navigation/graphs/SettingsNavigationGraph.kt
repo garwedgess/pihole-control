@@ -26,7 +26,7 @@ fun NavGraphBuilder.settingsNavigationGraph(
             onComposing = onComposing,
             navigateToModifyConnection = {
                 it?.run {
-                    navHostController.navigate(Screens.ModifyConnection(this))
+                    navHostController.navigate(Screens.ModifyConnection(this.toString()))
                 }
             },
             navigateToCreateConnection = {

@@ -7,18 +7,18 @@ import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
-import eu.wedgess.piholecontrol.domain.model.FilterRulesResultEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRulesUseCase
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import eu.wedgess.piholecontrol.utils.UiText
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -51,7 +51,7 @@ class FilterTabViewModelTest {
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -80,20 +80,16 @@ class FilterTabViewModelTest {
                     type = FilterRuleTypeEntity.ALLOW
                 )
             )
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.success(filterRules),
-                regexRules = Result.success(emptyList())
-            )
             coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
                 Result.success(
-                    filterRulesResultEntity
+                    filterRules
                 )
             )
 
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -120,7 +116,7 @@ class FilterTabViewModelTest {
             // When
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -128,11 +124,11 @@ class FilterTabViewModelTest {
                 val result = awaitItem()
                 assertThat(result).isInstanceOf(UIResult.Error::class.java)
                 assertThat((result as UIResult.Error).errorType)
-                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitle::class.java)
-                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).title).isEqualTo(
+                    .isInstanceOf(ResultType.Error.WithTitleAndSubTitleAndRetry::class.java)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).title).isEqualTo(
                     UiText.StringResource(R.string.filter_rules_fetch_error)
                 )
-                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitle).subTitle)
+                assertThat((result.errorType as ResultType.Error.WithTitleAndSubTitleAndRetry).subTitle)
                     .isEqualTo(
                         UiText.DynamicString(exception.message ?: "Unknown error")
                     )
@@ -153,33 +149,14 @@ class FilterTabViewModelTest {
                 groups = emptyList(),
                 type = FilterRuleTypeEntity.ALLOW
             )
-            // Given
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.success(
-                    listOf(
-                        expectedResult,
-                        FilterRuleEntity(
-                            id = 1,
-                            enabled = true,
-                            comment = null,
-                            dateModified = "12-01-2023",
-                            dateAdded = "11-01-2023",
-                            domain = "dummy.com",
-                            groups = emptyList(),
-                            type = FilterRuleTypeEntity.ALLOW
-                        )
-                    )
-                ),
-                regexRules = Result.success(emptyList())
-            )
             coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
                 Result.success(
-                    filterRulesResultEntity
+                    listOf(expectedResult)
                 )
             )
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
             val query = "test"
 
@@ -199,23 +176,16 @@ class FilterTabViewModelTest {
         }
 
     @Test
-    fun `GIVEN rules and regexRules returns failure WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should be emitted`() =
+    fun `GIVEN rules and regexRules returns failure WHEN viewmodel is initialized THEN UiResult is Error`() =
         runTest {
             // Given
             val rulesException = Exception("Rules Test Exception")
-            val regexRulesException = Exception("Regex Rules Test Exception")
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.failure(rulesException),
-                regexRules = Result.failure(regexRulesException)
-            )
             coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-                Result.success(
-                    filterRulesResultEntity
-                )
+                Result.failure(rulesException)
             )
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
 
             // Then
@@ -227,126 +197,100 @@ class FilterTabViewModelTest {
         }
 
     @Test
-    fun `GIVEN rules returns success and regexRules returns failure WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should be emitted`() =
+    fun `WHEN OnFilterByOptionsChanged event is received THEN filtered rules should be updated`() =
         runTest {
             // Given
-            val regexRulesException = Exception("Regex Rules Test Exception")
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.success(listOf(mockk(relaxed = true))),
-                regexRules = Result.failure(regexRulesException)
+            val allowRule = FilterRuleEntity(
+                id = 1,
+                enabled = true,
+                comment = null,
+                dateModified = "12-01-2023",
+                dateAdded = "11-01-2023",
+                domain = "test.com",
+                groups = emptyList(),
+                type = FilterRuleTypeEntity.ALLOW
             )
+            val regexRule = allowRule.copy(type = FilterRuleTypeEntity.REGEX_ALLOW)
+
             coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-                Result.success(
-                    filterRulesResultEntity
-                )
+                Result.success(listOf(allowRule, regexRule))
             )
+
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
+            )
+
+            // When
+            viewModel.onEvent(
+                FilterTabContract.Event.OnFilterByOptionsChanged(
+                    listOf(FilterByOption.ALLOW_EXACT)
+                )
             )
 
             // Then
             viewModel.uiResult.test {
-                val loadedResult = awaitItem()
-                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
-                cancelAndConsumeRemainingEvents()
-            }
-            viewModel.sideEffect.test {
-                val sideEffect = awaitItem()
-                assertThat(sideEffect)
-                    .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Loaded::class.java)
+                assertThat((result as UIResult.Loaded).data.filterRules)
+                    .containsExactly(allowRule.toInfo())
                 cancelAndConsumeRemainingEvents()
             }
         }
 
     @Test
-    fun `GIVEN rules returns success with empty list and regexRules returns failure WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should be emitted`() =
+    fun `GIVEN empty filter results WHEN rules are filtered THEN Empty state should be emitted`() =
         runTest {
             // Given
-            val regexRulesException = Exception("Regex Rules Test Exception")
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.success(emptyList()),
-                regexRules = Result.failure(regexRulesException)
-            )
-            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-                Result.success(
-                    filterRulesResultEntity
+            val rules = listOf(
+                FilterRuleEntity(
+                    id = 1,
+                    enabled = true,
+                    comment = null,
+                    dateModified = "12-01-2023",
+                    dateAdded = "11-01-2023",
+                    domain = "test.com",
+                    groups = emptyList(),
+                    type = FilterRuleTypeEntity.ALLOW
                 )
             )
+
+            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
+                Result.success(rules)
+            )
+
             viewModel = FilterTabViewModel(
                 fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
+                FilterTab.AllowList
             )
+
+            // When - search for non-existent domain
+            viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged("nonexistent"))
 
             // Then
             viewModel.uiResult.test {
-                val emptyResult = awaitItem()
-                assertThat(emptyResult).isInstanceOf(UIResult.Empty::class.java)
-                cancelAndConsumeRemainingEvents()
-            }
-            viewModel.sideEffect.test {
-                val sideEffect = awaitItem()
-                assertThat(sideEffect)
-                    .isInstanceOf(FilterTabContract.Effect.ShowErrorSnackbar::class.java)
+                val result = awaitItem()
+                assertThat(result).isInstanceOf(UIResult.Empty::class.java)
+                assertThat((result as UIResult.Empty).emptyType)
+                    .isInstanceOf(ResultType.Empty.WithTitle::class.java)
+                assertThat((result.emptyType as ResultType.Empty.WithTitle).title)
+                    .isEqualTo(UiText.DynamicString("No rules found"))
                 cancelAndConsumeRemainingEvents()
             }
         }
 
     @Test
-    fun `GIVEN rules returns failure and regexRules returns success WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should be emitted`() =
-        runTest {
-            // Given
-            val rulesException = Exception("Rules Test Exception")
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.failure(rulesException),
-                regexRules = Result.success(listOf(mockk(relaxed = true)))
-            )
-            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-                Result.success(
-                    filterRulesResultEntity
-                )
-            )
-            viewModel = FilterTabViewModel(
-                fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
-            )
+    fun `WHEN OnRefresh event is received THEN rules should be refreshed`() = runTest {
+        // Given
+        viewModel = FilterTabViewModel(
+            fetchFilterRulesUseCase,
+            FilterTab.AllowList
+        )
 
-            // Then
-            viewModel.uiResult.test {
-                val loadedResult = awaitItem()
-                assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
-                cancelAndConsumeRemainingEvents()
-            }
-            viewModel.sideEffect.test {
-                val sideEffect = awaitItem()
-                assertThat(sideEffect).isInstanceOf(
-                    FilterTabContract.Effect.ShowErrorSnackbar::class.java
-                )
-                cancelAndConsumeRemainingEvents()
-            }
-        }
+        // When
+        viewModel.onEvent(FilterTabContract.Event.OnRefresh)
 
-    @Test
-    fun `GIVEN rules and regexRules returns success WHEN viewmodel is initialized THEN ShowErrorSnackbar side effect should not be emitted`() =
-        runTest {
-            // Given
-            val filterRulesResultEntity = FilterRulesResultEntity(
-                rules = Result.success(emptyList()),
-                regexRules = Result.success(emptyList())
-            )
-            coEvery { fetchFilterRulesUseCase(FilterRuleTypeEntity.ALLOW) } returns flowOf(
-                Result.success(
-                    filterRulesResultEntity
-                )
-            )
-            viewModel = FilterTabViewModel(
-                fetchFilterRulesUseCase,
-                FilterScreenTabType.ALLOW
-            )
-
-            // Then
-            viewModel.sideEffect.test {
-                expectNoEvents()
-            }
-        }
+        // Then
+        coVerify { fetchFilterRulesUseCase.refreshRules() }
+    }
 }

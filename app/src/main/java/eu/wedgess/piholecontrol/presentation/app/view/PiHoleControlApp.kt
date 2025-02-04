@@ -1,9 +1,13 @@
 package eu.wedgess.piholecontrol.presentation.app.view
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -38,11 +42,14 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import eu.wedgess.piholecontrol.presentation.app.AppContract
+import eu.wedgess.piholecontrol.presentation.app.model.NetworkStatusUiState
+import eu.wedgess.piholecontrol.presentation.app.view.components.NetworkStatusRow
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs
 import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel
 import eu.wedgess.piholecontrol.presentation.common.components.MainAppBar
@@ -80,6 +87,7 @@ fun PiHoleControlApp(
     })
 
     val bottomBarHeight = remember { mutableFloatStateOf(0f) }
+    Timber.d("GARETH DP: $bottomBarHeight")
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetOriginal by animateFloatAsState(targetValue = 0f, label = "")
     val nestedScrollConnection = remember {
@@ -155,7 +163,8 @@ fun PiHoleControlApp(
                         BottomAppBar(
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->
-                                    bottomBarHeight.floatValue = coordinates.size.height.toFloat()
+                                    bottomBarHeight.floatValue =
+                                        coordinates.size.height.toFloat()
                                 }
                                 .graphicsLayer {
                                     translationY = -bottomBarOffsetHeightPx.floatValue
@@ -173,40 +182,57 @@ fun PiHoleControlApp(
                     }
                 },
                 content = { contentPadding ->
-                    MainNavigationGraph(
-                        modifier = Modifier.padding(
-                            PaddingValues(
-                                start = contentPadding.calculateStartPadding(currentLayoutDirection),
-                                bottom = if (uiState.appBarState.bottomBarVisible) {
-                                    bottomPadding.value
-                                } else {
-                                    contentPadding.calculateBottomPadding()
-                                },
-                                top = contentPadding.calculateTopPadding(),
-                                end = contentPadding.calculateEndPadding(currentLayoutDirection)
-                            )
-                        ),
-                        navController = navHostController,
-                        onComposing = { updateState ->
-                            viewModel.onEvent(AppContract.Event.UpdateAppBarState(updateState))
-                        },
-                        onResetBottomAppBarOffset = {
-                            bottomBarOffsetHeightPx.floatValue = bottomBarOffsetOriginal
-                        },
-                        showSnackbarMessage = { msg ->
-                            localCoroutineScope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = msg.asString(context = localContext),
-                                    duration = SnackbarDuration.Indefinite
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .animateContentSize()
+                            .padding(
+                                PaddingValues(
+                                    start = contentPadding.calculateStartPadding(
+                                        currentLayoutDirection
+                                    ),
+                                    bottom = if (uiState.appBarState.bottomBarVisible) {
+                                        bottomPadding.value
+                                    } else {
+                                        contentPadding.calculateBottomPadding()
+                                    },
+                                    top = contentPadding.calculateTopPadding(),
+                                    end = contentPadding.calculateEndPadding(currentLayoutDirection)
                                 )
-                                if (result == SnackbarResult.Dismissed) {
-                                    delay(500)
-                                    dismissSnackbarState.reset()
-                                }
+                            )
+                    ) {
+                        AnimatedContent(
+                            targetState = uiState.networkConnectionState,
+                            label = "Network Status Animation",
+                            contentKey = { it.isVisible }
+                        ) { targetState: NetworkStatusUiState ->
+                            if (targetState.isVisible) {
+                                NetworkStatusRow(status = targetState)
                             }
                         }
-                    )
-                    AppDialogs(uiState.dialogType, onEvent = viewModel::onEvent)
+                        MainNavigationGraph(
+                            navController = navHostController,
+                            onComposing = { updateState ->
+                                viewModel.onEvent(AppContract.Event.UpdateAppBarState(updateState))
+                            },
+                            onResetBottomAppBarOffset = {
+                                bottomBarOffsetHeightPx.floatValue = bottomBarOffsetOriginal
+                            },
+                            showSnackbarMessage = { msg ->
+                                localCoroutineScope.launch {
+                                    val result = snackbarHostState.showSnackbar(
+                                        message = msg.asString(context = localContext),
+                                        duration = SnackbarDuration.Indefinite
+                                    )
+                                    if (result == SnackbarResult.Dismissed) {
+                                        delay(500)
+                                        dismissSnackbarState.reset()
+                                    }
+                                }
+                            }
+                        )
+                        AppDialogs(uiState.dialogType, onEvent = viewModel::onEvent)
+                    }
                 }
             )
         }

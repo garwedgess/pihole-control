@@ -12,19 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eu.wedgess.piholecontrol.presentation.common.tabs.AnimatedTabContainer
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
 import eu.wedgess.piholecontrol.presentation.filters.tab.view.FilterTabScreenRoot
 import eu.wedgess.piholecontrol.presentation.filters.view.components.FilterDialogs
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
-import eu.wedgess.piholecontrol.utils.UiText
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FiltersScreen(
     uiState: FiltersContract.UiState,
     onEvent: (FiltersContract.Event) -> Unit,
-    triggerRefreshEvent: (() -> Unit) -> Unit,
-    showSnackBarText: (UiText) -> Unit
+    triggerRefreshEvent: (() -> Unit) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
@@ -36,27 +33,35 @@ fun FiltersScreen(
         },
         content = { padding ->
             Column(modifier = Modifier.padding(padding)) {
-                AnimatedTabContainer(tabItems = FilterTab.all()) { item ->
-                    onEvent(FiltersContract.Event.OnFilterTabChanged(item.toFilterRuleType()))
-                    when (item) {
+                AnimatedTabContainer(
+                    tabItems = uiState.tabOptionItems,
+                    onTabIndexChange = {
+                        onEvent(
+                            FiltersContract.Event.OnFilterTabChanged(
+                                uiState.tabOptionItems[it]
+                            )
+                        )
+                    }
+                ) { tabType ->
+                    when (tabType) {
                         FilterTab.AllowList -> FilterTabScreenRoot(
-                            filterScreenTabType = FilterScreenTabType.ALLOW,
+                            filterScreenTabType = tabType,
+                            filterByOptions = uiState.allowSelectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
                             },
-                            onRefreshFilters = triggerRefreshEvent,
-                            showSnackBarText = showSnackBarText
+                            onRefreshFilters = triggerRefreshEvent
                         )
 
-                        FilterTab.BlockList -> FilterTabScreenRoot(
-                            filterScreenTabType = FilterScreenTabType.BLOCK,
+                        FilterTab.DenyList -> FilterTabScreenRoot(
+                            filterScreenTabType = tabType,
+                            filterByOptions = uiState.denySelectedFilterBy,
                             searchQuery = uiState.searchQuery,
                             onFilterRuleClick = {
                                 onEvent(FiltersContract.Event.OnFilterRuleItemClick(it))
                             },
-                            onRefreshFilters = triggerRefreshEvent,
-                            showSnackBarText = showSnackBarText
+                            onRefreshFilters = triggerRefreshEvent
                         )
                     }
                 }

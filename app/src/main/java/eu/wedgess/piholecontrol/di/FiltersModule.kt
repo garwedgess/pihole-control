@@ -3,11 +3,7 @@ package eu.wedgess.piholecontrol.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
-import eu.wedgess.piholecontrol.data.api.FilterRulesApiServiceImpl
-import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
-import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
+import dagger.hilt.android.components.ViewModelComponent
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
@@ -15,18 +11,10 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.FetchFilterRulesUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
-import io.ktor.client.HttpClient
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object FiltersModule {
-
-    @Provides
-    fun provideFiltersApi(
-        @DefaultHttpClient defaultHttpClient: HttpClient,
-        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): FilterRulesApiService =
-        FilterRulesApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     fun provideAddFilterRuleUseCase(

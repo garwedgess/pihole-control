@@ -149,7 +149,7 @@ private fun AddFilterRuleDialogContent(
                             if (filterRuleType == FilterRuleTypeEntity.ALLOW) {
                                 FilterRuleTypeEntity.REGEX_ALLOW
                             } else {
-                                FilterRuleTypeEntity.REGEX_BLOCK
+                                FilterRuleTypeEntity.REGEX_DENY
                             }
                         } else {
                             filterRuleType

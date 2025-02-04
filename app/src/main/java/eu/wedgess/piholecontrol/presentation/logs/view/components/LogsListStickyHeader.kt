@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,7 +23,11 @@ import eu.wedgess.piholecontrol.utils.extensions.Border
 import eu.wedgess.piholecontrol.utils.extensions.border
 
 @Composable
-fun LogsListStickyHeader(listSize: Int) {
+fun LogsListStickyHeader(
+    listSize: Int,
+    liveLoggingEnabled: Boolean,
+    onLiveLoggingChange: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -46,6 +51,17 @@ fun LogsListStickyHeader(listSize: Int) {
                 text = stringResource(R.string.log_results_title, listSize),
                 color = MaterialTheme.colorScheme.onSurface
             )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Live Logging",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Checkbox(
+                    checked = liveLoggingEnabled,
+                    onCheckedChange = onLiveLoggingChange
+                )
+            }
         }
     }
 }
@@ -54,6 +70,6 @@ fun LogsListStickyHeader(listSize: Int) {
 @Composable
 private fun LogsListStickyHeaderPreview() {
     PiHoleControlTheme {
-        LogsListStickyHeader(listSize = 100)
+        LogsListStickyHeader(listSize = 100, liveLoggingEnabled = true, onLiveLoggingChange = {})
     }
 }

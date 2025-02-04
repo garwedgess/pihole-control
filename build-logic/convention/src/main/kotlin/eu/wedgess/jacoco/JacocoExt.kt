@@ -16,16 +16,29 @@ private val coverageExclusions = listOf(
     "**/R\$*.class",
     "**/BuildConfig.*",
     "**/Manifest*.*",
+    "**/hilt_aggregated_deps/**",
     "**/*_Hilt*.class",
     "**/Hilt_*.class",
+    "**/data/api/**/fakes/**",
     "**/presentation/**/view/**",
     "**/presentation/**/components/**",
     "**/presentation/compose/**",
+    "**/presentation/connections/list/extensions/SnackbarExt*.*",
+    "**/presentation/logs/extensions/LogEntryInfoExt.*",
+    "**/presentation/logs/extensions/LogEntryStatusExt.*",
     "**/presentation/common/**",
     "**/presentation/theme/**",
     "**/presentation/**/navigation/**",
-    "**/presentation/**/*Activity.*",
-    "**/*Application.*",
+    "**/presentation/**/FilterRuleInfo*",
+    "**/presentation/**/LogEntryInfo*",
+    "**/presentation/**/logs/extensions/**",
+    "**/utils/*ColorGenerator*.*",
+    "**/utils/*UiText*.*",
+    "**/data/utils/*AllCertsTrustManager*.*",
+    "**/utils/*DefaultDispatchers*.*",
+    "**/utils/extensions/*ColorExt*.*",
+    "**/utils/extensions/*BorderExt*.*",
+    "**/*Application*.*",
     "**/utils/vico/**",
     "**/di/**",
 )
@@ -65,7 +78,10 @@ internal fun Project.configureJacoco() {
                         }
                     )
                 )
-                sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+                sourceDirectories.setFrom(
+                    layout.projectDirectory.dir("src/main/java"),
+                    layout.projectDirectory.dir("src/main/kotlin")
+                )
                 executionData.setFrom(
                     files(
                         fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }

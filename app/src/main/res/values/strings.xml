@@ -29,6 +29,7 @@
 
     <!-- Logs Screen -->
     <string name="logs_msg_loading_query_logs">Loading query logs</string>
+    <string name="logs_msg_empty">No logs found&#8230;</string>
     <string name="log_label_all">All</string>
     <string name="log_label_allowed">Allowed</string>
     <string name="log_label_blocked">Blocked</string>
@@ -36,6 +37,8 @@
     <string name="log_label_date_sort_asc">Date Ascending</string>
     <string name="log_label_response_time_sort_asc">Response Time Ascending</string>
     <string name="log_label_response_time_sort_desc">Response Time Descending</string>
+    <string name="log_version_5_response_time_postfix">%s ms</string>
+    <string name="log_version_6_response_time_postfix">%s µs</string>
 
     <string name="log_dialog_details_title">Log Details</string>
     <string name="log_dialog_details_label_url">URL</string>
@@ -68,6 +71,15 @@
     <string name="logs_type_label_block_gravity_cname">Blocked (Gravity CNAME)</string>
     <string name="logs_type_label_block_regex_cname">Blocked (Regex CNAME)</string>
     <string name="logs_type_label_block_exact_cname">Blocked (Exact CNAME)</string>
+    <string name="logs_type_label_forwarded">OK (Forwarded)</string>
+    <string name="logs_type_label_block_list">Blocked (Deny List)</string>
+    <string name="logs_type_label_block_list_cname">Blocked (Deny List CNAME)</string>
+    <string name="logs_type_label_special_domain">OK (Special Domain)</string>
+    <string name="logs_type_label_cache_stale">OK (Cache Stale)</string>
+    <string name="logs_type_label_external_blocked_ede15">Blocked (External EDE15)</string>
+    <string name="logs_type_label_dnssed">Retried DNSSEC</string>
+    <string name="logs_type_label_dbbusy">DB Busy</string>
+    <string name="logs_type_label_inprogress">In Progress</string>
     <string name="logs_type_label_unknown">Unknown</string>
 
     <!-- Home Screen -->
@@ -83,7 +95,7 @@
 
     <!-- Filters Screen -->
     <string name="filters_tab_title_allow_list">Allow List</string>
-    <string name="filters_tab_title_block_list">Block List</string>
+    <string name="filters_tab_title_deny_list">Deny List</string>
     <string name="filters_add_rule_dialog_title">Add rule</string>
     <string name="filters_add_rule_dialog_label_as_wildcard">Add as wildcard</string>
     <string name="filters_add_rule_dialog_btn_add">Add</string>
@@ -101,16 +113,17 @@
     <string name="filters_label_regex">Regex</string>
     <string name="filters_msg_loading_filters">Loading filters</string>
     <string name="filters_label_allowlist">Allow</string>
-    <string name="filters_label_blocklist">Block</string>
+    <string name="filters_label_denylist">Deny</string>
     <string name="filters_label_allowlist_regex">Allow Regex</string>
-    <string name="filters_label_blocklist_regex">Block Regex</string>
+    <string name="filters_label_denylist_regex">Deny Regex</string>
     <string name="filter_rules_fetch_error">Failed to fetch filter rules</string>
 
 
     <!-- Statistics Screen -->
     <string name="statistics_title_top_blocked">Top Blocked</string>
     <string name="statistics_title_top_permitted">Top Permitted</string>
-    <string name="statistics_title_top_clients">Top Clients</string>
+    <string name="statistics_title_top_clients_all">Top Clients (all)</string>
+    <string name="statistics_title_top_clients_blocked">Top Clients (blocked)</string>
     <string name="statistics_msg_loading_server">Loading server statistics</string>
     <string name="statistics_msg_loading_query_type">Loading query type statistics</string>
     <string name="statistics_msg_loading_top_clients">Loading top clients</string>
@@ -122,7 +135,7 @@
     <string name="top_domains_error">Failed to fetch top domains</string>
     <string name="top_clients_error">Failed to fetch top clients</string>
     <string name="query_types_error">Failed to fetch query types</string>
-    <string name="forward_destinations_error">Failed to fetch forward destinations</string>
+    <string name="upstream_destinations_error">Failed to fetch upstream destinations</string>
 
 
     <string name="modify_connection_label_name">Name</string>
@@ -134,7 +147,9 @@
     <string name="modify_connection_label_basic_auth_password">Basic Auth Password</string>
     <string name="modify_connection_label_basic_auth_realm">Basic Auth Realm</string>
     <string name="modify_connection_label_show_advanced_settings">Show Advanced Settings</string>
+    <string name="modify_connection_label_api_version">API Version</string>
     <string name="modify_connection_label_port">Port</string>
+    <string name="modify_connection_label_password">Password</string>
     <string name="modify_connection_label_trust_all_certificates">Trust All Certificates</string>
     <string name="modify_connection_btn_save">Save</string>
     <string name="modify_connection_btn_update">Update</string>
@@ -152,11 +167,13 @@
     <string name="all_btn_confirm">Confirm</string>
     <string name="statistics_query_types_title">Query Types</string>
     <string name="statistics_forward_destinations_title">Forward Destinations</string>
+    <string name="logs_adding_to_allow_list_failed">Failed to add domain to allow list: %s</string>
+    <string name="logs_adding_to_deny_list_failed">Failed to add domain to deny list: %s</string>
     <string name="logs_domain_added_to_allow_list">Domain added to allow list</string>
-    <string name="logs_domain_added_to_block_list">Domain added to block list</string>
+    <string name="logs_domain_added_to_deny_list">Domain added to deny list</string>
 
-    <string name="filter_search_placeholder">Search for filter...</string>
-    <string name="logs_search_placeholder">Search for logs...</string>
+    <string name="filter_search_placeholder">Search for filter&#8230;</string>
+    <string name="logs_search_placeholder">Search for logs&#8230;</string>
     <string name="snackbar_dismiss">dismiss</string>
     <string name="title_activity_initial_connection">InitialConnectionActivity</string>
     <string name="initial_setup_title">Setup Connection</string>
@@ -174,6 +191,33 @@
     <string name="snackbar_msg_connection_deleted">Connection %s has been deleted</string>
     <string name="snackbar_msg_failed_connection_restore">Failed to restore connection %s</string>
     <string name="snackbar_msg_failed_to_set_active_connection">Failed to set %s as the active connection</string>
-    <string name="log_results_title">Results: %d</string>
+    <string name="log_results_title">%d Results</string>
+
+    <string name="network_connected">Connected to network</string>
+    <string name="network_disconnected">Disconnected from network</string>
+    <string name="label_api_version_5">Version 5</string>
+    <string name="label_api_version_6">Version 6</string>
+    <string name="connection_dialog_title_saving_failed">Error</string>
+    <string name="connection_dialog_message_update_failed">Failed to save update: %s</string>
+    <string name="connection_dialog_message_saving_failed">Failed to save connection: %s</string>
+    <string name="all_btn_ok">Ok</string>
+    <string name="connection_loading_dialog_updating_message">Updating connection&#8230;</string>
+    <string name="connection_loading_dialog_validating_password_message">Validating password&#8230;</string>
+    <string name="connection_loading_dialog_saving_message">Saving connection&#8230;</string>
+    <string name="connection_password_error_blank">Password cannot be blank</string>
+    <string name="connection_name_error_blank">Name cannot be blank</string>
+    <string name="connection_host_error_invalid">%s is not a valid host</string>
+    <string name="connection_port_error_blank">Port cannot be blank</string>
+    <string name="connection_port_error_invalid">Not a valid port number: $port</string>
+    <string name="connection_port_error_range">Port must be between 1 and 65535</string>
+    <string name="logs_filter_title_advanced_filter">Advanced Filter</string>
+    <string name="logs_filter_title_basic_filter">Basic Filter</string>
+    <string name="logs_advanced_filter_label_client_ip">Client IP</string>
+    <string name="logs_advanced_filter_label_client_name">Client Name</string>
+    <string name="logs_advanced_filter_label_query_type">Query Type</string>
+    <string name="logs_advanced_filter_label_advanced_status">Advanced Status</string>
+    <string name="filters_clear_btn">Clear Filters</string>
+    <string name="statistics_label_requests">Requests:</string>
+    <string name="all_back_press_msg">Press back again to exit</string>
 
 </resources>

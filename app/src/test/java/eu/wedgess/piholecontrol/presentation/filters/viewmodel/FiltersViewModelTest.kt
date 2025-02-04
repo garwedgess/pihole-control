@@ -11,8 +11,10 @@ import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -88,24 +90,6 @@ class FiltersViewModelTest {
             viewModel.uiState.test {
                 val result = awaitItem()
                 assertThat(result.searchQuery).isEmpty()
-                cancelAndConsumeRemainingEvents()
-            }
-        }
-
-    @Test
-    fun `WHEN OnSearchClick event is received THEN uiState should update showSearchView to false`() =
-        runTest {
-            // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
-            viewModel.onEvent(FiltersContract.Event.OnShowSearchView)
-
-            // When
-            viewModel.onEvent(FiltersContract.Event.OnSearchClick)
-
-            // Then
-            viewModel.uiState.test {
-                val result = awaitItem()
-                assertThat(result.showSearchView).isFalse()
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -326,7 +310,7 @@ class FiltersViewModelTest {
                 dateAdded = "11-01-2023",
                 domain = "test.com",
                 groups = emptyList(),
-                type = FilterRuleTypeEntity.BLOCK
+                type = FilterRuleTypeEntity.DENY
             )
             coEvery { removeFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
@@ -338,7 +322,7 @@ class FiltersViewModelTest {
                 FiltersContract.Event.OnDeleteFilterRuleConfirmed(
                     ModifyFilterRule.Delete(
                         domain = "test.com",
-                        type = FilterRuleTypeEntity.BLOCK
+                        type = FilterRuleTypeEntity.DENY
                     )
                 )
             )
@@ -429,8 +413,8 @@ class FiltersViewModelTest {
             viewModel.uiState.test {
                 val result = awaitItem()
                 assertThat((result.dialogType as FilterDialogType.ShowFilterRuleInfo).filterRule).isEqualTo(
-                        rule.toInfo()
-                    )
+                    rule.toInfo()
+                )
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -461,9 +445,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
 
             // When
-            viewModel.onEvent(
-                FiltersContract.Event.OnFilterTabChanged(FilterRuleTypeEntity.REGEX_BLOCK)
-            )
+            viewModel.onEvent(FiltersContract.Event.OnFilterTabChanged(FilterTab.DenyList))
 
             // Then
             viewModel.uiState.test {
@@ -471,8 +453,8 @@ class FiltersViewModelTest {
                 viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
                 val result2 = awaitItem()
                 assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
-                        FilterRuleTypeEntity.REGEX_BLOCK
-                    )
+                    FilterRuleTypeEntity.DENY
+                )
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -500,8 +482,85 @@ class FiltersViewModelTest {
             viewModel.uiState.test {
                 val result = awaitItem()
                 assertThat((result.dialogType as FilterDialogType.OnConfirmFilterDelete).filterRule).isEqualTo(
-                        rule.toInfo()
-                    )
+                    rule.toInfo()
+                )
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnDismissFilterBy event is received THEN showFilterByMenu should be false`() =
+        runTest {
+            // Given
+            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
+
+            // When
+            viewModel.onEvent(FiltersContract.Event.OnDismissFilterBy)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showFilterByMenu).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnShowFilterByMenu event is received THEN showFilterByMenu should be true`() =
+        runTest {
+            // Given
+            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+
+            // When
+            viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.showFilterByMenu).isTrue()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnFilterByOptionClick event is received THEN selected filter options should be updated`() =
+        runTest {
+            // Given
+            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            val option = FilterByOption.ALLOW_EXACT
+
+            // When
+            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(option))
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.selectedFilterByOptions).doesNotContain(option)
+                assertThat(result.showFilterByMenu).isFalse()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN only one filter option selected WHEN that option is deselected THEN other option should be automatically selected`() =
+        runTest {
+            // Given
+            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            val firstOption = FilterByOption.ALLOW_EXACT
+            val secondOption = FilterByOption.ALLOW_REGEX
+
+            viewModel.onEvent(FiltersContract.Event.OnFilterTabChanged(FilterTab.AllowList))
+            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(firstOption))
+            advanceUntilIdle()
+            viewModel.onEvent(FiltersContract.Event.OnFilterByOptionClick(secondOption))
+            advanceUntilIdle()
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.selectedFilterByOptions).containsExactly(firstOption)
+                assertThat(result.showFilterByMenu).isFalse()
                 cancelAndConsumeRemainingEvents()
             }
         }

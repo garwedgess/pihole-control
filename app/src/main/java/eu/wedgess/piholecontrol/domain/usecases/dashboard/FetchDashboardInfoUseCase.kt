@@ -27,14 +27,24 @@ class FetchDashboardInfoUseCase(
                 val overTimeDataResult = deferredOverTimeData.await()
                 val clientsOverTimeDataResult = deferredClientsOverTimeData.await()
 
-                Result.success(
-                    DashboardInfoEntity(
-                        summaryResult,
-                        overTimeDataResult,
-                        clientsOverTimeDataResult
+                if (
+                    summaryResult.isFailure &&
+                    overTimeDataResult.isFailure &&
+                    clientsOverTimeDataResult.isFailure
+                ) {
+                    Result.failure(Throwable(summaryResult.exceptionOrNull()))
+                } else {
+                    Result.success(
+                        DashboardInfoEntity(
+                            summaryResult,
+                            overTimeDataResult,
+                            clientsOverTimeDataResult
+                        )
                     )
-                )
+                }
             }
         }
     }
+
+    fun triggerRefresh() = periodicRefreshUseCase.triggerRefresh()
 }

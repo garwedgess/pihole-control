@@ -6,24 +6,31 @@ import com.google.common.truth.Truth.assertThat
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.SavedStateHandleRule
+import eu.wedgess.piholecontrol.domain.model.AuthSessionStatusEntity
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
+import eu.wedgess.piholecontrol.domain.usecases.auth.GenerateSessionIdUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.AddConnectionUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchConnectionByIdUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.UpdateConnectionUseCase
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.ConnectionInputError
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
+import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import io.ktor.http.URLProtocol
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.UUID
 
 @ExperimentalCoroutinesApi
 class ModifyConnectionViewModelTest {
@@ -49,6 +56,9 @@ class ModifyConnectionViewModelTest {
     @RelaxedMockK
     private lateinit var barcodeScanner: BarcodeScanner
 
+    @RelaxedMockK
+    private lateinit var generateSessionIdUseCase: GenerateSessionIdUseCase
+
     private lateinit var viewModel: ModifyConnectionViewModel
 
     @Before
@@ -67,6 +77,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -79,12 +90,12 @@ class ModifyConnectionViewModelTest {
         }
 
     @Test
-    fun `GIVEN connectionId WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
+    fun `GIVEN connectionId of Version5 WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
         runTest {
             // Given
-            val connectionId = 21L
-            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId))
-            val connection = ConnectionEntity.default.copy(id = connectionId)
+            val connectionId = UUID.randomUUID()
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId.toString()))
+            val connection = ConnectionEntity.Version5.default.copy(id = connectionId)
 
             coEvery { fetchConnectionByIdUseCase(connectionId) } returns Result.success(connection)
 
@@ -93,6 +104,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -104,10 +116,49 @@ class ModifyConnectionViewModelTest {
                 assertThat(result.currentConnection).isEqualTo(connection)
                 assertThat(result.name).isEqualTo(connection.name)
                 assertThat(result.host).isEqualTo(connection.host)
-                assertThat(result.port).isEqualTo(connection.port)
+                assertThat(result.port).isEqualTo(connection.port.toString())
                 assertThat(result.protocol).isEqualTo(connection.protocol)
                 assertThat(result.apiPath).isEqualTo(connection.apiPath)
                 assertThat(result.apiToken).isEqualTo(connection.token)
+                assertThat(result.authUsername).isEqualTo(connection.authUsername)
+                assertThat(result.authPassword).isEqualTo(connection.authPassword)
+                assertThat(result.authRealm).isEqualTo(connection.authRealm)
+                assertThat(result.trustAllCerts).isEqualTo(connection.trustAllCerts)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN connectionId of Version6 WHEN viewmodel is initialized for editing THEN uiState should emit updated state`() =
+        runTest {
+            // Given
+            val connectionId = UUID.randomUUID()
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(connectionId.toString()))
+            val connection = ConnectionEntity.Version6.default.copy(id = connectionId)
+
+            coEvery { fetchConnectionByIdUseCase(connectionId) } returns Result.success(connection)
+
+            // When
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            viewModel.onEvent(ModifyConnectionsContract.Event.FetchCurrentConnection)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.currentConnection).isEqualTo(connection)
+                assertThat(result.name).isEqualTo(connection.name)
+                assertThat(result.host).isEqualTo(connection.host)
+                assertThat(result.port).isEqualTo(connection.port.toString())
+                assertThat(result.protocol).isEqualTo(connection.protocol)
+                assertThat(result.apiPath).isEmpty()
+                assertThat(result.apiToken).isEmpty()
                 assertThat(result.authUsername).isEqualTo(connection.authUsername)
                 assertThat(result.authPassword).isEqualTo(connection.authPassword)
                 assertThat(result.authRealm).isEqualTo(connection.authRealm)
@@ -126,6 +177,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -146,12 +198,13 @@ class ModifyConnectionViewModelTest {
     fun `WHEN SaveConnection event is received for updating THEN updateConnectionUseCase should be called and Navigation Back side effect should be emitted`() =
         runTest {
             // Given
-            savedStateHandleRule.setRoute(Screens.ModifyConnection(12))
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(UUID.randomUUID().toString()))
             coEvery { updateConnectionUseCase(any()) } returns Result.success(Unit)
             viewModel = ModifyConnectionViewModel(
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -177,6 +230,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -205,6 +259,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -229,6 +284,7 @@ class ModifyConnectionViewModelTest {
             fetchConnectionByIdUseCase,
             addConnectionUseCase,
             updateConnectionUseCase,
+            generateSessionIdUseCase,
             barcodeScanner,
             savedStateHandleRule.savedStateHandleMock
         )
@@ -254,6 +310,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -280,6 +337,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -307,6 +365,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -334,6 +393,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -359,6 +419,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -388,6 +449,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -416,6 +478,7 @@ class ModifyConnectionViewModelTest {
             fetchConnectionByIdUseCase,
             addConnectionUseCase,
             updateConnectionUseCase,
+            generateSessionIdUseCase,
             barcodeScanner,
             savedStateHandleRule.savedStateHandleMock
         )
@@ -440,6 +503,7 @@ class ModifyConnectionViewModelTest {
             fetchConnectionByIdUseCase,
             addConnectionUseCase,
             updateConnectionUseCase,
+            generateSessionIdUseCase,
             barcodeScanner,
             savedStateHandleRule.savedStateHandleMock
         )
@@ -464,10 +528,11 @@ class ModifyConnectionViewModelTest {
             fetchConnectionByIdUseCase,
             addConnectionUseCase,
             updateConnectionUseCase,
+            generateSessionIdUseCase,
             barcodeScanner,
             savedStateHandleRule.savedStateHandleMock
         )
-        val newPort = 8080
+        val newPort = 8080.toString()
 
         // When
         viewModel.onEvent(ModifyConnectionsContract.Event.OnPortChanged(newPort))
@@ -489,6 +554,7 @@ class ModifyConnectionViewModelTest {
                 fetchConnectionByIdUseCase,
                 addConnectionUseCase,
                 updateConnectionUseCase,
+                generateSessionIdUseCase,
                 barcodeScanner,
                 savedStateHandleRule.savedStateHandleMock
             )
@@ -501,7 +567,254 @@ class ModifyConnectionViewModelTest {
             viewModel.uiState.test {
                 val result = awaitItem()
                 assertThat(result.protocol).isEqualTo(newProtocol)
-                assertThat(result.port).isEqualTo(newProtocol.defaultPort)
+                assertThat(result.port).isEqualTo(newProtocol.defaultPort.toString())
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnPasswordFieldVisibilityChanged event is received THEN uiState should update apiKeyPasswordVisible`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            val newVisibility = true
+
+            // When
+            viewModel.onEvent(
+                ModifyConnectionsContract.Event.OnPasswordFieldVisibilityChanged(
+                    newVisibility
+                )
+            )
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.apiKeyPasswordVisible).isEqualTo(newVisibility)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnBasicPasswordFieldVisibilityChanged event is received THEN uiState should update basicAuthPasswordVisible`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            val newVisibility = true
+
+            // When
+            viewModel.onEvent(
+                ModifyConnectionsContract.Event.OnBasicPasswordFieldVisibilityChanged(
+                    newVisibility
+                )
+            )
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.basicAuthPasswordVisible).isEqualTo(newVisibility)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnPasswordChanged event is received with valid password THEN uiState should update password without error`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            val validPassword = "validPassword"
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnPasswordChanged(validPassword))
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.password).isEqualTo(validPassword)
+                assertThat(result.inputErrors).isEmpty()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnPasswordChanged event is received with blank password THEN uiState should update with error`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            val blankPassword = ""
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnPasswordChanged(blankPassword))
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.password).isEqualTo(blankPassword)
+                assertThat(result.inputErrors).hasSize(1)
+                assertThat(result.inputErrors.first()).isInstanceOf(ConnectionInputError.Password::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN OnApiVersionChanged event is received THEN uiState should update apiVersion`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+            val newApiVersion = PiHoleApiVersion.Version6
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnApiVersionChanged(newApiVersion))
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.apiVersion).isEqualTo(newApiVersion)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN saving Version6 connection fails with password error THEN uiState should update with password error`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+
+            // Set Version6 API version
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnApiVersionChanged(PiHoleApiVersion.Version6))
+
+            // Mock generate session failure
+            coEvery { generateSessionIdUseCase(any()) } returns Result.failure(
+                Exception("password incorrect")
+            )
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.SaveConnection)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.dialogType).isInstanceOf(ModifyConnectionDialogType.FailedToSaveConnection::class.java)
+                assertThat(result.inputErrors.first()).isInstanceOf(ConnectionInputError.Password::class.java)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN saving Version6 connection fails with other error THEN uiState should show error dialog without password error`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+
+            // Set Version6 API version
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnApiVersionChanged(PiHoleApiVersion.Version6))
+
+            // Mock generate session failure
+            coEvery { generateSessionIdUseCase(any()) } returns Result.failure(
+                Exception("network error")
+            )
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.SaveConnection)
+
+            // Then
+            viewModel.uiState.test {
+                val result = awaitItem()
+                assertThat(result.dialogType).isInstanceOf(ModifyConnectionDialogType.FailedToSaveConnection::class.java)
+                assertThat(result.inputErrors).isEmpty()
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `WHEN saving Version6 connection succeeds THEN connection should be saved with session ID`() =
+        runTest {
+            // Given
+            savedStateHandleRule.setRoute(Screens.ModifyConnection(null))
+            viewModel = ModifyConnectionViewModel(
+                fetchConnectionByIdUseCase,
+                addConnectionUseCase,
+                updateConnectionUseCase,
+                generateSessionIdUseCase,
+                barcodeScanner,
+                savedStateHandleRule.savedStateHandleMock
+            )
+
+            // Set Version6 API version
+            viewModel.onEvent(ModifyConnectionsContract.Event.OnApiVersionChanged(PiHoleApiVersion.Version6))
+
+            // Mock successful session generation
+            val sessionResponse = mockk<AuthSessionStatusEntity>(relaxed = true).apply {
+                every { this@apply.sid } returns "test_session_id"
+            }
+            coEvery { generateSessionIdUseCase(any()) } returns Result.success(sessionResponse)
+            coEvery { addConnectionUseCase(any()) } returns Result.success(Unit)
+
+            // When
+            viewModel.onEvent(ModifyConnectionsContract.Event.SaveConnection)
+
+            // Then
+            coVerify {
+                generateSessionIdUseCase(any())
+                addConnectionUseCase(match { it is ConnectionEntity.Version6 && it.sid == "test_session_id" })
+            }
+            viewModel.sideEffect.test {
+                assertThat(awaitItem()).isInstanceOf(ModifyConnectionsContract.Effect.Navigation.Back::class.java)
                 cancelAndConsumeRemainingEvents()
             }
         }

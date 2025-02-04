@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ClientOverTimeEntity
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
+import eu.wedgess.piholecontrol.presentation.common.components.SectionTitle
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -35,10 +34,7 @@ fun ClientQueriesOverTimeSection(
                 Alignment.CenterVertically
             )
         ) {
-            Text(
-                text = stringResource(R.string.home_title_clients_over_time),
-                style = MaterialTheme.typography.titleMedium
-            )
+            SectionTitle.TitleOnly(title = stringResource(R.string.home_title_clients_over_time))
             ClientQueriesOvertimeGraph(clientsOvertimeChartInfo = overTimeData)
         }
     }

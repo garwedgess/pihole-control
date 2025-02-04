@@ -11,6 +11,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.layout.fullWidth
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shape.shader.verticalGradient
@@ -18,6 +19,7 @@ import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.axis.vertical.VerticalAxis
+import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
 import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import eu.wedgess.piholecontrol.domain.model.OverTimeEntity
@@ -70,14 +72,14 @@ fun LineChart(
         bottomAxis = rememberBottomAxis(
             tick = null,
             itemPlacer = remember {
-                maxOf(data.maxOf { it.entries.count() } / 5, 1).let {
-                    AxisItemPlacer.Horizontal.default(spacing = it, addExtremeLabelPadding = true)
+                maxOf(data.maxOf { it.entries.count() } / 6, 1).let {
+                    AxisItemPlacer.Horizontal.default(spacing = it, addExtremeLabelPadding = false)
                 }
             },
             guideline = null,
             valueFormatter = { value, chartValues ->
                 (chartValues.chartEntryModel.entries.firstOrNull()
-                    ?.find { it.x == value } as? LineChartEntry)?.xDisplayValue ?: ""
+                    ?.find { it.x == value } as? LineChartEntry)?.xDisplayValue ?: value.toString()
             }
         ),
         startAxis = rememberStartAxis(
@@ -86,9 +88,10 @@ fun LineChart(
             guideline = null,
             horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
             valueFormatter = { value, _ ->
-                if (value == 0f) "" else value.roundToInt().toString()
+                value.roundToInt().toString()
             }
         ),
+        horizontalLayout = HorizontalLayout.fullWidth(),
         chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
         marker = rememberMarker()
     )

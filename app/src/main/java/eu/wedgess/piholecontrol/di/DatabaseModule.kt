@@ -7,10 +7,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.Connection
+import eu.wedgess.piholecontrol.ConnectionVersion5
+import eu.wedgess.piholecontrol.ConnectionVersion6
 import eu.wedgess.piholecontrol.data.PiHoleControlDatabase
 import eu.wedgess.piholecontrol.data.utils.sqldelight.portAdapter
 import eu.wedgess.piholecontrol.data.utils.sqldelight.protocolAdapter
+import eu.wedgess.piholecontrol.data.utils.sqldelight.uuidAdapter
 import javax.inject.Singleton
 
 @Module
@@ -28,9 +30,15 @@ object DatabaseModule {
     @Provides
     fun provideDb(driver: AndroidSqliteDriver) = PiHoleControlDatabase(
         driver,
-        ConnectionAdapter = Connection.Adapter(
+        ConnectionVersion5Adapter = ConnectionVersion5.Adapter(
             ProtocolAdapter = protocolAdapter,
-            PortAdapter = portAdapter
+            PortAdapter = portAdapter,
+            IdAdapter = uuidAdapter
+        ),
+        ConnectionVersion6Adapter = ConnectionVersion6.Adapter(
+            ProtocolAdapter = protocolAdapter,
+            PortAdapter = portAdapter,
+            IdAdapter = uuidAdapter
         )
     )
 }

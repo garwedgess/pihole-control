@@ -1,0 +1,23 @@
+package eu.wedgess.piholecontrol.presentation.statistics.tabs.upstreams
+
+import eu.wedgess.piholecontrol.presentation.common.model.LegendData
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
+
+interface UpstreamDestinationsContract {
+
+    data class UiState(
+        val donutChartDataCollection: DonutChartDataCollection,
+        val legendData: List<LegendData>
+    ) {
+        companion object {
+            fun initial() = UiState(
+                donutChartDataCollection = DonutChartDataCollection(emptyList()),
+                legendData = emptyList()
+            )
+        }
+    }
+
+    sealed interface Event {
+        data class OnLegendItemSelected(val index: Int) : Event
+    }
+}

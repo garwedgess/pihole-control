@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -87,7 +88,7 @@ class ConnectionsViewModel @Inject constructor(
         }
     }
 
-    private fun undoDeleteConnection(id: Long, name: String) {
+    private fun undoDeleteConnection(id: UUID, name: String) {
         viewModelScope.launch {
             unMarkConnectionForDeletionUseCase(id).onFailure {
                 Timber.e(it, "Failed to unmark connection $id : $name for deletion")
@@ -114,7 +115,7 @@ class ConnectionsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteConnection(id: Long, name: String) {
+    private fun deleteConnection(id: UUID, name: String) {
         viewModelScope.launch {
             markConnectionForDeletionUseCase(id)
                 .onFailure {
@@ -137,7 +138,7 @@ class ConnectionsViewModel @Inject constructor(
         viewModelScope.emitSideEffect(destination)
     }
 
-    private fun setConnectionAsActive(id: Long, name: String) {
+    private fun setConnectionAsActive(id: UUID, name: String) {
         viewModelScope.launch {
             setConnectionAsActiveUseCase(id)
                 .onFailure {

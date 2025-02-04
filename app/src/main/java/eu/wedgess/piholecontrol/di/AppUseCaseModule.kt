@@ -3,11 +3,7 @@ package eu.wedgess.piholecontrol.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import eu.wedgess.piholecontrol.data.api.StatusApiService
-import eu.wedgess.piholecontrol.data.api.StatusApiServiceImpl
-import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
-import eu.wedgess.piholecontrol.di.annotations.TrustAllCertificatesHttpClient
+import dagger.hilt.android.components.ViewModelComponent
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
@@ -22,19 +18,10 @@ import eu.wedgess.piholecontrol.domain.usecases.app.FetchAppInfoUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchShouldChangeStatusOnAllConnectionsUseCase
 import eu.wedgess.piholecontrol.domain.usecases.app.FetchStatusUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
-import io.ktor.client.HttpClient
-import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object AppUseCaseModule {
-
-    @Provides
-    @Singleton
-    fun provideStatusApiService(
-        @DefaultHttpClient defaultHttpClient: HttpClient,
-        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
-    ): StatusApiService = StatusApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     fun provideFetchStatusUseCase(

@@ -5,59 +5,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
-import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
-import eu.wedgess.piholecontrol.presentation.filters.model.FilterScreenTabType
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabViewModel
-import eu.wedgess.piholecontrol.utils.UiText
+import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 
 @Composable
 fun FilterTabScreenRoot(
-    filterScreenTabType: FilterScreenTabType,
+    filterScreenTabType: FilterTab,
+    filterByOptions: List<FilterByOption>,
     onFilterRuleClick: (FilterRuleInfo) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
-    searchQuery: String? = null,
-    showSnackBarText: (UiText) -> Unit
+    searchQuery: String? = null
 ) {
-    val context = LocalContext.current
     val viewModel: FilterTabViewModel = hiltViewModel(
-        key = "FilterTabViewModel-${filterScreenTabType.name}",
+        key = filterScreenTabType.title.asString(),
         creationCallback = { factory: FilterTabViewModelFactory ->
             factory.create(filterScreenTabType)
         }
     )
 
     val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
-    val sideEffect = viewModel.sideEffect
 
     LaunchedEffect(searchQuery) {
         viewModel.onEvent(FilterTabContract.Event.OnSearchQueryChanged(searchQuery ?: ""))
     }
 
+    LaunchedEffect(filterByOptions) {
+        viewModel.onEvent(FilterTabContract.Event.OnFilterByOptionsChanged(filterByOptions))
+    }
+
     LaunchedEffect(Unit) {
         onRefreshFilters {
             viewModel.onEvent(FilterTabContract.Event.OnRefresh)
-        }
-    }
-
-    CollectSideEffect(sideEffect) { effect ->
-        if (effect is FilterTabContract.Effect.ShowErrorSnackbar) {
-            showSnackBarText(
-                UiText.DynamicString(
-                    effect.errorMessages.joinToString(separator = "\n") {
-                        it.asString(context)
-                    }
-                )
-            )
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
+import eu.wedgess.piholecontrol.presentation.common.components.DoublePressToExitBackHandler
 import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.dashboard.DashboardContract
 import eu.wedgess.piholecontrol.presentation.dashboard.view.DashboardScreen
@@ -41,5 +42,6 @@ fun NavGraphBuilder.dashboardRoot(
         }
 
         DashboardScreen(uiResult)
+        DoublePressToExitBackHandler()
     }
 }

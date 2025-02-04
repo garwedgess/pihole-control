@@ -9,14 +9,15 @@ import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.common.model.LegendData
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.presentation.statistics.tabs.querytypes.QueryTypesContract
-import eu.wedgess.piholecontrol.presentation.statistics.view.donutchart.model.DonutChartDataCollection
 import eu.wedgess.piholecontrol.utils.UiText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,9 +31,10 @@ class QueryTypesViewModel @Inject constructor(
         fetchQueryTypesUseCase().combine(selectedIndexFlow) { queryTypesResult, selectedIndex ->
             queryTypesResult.getOrElse {
                 return@combine UIResult.Error(
-                    ResultType.Error.WithTitleAndSubTitle(
-                        UiText.StringResource(R.string.query_types_error),
-                        UiText.DynamicString(it.message ?: "Unknown error")
+                    ResultType.Error.WithTitleAndSubTitleAndRetry(
+                        title = UiText.StringResource(R.string.query_types_error),
+                        subTitle = UiText.DynamicString(it.message ?: "Unknown error"),
+                        onRetry = fetchQueryTypesUseCase::refresh
                     )
                 )
             }.run {
@@ -42,7 +44,10 @@ class QueryTypesViewModel @Inject constructor(
                         legendData = this.mapIndexed { index, queryTypeChartData ->
                             LegendData(
                                 title = queryTypeChartData.title,
-                                subTitle = "${queryTypeChartData.percentage}%",
+                                subTitle = "${
+                                    DecimalFormat("#.#")
+                                        .format(queryTypeChartData.percentage)
+                                }%",
                                 isSelected = selectedIndex == index
                             )
                         }

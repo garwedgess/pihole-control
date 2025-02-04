@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.logs.view.components.actions
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -23,25 +24,33 @@ fun LogsTopBarActions(
     isSortingMenuVisible: Boolean,
     onSearchClick: () -> Unit,
     onSortClick: () -> Unit,
+    onFilterClick: () -> Unit,
     onDismissSort: () -> Unit,
     onSortItemClick: (LogSorting) -> Unit
 ) {
     Row {
-        IconButton(onClick = { onSortClick() }) {
+        IconButton(onClick = onFilterClick) {
+            Icon(
+                imageVector = Icons.Outlined.FilterList,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        IconButton(onClick = onSortClick) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.Sort,
                 contentDescription = "sort",
                 tint = MaterialTheme.colorScheme.onBackground,
             )
         }
-        IconButton(onClick = { onSearchClick() }) {
+        IconButton(onClick = onSearchClick) {
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = "search",
                 tint = MaterialTheme.colorScheme.onBackground,
             )
         }
-        DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = { onDismissSort() }) {
+        DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = onDismissSort) {
             LogSorting.entries.forEach {
                 DropdownMenuItem(
                     trailingIcon = {
@@ -71,6 +80,7 @@ private fun LogsTopAppBarActionsPreview() {
                 isSortingMenuVisible = true,
                 onSearchClick = {},
                 onSortClick = {},
+                onFilterClick = {},
                 onDismissSort = {},
                 onSortItemClick = {}
             )

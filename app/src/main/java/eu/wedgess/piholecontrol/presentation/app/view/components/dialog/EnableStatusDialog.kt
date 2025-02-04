@@ -19,16 +19,16 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun EnableStatusDialog(
     onEnabledStatus: () -> Unit,
-    onDismissDialog: () -> Unit
+    onDismiss: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onDismissDialog() }) {
+    Dialog(onDismissRequest = { onDismiss() }) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             EnableStatusDialogContent(
-                onEnable = { onEnabledStatus() },
-                onDismiss = { onDismissDialog() }
+                onEnable = onEnabledStatus,
+                onDismiss = onDismiss
             )
         }
     }
@@ -78,7 +78,7 @@ private fun StatusDialogPreview() {
     PiHoleControlTheme {
         EnableStatusDialog(
             onEnabledStatus = {},
-            onDismissDialog = {}
+            onDismiss = {}
         )
     }
 }

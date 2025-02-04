@@ -1,3 +1,3 @@
 package eu.wedgess.piholecontrol.domain.model
 
-data class TopClientEntity(val client: String, val hits: Int)
+data class TopClientEntity(val client: String, val hits: Int, val percentage: Float)

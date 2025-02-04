@@ -118,6 +118,7 @@ dependencies {
     implementation(libs.bundles.vico)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.camera)
+    implementation(libs.logging.interceptor)
 }
 
 protobuf {

@@ -1,0 +1,103 @@
+{
+  "domains": [
+    {
+      "domain": "0.client-channel.google.com",
+      "unicode": "0.client-channel.google.com",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 6,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "1drv.com",
+      "unicode": "1drv.com",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 7,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "2.android.pool.ntp.org",
+      "unicode": "2.android.pool.ntp.org",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 8,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "akamaihd.net",
+      "unicode": "akamaihd.net",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 9,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "akamaitechnologies.com",
+      "unicode": "akamaitechnologies.com",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 10,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "akamaized.net",
+      "unicode": "akamaized.net",
+      "type": "allow",
+      "kind": "exact",
+      "comment": null,
+      "groups": [
+        2
+      ],
+      "enabled": true,
+      "id": 11,
+      "date_added": 1591907114,
+      "date_modified": 1708291661
+    },
+    {
+      "domain": "t.myvisualiq.net",
+      "unicode": "t.myvisualiq.net",
+      "type": "allow",
+      "kind": "exact",
+      "comment": "Google Ads",
+      "groups": [
+        1
+      ],
+      "enabled": true,
+      "id": 604,
+      "date_added": 1694203227,
+      "date_modified": 1708291663
+    }
+  ],
+  "took": 0.0072472095489501953
+}
