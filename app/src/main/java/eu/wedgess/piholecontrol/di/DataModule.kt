@@ -27,7 +27,6 @@ object DataModule {
     fun provideDispatcherProvider(): DispatcherProvider =
         DefaultDispatchers()
 
-
     @Singleton
     @Provides
     fun provideV6Dao(database: PiHoleControlDatabase, dispatcherProvider: DispatcherProvider) =

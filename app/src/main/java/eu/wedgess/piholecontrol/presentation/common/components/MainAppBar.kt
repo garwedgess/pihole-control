@@ -42,7 +42,7 @@ fun MainAppBar(
         targetValue = if (appBarState.showSearchView) 0f else 01f,
         animationSpec = tween(
             durationMillis = if (appBarState.showSearchView) 20 else 300,
-            easing = LinearEasing,
+            easing = LinearEasing
         ),
         label = "title animation"
     )

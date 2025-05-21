@@ -26,7 +26,7 @@ fun QueriesOvertimeGraph(overTimeData: OverTimeLineChartInfo) {
             modifier = Modifier
                 .fillMaxSize()
                 .heightIn(min = PiHoleControlTheme.dimens.size.lineChartHeight),
-            data = listOf(overTimeData.permittedChartInfo, overTimeData.blockedChartInfo),
+            data = listOf(overTimeData.permittedChartInfo, overTimeData.blockedChartInfo)
         )
         LegendGrid(
             data = listOf(
@@ -60,7 +60,7 @@ private fun QueriesOvertimeGraphPreview() {
                             OverTimeEntity(timestamp = 1734368700, hits = 250),
                             OverTimeEntity(timestamp = 1734369300, hits = 100),
                             OverTimeEntity(timestamp = 1734369900, hits = 192),
-                            OverTimeEntity(timestamp = 1734370500, hits = 192),
+                            OverTimeEntity(timestamp = 1734370500, hits = 192)
                         )
                     ),
                     blockedChartInfo = LineChartInfo.BlockedQueriesOverLineChart(

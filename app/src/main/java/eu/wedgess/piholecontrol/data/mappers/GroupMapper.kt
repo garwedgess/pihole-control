@@ -21,13 +21,13 @@ fun PiHoleGroupsResponseData.GroupData.toGroupEntity() = GroupEntity(
     dateModified = Instant.ofEpochSecond(this.dateModified)
         .atZone(ZoneId.systemDefault())
         .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        .replace("T", " "),
+        .replace("T", " ")
 )
 
 fun GroupEntity.toPiHoleGroupRequestData() = PiHoleGroupRequestData(
     name = this.name,
     enabled = this.enabled,
-    comment = this.comment,
+    comment = this.comment
 )
 
 fun PiHoleModifyGroupResponseData.toEntity() = ModifyGroupResponseEntity(

@@ -27,7 +27,7 @@ interface LogsContract {
         val availableStatuses: List<String>,
         val selectedAdvancedStatus: String,
         val showBasicFiltering: Boolean,
-        val showAdvancedFiltering: Boolean,
+        val showAdvancedFiltering: Boolean
     ) {
         companion object {
             internal val availableLogLimits = listOf(100, 500, 1000, 2500)
@@ -53,7 +53,7 @@ interface LogsContract {
 
     data class SearchUiState(
         val searchQuery: String,
-        val showSearchView: Boolean,
+        val showSearchView: Boolean
     ) {
         companion object {
             fun initial() = SearchUiState(
@@ -78,7 +78,7 @@ interface LogsContract {
                 showSortingDropdownMenu = false,
                 sorting = LogSorting.DATE_DESC,
                 dialogType = LogsDialogType.None,
-                liveLogging = false,
+                liveLogging = false
             )
         }
     }

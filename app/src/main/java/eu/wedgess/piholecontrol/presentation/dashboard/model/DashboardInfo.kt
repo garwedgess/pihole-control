@@ -18,8 +18,8 @@ data class DashboardInfo(
     fun toUiResult(onRetry: () -> Unit): UIResult<DashboardContract.UiState> {
         return when {
             summaryResult.isFailure &&
-                    queriesOverTimeResult.isFailure &&
-                    clientQueriesOverTimeResult.isFailure -> {
+                queriesOverTimeResult.isFailure &&
+                clientQueriesOverTimeResult.isFailure -> {
                 handleErrorThrowable(
                     throwable = summaryResult.exceptionOrNull(),
                     onRetry = onRetry

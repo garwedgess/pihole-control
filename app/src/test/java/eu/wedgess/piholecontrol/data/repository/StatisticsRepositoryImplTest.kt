@@ -108,7 +108,7 @@ class StatisticsRepositoryImplTest {
             val mockResponse = PiHoleTopQueriesCombinedResponseData(
                 permitted = listOf(
                     PiHoleTopQueryData(domain = "test.com", count = 10),
-                    PiHoleTopQueryData(domain = "example.com", count = 5),
+                    PiHoleTopQueryData(domain = "example.com", count = 5)
                 ),
                 blocked = emptyList()
             )
@@ -148,7 +148,7 @@ class StatisticsRepositoryImplTest {
             val mockResponse = PiHoleTopClientsCombinedResponseData(
                 all = listOf(
                     PiHoleTopClientData(name = "test", ip = "1.2.3.4", count = 5),
-                    PiHoleTopClientData(name = "other", ip = "1.2.3.5", count = 3),
+                    PiHoleTopClientData(name = "other", ip = "1.2.3.5", count = 3)
                 ),
                 blocked = emptyList()
             )

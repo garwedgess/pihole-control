@@ -72,7 +72,7 @@ object NetworkModule {
     @TokenRefreshOkHttpClient
     @Singleton
     fun provideOkHttpClient(
-        sessionIdAuthenticator: SessionIdAuthenticator,
+        sessionIdAuthenticator: SessionIdAuthenticator
     ): OkHttpClient = OkHttpClient
         .Builder()
         .authenticator(sessionIdAuthenticator)

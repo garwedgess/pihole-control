@@ -67,7 +67,7 @@ import kotlin.math.abs
 fun PiHoleControlApp(
     isDarkTheme: Boolean,
     useDynamicColors: Boolean,
-    viewModel: AppViewModel = hiltViewModel(),
+    viewModel: AppViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
@@ -163,7 +163,7 @@ fun PiHoleControlApp(
                     AnimatedVisibility(
                         visible = uiState.appBarState.bottomBarVisible,
                         enter = slideInVertically(initialOffsetY = { it }),
-                        exit = slideOutVertically(targetOffsetY = { it }),
+                        exit = slideOutVertically(targetOffsetY = { it })
                     ) {
                         BottomAppBar(
                             modifier = Modifier

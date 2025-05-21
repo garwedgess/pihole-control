@@ -67,7 +67,7 @@ fun SwipeToDeleteItem(
             positionalThreshold = { distance -> distance * 0.5f },
             velocityThreshold = { with(density) { 125.dp.toPx() } },
             snapAnimationSpec = tween(),
-            decayAnimationSpec = decayAnimationSpec,
+            decayAnimationSpec = decayAnimationSpec
         )
     }
 

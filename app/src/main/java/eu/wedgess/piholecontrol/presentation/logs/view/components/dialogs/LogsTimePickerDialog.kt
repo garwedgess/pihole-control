@@ -36,7 +36,7 @@ fun LogsTimePickerDialog(
     onConfirmTime: (Int, Int) -> Unit,
     onDismiss: () -> Unit,
     initialMinutes: Int = LocalDateTime.now().minute,
-    initialHour: Int = LocalDateTime.now().hour,
+    initialHour: Int = LocalDateTime.now().hour
 ) {
     val state = rememberTimePickerState(
         initialHour = initialHour,
@@ -47,14 +47,14 @@ fun LogsTimePickerDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false
-        ),
+        )
     ) {
         Surface(
             modifier = Modifier
                 .wrapContentWidth()
                 .wrapContentHeight(),
             shape = MaterialTheme.shapes.extraLarge,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),

@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
 @Composable
 fun LineChart(
     data: Iterable<LineChartInfo>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) = ProvideChartStyle(
     m3ChartStyle(entityColors = data.map { it.color() })
 ) {
@@ -78,8 +78,10 @@ fun LineChart(
             },
             guideline = null,
             valueFormatter = { value, chartValues ->
-                (chartValues.chartEntryModel.entries.firstOrNull()
-                    ?.find { it.x == value } as? LineChartEntry)?.xDisplayValue ?: value.toString()
+                (
+                    chartValues.chartEntryModel.entries.firstOrNull()
+                        ?.find { it.x == value } as? LineChartEntry
+                    )?.xDisplayValue ?: value.toString()
             }
         ),
         startAxis = rememberStartAxis(
@@ -111,7 +113,7 @@ private fun LineChartPreview() {
                             OverTimeEntity(1525546500, 84),
                             OverTimeEntity(1525547100, 154),
                             OverTimeEntity(1525547700, 50)
-                        ),
+                        )
                     ),
                     LineChartInfo.BlockedQueriesOverLineChart(
                         entity = listOf(

@@ -55,7 +55,7 @@ private fun QueriesOverTimeSectionPreview() {
                             OverTimeEntity(timestamp = 1734368700, hits = 250),
                             OverTimeEntity(timestamp = 1734369300, hits = 100),
                             OverTimeEntity(timestamp = 1734369900, hits = 192),
-                            OverTimeEntity(timestamp = 1734370500, hits = 192),
+                            OverTimeEntity(timestamp = 1734370500, hits = 192)
                         )
                     ),
                     blockedChartInfo = LineChartInfo.BlockedQueriesOverLineChart(

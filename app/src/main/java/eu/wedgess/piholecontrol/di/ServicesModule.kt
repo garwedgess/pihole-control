@@ -29,14 +29,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ServicesModule {
 
-
     @Provides
     @Singleton
     fun provideStatusApiService(
         @DefaultHttpClient defaultHttpClient: HttpClient,
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
     ): StatusApiService = StatusApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
-
 
     @Provides
     @Singleton
@@ -54,7 +52,6 @@ object ServicesModule {
     ): FilterRulesApiService =
         FilterRulesApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
-
     @Provides
     @Singleton
     fun provideLogsApi(
@@ -62,7 +59,6 @@ object ServicesModule {
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
     ): LogsApiService =
         LogsApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
-
 
     @Provides
     @Singleton

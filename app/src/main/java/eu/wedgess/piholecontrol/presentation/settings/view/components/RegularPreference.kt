@@ -26,7 +26,7 @@ fun RegularPreference(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     subtitle: String? = null,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     RegularPreferenceImpl(
         title = title,
@@ -34,7 +34,7 @@ fun RegularPreference(
         icon = icon,
         onClick = onClick,
         modifier = modifier,
-        enabled = enabled,
+        enabled = enabled
     )
 }
 
@@ -45,14 +45,14 @@ private fun RegularPreferenceImpl(
     modifier: Modifier = Modifier,
     subtitleAnnotatedString: AnnotatedString? = null,
     icon: ImageVector? = null,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable(
                 enabled = enabled,
-                onClick = onClick,
+                onClick = onClick
             )
             .padding(all = PiHoleControlTheme.dimens.padding.itemContentLarge),
         verticalAlignment = Alignment.CenterVertically
@@ -74,7 +74,7 @@ private fun RegularPreferenceImpl(
                     MaterialTheme.colorScheme.onSurface.copy(
                         alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
                     )
-                },
+                }
             )
 
             subtitleAnnotatedString?.let { subtitle ->
@@ -89,7 +89,7 @@ private fun RegularPreferenceImpl(
                         MaterialTheme.colorScheme.onSurface.copy(
                             alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
                         )
-                    },
+                    }
                 )
             }
         }
@@ -103,6 +103,6 @@ private fun RegularPreferencePreview() {
         title = "Advanced settings",
         subtitle = "Lorem ipsum dolor sit amet",
         icon = Icons.Default.Palette,
-        onClick = { },
+        onClick = { }
     )
 }

@@ -3,8 +3,6 @@ package eu.wedgess.piholecontrol.data.repository
 import TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.data.api.GroupApiService
-import eu.wedgess.piholecontrol.data.mappers.toEntity
-import eu.wedgess.piholecontrol.data.mappers.toGroupEntity
 import eu.wedgess.piholecontrol.data.mappers.toPiHoleGroupRequestData
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleGroupsResponseData
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
@@ -48,7 +46,7 @@ class GroupRepositoryImplTest {
                         enabled = true,
                         id = 1,
                         dateAdded = 12324324211L,
-                        dateModified = 12324324211L,
+                        dateModified = 12324324211L
                     )
                 )
             )

@@ -138,8 +138,9 @@ private fun DisableStatusDialogContent(
                     if (customTimeHours.text.isNotBlank() || customTimeMinutes.text.isNotBlank()) {
                         TimeUnit.HOURS.toMillis(customTimeHours.text.ifBlank { "00" }.toLong())
                             .plus(
-                                TimeUnit.MINUTES.toMillis(customTimeMinutes.text.ifBlank { "00" }
-                                    .toLong()
+                                TimeUnit.MINUTES.toMillis(
+                                    customTimeMinutes.text.ifBlank { "00" }
+                                        .toLong()
                                 )
                             )
                     } else {

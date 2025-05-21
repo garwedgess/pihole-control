@@ -63,7 +63,7 @@ private fun LogsListContentPreview() {
                         listId = null,
                         edeCode = -1,
                         edeText = null,
-                        cname = null,
+                        cname = null
                     )
                 },
                 liveLoggingEnabled = false,

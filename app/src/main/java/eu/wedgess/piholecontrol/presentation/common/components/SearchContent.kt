@@ -27,7 +27,7 @@ fun SearchContent(
     onQueryChange: (String) -> Unit,
     onExpandedChange: (Boolean) -> Unit,
     onClearSearchQuery: (String) -> Unit,
-    onSearch: ((String) -> Unit)? = null,
+    onSearch: ((String) -> Unit)? = null
 ) {
     val focusRequester = remember { FocusRequester() }
     val localKeyboardController = LocalSoftwareKeyboardController.current
@@ -56,7 +56,7 @@ fun SearchContent(
                     IconButton(onClick = { onClearSearchQuery(searchQuery) }) {
                         Icon(Icons.Default.Close, contentDescription = null)
                     }
-                },
+                }
             )
         },
         expanded = showSearchView,

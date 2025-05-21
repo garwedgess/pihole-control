@@ -30,7 +30,7 @@ fun <T> DropdownTextField(
     onValueChange: (Set<T>) -> Unit,
     valueFormatter: (T) -> String,
     modifier: Modifier = Modifier,
-    multiSelect: Boolean = false,
+    multiSelect: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -38,7 +38,7 @@ fun <T> DropdownTextField(
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
-        modifier = modifier,
+        modifier = modifier
     ) {
         OutlinedTextField(
             readOnly = true,
@@ -51,7 +51,7 @@ fun <T> DropdownTextField(
             colors = OutlinedTextFieldDefaults.colors(),
             modifier = Modifier
                 .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true)
-                .fillMaxWidth(),
+                .fillMaxWidth()
         )
 
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
@@ -67,7 +67,9 @@ fun <T> DropdownTextField(
                                 tint = Color(0xFF119955)
                             )
                         }
-                    } else null,
+                    } else {
+                        null
+                    },
                     onClick = {
                         val updatedSelection = if (multiSelect) {
                             if (isSelected) selectedValues - option else selectedValues + option

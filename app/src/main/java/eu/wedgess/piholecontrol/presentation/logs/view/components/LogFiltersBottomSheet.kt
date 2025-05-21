@@ -49,7 +49,7 @@ fun LogFiltersBottomSheet(
                     getStatusBarHeight()
                 )
             )
-            .padding(PiHoleControlTheme.dimens.padding.itemContent),
+            .padding(PiHoleControlTheme.dimens.padding.itemContent)
     ) {
         Column(
             modifier = Modifier

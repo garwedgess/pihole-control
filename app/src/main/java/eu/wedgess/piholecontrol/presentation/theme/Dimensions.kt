@@ -20,7 +20,7 @@ class Padding(
     val itemContentXSmall: Dp,
     val itemContentXXSmall: Dp,
     val itemContentLarge: Dp,
-    val itemContentXLarge: Dp,
+    val itemContentXLarge: Dp
 )
 
 class Size(
@@ -40,7 +40,7 @@ class Size(
     val timeButtonWidth: Dp,
     val listPercentageBarWidth: Dp,
     val statisticsTitleIcon: Dp,
-    val timeInputWidth: Dp,
+    val timeInputWidth: Dp
 ) {
     fun logsBottomSheetHeight(screenHeight: Dp, statusBarHeightDp: Dp): Dp =
         screenHeight.minus(
@@ -62,12 +62,12 @@ class Weight(
     val bottomNavUnselectedAlpha: Float,
     val secondaryTextAlpha: Float,
     val tertiaryTextAlpha: Float,
-    val disabledTextAlpha: Float,
+    val disabledTextAlpha: Float
 )
 
 class FontSize(
     val legendTitle: TextUnit,
-    val legendSubTitle: TextUnit,
+    val legendSubTitle: TextUnit
 )
 
 class AppDimens : Dimensions {

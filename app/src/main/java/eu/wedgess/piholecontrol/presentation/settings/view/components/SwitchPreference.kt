@@ -35,7 +35,7 @@ fun SwitchPreference(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     icon: ImageVector? = null,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     SwitchPreferenceImpl(
         title = title,
@@ -44,7 +44,7 @@ fun SwitchPreference(
         checked = checked,
         onCheckedChange = onCheckedChange,
         modifier = modifier,
-        enabled = enabled,
+        enabled = enabled
     )
 }
 
@@ -56,7 +56,7 @@ private fun SwitchPreferenceImpl(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -68,9 +68,9 @@ private fun SwitchPreferenceImpl(
                 interactionSource = interactionSource,
                 indication = LocalIndication.current,
                 enabled = enabled,
-                onClick = { onCheckedChange(!checked) },
+                onClick = { onCheckedChange(!checked) }
             )
-            .padding(all = 16.dp),
+            .padding(all = 16.dp)
     ) {
         icon?.run {
             Icon(
@@ -80,7 +80,7 @@ private fun SwitchPreferenceImpl(
         }
 
         Column(
-            modifier = Modifier.weight(weight = 1f, fill = true).padding(start = if (icon != null) 16.dp else 0.dp),
+            modifier = Modifier.weight(weight = 1f, fill = true).padding(start = if (icon != null) 16.dp else 0.dp)
         ) {
             Text(
                 text = title,
@@ -91,7 +91,7 @@ private fun SwitchPreferenceImpl(
                     MaterialTheme.colorScheme.onSurface.copy(
                         alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
                     )
-                },
+                }
             )
 
             annotatedSubtitle?.run {
@@ -106,7 +106,7 @@ private fun SwitchPreferenceImpl(
                         MaterialTheme.colorScheme.onSurface.copy(
                             alpha = PiHoleControlTheme.dimens.weight.disabledTextAlpha
                         )
-                    },
+                    }
                 )
             }
         }
@@ -114,7 +114,7 @@ private fun SwitchPreferenceImpl(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            interactionSource = interactionSource,
+            interactionSource = interactionSource
         )
     }
 }

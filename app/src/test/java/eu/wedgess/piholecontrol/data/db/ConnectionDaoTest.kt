@@ -34,7 +34,9 @@ class ConnectionDaoTest {
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         driver = AndroidSqliteDriver(
-            PiHoleControlDatabase.Schema, context, null
+            PiHoleControlDatabase.Schema,
+            context,
+            null
         )
         database = PiHoleControlDatabase(
             driver = driver,

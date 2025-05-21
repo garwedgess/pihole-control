@@ -107,7 +107,6 @@ class ModifyConnectionViewModel @Inject constructor(
                     copy(basicAuthPasswordVisible = event.visible)
                 }
             }
-
         }
     }
 
@@ -192,17 +191,20 @@ class ModifyConnectionViewModel @Inject constructor(
     private fun onPortChanged(port: String) {
         val portNumber = port.toIntOrNull()
         val (validatedPort, portError) = when {
-            port.isEmpty() -> port to
+            port.isEmpty() ->
+                port to
                     ConnectionInputError.Port(
                         UiText.StringResource(R.string.connection_port_error_blank)
                     )
 
-            !port.isDigitsOnly() -> "" to
+            !port.isDigitsOnly() ->
+                "" to
                     ConnectionInputError.Port(
                         UiText.StringResource(R.string.connection_port_error_invalid)
                     )
 
-            portNumber !in 1..65535 -> "" to
+            portNumber !in 1..65535 ->
+                "" to
                     ConnectionInputError.Port(
                         UiText.StringResource(R.string.connection_port_error_range)
                     )

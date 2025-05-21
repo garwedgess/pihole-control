@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleUpstreamStatisticsData
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleUpstreamData
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleUpstreamStatisticsData
 import eu.wedgess.piholecontrol.data.model.responses.UpstreamDestinationsWithPercentages
 import eu.wedgess.piholecontrol.domain.model.UpstreamDestinationEntity
 import org.junit.Test

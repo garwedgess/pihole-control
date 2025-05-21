@@ -40,14 +40,14 @@ fun LogsTopBarActions(
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.Sort,
                 contentDescription = "sort",
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
         IconButton(onClick = onSearchClick) {
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = "search",
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
         DropdownMenu(expanded = isSortingMenuVisible, onDismissRequest = onDismissSort) {

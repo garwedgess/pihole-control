@@ -57,7 +57,7 @@ private fun ClientQueriesOverTimeSectionPreview() {
                                 OverTimeEntity(timestamp = 1734368700, hits = 25),
                                 OverTimeEntity(timestamp = 1734369300, hits = 0),
                                 OverTimeEntity(timestamp = 1734369900, hits = 92),
-                                OverTimeEntity(timestamp = 1734370500, hits = 81),
+                                OverTimeEntity(timestamp = 1734370500, hits = 81)
                             )
                         )
                     ),
@@ -71,7 +71,7 @@ private fun ClientQueriesOverTimeSectionPreview() {
                                 OverTimeEntity(timestamp = 1734368700, hits = 250),
                                 OverTimeEntity(timestamp = 1734369300, hits = 100),
                                 OverTimeEntity(timestamp = 1734369900, hits = 92),
-                                OverTimeEntity(timestamp = 1734370500, hits = 81),
+                                OverTimeEntity(timestamp = 1734370500, hits = 81)
                             )
                         )
                     )

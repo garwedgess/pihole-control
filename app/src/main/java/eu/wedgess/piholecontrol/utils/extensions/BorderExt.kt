@@ -20,7 +20,7 @@ fun Modifier.border(
     start: Border? = null,
     top: Border? = null,
     end: Border? = null,
-    bottom: Border? = null,
+    bottom: Border? = null
 ) =
     drawBehind {
         start?.run {

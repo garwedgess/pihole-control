@@ -40,7 +40,7 @@ class SetConnectionAsActiveUseCaseTest {
         val connectionId = UUID.randomUUID()
         val exception = Exception("Failed to set connection as active")
         coEvery { repository.setActiveById(connectionId) } returns
-                Result.failure(exception)
+            Result.failure(exception)
 
         val result = setConnectionAsActiveUseCase(connectionId)
 

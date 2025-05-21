@@ -237,10 +237,10 @@ class ConnectionsViewModelTest {
             // Then
             viewModel.sideEffect.test {
                 assertThat(awaitItem()).isEqualTo(
-                        ConnectionsContract.Effect.Navigation.Edit(
-                            connectionId
-                        )
+                    ConnectionsContract.Effect.Navigation.Edit(
+                        connectionId
                     )
+                )
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -327,8 +327,8 @@ class ConnectionsViewModelTest {
             viewModel.sideEffect.test {
                 val sideEffect = awaitItem()
                 assertThat(sideEffect).isInstanceOf(
-                        ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed::class.java
-                    )
+                    ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed::class.java
+                )
                 (sideEffect as ConnectionsContract.Effect.Snackbar.SetActiveConnectionFailed).run {
                     assertThat(id).isEqualTo(connectionId)
                     assertThat(name).isEqualTo(connectionName)
@@ -369,8 +369,8 @@ class ConnectionsViewModelTest {
             viewModel.sideEffect.test {
                 val sideEffect = awaitItem()
                 assertThat(sideEffect).isInstanceOf(
-                        ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
-                    )
+                    ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
+                )
                 assertThat(
                     (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).name
                 ).isEqualTo(connectionName)
@@ -408,8 +408,8 @@ class ConnectionsViewModelTest {
                 val sideEffect = awaitItem()
                 assertThat(sideEffect).isInstanceOf(ConnectionsContract.Effect.Snackbar.DeleteConnection::class.java)
                 assertThat((sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnection).id).isEqualTo(
-                        connectionId
-                    )
+                    connectionId
+                )
                 assertThat(sideEffect.name).isEqualTo(connectionName)
                 cancelAndConsumeRemainingEvents()
             }
@@ -442,8 +442,8 @@ class ConnectionsViewModelTest {
             viewModel.sideEffect.test {
                 val sideEffect = awaitItem()
                 assertThat(sideEffect).isInstanceOf(
-                        ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
-                    )
+                    ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed::class.java
+                )
                 assertThat(
                     (sideEffect as ConnectionsContract.Effect.Snackbar.DeleteConnectionFailed).message
                 ).isInstanceOf(UiText.StringResourceWithArgs::class.java)
@@ -483,8 +483,8 @@ class ConnectionsViewModelTest {
             viewModel.sideEffect.test {
                 val sideEffect = awaitItem()
                 assertThat(sideEffect).isInstanceOf(
-                        ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed::class.java
-                    )
+                    ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed::class.java
+                )
                 assertThat(
                     (sideEffect as ConnectionsContract.Effect.Snackbar.RestoreConnectionFailed).id
                 ).isEqualTo(connectionId)

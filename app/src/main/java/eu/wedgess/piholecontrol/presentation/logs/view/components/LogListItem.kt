@@ -137,7 +137,7 @@ private class LogListItemPreviewProvider : PreviewParameterProvider<LogEntryInfo
                 listId = null,
                 edeCode = -1,
                 edeText = null,
-                cname = null,
+                cname = null
             )
         }
 }

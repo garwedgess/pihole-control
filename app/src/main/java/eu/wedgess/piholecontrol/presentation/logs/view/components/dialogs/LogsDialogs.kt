@@ -33,7 +33,8 @@ fun LogsDialogs(dialogType: LogsDialogType, onEvent: (LogsContract.Event) -> Uni
             onConfirmTime = { hours, minutes ->
                 onEvent(
                     LogsContract.Event.OnTimeConfirmed(
-                        dialogType.pickerType, dialogType.currentDate.atTime(hours, minutes)
+                        dialogType.pickerType,
+                        dialogType.currentDate.atTime(hours, minutes)
                     )
                 )
             }
@@ -76,9 +77,9 @@ private class LogsDialogsPreviewParameters : PreviewParameterProvider<LogsDialog
                     listId = null,
                     edeCode = -1,
                     edeText = null,
-                    cname = null,
+                    cname = null
                 )
             ),
-            LogsDialogType.ShowDatePickerDialog(pickerType = PickerType.ToTime),
+            LogsDialogType.ShowDatePickerDialog(pickerType = PickerType.ToTime)
         )
 }

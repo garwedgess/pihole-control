@@ -159,7 +159,7 @@ private suspend fun LogsContract.Effect.Snackbar.handleDisplayingSnackbar(
     snackbarHostState: SnackbarHostState,
     context: Context,
     onRetryAddToAllowList: (String) -> Unit,
-    onRetryAddToDenyList: (String) -> Unit,
+    onRetryAddToDenyList: (String) -> Unit
 ) {
     val actionLabel = if (
         this is LogsContract.Effect.Snackbar.AddDomainToAllowListFailed ||

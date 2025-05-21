@@ -21,8 +21,8 @@ import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import java.util.UUID
-import kotlin.Result.Companion.success
 import kotlin.Result.Companion.failure
+import kotlin.Result.Companion.success
 
 class SessionIdAuthenticatorTest {
 

@@ -61,7 +61,7 @@ fun TimeTextField(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
             .width(PiHoleControlTheme.dimens.size.timeInputWidth)
-            .onFocusChanged { focusState = it },
+            .onFocusChanged { focusState = it }
     )
 }
 
@@ -105,5 +105,7 @@ private fun timeInputOnChange(
 }
 
 enum class TimePickerType(val max: Int) {
-    Hours(99), Minutes(60), Seconds(60)
+    Hours(99),
+    Minutes(60),
+    Seconds(60)
 }

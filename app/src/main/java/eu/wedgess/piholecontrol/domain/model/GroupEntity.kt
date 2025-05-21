@@ -6,5 +6,5 @@ data class GroupEntity(
     val enabled: Boolean,
     val id: Int,
     val dateAdded: String,
-    val dateModified: String,
+    val dateModified: String
 )

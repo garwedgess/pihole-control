@@ -8,5 +8,5 @@ data class LogFilterSuggestionsEntity(
     val queryTypes: List<String>,
     val statuses: List<String>,
     val replyTypes: List<String>,
-    val dnsSecs: List<String>,
+    val dnsSecs: List<String>
 )

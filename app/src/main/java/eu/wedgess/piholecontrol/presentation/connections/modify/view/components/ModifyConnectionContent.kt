@@ -38,7 +38,6 @@ fun ModifyConnectionContent(
         modifier = Modifier.verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(PiHoleControlTheme.dimens.padding.itemContent)
     ) {
-
         ModifyConnectionTextField(
             label = stringResource(R.string.modify_connection_label_name),
             value = uiState.name,
@@ -162,6 +161,6 @@ private class ModifyConnectionContentPreviewParams :
             },
             with(ConnectionEntity.default) {
                 ModifyConnectionsContract.UiState.initial(this).copy(currentConnection = this)
-            },
+            }
         )
 }

@@ -25,7 +25,7 @@ class ConnectionMapperTest {
             Active = true,
             Sid = "session-id",
             Password = "password",
-            ApiPath = "/api",
+            ApiPath = "/api"
         )
 
         val connectionEntity = connection.toEntity()
@@ -49,7 +49,7 @@ class ConnectionMapperTest {
             Active = true,
             Sid = "session-id",
             Password = "password",
-            ApiPath = "/api",
+            ApiPath = "/api"
         )
 
         val connectionEntity = connection.toEntity()

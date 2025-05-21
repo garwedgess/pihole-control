@@ -4,7 +4,6 @@ import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
-import eu.wedgess.piholecontrol.utils.extensions.resultOf
 import javax.inject.Inject
 
 class RemoveFilterRuleUseCase @Inject constructor(

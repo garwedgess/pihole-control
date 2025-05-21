@@ -22,7 +22,7 @@ import org.threeten.bp.ZoneOffset
 fun LogsDatePickerDialog(
     onDismiss: () -> Unit,
     onConfirm: (date: LocalDate) -> Unit,
-    selectedDate: LocalDate? = null,
+    selectedDate: LocalDate? = null
 ) {
     val state = rememberDatePickerState(
         selectableDates = PastOrPresentSelectableDates,

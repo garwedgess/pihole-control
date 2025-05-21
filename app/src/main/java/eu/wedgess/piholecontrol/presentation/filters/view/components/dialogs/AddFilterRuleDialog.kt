@@ -67,7 +67,7 @@ private fun AddFilterRuleDialogContent(
     groups: List<GroupEntity>,
     onConfirmClick: (ModifyFilterRule.Add) -> Unit,
     onCancelClick: () -> Unit,
-    focusRequester: FocusRequester = remember { FocusRequester() },
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
     var isWildcardChecked by remember {
         mutableStateOf(false)

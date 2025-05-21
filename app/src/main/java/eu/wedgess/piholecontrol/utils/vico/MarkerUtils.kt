@@ -39,7 +39,7 @@ fun rememberMarker(): Marker {
         ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
             radius = LABEL_BACKGROUND_SHADOW_RADIUS,
             dy = LABEL_BACKGROUND_SHADOW_DY,
-            applyElevationOverlay = true,
+            applyElevationOverlay = true
         )
     }
     val label = textComponent(
@@ -47,7 +47,7 @@ fun rememberMarker(): Marker {
         background = labelBackground,
         lineCount = LABEL_LINE_COUNT,
         padding = labelPadding,
-        typeface = Typeface.MONOSPACE,
+        typeface = Typeface.MONOSPACE
     )
     val indicatorInnerComponent =
         shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.surface)
@@ -58,14 +58,14 @@ fun rememberMarker(): Marker {
         inner = overlayingComponent(
             outer = indicatorCenterComponent,
             inner = indicatorInnerComponent,
-            innerPaddingAll = indicatorInnerAndCenterComponentPaddingValue,
+            innerPaddingAll = indicatorInnerAndCenterComponentPaddingValue
         ),
-        innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue,
+        innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue
     )
     val guideline = lineComponent(
         MaterialTheme.colorScheme.onSurface.copy(GUIDELINE_ALPHA),
         guidelineThickness,
-        guidelineShape,
+        guidelineShape
     )
     return remember(label, indicator, guideline) {
         object : MarkerComponent(label, indicator, guideline) {
@@ -77,7 +77,8 @@ fun rememberMarker(): Marker {
                     with(indicatorCenterComponent) {
                         color = entryColor
                         setShadow(
-                            radius = INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS, color = entryColor
+                            radius = INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS,
+                            color = entryColor
                         )
                     }
                 }
@@ -89,10 +90,10 @@ fun rememberMarker(): Marker {
                 horizontalDimensions: HorizontalDimensions
             ) = with(context) {
                 outInsets.top = label.getHeight(context) +
-                        labelBackgroundShape.tickSizeDp.pixels +
-                        LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
-                        SHADOW_RADIUS_MULTIPLIER -
-                        LABEL_BACKGROUND_SHADOW_DY.pixels
+                    labelBackgroundShape.tickSizeDp.pixels +
+                    LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
+                    SHADOW_RADIUS_MULTIPLIER -
+                    LABEL_BACKGROUND_SHADOW_DY.pixels
             }
         }.apply {
             labelFormatter = object : MarkerLabelFormatter {
@@ -110,17 +111,17 @@ fun rememberMarker(): Marker {
                             else -> PATTERN.format(entry.x)
                         } + if (markedEntries.size > 1) " (" else " ",
                         postfix = if (markedEntries.size > 1) ")" else "",
-                        separator = " : ",
+                        separator = " : "
                     ) { model ->
                         appendCompat(
                             when (val entry = model.entry) {
                                 is LineChartEntry -> PATTERN.format(model.entry.y) +
-                                        (entry.yLabel?.let { " $it" } ?: "")
+                                    (entry.yLabel?.let { " $it" } ?: "")
 
                                 else -> PATTERN.format(model.entry.y)
                             },
                             ForegroundColorSpan(model.color),
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
                 }

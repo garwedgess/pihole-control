@@ -21,7 +21,7 @@ fun TimePickerLayout(
     onClearFromTime: () -> Unit,
     onClearToTime: () -> Unit,
     fromTime: Long? = null,
-    toTime: Long? = null,
+    toTime: Long? = null
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),

@@ -36,7 +36,7 @@ class StatusRepositoryImplTest {
     fun `fetchStatus - api fetchStatus is invoked AND result is success`() = runTest {
         val activeConnection = mockk<ConnectionEntity>(relaxed = true)
         coEvery { apiServiceV6.fetchStatus(activeConnection) } returns
-                Result.success(mockk(relaxed = true))
+            Result.success(mockk(relaxed = true))
 
         val result = target.fetchStatus(activeConnection)
 

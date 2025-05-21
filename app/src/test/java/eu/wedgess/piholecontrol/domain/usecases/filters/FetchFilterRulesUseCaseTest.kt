@@ -69,7 +69,7 @@ class FetchFilterRulesUseCaseTest {
         val regexRulesException = Exception("Failed to fetch regex rules")
 
         coEvery { fetchFilterRuleUseCase(connection, FilterRuleTypeEntity.DENY) } returns
-                Result.failure(regexRulesException)
+            Result.failure(regexRulesException)
         coEvery { periodicRefreshUseCase<List<FilterRuleEntity>>(any()) } answers {
             flow {
                 val fetchBlock =

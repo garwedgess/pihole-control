@@ -56,7 +56,7 @@ class FetchLogsUseCaseTest {
                 until = any()
             )
         } returns
-                Result.success(logEntries)
+            Result.success(logEntries)
 
         coEvery { periodicRefreshUseCase<List<PiHoleLogsEntity>>(any()) } answers {
             val fetchData = arg<suspend (ConnectionEntity) -> Result<List<PiHoleLogsEntity>>>(0)

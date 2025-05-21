@@ -28,7 +28,7 @@ fun <T> DropDownPreference(
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
     var dropDownExpanded by remember { mutableStateOf(value = false) }
 
@@ -47,14 +47,14 @@ fun <T> DropDownPreference(
                     Color.Unspecified
                 }
             ),
-        enabled = enabled,
+        enabled = enabled
     )
 
     Box {
         DropdownMenu(
             modifier = Modifier.fillMaxWidth(),
             expanded = dropDownExpanded,
-            onDismissRequest = { dropDownExpanded = !dropDownExpanded },
+            onDismissRequest = { dropDownExpanded = !dropDownExpanded }
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
@@ -74,7 +74,7 @@ fun <T> DropDownPreference(
                     text = {
                         Text(
                             text = item.second,
-                            overflow = TextOverflow.Ellipsis,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 )
@@ -89,7 +89,7 @@ private fun DropDownPreferencePreview() {
     val themes = listOf(
         "system" to "System default",
         "light" to "Light",
-        "dark" to "Dark",
+        "dark" to "Dark"
     )
     var selectedTheme by remember { mutableStateOf(value = themes.first().first) }
 
@@ -98,6 +98,6 @@ private fun DropDownPreferencePreview() {
         icon = Icons.Default.Palette,
         items = themes,
         selectedItem = selectedTheme,
-        onItemClick = { },
+        onItemClick = { }
     )
 }

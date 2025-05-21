@@ -24,6 +24,6 @@ data class PiHoleLogSuggestionsResponseData(
         @SerialName("reply")
         val replyTypes: List<String>,
         @SerialName("dnssec")
-        val dnsSecs: List<String>,
+        val dnsSecs: List<String>
     )
 }

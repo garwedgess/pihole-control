@@ -16,7 +16,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 fun FilterListContent(
     filtersList: List<FilterRuleInfo>,
     onFilterRuleClick: (FilterRuleInfo) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),

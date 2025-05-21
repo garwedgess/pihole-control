@@ -32,7 +32,7 @@ private fun LegendGridPreview() {
         listOf(
             LegendData(
                 title = "Title1 that is really long and does not fit",
-                subTitle = "Subtitle1 long",
+                subTitle = "Subtitle1 long"
             ),
             LegendData(
                 title = "Title2",

@@ -52,7 +52,7 @@ class AppViewModel @Inject constructor(
             appBarState = uiState.appBarState.copy(
                 adBlockingEnabled = appInfo.status == StatusEntity.ENABLED,
                 currentConnection = appInfo.currentConnection,
-                connections = appInfo.connections,
+                connections = appInfo.connections
             )
         )
     }

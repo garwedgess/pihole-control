@@ -70,7 +70,8 @@ fun PasswordTextField(
             IconButton(onClick = { onVisibilityChanged(!inputVisible) }) {
                 Icon(
                     imageVector = image,
-                    contentDescription = if (inputVisible) "Hide" else "Show")
+                    contentDescription = if (inputVisible) "Hide" else "Show"
+                )
             }
         },
         supportingText = {
@@ -156,7 +157,7 @@ private class PasswordTextFieldPreviewParams : PreviewParameterProvider<Password
                 label = "Password",
                 value = "password",
                 visible = false,
-                error = null,
+                error = null
             ),
             PasswordTextFieldParams(
                 label = "Password",
@@ -168,8 +169,7 @@ private class PasswordTextFieldPreviewParams : PreviewParameterProvider<Password
                 label = "Password",
                 value = "password",
                 visible = false,
-                error = ConnectionInputError.Password(UiText.DynamicString("Password cannot be blank")),
+                error = ConnectionInputError.Password(UiText.DynamicString("Password cannot be blank"))
             )
         )
-
 }

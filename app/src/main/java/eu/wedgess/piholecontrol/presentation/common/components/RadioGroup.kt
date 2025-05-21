@@ -31,7 +31,7 @@ fun <T> RadioGroup(
     labelFormatter: @Composable (T) -> String,
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center
 ) {
     Row(modifier = modifier.wrapContentWidth(), horizontalArrangement = horizontalArrangement) {
         itemsList.forEachIndexed { index, item ->

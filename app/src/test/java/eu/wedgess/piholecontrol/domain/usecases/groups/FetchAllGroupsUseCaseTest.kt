@@ -39,7 +39,7 @@ class FetchAllGroupsUseCaseTest {
                 mockk<GroupEntity>(relaxed = true),
                 mockk<GroupEntity>(relaxed = true)
             )
-            
+
             coEvery { connectionRepository.fetchActive() } returns Result.success(activeConnection)
             coEvery { groupRepository.fetchAllGroups(activeConnection) } returns Result.success(groups)
 
@@ -52,7 +52,7 @@ class FetchAllGroupsUseCaseTest {
             assertThat(resultGroups).isNotNull()
             assertThat(resultGroups).hasSize(2)
             assertThat(resultGroups).isEqualTo(groups)
-            
+
             coVerify { connectionRepository.fetchActive() }
             coVerify { groupRepository.fetchAllGroups(activeConnection) }
         }
@@ -63,7 +63,7 @@ class FetchAllGroupsUseCaseTest {
             // Arrange
             val activeConnection = mockk<ConnectionEntity>(relaxed = true)
             val exception = RuntimeException("Failed to fetch groups")
-            
+
             coEvery { connectionRepository.fetchActive() } returns Result.success(activeConnection)
             coEvery { groupRepository.fetchAllGroups(activeConnection) } returns Result.failure(exception)
 
@@ -73,7 +73,7 @@ class FetchAllGroupsUseCaseTest {
             // Assert
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
-            
+
             coVerify { connectionRepository.fetchActive() }
             coVerify { groupRepository.fetchAllGroups(activeConnection) }
         }
@@ -83,7 +83,7 @@ class FetchAllGroupsUseCaseTest {
         runTest {
             // Arrange
             val exception = RuntimeException("No active connection found")
-            
+
             coEvery { connectionRepository.fetchActive() } returns Result.failure(exception)
 
             // Act
@@ -92,7 +92,7 @@ class FetchAllGroupsUseCaseTest {
             // Assert
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
-            
+
             coVerify { connectionRepository.fetchActive() }
             coVerify(exactly = 0) { groupRepository.fetchAllGroups(any()) }
         }

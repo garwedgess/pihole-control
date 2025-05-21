@@ -36,5 +36,4 @@ class GroupRepositoryImpl @Inject constructor(
         withContext(dispatcherProvider.io) {
             api.deleteGroup(connection, name)
         }
-
 }

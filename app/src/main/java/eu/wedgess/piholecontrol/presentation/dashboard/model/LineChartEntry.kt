@@ -8,7 +8,7 @@ class LineChartEntry(
     val xDisplayValue: String? = null,
     val yDisplayValue: String? = null,
     val xLabel: String? = null,
-    val yLabel: String? = null,
+    val yLabel: String? = null
 ) : ChartEntry {
     override fun withY(y: Float): ChartEntry =
         LineChartEntry(x, y, xDisplayValue, yDisplayValue, xLabel, yLabel)

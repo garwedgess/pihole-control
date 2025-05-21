@@ -5,7 +5,7 @@ import kotlin.math.floor
 
 data class PiHoleTopClientsCombinedResponseData(
     val all: List<PiHoleTopClientData>,
-    val blocked: List<PiHoleTopClientData>,
+    val blocked: List<PiHoleTopClientData>
 ) {
     val allWithPercentages: List<TopClientData>
         get() = calculateWithPercentages(all)

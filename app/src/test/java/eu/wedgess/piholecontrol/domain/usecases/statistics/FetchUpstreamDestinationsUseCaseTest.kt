@@ -50,7 +50,7 @@ class FetchUpstreamDestinationsUseCaseTest {
             destinations
         )
         coEvery { periodicRefreshUseCase<List<UpstreamDestinationsChartData>>(any()) } returns
-                flowOf(expectedResult)
+            flowOf(expectedResult)
 
         target().test {
             assertThat(awaitItem()).isEqualTo(expectedResult)

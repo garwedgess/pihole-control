@@ -16,6 +16,7 @@ class DonutChartState(
         }
 
     enum class State {
-        Selected, Unselected
+        Selected,
+        Unselected
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
-import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.groups.FetchAllGroupsUseCase
@@ -114,7 +113,7 @@ class FiltersViewModel @Inject constructor(
                     is FilterTab.DenyList -> denySelectedFilterBy
                 },
                 option = option,
-                availableOptions = filterByOptions,
+                availableOptions = filterByOptions
             )
             when (currentTabType) {
                 is FilterTab.AllowList -> copy(

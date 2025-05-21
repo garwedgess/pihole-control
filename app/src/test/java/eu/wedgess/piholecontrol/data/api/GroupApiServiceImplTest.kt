@@ -1,10 +1,7 @@
 package eu.wedgess.piholecontrol.data.api
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.api.fakes.FiltersMockHttpClient
 import eu.wedgess.piholecontrol.data.api.fakes.GroupsMockHttpClient
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
-import eu.wedgess.piholecontrol.data.model.requests.PiHoleAddFilterRuleRequestData
 import eu.wedgess.piholecontrol.data.model.requests.PiHoleGroupRequestData
 import eu.wedgess.piholecontrol.data.model.responses.ApiErrorResponse
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleErrorResponseData

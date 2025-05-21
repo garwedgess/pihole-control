@@ -68,5 +68,5 @@ data class LogEntryInfo(
     val isBlocked: Boolean = this.status.category == LogAnswerCategoryEntity.BLOCK
 
     val isAllowed: Boolean = this.status.category == LogAnswerCategoryEntity.ALLOW ||
-            this.status.category == LogAnswerCategoryEntity.CACHE
+        this.status.category == LogAnswerCategoryEntity.CACHE
 }

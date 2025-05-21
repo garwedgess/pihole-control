@@ -13,7 +13,7 @@ import eu.wedgess.piholecontrol.presentation.settings.navigation.settingsRoot
 @ExperimentalGetImage
 fun NavGraphBuilder.settingsNavigationGraph(
     navHostController: NavHostController,
-    onComposing: (AppBarState) -> Unit,
+    onComposing: (AppBarState) -> Unit
 ) {
     navigation<Graphs.Settings>(
         startDestination = Screens.Settings

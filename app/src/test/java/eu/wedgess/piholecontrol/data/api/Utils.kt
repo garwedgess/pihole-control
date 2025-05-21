@@ -22,5 +22,5 @@ fun ConnectionEntity.toConnection() = Connection(
     AuthRealm = this.authRealm,
     TrustAllCerts = this.trustAllCerts,
     IsDeleted = this.isDeleted,
-    Active = this.isActive,
+    Active = this.isActive
 )

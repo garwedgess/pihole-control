@@ -125,7 +125,7 @@ fun DonutChart(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 24.dp),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Canvas(
             modifier = Modifier
@@ -167,7 +167,7 @@ fun DonutChart(
                     val animatedPercentage = animatedPercentages[ind].value
                     // Calculate sweep angle using total percentage for smoother transitions
                     val sweepAngle = (animatedPercentage / totalPercentage) *
-                            (360f - (data.items.size * gapAngle))
+                        (360f - (data.items.size * gapAngle))
 
                     anglesList.add(DrawingAngles(lastAngle, sweepAngle))
                     val strokeWidth = animValues[ind].value.toPx()
@@ -221,9 +221,9 @@ fun DonutChart(
                         color = Color.White,
                         topLeft = Offset(
                             x = -textCenter.x + center.x +
-                                    ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
+                                ((size.width - defaultStrokeWidth) / 2) * cos(angleInRadians),
                             y = -textCenter.y + center.y +
-                                    ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
+                                ((size.height - defaultStrokeWidth) / 2) * sin(angleInRadians)
                         )
                     )
 
@@ -243,7 +243,7 @@ private fun handleCanvasTap(
     currentStrokeValues: List<Float>,
     onItemSelected: (Int) -> Unit = {},
     onItemDeselected: (Int) -> Unit = {},
-    onNoItemSelected: () -> Unit = {},
+    onNoItemSelected: () -> Unit = {}
 ) {
     val normalized = tapOffset.findNormalizedPointFromTouch(center)
     val touchAngle =
@@ -288,7 +288,7 @@ private fun DonutChartPreview() {
                 QueryTypeChartData(percentage = 10f, title = "A"),
                 QueryTypeChartData(percentage = 20f, title = "B"),
                 QueryTypeChartData(percentage = 50f, title = "C")
-            ),
+            )
         ),
         onSelectedIndexChange = {}
     )

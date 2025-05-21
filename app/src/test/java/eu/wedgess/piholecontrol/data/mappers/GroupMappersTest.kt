@@ -91,7 +91,7 @@ class GroupMappersTest {
                 errors = emptyList()
             ),
             groups = emptyList(),
-            took = 0.123123123123,
+            took = 0.123123123123
         )
 
         // Act
@@ -116,7 +116,7 @@ class GroupMappersTest {
                 errors = listOf(errorItem)
             ),
             groups = emptyList(),
-            took = 0.123123123123,
+            took = 0.123123123123
         )
 
         // Act
@@ -134,7 +134,7 @@ class GroupMappersTest {
         val responseData = PiHoleModifyGroupResponseData(
             processed = null,
             groups = emptyList(),
-            took = 0.123123123123,
+            took = 0.123123123123
         )
 
         // Act
@@ -158,7 +158,7 @@ class GroupMappersTest {
                 errors = emptyList()
             ),
             groups = emptyList(),
-            took = 0.123123123123,
+            took = 0.123123123123
         )
 
         // Act
@@ -182,7 +182,7 @@ class GroupMappersTest {
                 errors = errorItems
             ),
             groups = emptyList(),
-            took = 0.123123123123,
+            took = 0.123123123123
         )
 
         // Act

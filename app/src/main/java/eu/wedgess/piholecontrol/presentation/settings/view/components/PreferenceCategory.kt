@@ -11,7 +11,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun PreferenceCategory(
     title: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Text(
         text = title,
@@ -20,10 +20,10 @@ fun PreferenceCategory(
                 start = PiHoleControlTheme.dimens.padding.itemContentLarge,
                 top = PiHoleControlTheme.dimens.padding.itemContentXLarge,
                 end = PiHoleControlTheme.dimens.padding.itemContentLarge,
-                bottom = PiHoleControlTheme.dimens.padding.itemContent,
+                bottom = PiHoleControlTheme.dimens.padding.itemContent
             ),
         color = MaterialTheme.colorScheme.primary,
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.titleMedium
     )
 }
 

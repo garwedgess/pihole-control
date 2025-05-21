@@ -21,7 +21,6 @@ class FetchLogFilterSuggestionsUseCase @Inject constructor(
                     Result.failure(error)
                 }
             )
-
         }
     }
 }

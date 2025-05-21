@@ -3,8 +3,8 @@ package eu.wedgess.piholecontrol.data.api
 import eu.wedgess.piholecontrol.data.extensions.fetchBaseRequestInfo
 import eu.wedgess.piholecontrol.data.model.enums.PiHoleFilterRuleType
 import eu.wedgess.piholecontrol.data.model.requests.PiHoleAddFilterRuleRequestData
-import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleAddFilterRuleResponseData
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleApiResult
 import eu.wedgess.piholecontrol.data.model.responses.PiHoleFilterRulesResponseData
 import eu.wedgess.piholecontrol.data.utils.requestResult
 import eu.wedgess.piholecontrol.di.annotations.DefaultHttpClient
