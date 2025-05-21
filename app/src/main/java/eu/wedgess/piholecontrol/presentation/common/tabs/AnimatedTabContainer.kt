@@ -1,5 +1,7 @@
 package eu.wedgess.piholecontrol.presentation.common.tabs
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -13,9 +15,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.util.lerp
 import eu.wedgess.piholecontrol.presentation.base.TabItem
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 @Composable
 fun <T : TabItem> AnimatedTabContainer(
@@ -30,7 +35,7 @@ fun <T : TabItem> AnimatedTabContainer(
     })
 
     LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.settledPage }
+        snapshotFlow { pagerState.currentPage }
             .distinctUntilChanged()
             .collect { page ->
                 onTabIndexChange?.invoke(page)
@@ -45,7 +50,12 @@ fun <T : TabItem> AnimatedTabContainer(
                 Tab(
                     selected = index == pagerState.currentPage,
                     onClick = {
-                        scope.launch { pagerState.animateScrollToPage(index) }
+                        scope.launch {
+                            pagerState.animateScrollToPage(
+                                index,
+                                animationSpec = tween(durationMillis = 500)
+                            )
+                        }
                     },
                     text = { Text(tab.title.asString()) },
                     icon = {
@@ -58,7 +68,32 @@ fun <T : TabItem> AnimatedTabContainer(
             }
         }
         HorizontalPager(state = pagerState) { page ->
-            onTabSelected(tabItems[page])
+            val pageOffset = (
+                (pagerState.currentPage - page) + pagerState
+                    .currentPageOffsetFraction
+                ).absoluteValue
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        val scale = lerp(
+                            start = 0.85f,
+                            stop = 1f,
+                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                        )
+                        scaleX = scale
+                        scaleY = scale
+
+                        alpha = lerp(
+                            start = 0.5f,
+                            stop = 1f,
+                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                        )
+                    }
+            ) {
+                onTabSelected(tabItems[page])
+            }
         }
     }
 }
