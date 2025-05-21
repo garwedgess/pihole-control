@@ -18,12 +18,6 @@ fun ModifyConnectionDialogs(
 ) {
     when (dialogType) {
         ModifyConnectionDialogType.None -> Unit
-        is ModifyConnectionDialogType.ApiTokenScanner -> ApiTokenScannerDialog(
-            barcodeScanner = dialogType.barcodeScanner,
-            onDismiss = { onEvent(ModifyConnectionsContract.Event.OnDismissDialog) },
-            onApiTokenScanFailed = { },
-            onApiTokenScan = { onEvent(ModifyConnectionsContract.Event.OnApiTokenChanged(it)) }
-        )
 
         is ModifyConnectionDialogType.FailedToSaveConnection -> AlertMessageDialog(
             titleText = stringResource(R.string.connection_dialog_title_saving_failed),

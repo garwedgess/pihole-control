@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.mappers
 
 import com.google.common.truth.Truth.assertThat
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleAuthSessionStatusResponseDataV6
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleAuthSessionStatusResponseData
 import eu.wedgess.piholecontrol.domain.model.AuthSessionStatusEntity
 import org.junit.Test
 
@@ -10,8 +10,8 @@ class AuthSessionStatusMapperTest {
     @Test
     fun `toEntity maps all fields correctly`() {
         // Arrange
-        val response = PiHoleAuthSessionStatusResponseDataV6(
-            session = PiHoleAuthSessionStatusResponseDataV6.PiHoleAuthSession(
+        val response = PiHoleAuthSessionStatusResponseData(
+            session = PiHoleAuthSessionStatusResponseData.PiHoleAuthSession(
                 valid = true,
                 totp = true,
                 sid = "test-sid",
@@ -37,7 +37,7 @@ class AuthSessionStatusMapperTest {
     @Test
     fun `toEntity maps default values correctly`() {
         // Arrange
-        val response = PiHoleAuthSessionStatusResponseDataV6()
+        val response = PiHoleAuthSessionStatusResponseData()
 
         // Act
         val result = response.toEntity()

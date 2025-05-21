@@ -4,8 +4,9 @@ import eu.wedgess.piholecontrol.domain.model.TopClientQueriesEntity
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class FetchTopClientsUseCase(
+class FetchTopClientsUseCase @Inject constructor(
     private val repository: StatisticsRepository,
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {

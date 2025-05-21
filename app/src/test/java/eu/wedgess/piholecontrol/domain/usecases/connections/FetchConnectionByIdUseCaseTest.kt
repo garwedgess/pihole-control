@@ -26,7 +26,7 @@ class FetchConnectionByIdUseCaseTest {
 
     @Test
     fun `invoke - fetches connection by id and returns success`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val connectionId = connection.id
 
         coEvery { repository.fetchById(connectionId) } returns Result.success(connection)

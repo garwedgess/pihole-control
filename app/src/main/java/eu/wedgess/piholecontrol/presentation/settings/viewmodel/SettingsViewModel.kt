@@ -41,16 +41,16 @@ class SettingsViewModel @Inject constructor(
     EventDrivenViewModel<SettingsContract.Event>,
     SideEffectViewModel<SettingsContract.Effect> by SideEffectViewModelImpl() {
 
-    private val uiState = MutableStateFlow(SettingsContract.UiState.initial())
+    private val _uiState = MutableStateFlow(SettingsContract.UiState.initial())
 
     val uiResult = combine(
         observeActiveUserUseCase(),
         fetchAppPreferencesUseCase(),
-        uiState
+        _uiState
     ) { connection, preferences, uiState ->
         UIResult.Loaded(
             uiState.copy(
-                currentConnection = connection.getOrNull() ?: ConnectionEntity.Version5.default,
+                currentConnection = connection.getOrNull() ?: ConnectionEntity.default,
                 currentTheme = preferences.theme.mapToAppThemePres(),
                 refreshInterval = preferences.refreshInterval,
                 useDynamicThemeColors = preferences.useDynamicColors,
@@ -66,14 +66,16 @@ class SettingsViewModel @Inject constructor(
 
     override fun onEvent(event: SettingsContract.Event) {
         when (event) {
-            SettingsContract.Event.OnRefreshIntervalClicked -> uiState.update {
-                it.copy(dialogType = SettingsDialogType.RefreshInterval(it.refreshInterval))
+            is SettingsContract.Event.OnRefreshIntervalClicked -> _uiState.update {
+                it.copy(
+                    dialogType = SettingsDialogType.RefreshInterval(event.currentRefreshInterval)
+                )
             }
 
             SettingsContract.Event.OnServerClicked ->
                 navigateTo(SettingsContract.Effect.Navigation.Connections)
 
-            SettingsContract.Event.OnDismissDialog -> uiState.update {
+            SettingsContract.Event.OnDismissDialog -> _uiState.update {
                 it.copy(dialogType = SettingsDialogType.None)
             }
 
@@ -94,6 +96,8 @@ class SettingsViewModel @Inject constructor(
             updateRefreshIntervalUseCase(refreshInterval).onFailure {
                 Timber.e("Failed to refresh interval", it)
                 return@launch
+            }.onSuccess {
+                _uiState.update { it.copy(dialogType = SettingsDialogType.None) }
             }
         }
     }
@@ -105,10 +109,6 @@ class SettingsViewModel @Inject constructor(
                 return@launch
             }
         }
-    }
-
-    private fun navigateTo(destination: SettingsContract.Effect.Navigation) {
-        viewModelScope.emitSideEffect(destination)
     }
 
     private fun updateTheme(theme: AppThemePres) {
@@ -128,5 +128,9 @@ class SettingsViewModel @Inject constructor(
                 return@launch
             }
         }
+    }
+
+    private fun navigateTo(destination: SettingsContract.Effect.Navigation) {
+        viewModelScope.emitSideEffect(destination)
     }
 }

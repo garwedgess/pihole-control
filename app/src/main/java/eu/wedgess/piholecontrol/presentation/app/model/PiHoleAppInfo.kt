@@ -10,7 +10,7 @@ data class PiHoleAppInfo(
 ) {
     companion object {
         fun initial() = PiHoleAppInfo(
-            currentConnection = ConnectionEntity.Version5.default,
+            currentConnection = ConnectionEntity.default,
             connections = emptyList(),
             status = StatusEntity.UNKNOWN
         )

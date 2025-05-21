@@ -91,7 +91,7 @@ class AppViewModelTest {
             val result = awaitItem()
             val expected = AppContract.UiState.initial().copy(
                 appBarState = AppBarState(
-                    currentConnection = ConnectionEntity.Version5.default,
+                    currentConnection = ConnectionEntity.default,
                     connections = emptyList(),
                     adBlockingEnabled = false
                 )
@@ -107,8 +107,8 @@ class AppViewModelTest {
             // Given
             val appInfo = PiHoleAppInfo(
                 status = StatusEntity.ENABLED,
-                currentConnection = ConnectionEntity.Version5.default,
-                connections = listOf(ConnectionEntity.Version5.default)
+                currentConnection = ConnectionEntity.default,
+                connections = listOf(ConnectionEntity.default)
             )
             coEvery { fetchAppInfoUseCase() } returns flowOf(appInfo)
             every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
@@ -197,7 +197,7 @@ class AppViewModelTest {
     fun `WHEN OnConnectionSelected event is received THEN setConnectionAsActiveUseCase should be called`() =
         runTest {
             // Given
-            val connection = ConnectionEntity.Version5.default
+            val connection = ConnectionEntity.default
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
             coEvery { setConnectionAsActiveUseCase(connection.id) } returns Result.success(Unit)
             every { observeNetworkConnectivityUseCase() } returns flowOf(NetworkConnectionState.Available)
@@ -223,8 +223,8 @@ class AppViewModelTest {
             // Given
             coEvery { fetchAppInfoUseCase() } returns flowOf(
                 PiHoleAppInfo(
-                    currentConnection = ConnectionEntity.Version5.default,
-                    connections = listOf(ConnectionEntity.Version5.default),
+                    currentConnection = ConnectionEntity.default,
+                    connections = listOf(ConnectionEntity.default),
                     status = StatusEntity.ENABLED
                 )
             )
@@ -238,8 +238,8 @@ class AppViewModelTest {
             )
             val newAppBarState = AppBarState(
                 adBlockingEnabled = true,
-                currentConnection = ConnectionEntity.Version5.default,
-                connections = listOf(ConnectionEntity.Version5.default)
+                currentConnection = ConnectionEntity.default,
+                connections = listOf(ConnectionEntity.default)
             )
 
             // When
@@ -281,7 +281,7 @@ class AppViewModelTest {
     fun `GIVEN usecase returns failure WHEN OnConnectionSelected event is received THEN error should be logged`() =
         runTest {
             // Given
-            val connection = ConnectionEntity.Version5.default
+            val connection = ConnectionEntity.default
             coEvery { fetchAppInfoUseCase() } returns flowOf(mockk(relaxed = true))
             coEvery { setConnectionAsActiveUseCase(connection.id) } returns Result.failure(
                 Exception("Test")

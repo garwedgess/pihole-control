@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Token
@@ -44,28 +42,11 @@ fun ConnectionInfoContent(
             title = "Status",
             value = "Connected".takeIf { connection.isActive } ?: "Disconnected"
         )
-        if (connection is ConnectionEntity.Version5) {
-            ConnectionInfoRow(
-                icon = Icons.Default.Api,
-                title = "Api Path",
-                value = connection.apiPath
-            )
-        }
-        if (connection is ConnectionEntity.Version5) {
-            ConnectionInfoRow(
-                icon = Icons.Default.Token,
-                title = "Token",
-                value = "Set".takeIf { connection.token.isNotBlank() } ?: "Not Set"
-            )
-        }
-
-        if (connection is ConnectionEntity.Version6) {
-            ConnectionInfoRow(
-                icon = Icons.Default.Token,
-                title = "Password",
-                value = "Set".takeIf { connection.password.isNotBlank() } ?: "Not Set"
-            )
-        }
+        ConnectionInfoRow(
+            icon = Icons.Default.Token,
+            title = "Password",
+            value = "Set".takeIf { connection.password.isNotBlank() } ?: "Not Set"
+        )
         ConnectionInfoRow(
             icon = Icons.Default.Lock,
             title = "Auth Credentials",
@@ -129,7 +110,7 @@ private fun ConnectionInfoContentPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionInfoContent(
-                connection = ConnectionEntity.Version5.default,
+                connection = ConnectionEntity.default,
                 onEditClick = {},
                 onDeleteClick = {},
                 onSetActiveClick = {}

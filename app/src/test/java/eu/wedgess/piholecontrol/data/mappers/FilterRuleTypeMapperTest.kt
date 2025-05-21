@@ -30,28 +30,4 @@ class FilterRuleTypeMapperTest {
         val result = PiHoleFilterRuleType.REGEX_DENY.toFilterTypeRuleEntity()
         assertThat(result).isEqualTo(FilterRuleTypeEntity.REGEX_DENY)
     }
-
-    @Test
-    fun `toPiHoleFilterRuleType - maps ALLOW correctly`() {
-        val result = FilterRuleTypeEntity.ALLOW.toPiHoleFilterRuleType()
-        assertThat(result).isEqualTo(PiHoleFilterRuleType.ALLOW)
-    }
-
-    @Test
-    fun `toPiHoleFilterRuleType - maps BLOCK correctly`() {
-        val result = FilterRuleTypeEntity.DENY.toPiHoleFilterRuleType()
-        assertThat(result).isEqualTo(PiHoleFilterRuleType.DENY)
-    }
-
-    @Test
-    fun `toPiHoleFilterRuleType - maps REGEX_ALLOW correctly`() {
-        val result = FilterRuleTypeEntity.REGEX_ALLOW.toPiHoleFilterRuleType()
-        assertThat(result).isEqualTo(PiHoleFilterRuleType.REGEX_ALLOW)
-    }
-
-    @Test
-    fun `toPiHoleFilterRuleType - maps REGEX_BLOCK correctly`() {
-        val result = FilterRuleTypeEntity.REGEX_DENY.toPiHoleFilterRuleType()
-        assertThat(result).isEqualTo(PiHoleFilterRuleType.REGEX_DENY)
-    }
 }

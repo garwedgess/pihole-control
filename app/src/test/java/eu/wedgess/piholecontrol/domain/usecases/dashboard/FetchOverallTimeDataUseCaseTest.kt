@@ -27,7 +27,7 @@ class FetchOverallTimeDataUseCaseTest {
 
     @Test
     fun `invoke - successfully fetches overall time data`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val queriesOverTime =
             QueriesOverTimeEntity(permitted = emptyList(), blocked = emptyList())
         coEvery { dashboardRepository.fetchOverTimeData10Minutes(connection) } returns Result.success(
@@ -43,7 +43,7 @@ class FetchOverallTimeDataUseCaseTest {
 
     @Test
     fun `invoke - returns failure when fetching overall time data fails`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch overall time data")
         coEvery { dashboardRepository.fetchOverTimeData10Minutes(connection) } returns Result.failure(
             exception

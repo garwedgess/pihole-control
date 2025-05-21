@@ -284,7 +284,12 @@ class LogsViewModel @Inject constructor(
 
     private fun onAddToAllowList(domain: String) {
         viewModelScope.launch {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW).onFailure {
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.ALLOW
+            ).onFailure {
                 Timber.e(it, "Failed to add domain to allow list: $domain")
                 emitSideEffect(
                     LogsContract.Effect.Snackbar.AddDomainToAllowListFailed(
@@ -307,7 +312,12 @@ class LogsViewModel @Inject constructor(
 
     private fun onAddToBlockList(domain: String) {
         viewModelScope.launch {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY).onFailure {
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.DENY
+            ).onFailure {
                 Timber.e(it, "Failed to add domain to block list: $domain")
                 emitSideEffect(
                     LogsContract.Effect.Snackbar.AddDomainToDenyListFailed(

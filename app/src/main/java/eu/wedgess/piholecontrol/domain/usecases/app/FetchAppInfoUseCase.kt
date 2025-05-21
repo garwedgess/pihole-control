@@ -7,8 +7,9 @@ import eu.wedgess.piholecontrol.presentation.app.model.PiHoleAppInfo
 import eu.wedgess.piholecontrol.presentation.base.RefreshFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import javax.inject.Inject
 
-class FetchAppInfoUseCase(
+class FetchAppInfoUseCase @Inject constructor(
     private val fetchAllConnectionsUseCase: FetchAllConnectionsUseCase,
     private val observeActiveUserUseCase: ObserveActiveUserUseCase,
     private val fetchStatusUseCase: FetchStatusUseCase

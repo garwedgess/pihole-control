@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,9 +30,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.data.model.enums.WILDCARD_REGEX_PREFIX
-import eu.wedgess.piholecontrol.data.model.enums.WILDCARD_REGEX_SUFFIX
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.GroupEntity
+import eu.wedgess.piholecontrol.presentation.common.components.DropdownTextField
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -39,6 +40,7 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun AddFilterRuleDialog(
     filterRuleType: FilterRuleTypeEntity,
+    groups: List<GroupEntity>,
     onDismissRequest: () -> Unit,
     onConfirmClick: (ModifyFilterRule.Add) -> Unit
 ) {
@@ -51,6 +53,7 @@ fun AddFilterRuleDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         AddFilterRuleDialogContent(
             filterRuleType = filterRuleType,
+            groups = groups,
             focusRequester = focusRequester,
             onConfirmClick = onConfirmClick,
             onCancelClick = onDismissRequest
@@ -61,6 +64,7 @@ fun AddFilterRuleDialog(
 @Composable
 private fun AddFilterRuleDialogContent(
     filterRuleType: FilterRuleTypeEntity,
+    groups: List<GroupEntity>,
     onConfirmClick: (ModifyFilterRule.Add) -> Unit,
     onCancelClick: () -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() },
@@ -68,7 +72,13 @@ private fun AddFilterRuleDialogContent(
     var isWildcardChecked by remember {
         mutableStateOf(false)
     }
-    var value by remember {
+    var domain by remember {
+        mutableStateOf("")
+    }
+    var domainGroups by remember {
+        mutableStateOf(setOfNotNull(groups.firstOrNull()))
+    }
+    var comment by remember {
         mutableStateOf("")
     }
     Surface(
@@ -97,21 +107,36 @@ private fun AddFilterRuleDialogContent(
                     .fillMaxWidth()
                     .focusRequester(focusRequester),
                 label = { Text(stringResource(R.string.filters_add_rule_dialog_label_domain)) },
-                leadingIcon = if (isWildcardChecked) {
-                    { Text(WILDCARD_REGEX_PREFIX) }
-                } else {
-                    null
-                },
-                value = value,
-                trailingIcon = if (isWildcardChecked) {
-                    { Text(WILDCARD_REGEX_SUFFIX) }
-                } else {
-                    null
-                },
+                value = domain,
+                maxLines = 1,
                 onValueChange = {
-                    value = it
+                    domain = it
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+            )
+            AnimatedVisibility(visible = groups.isNotEmpty()) {
+                DropdownTextField(
+                    selectedValues = domainGroups,
+                    options = groups,
+                    label = "Group",
+                    onValueChange = {
+                        domainGroups = it
+                    },
+                    valueFormatter = { it.name },
+                    multiSelect = true
+                )
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                label = { Text(stringResource(R.string.filters_details_dialog_label_comment)) },
+                value = comment,
+                maxLines = 1,
+                onValueChange = {
+                    comment = it
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
             Row(
                 Modifier
@@ -126,7 +151,7 @@ private fun AddFilterRuleDialogContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    stringResource(R.string.filters_add_rule_dialog_label_as_wildcard),
+                    stringResource(R.string.filters_add_rule_dialog_label_as_regex),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Checkbox(
@@ -154,7 +179,14 @@ private fun AddFilterRuleDialogContent(
                         } else {
                             filterRuleType
                         }
-                        onConfirmClick(ModifyFilterRule.Add(value, type))
+                        onConfirmClick(
+                            ModifyFilterRule.Add(
+                                domain = domain,
+                                groups = domainGroups.map { it.id },
+                                comment = comment,
+                                type = type
+                            )
+                        )
                     }
                 ) {
                     Text(
@@ -173,6 +205,7 @@ private fun AddFilterRuleDialogPreview() {
         Surface {
             AddFilterRuleDialog(
                 filterRuleType = FilterRuleTypeEntity.ALLOW,
+                groups = emptyList(),
                 onConfirmClick = { },
                 onDismissRequest = { }
             )

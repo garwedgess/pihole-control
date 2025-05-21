@@ -34,7 +34,7 @@ class FetchFilterRulesUseCaseTest {
 
     @Test
     fun `invoke - returns combined filter and regex filter rules`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val ruleType = FilterRuleTypeEntity.ALLOW
         val rules = listOf<FilterRuleEntity>(mockk(relaxed = true), mockk(relaxed = true))
 
@@ -64,7 +64,7 @@ class FetchFilterRulesUseCaseTest {
 
     @Test
     fun `invoke - returns failure when exception occurs`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val ruleType = FilterRuleTypeEntity.DENY
         val regexRulesException = Exception("Failed to fetch regex rules")
 

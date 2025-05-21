@@ -174,14 +174,21 @@ private fun LogDetailsRow(
 private fun DisplayFilterRuleDialogPreview() {
     PiHoleControlTheme {
         LogDetailsDialog(
-            piHoleLog = LogEntryInfo.Version5(
-                answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
-                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
-                domain = "www.google.com",
-                client = "192.168.1.1",
-                replyTime = 1.0,
-                timestamp = 1689425287,
-                time = "10:12"
+            piHoleLog = LogEntryInfo(
+                timestamp = System.currentTimeMillis().div(1000L),
+                client = "My Android",
+                domain = "www.google.com.ccckjkjakjkldasjklasjkjlj",
+                time = "10:12:01",
+                replyTime = 1.2,
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
+                id = 1,
+                status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
+                dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                listId = null,
+                edeCode = -1,
+                edeText = null,
+                cname = null
             ),
             addToAllowList = {},
             addToBlockList = {},

@@ -28,7 +28,7 @@ class ValidateSessionIdUseCaseTest {
     @Test
     fun `invoke should return repository validation result`() = runTest {
         // Given
-        val connection = ConnectionEntity.Version6.default
+        val connection = ConnectionEntity.default
         val expectedResponse = AuthSessionStatusEntity(
             valid = true,
             totp = false,
@@ -52,7 +52,7 @@ class ValidateSessionIdUseCaseTest {
     @Test
     fun `invoke should return false when validation fails`() = runTest {
         // Given
-        val connection = ConnectionEntity.Version6.default
+        val connection = ConnectionEntity.default
 
         coEvery { authRepository.validateSessionId(connection) } returns Result.failure(
             RuntimeException("Error")

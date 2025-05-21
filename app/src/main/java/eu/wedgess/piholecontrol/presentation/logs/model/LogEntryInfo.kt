@@ -1,7 +1,8 @@
 package eu.wedgess.piholecontrol.presentation.logs.model
 
 import androidx.compose.runtime.Composable
-import eu.wedgess.piholecontrol.R
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.piholecontrol.domain.model.LogAnswerCategoryEntity
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.logs.extensions.toColor
@@ -10,120 +11,62 @@ import eu.wedgess.piholecontrol.presentation.logs.extensions.toStringValue
 import eu.wedgess.piholecontrol.utils.UiText
 import java.util.Locale
 
-sealed class LogEntryInfo {
+data class LogEntryInfo(
+    val timestamp: Long,
+    val client: String,
+    val domain: String,
+    val time: String,
+    val replyTime: Double,
+    val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity,
+    val id: Int,
+    val status: PiHoleLogsEntity.LogEntryStatusEntity,
+    val dnssec: PiHoleLogsEntity.LogEntryDnssecEntity,
+    val replyType: PiHoleLogsEntity.LogEntryReplyTypeEntity,
+    val listId: Int?,
+    val edeCode: Int,
+    val edeText: String?,
+    val cname: String?
+) {
 
-    abstract val timestamp: Long
-    abstract val client: String
-    abstract val domain: String
-    abstract val time: String
-    abstract val replyTime: Double
-    abstract val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity
-    abstract val formattedReplyTime: UiText
+    val formattedReplyTime: UiText
+        get() =
+            UiText.DynamicString(convertToSeconds(replyTime))
 
-    data class Version5(
-        override val timestamp: Long,
-        override val client: String,
-        override val domain: String,
-        override val time: String,
-        override val replyTime: Double,
-        override val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity,
-        val answerType: PiHoleLogsEntity.LogsAnswerTypeEntity,
-    ) : LogEntryInfo() {
-        override val formattedReplyTime: UiText
-            get() =
-                UiText.StringResourceWithArgs(
-                    R.string.log_version_5_response_time_postfix,
-                    String.format(Locale.UK, "%.1f", replyTime * 0.1)
-                )
-    }
+    private fun convertToSeconds(value: Double): String {
+        if (value == 0.0) return "0.0 s"
+        val valueInMs = value * 1000
 
-    data class Version6(
-        override val timestamp: Long,
-        override val client: String,
-        override val domain: String,
-        override val time: String,
-        override val replyTime: Double,
-        override val queryType: PiHoleLogsEntity.LogEntryQueryTypeEntity,
-        val id: Int,
-        val status: PiHoleLogsEntity.LogEntryStatusEntity,
-        val dnssec: PiHoleLogsEntity.LogEntryDnssecEntity,
-        val replyType: PiHoleLogsEntity.LogEntryReplyTypeEntity,
-        val listId: Int?,
-        val edeCode: Int,
-        val edeText: String?,
-        val cname: String?
-    ) : LogEntryInfo() {
-        override val formattedReplyTime: UiText
-            get() =
-                UiText.DynamicString(convertToSeconds(replyTime))
+        return when {
+            valueInMs < 0.095 -> {
+                val microseconds = value * 1000000
+                String.format(Locale.UK, "%.1f µs", microseconds)
+            }
 
-        private fun convertToSeconds(value: Double): String {
-            if (value == 0.0) return "0.0 s"
-            val valueInMs = value * 1000
+            valueInMs < 1000 -> {
+                String.format(Locale.UK, "%.1f ms", valueInMs)
+            }
 
-            return when {
-                valueInMs < 0.095 -> {
-                    val microseconds = value * 1000000
-                    String.format(Locale.UK, "%.1f µs", microseconds)
-                }
-
-                valueInMs < 1000 -> {
-                    String.format(Locale.UK, "%.1f ms", valueInMs)
-                }
-
-                else -> {
-                    String.format(Locale.UK, "%.1f s", value)
-                }
+            else -> {
+                String.format(Locale.UK, "%.1f s", value)
             }
         }
     }
 
     @Composable
-    fun icon() = when (this) {
-        is Version5 -> this.answerType.toIcon()
-        is Version6 -> this.status.toIcon()
-    }
+    fun icon(): ImageVector = this.status.toIcon()
 
     @Composable
-    fun color() = when (this) {
-        is Version5 -> this.answerType.toColor()
-        is Version6 -> this.status.toColor()
-    }
+    fun color(): Color = this.status.toColor()
 
     @Composable
-    fun stringValue() = when (this) {
-        is Version5 -> this.answerType.toStringValue()
-        is Version6 -> this.status.toStringValue()
-    }
+    fun stringValue(): String = this.status.toStringValue()
 
-    val queryTypeString: String
-        get() = when (this) {
-            is Version5 -> this.queryType.key
-            is Version6 -> this.queryType.key
-        }
+    val queryTypeString: String = this.queryType.key
 
-    val statusString: String
-        get() = when (this) {
-            is Version5 -> this.answerType.category.name
-            is Version6 -> this.status.category.name
-        }
+    val statusString: String = this.status.category.name
 
-    val isBlocked: Boolean
-        get() = when (this) {
-            is Version5 -> this.answerType.category == LogAnswerCategoryEntity.BLOCK
-            is Version6 -> this.status.category == LogAnswerCategoryEntity.BLOCK
-        }
+    val isBlocked: Boolean = this.status.category == LogAnswerCategoryEntity.BLOCK
 
-    val isAllowed: Boolean
-        get() = when (this) {
-            is Version5 -> {
-                this.answerType.category == LogAnswerCategoryEntity.ALLOW ||
-                        this.answerType.category == LogAnswerCategoryEntity.CACHE
-            }
-
-            is Version6 -> {
-                this.status.category == LogAnswerCategoryEntity.ALLOW ||
-                        this.status.category == LogAnswerCategoryEntity.CACHE
-            }
-        }
+    val isAllowed: Boolean = this.status.category == LogAnswerCategoryEntity.ALLOW ||
+            this.status.category == LogAnswerCategoryEntity.CACHE
 }

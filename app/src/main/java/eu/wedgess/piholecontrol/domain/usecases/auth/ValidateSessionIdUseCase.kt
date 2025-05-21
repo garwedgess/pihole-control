@@ -5,6 +5,6 @@ import eu.wedgess.piholecontrol.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class ValidateSessionIdUseCase @Inject constructor(private val repository: AuthRepository) {
-    suspend operator fun invoke(connectionEntity: ConnectionEntity.Version6) =
+    suspend operator fun invoke(connectionEntity: ConnectionEntity) =
         repository.validateSessionId(connectionEntity)
 }

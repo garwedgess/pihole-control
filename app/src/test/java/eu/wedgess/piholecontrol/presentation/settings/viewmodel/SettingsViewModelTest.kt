@@ -19,6 +19,7 @@ import eu.wedgess.piholecontrol.presentation.settings.model.AppThemePres
 import eu.wedgess.piholecontrol.presentation.settings.model.SettingsDialogType
 import eu.wedgess.piholecontrol.presentation.settings.model.mapToEntity
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -96,11 +97,11 @@ class SettingsViewModelTest {
         runTest {
             // Given
             val connection =
-                ConnectionEntity.Version5.default.copy(
+                ConnectionEntity.default.copy(
                     name = "Test",
                     host = "test.com",
                     port = 80,
-                    token = "test"
+                    password = "test"
                 )
             val preferences = AppPreferencesEntity.default
             every { observeActiveUserUseCase() } returns flowOf(Result.success(connection))
@@ -140,8 +141,9 @@ class SettingsViewModelTest {
     @Test
     fun `WHEN OnRefreshIntervalClicked event is received THEN uiState should be updated`() =
         runTest {
+            val expectedInterval = 6000L
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.Version5.default)
+                Result.success(ConnectionEntity.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
 
@@ -156,7 +158,7 @@ class SettingsViewModelTest {
             )
 
             // When
-            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked)
+            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked(expectedInterval))
             advanceUntilIdle()
 
             // Then
@@ -165,6 +167,12 @@ class SettingsViewModelTest {
                 assertThat(loadedResult).isInstanceOf(UIResult.Loaded::class.java)
                 assertThat((loadedResult as UIResult.Loaded).data.dialogType)
                     .isInstanceOf(SettingsDialogType.RefreshInterval::class.java)
+                assertThat(
+                    (loadedResult.data.dialogType as SettingsDialogType.RefreshInterval)
+                        .currentRefreshTime
+                ).isEqualTo(
+                    expectedInterval
+                )
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -173,7 +181,7 @@ class SettingsViewModelTest {
     fun `WHEN OnServerClicked event is received THEN side effect should be emitted`() =
         runTest {
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.Version5.default)
+                Result.success(ConnectionEntity.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
             // Given
@@ -201,9 +209,10 @@ class SettingsViewModelTest {
     @Test
     fun `WHEN OnDismissDialog event is received THEN uiState should be updated`() =
         runTest {
+            val expectedInterval = 10000L
             // Given
             every { observeActiveUserUseCase() } returns flowOf(
-                Result.success(ConnectionEntity.Version5.default)
+                Result.success(ConnectionEntity.default)
             )
             every { fetchAppPreferencesUseCase() } returns flowOf(AppPreferencesEntity.default)
 
@@ -222,14 +231,14 @@ class SettingsViewModelTest {
             }
 
             // When
-            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked)
+            viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalClicked(expectedInterval))
             runCurrent()
             viewModel.onEvent(SettingsContract.Event.OnDismissDialog)
             runCurrent()
             job.cancel()
 
             assertThat((emittedStates[0] as UIResult.Loaded).data.dialogType)
-                .isEqualTo(SettingsDialogType.RefreshInterval(10000L))
+                .isEqualTo(SettingsDialogType.RefreshInterval(expectedInterval))
             assertThat((emittedStates[1] as UIResult.Loaded).data.dialogType)
                 .isEqualTo(SettingsDialogType.None)
         }
@@ -291,6 +300,7 @@ class SettingsViewModelTest {
                 updateStatusChangeOnAllConnectionsUseCase
             )
             val refreshInterval = 5000L
+            coEvery { updateRefreshIntervalUseCase(any()) } returns Result.success(Unit)
 
             // When
             viewModel.onEvent(SettingsContract.Event.OnRefreshIntervalChanged(refreshInterval))

@@ -6,6 +6,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -87,7 +89,6 @@ fun PiHoleControlApp(
     })
 
     val bottomBarHeight = remember { mutableFloatStateOf(0f) }
-    Timber.d("GARETH DP: $bottomBarHeight")
     val bottomBarOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val bottomBarOffsetOriginal by animateFloatAsState(targetValue = 0f, label = "")
     val nestedScrollConnection = remember {
@@ -115,7 +116,11 @@ fun PiHoleControlApp(
         darkTheme = isDarkTheme,
         dynamicColor = useDynamicColors
     ) {
-        Surface(modifier = Modifier.fillMaxSize()) {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+                .systemBarsPadding()
+        ) {
             Scaffold(
                 modifier = Modifier.nestedScroll(nestedScrollConnection),
                 snackbarHost = {

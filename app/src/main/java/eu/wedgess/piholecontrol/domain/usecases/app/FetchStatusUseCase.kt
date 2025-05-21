@@ -5,8 +5,9 @@ import eu.wedgess.piholecontrol.domain.repository.StatusRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
+import javax.inject.Inject
 
-class FetchStatusUseCase(
+class FetchStatusUseCase @Inject constructor(
     private val repository: StatusRepository,
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {

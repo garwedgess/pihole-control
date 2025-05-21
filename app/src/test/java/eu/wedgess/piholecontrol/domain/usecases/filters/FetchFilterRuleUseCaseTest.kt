@@ -28,7 +28,7 @@ class FetchFilterRuleUseCaseTest {
 
     @Test
     fun `invoke - returns success when repository returns filter rules`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val ruleType = FilterRuleTypeEntity.ALLOW
         val filterRules = listOf<FilterRuleEntity>(
             mockk(relaxed = true),
@@ -48,7 +48,7 @@ class FetchFilterRuleUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fetch fails`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val ruleType = FilterRuleTypeEntity.ALLOW
         val exception = Exception("Failed to fetch filter rules")
 

@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
+import eu.wedgess.piholecontrol.domain.usecases.groups.FetchAllGroupsUseCase
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
@@ -22,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FiltersViewModel @Inject constructor(
     private val addFilterRuleUseCase: AddFilterRuleUseCase,
-    private val removeFilterRuleUseCase: RemoveFilterRuleUseCase
+    private val removeFilterRuleUseCase: RemoveFilterRuleUseCase,
+    private val fetchAllGroupsUseCase: FetchAllGroupsUseCase
 ) : ViewModel(),
     EventDrivenViewModel<FiltersContract.Event>,
     SideEffectViewModel<FiltersContract.Effect> by SideEffectViewModelImpl(),
@@ -48,6 +51,8 @@ class FiltersViewModel @Inject constructor(
 
             is FiltersContract.Event.OnAddFilterRule -> handleAddFilterRule(
                 rule = event.rule.domain,
+                groups = event.rule.groups,
+                comment = event.rule.comment,
                 type = event.rule.type
             )
 
@@ -64,13 +69,7 @@ class FiltersViewModel @Inject constructor(
                 copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
             }
 
-            FiltersContract.Event.AddFilterRuleClick -> updateUiState {
-                copy(
-                    dialogType = FilterDialogType.AddFilterRule(
-                        type = currentTabType.toFilterRuleType()
-                    )
-                )
-            }
+            FiltersContract.Event.AddFilterRuleClick -> fetchGroupsAndShowDialog()
 
             is FiltersContract.Event.OnFilterTabChanged -> handleTabChange(event.type)
 
@@ -87,6 +86,23 @@ class FiltersViewModel @Inject constructor(
             }
 
             is FiltersContract.Event.OnFilterByOptionClick -> handleFilterOptionClick(event.option)
+        }
+    }
+
+    private fun fetchGroupsAndShowDialog() {
+        viewModelScope.launch {
+            val groups = fetchAllGroupsUseCase().getOrElse {
+                Timber.e(it, "Failed to fetch groups")
+                emptyList()
+            }
+            updateUiState {
+                copy(
+                    dialogType = FilterDialogType.AddFilterRule(
+                        type = currentTabType.toFilterRuleType(),
+                        groups = groups
+                    )
+                )
+            }
         }
     }
 
@@ -145,9 +161,14 @@ class FiltersViewModel @Inject constructor(
         }
     }
 
-    private fun handleAddFilterRule(rule: String, type: FilterRuleTypeEntity) {
+    private fun handleAddFilterRule(
+        rule: String,
+        groups: List<Int>,
+        comment: String?,
+        type: FilterRuleTypeEntity
+    ) {
         viewModelScope.launch {
-            addFilterRuleUseCase(rule, type)
+            addFilterRuleUseCase(rule, groups = groups, comment, type)
                 .onFailure {
                     Timber.e(it, "Failed to insert filter rule $rule for type: $type")
                     emitSideEffect(FiltersContract.Effect.Toast.RuleAddFailed).also {

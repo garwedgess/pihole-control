@@ -25,7 +25,7 @@ class UpdateConnectionUseCaseTest {
 
     @Test
     fun `invoke - updates connection and returns success`() = runTest {
-        val connectionInfo = ConnectionEntity.Version5.default
+        val connectionInfo = ConnectionEntity.default
         coEvery { repository.update(connectionInfo) } returns Result.success(Unit)
 
         val result = updateConnectionUseCase(connectionInfo)
@@ -36,7 +36,7 @@ class UpdateConnectionUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fails`() = runTest {
-        val connectionInfo = ConnectionEntity.Version5.default
+        val connectionInfo = ConnectionEntity.default
         val exception = Exception("Update failed")
         coEvery { repository.update(connectionInfo) } returns Result.failure(exception)
 

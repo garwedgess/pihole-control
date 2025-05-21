@@ -13,7 +13,15 @@ class FetchLogFilterSuggestionsUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<Result<LogFilterSuggestionsEntity>> {
         return observeActiveUser().map { connection ->
-            logsRepository.fetchLogFilterSuggestions(connection.getOrThrow())
+            connection.fold(
+                onSuccess = { activeConnection ->
+                    logsRepository.fetchLogFilterSuggestions(activeConnection)
+                },
+                onFailure = { error ->
+                    Result.failure(error)
+                }
+            )
+
         }
     }
 }

@@ -1,65 +1,21 @@
 package eu.wedgess.piholecontrol.domain.model
 
-sealed class PiHoleLogsEntity {
-
-    abstract val timestamp: Long
-    abstract val client: String
-    abstract val domain: String
-    abstract val time: String
-    abstract val replyTime: Double
-    abstract val queryType: LogEntryQueryTypeEntity
-
-    data class Version5(
-        override val timestamp: Long,
-        override val client: String,
-        override val domain: String,
-        override val time: String,
-        override val replyTime: Double,
-        override val queryType: LogEntryQueryTypeEntity,
-        val answerType: LogsAnswerTypeEntity,
-    ) : PiHoleLogsEntity()
-
-    data class Version6(
-        override val timestamp: Long,
-        override val client: String,
-        override val domain: String,
-        override val time: String,
-        override val replyTime: Double,
-        override val queryType: LogEntryQueryTypeEntity,
-        val id: Int,
-        val status: LogEntryStatusEntity,
-        val dnssec: LogEntryDnssecEntity,
-        val replyType: LogEntryReplyTypeEntity,
-        val listId: Int?,
-        val edeCode: Int,
-        val edeText: String?,
-        val cname: String?
-    ) : PiHoleLogsEntity()
-
-    enum class LogsAnswerTypeEntity(val key: String, val category: LogAnswerCategoryEntity) {
-        GRAVITY_BLOCK("GRAVITY_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        UPSTREAM("UPSTREAM", LogAnswerCategoryEntity.ALLOW),
-        LOCAL_CACHE("LOCAL_CACHE", LogAnswerCategoryEntity.CACHE),
-        REGEX_BLOCK("REGEX_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        EXACT_BLOCK("EXACT_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        EXTERNAL_IP_BLOCK("EXTERNAL_IP_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        EXTERNAL_NULL_BLOCK("EXTERNAL_NULL_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        EXTERNAL_NXRA_BLOCK("EXTERNAL_NXRA_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        CNAME_GRAVITY_BLOCK("CNAME_GRAVITY_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        CNAME_REGEX_BLOCK("CNAME_REGEX_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        CNAME_EXACT_BLOCK("CNAME_EXACT_BLOCK", LogAnswerCategoryEntity.BLOCK),
-        RETRIED("RETRIED", LogAnswerCategoryEntity.ALLOW),
-        RETRIED_IGNORED("RETRIED_IGNORED", LogAnswerCategoryEntity.ALLOW),
-        ALREADY_FORWARDED("ALREADY_FORWARDED", LogAnswerCategoryEntity.ALLOW),
-        UNKNOWN("UNKNOWN", LogAnswerCategoryEntity.UNKNOWN);
-
-        companion object {
-            operator fun get(key: String) =
-                requireNotNull(LogsAnswerTypeEntity.entries.find { it.key == key }) {
-                    "No value found for ${LogsAnswerTypeEntity::class.java.simpleName} with key: $key"
-                }
-        }
-    }
+data class PiHoleLogsEntity(
+    val timestamp: Long,
+    val client: String,
+    val domain: String,
+    val time: String,
+    val replyTime: Double,
+    val queryType: LogEntryQueryTypeEntity,
+    val id: Int,
+    val status: LogEntryStatusEntity,
+    val dnssec: LogEntryDnssecEntity,
+    val replyType: LogEntryReplyTypeEntity,
+    val listId: Int?,
+    val edeCode: Int,
+    val edeText: String?,
+    val cname: String?
+) {
 
     enum class LogEntryStatusEntity(val key: String, val category: LogAnswerCategoryEntity) {
         UNKNOWN("UNKNOWN", LogAnswerCategoryEntity.UNKNOWN),

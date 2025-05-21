@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.data.utils
 
 import eu.wedgess.piholecontrol.data.model.responses.ApiErrorResponse
+import eu.wedgess.piholecontrol.data.model.responses.PiHoleErrorResponseData
 import eu.wedgess.piholecontrol.data.model.responses.exceptions.ApiErrorThrowable
-import eu.wedgess.piholecontrol.data.model.responses.v6.PiHoleErrorResponseDataV6
 import eu.wedgess.piholecontrol.utils.extensions.resultOf
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -17,7 +17,6 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 
-// Safe request function that uses Result<T> and catches exceptions, supports error deserialization with ApiError
 internal suspend inline fun <reified T> HttpClient.requestResult(
     block: HttpRequestBuilder.() -> Unit
 ): Result<T> {
@@ -29,7 +28,6 @@ internal suspend inline fun <reified T> HttpClient.requestResult(
     }
 }
 
-// Extracted recoverCatching logic to handle different types of exceptions
 private suspend fun handleRecovery(e: Throwable): Throwable {
     return when (e) {
         is ClientRequestException -> handleClientError(e)
@@ -40,24 +38,14 @@ private suspend fun handleRecovery(e: Throwable): Throwable {
     }
 }
 
-// Logic to handle client errors (4xx)
 private suspend fun handleClientError(e: ClientRequestException): Throwable {
-    val errorBody = e.errorBody<PiHoleErrorResponseDataV6>()
-    return if (errorBody != null) {
-        ApiErrorThrowable(ApiErrorResponse.V6(errorBody))
-    } else {
-        ApiErrorThrowable(ApiErrorResponse.V5(e.message))
-    }
+    val errorBody = e.errorBody<PiHoleErrorResponseData>()
+    return errorBody?.let { error -> ApiErrorThrowable(ApiErrorResponse(error)) } ?: e
 }
 
-// Logic to handle server errors (5xx)
 private suspend fun handleServerError(e: ServerResponseException): Throwable {
-    val errorBody = e.errorBody<PiHoleErrorResponseDataV6>()
-    return if (errorBody != null) {
-        ApiErrorThrowable(ApiErrorResponse.V6(errorBody))
-    } else {
-        ApiErrorThrowable(ApiErrorResponse.V5(e.message))
-    }
+    val errorBody = e.errorBody<PiHoleErrorResponseData>()
+    return errorBody?.let { error -> ApiErrorThrowable(ApiErrorResponse(error)) } ?: e
 }
 
 private suspend inline fun <reified T> HttpResponse.handleResponse(): T {
@@ -76,7 +64,6 @@ private suspend inline fun <reified T> HttpResponse.handleResponse(): T {
     }
 }
 
-// Extension function to safely get the error body from a ResponseException, return null if deserialization fails
 private suspend inline fun <reified E> ResponseException.errorBody(): E? {
     return try {
         response.body<E>()

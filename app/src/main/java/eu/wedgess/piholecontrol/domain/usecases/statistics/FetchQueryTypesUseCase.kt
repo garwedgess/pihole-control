@@ -4,8 +4,9 @@ import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import eu.wedgess.piholecontrol.presentation.statistics.common.components.donutchart.model.QueryTypeChartData
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class FetchQueryTypesUseCase(
+class FetchQueryTypesUseCase @Inject constructor(
     private val repository: StatisticsRepository,
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {

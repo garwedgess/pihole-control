@@ -45,7 +45,7 @@ class FetchTopPiHoleSummaryClientsDataUseCaseTest {
                 TopClientEntity("192.168.1.4", 78, 15f)
             )
         )
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
 
         coEvery {
             periodicRefreshUseCase<TopClientQueriesEntity>(any())
@@ -69,7 +69,7 @@ class FetchTopPiHoleSummaryClientsDataUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch top clients")
 
         coEvery {

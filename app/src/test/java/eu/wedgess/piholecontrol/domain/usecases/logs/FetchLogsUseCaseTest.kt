@@ -35,7 +35,7 @@ class FetchLogsUseCaseTest {
 
     @Test
     fun `invoke - emits logs successfully`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val logEntries = listOf<PiHoleLogsEntity>(
             mockk(relaxed = true),
             mockk(relaxed = true)
@@ -97,7 +97,7 @@ class FetchLogsUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val expectedError = Result.failure<List<PiHoleLogsEntity>>(Exception("Error fetching logs"))
 
         coEvery {

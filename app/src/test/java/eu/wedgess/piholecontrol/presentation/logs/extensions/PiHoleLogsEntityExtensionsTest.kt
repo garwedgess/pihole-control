@@ -1,6 +1,5 @@
 package eu.wedgess.piholecontrol.presentation.logs.extensions
 
-import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.domain.model.PiHoleLogsEntity
 import eu.wedgess.piholecontrol.presentation.logs.model.LogEntryInfo
 import org.junit.Assert.assertEquals
@@ -9,39 +8,9 @@ import org.junit.Test
 class PiHoleLogsEntityExtensionsTest {
 
     @Test
-    fun `toInfo() should return correct LogEntryInfo for Version5`() {
+    fun `toInfo() should return correct LogEntryInfo`() {
         // Arrange
-        val version5Log = PiHoleLogsEntity.Version5(
-            queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
-            client = "client",
-            domain = "domain",
-            replyTime = 10.0,
-            answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.UPSTREAM,
-            timestamp = 123456789,
-            time = "10:00"
-        )
-
-        // Act
-        val logEntryInfo = version5Log.toInfo()
-
-        // Assert
-        assertThat(
-            LogEntryInfo.Version5(
-                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
-                client = "client",
-                domain = "domain",
-                replyTime = 10.0,
-                answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.UPSTREAM,
-                timestamp = 123456789,
-                time = "10:00"
-            )
-        ).isEqualTo(logEntryInfo)
-    }
-
-    @Test
-    fun `toInfo() should return correct LogEntryInfo for Version6`() {
-        // Arrange
-        val version6Log = PiHoleLogsEntity.Version6(
+        val logEntity = PiHoleLogsEntity(
             timestamp = 987654321,
             client = "client",
             domain = "domain",
@@ -59,11 +28,11 @@ class PiHoleLogsEntityExtensionsTest {
         )
 
         // Act
-        val logEntryInfo = version6Log.toInfo()
+        val logEntryInfo = logEntity.toInfo()
 
         // Assert
         assertEquals(
-            LogEntryInfo.Version6(
+            LogEntryInfo(
                 timestamp = 987654321,
                 client = "client",
                 domain = "domain",

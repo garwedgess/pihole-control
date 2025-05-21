@@ -1,7 +1,6 @@
 package eu.wedgess.piholecontrol.data.utils.sqldelight
 
 import app.cash.sqldelight.ColumnAdapter
-import eu.wedgess.piholecontrol.data.model.enums.PiHoleApiVersionData
 import io.ktor.http.URLProtocol
 import java.util.UUID
 
@@ -22,10 +21,4 @@ val uuidAdapter = object : ColumnAdapter<UUID, String> {
     override fun decode(databaseValue: String): UUID = UUID.fromString(databaseValue)
 
     override fun encode(value: UUID): String = value.toString()
-}
-
-val apiVersionAdapter = object : ColumnAdapter<PiHoleApiVersionData, Long> {
-    override fun decode(databaseValue: Long): PiHoleApiVersionData = PiHoleApiVersionData[databaseValue]
-
-    override fun encode(value: PiHoleApiVersionData): Long = value.key
 }

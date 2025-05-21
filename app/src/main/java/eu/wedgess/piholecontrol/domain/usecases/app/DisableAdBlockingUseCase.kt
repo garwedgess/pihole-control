@@ -3,9 +3,10 @@ package eu.wedgess.piholecontrol.domain.usecases.app
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.repository.StatusRepository
+import javax.inject.Inject
 import kotlin.time.Duration
 
-class DisableAdBlockingUseCase(private val repository: StatusRepository) {
+class DisableAdBlockingUseCase @Inject constructor(private val repository: StatusRepository) {
     suspend operator fun invoke(
         connection: ConnectionEntity,
         duration: Duration

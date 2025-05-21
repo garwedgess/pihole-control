@@ -70,7 +70,9 @@ fun SettingsScreen(
                     TimeUnit.MILLISECONDS
                 )
             } seconds",
-            onClick = { onEvent(SettingsContract.Event.OnRefreshIntervalClicked) }
+            onClick = {
+                onEvent(SettingsContract.Event.OnRefreshIntervalClicked(uiState.refreshInterval))
+            }
         )
 
         SwitchPreference(

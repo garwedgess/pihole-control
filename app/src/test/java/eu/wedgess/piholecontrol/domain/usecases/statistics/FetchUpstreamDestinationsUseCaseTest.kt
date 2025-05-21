@@ -34,7 +34,7 @@ class FetchUpstreamDestinationsUseCaseTest {
 
     @Test
     fun `invoke - emits forward destinations successfully`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val destinations = listOf(
             UpstreamDestinationEntity("destination1", 123f),
             UpstreamDestinationEntity("destination2", 456f)
@@ -60,7 +60,7 @@ class FetchUpstreamDestinationsUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val expectedError = Result.failure<List<UpstreamDestinationEntity>>(
             Exception("Error fetching forward destinations")
         )

@@ -55,7 +55,7 @@ class ConnectionsViewModel @Inject constructor(
                         )
                     )
                 } else {
-                    UIResult.Loaded(ConnectionsContract.UiState(this))
+                    UIResult.Loaded(ConnectionsContract.UiState(this.filterNot { it.isDeleted }))
                 }
             }
         }

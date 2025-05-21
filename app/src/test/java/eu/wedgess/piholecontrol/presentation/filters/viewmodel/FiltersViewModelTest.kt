@@ -6,9 +6,11 @@ import com.google.common.truth.Truth.assertThat
 import eu.wedgess.piholecontrol.MainDispatcherRule
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
+import eu.wedgess.piholecontrol.domain.usecases.groups.FetchAllGroupsUseCase
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
@@ -41,17 +43,43 @@ class FiltersViewModelTest {
     @RelaxedMockK
     private lateinit var removeFilterRuleUseCase: RemoveFilterRuleUseCase
 
+    @RelaxedMockK
+    private lateinit var fetchAllGroupsUseCase: FetchAllGroupsUseCase
+
     private lateinit var viewModel: FiltersViewModel
+
+    // Test data
+    private val testGroups = listOf(
+        GroupEntity(
+            id = 1,
+            name = "Test Group 1",
+            enabled = true,
+            comment = "Test comment 1",
+            dateAdded = "2023-01-01 10:00:00",
+            dateModified = "2023-01-02 11:00:00"
+        ),
+        GroupEntity(
+            id = 2,
+            name = "Test Group 2",
+            enabled = true,
+            comment = "Test comment 2",
+            dateAdded = "2023-01-03 12:00:00",
+            dateModified = "2023-01-04 13:00:00"
+        )
+    )
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        // Set up default response for fetchAllGroupsUseCase
+        coEvery { fetchAllGroupsUseCase() } returns Result.success(testGroups)
     }
 
     @Test
     fun `WHEN viewmodel is initialized THEN uiState should emit initial state`() = runTest {
         // When
-        viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+        viewModel =
+            FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase, fetchAllGroupsUseCase)
 
         // Then
         viewModel.uiState.test {
@@ -64,7 +92,11 @@ class FiltersViewModelTest {
     fun `WHEN OnClearSearchQuery event is received with empty query THEN uiState should update showSearchView to false`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnClearSearchQuery(""))
@@ -81,7 +113,11 @@ class FiltersViewModelTest {
     fun `WHEN OnClearSearchQuery event is received with non-empty query THEN uiState should update searchQuery to empty`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnClearSearchQuery("test"))
@@ -98,7 +134,11 @@ class FiltersViewModelTest {
     fun `WHEN OnSearchExpandedChanged event is received THEN uiState should update showSearchView`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnSearchExpandedChanged(true))
@@ -125,7 +165,11 @@ class FiltersViewModelTest {
     fun `WHEN OnSearchQueryChanged event is received THEN uiState should update searchQuery`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
             val query = "test query"
 
             // When
@@ -143,7 +187,11 @@ class FiltersViewModelTest {
     fun `WHEN OnShowSearchView event is received THEN uiState should update showSearchView to true`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnShowSearchView)
@@ -157,29 +205,42 @@ class FiltersViewModelTest {
         }
 
     @Test
-    fun `WHEN OnAddFilterRule event is received THEN addFilterRuleUseCase should be called`() =
+    fun `WHEN OnAddFilterRule event is received THEN addFilterRuleUseCase should be called with groups`() =
         runTest {
             // Given
             val rule = FilterRuleEntity(
                 id = 1,
                 enabled = true,
-                comment = null,
+                comment = "Test comment",
                 dateModified = "12-01-2023",
                 dateAdded = "11-01-2023",
                 domain = "test.com",
-                groups = emptyList(),
+                groups = listOf(1, 2),
                 type = FilterRuleTypeEntity.ALLOW
             )
-            coEvery { addFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
+            coEvery {
+                addFilterRuleUseCase(
+                    rule.domain,
+                    rule.groups,
+                    rule.comment,
+                    rule.type
+                )
+            } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
                 FiltersContract.Event.OnAddFilterRule(
                     ModifyFilterRule.Add(
                         domain = rule.domain,
+                        groups = rule.groups,
+                        comment = rule.comment,
                         type = rule.type
                     )
                 )
@@ -187,7 +248,7 @@ class FiltersViewModelTest {
             advanceUntilIdle()
 
             // Then
-            coVerify { addFilterRuleUseCase(rule.domain, rule.type) }
+            coVerify { addFilterRuleUseCase(rule.domain, rule.groups, rule.comment, rule.type) }
         }
 
     @Test
@@ -201,19 +262,32 @@ class FiltersViewModelTest {
                 dateModified = "12-01-2023",
                 dateAdded = "11-01-2023",
                 domain = "test.com",
-                groups = emptyList(),
+                groups = listOf(1, 2),
                 type = FilterRuleTypeEntity.ALLOW
             )
-            coEvery { addFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
+            coEvery {
+                addFilterRuleUseCase(
+                    rule.domain,
+                    rule.groups,
+                    rule.comment,
+                    rule.type
+                )
+            } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
                 FiltersContract.Event.OnAddFilterRule(
                     ModifyFilterRule.Add(
                         domain = rule.domain,
+                        groups = rule.groups,
+                        comment = rule.comment,
                         type = rule.type
                     )
                 )
@@ -238,19 +312,32 @@ class FiltersViewModelTest {
                 dateModified = "12-01-2023",
                 dateAdded = "11-01-2023",
                 domain = "test.com",
-                groups = emptyList(),
+                groups = listOf(1),
                 type = FilterRuleTypeEntity.REGEX_ALLOW
             )
-            coEvery { addFilterRuleUseCase(rule.domain, rule.type) } returns Result.failure(
+            coEvery {
+                addFilterRuleUseCase(
+                    rule.domain,
+                    rule.groups,
+                    rule.comment,
+                    rule.type
+                )
+            } returns Result.failure(
                 Exception("Test")
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
                 FiltersContract.Event.OnAddFilterRule(
                     ModifyFilterRule.Add(
                         domain = rule.domain,
+                        groups = rule.groups,
+                        comment = rule.comment,
                         type = rule.type
                     )
                 )
@@ -281,7 +368,11 @@ class FiltersViewModelTest {
             coEvery { removeFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
@@ -315,7 +406,11 @@ class FiltersViewModelTest {
             coEvery { removeFilterRuleUseCase(rule.domain, rule.type) } returns Result.success(
                 ModifyFilterRuleResponseEntity(success = true, message = null)
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
@@ -352,7 +447,11 @@ class FiltersViewModelTest {
             coEvery { removeFilterRuleUseCase(rule.domain, rule.type) } returns Result.failure(
                 Exception("Test")
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(
@@ -376,8 +475,13 @@ class FiltersViewModelTest {
     fun `WHEN OnDismissDialog event is received THEN uiState should update dialogType to None`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
             viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnDismissDialog)
@@ -404,7 +508,11 @@ class FiltersViewModelTest {
                 groups = emptyList(),
                 type = FilterRuleTypeEntity.ALLOW
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnFilterRuleItemClick(rule.toInfo()))
@@ -420,20 +528,52 @@ class FiltersViewModelTest {
         }
 
     @Test
-    fun `WHEN AddFilterRuleClick event is received THEN uiState should update dialogType to AddFilterRule`() =
+    fun `WHEN AddFilterRuleClick event is received THEN fetchGroupsUseCase should be called and groups stored in dialog`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
+
+            // Then
+            coVerify { fetchAllGroupsUseCase() }
+
+            viewModel.uiState.test {
+                val result = awaitItem()
+                val dialog = result.dialogType as FilterDialogType.AddFilterRule
+                assertThat(dialog.type).isEqualTo(FilterRuleTypeEntity.ALLOW)
+                assertThat(dialog.groups).isEqualTo(testGroups)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `GIVEN fetchAllGroupsUseCase fails WHEN AddFilterRuleClick event is received THEN empty groups list should be used`() =
+        runTest {
+            // Given
+            coEvery { fetchAllGroupsUseCase() } returns Result.failure(Exception("Failed to fetch groups"))
+
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
+
+            // When
+            viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
 
             // Then
             viewModel.uiState.test {
                 val result = awaitItem()
-                assertThat((result.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
-                    FilterRuleTypeEntity.ALLOW
-                )
+                val dialog = result.dialogType as FilterDialogType.AddFilterRule
+                assertThat(dialog.groups).isEmpty()
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -442,7 +582,11 @@ class FiltersViewModelTest {
     fun `WHEN OnFilterTabChanged event is received THEN currentPiHoleFilterRuleType should be updated`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnFilterTabChanged(FilterTab.DenyList))
@@ -451,6 +595,7 @@ class FiltersViewModelTest {
             viewModel.uiState.test {
                 awaitItem() // Consume the initial state
                 viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+                advanceUntilIdle()
                 val result2 = awaitItem()
                 assertThat((result2.dialogType as FilterDialogType.AddFilterRule).type).isEqualTo(
                     FilterRuleTypeEntity.DENY
@@ -473,7 +618,11 @@ class FiltersViewModelTest {
                 groups = emptyList(),
                 type = FilterRuleTypeEntity.ALLOW
             )
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnDeleteFilterRuleClick(rule.toInfo()))
@@ -492,7 +641,11 @@ class FiltersViewModelTest {
     fun `WHEN OnDismissFilterBy event is received THEN showFilterByMenu should be false`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
             viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
 
             // When
@@ -510,7 +663,11 @@ class FiltersViewModelTest {
     fun `WHEN OnShowFilterByMenu event is received THEN showFilterByMenu should be true`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
 
             // When
             viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
@@ -527,7 +684,11 @@ class FiltersViewModelTest {
     fun `WHEN OnFilterByOptionClick event is received THEN selected filter options should be updated`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
             val option = FilterByOption.ALLOW_EXACT
 
             // When
@@ -536,7 +697,7 @@ class FiltersViewModelTest {
             // Then
             viewModel.uiState.test {
                 val result = awaitItem()
-                assertThat(result.selectedFilterByOptions).doesNotContain(option)
+                assertThat(result.allowSelectedFilterBy).doesNotContain(option)
                 assertThat(result.showFilterByMenu).isFalse()
                 cancelAndConsumeRemainingEvents()
             }
@@ -546,7 +707,11 @@ class FiltersViewModelTest {
     fun `GIVEN only one filter option selected WHEN that option is deselected THEN other option should be automatically selected`() =
         runTest {
             // Given
-            viewModel = FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase)
+            viewModel = FiltersViewModel(
+                addFilterRuleUseCase,
+                removeFilterRuleUseCase,
+                fetchAllGroupsUseCase
+            )
             val firstOption = FilterByOption.ALLOW_EXACT
             val secondOption = FilterByOption.ALLOW_REGEX
 
@@ -559,7 +724,7 @@ class FiltersViewModelTest {
             // Then
             viewModel.uiState.test {
                 val result = awaitItem()
-                assertThat(result.selectedFilterByOptions).containsExactly(firstOption)
+                assertThat(result.allowSelectedFilterBy).containsExactly(firstOption)
                 assertThat(result.showFilterByMenu).isFalse()
                 cancelAndConsumeRemainingEvents()
             }

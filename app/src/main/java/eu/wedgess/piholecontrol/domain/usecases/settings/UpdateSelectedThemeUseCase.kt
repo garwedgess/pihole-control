@@ -2,8 +2,9 @@ package eu.wedgess.piholecontrol.domain.usecases.settings
 
 import eu.wedgess.piholecontrol.domain.model.AppThemeEntity
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
+import javax.inject.Inject
 
-class UpdateSelectedThemeUseCase(private val repository: SettingsRepository) {
+class UpdateSelectedThemeUseCase @Inject constructor(private val repository: SettingsRepository) {
     suspend operator fun invoke(theme: AppThemeEntity): Result<Unit> {
         return repository.updateSelectedTheme(theme)
     }

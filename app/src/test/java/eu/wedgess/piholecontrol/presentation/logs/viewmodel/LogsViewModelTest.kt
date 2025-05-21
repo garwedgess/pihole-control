@@ -91,14 +91,21 @@ class LogsViewModelTest {
         runTest {
             // Given
             val logs = listOf(
-                PiHoleLogsEntity.Version5(
+                PiHoleLogsEntity(
                     timestamp = 1672531200,
-                    time = "23:53:25",
-                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
-                    domain = "test.com",
-                    answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                     client = "192.168.1.1",
-                    replyTime = 1.0
+                    domain = "test.com",
+                    time = "23:53:25",
+                    replyTime = 1.0,
+                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
+                    id = 1,
+                    status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
+                    dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                    replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                    listId = null,
+                    edeCode = -1,
+                    edeText = null,
+                    cname = null
                 )
             )
             coEvery {
@@ -214,6 +221,8 @@ class LogsViewModelTest {
     @Test
     fun `WHEN AddToAllowList event is received THEN addFilterRuleUseCase should be called with correct parameters`() =
         runTest {
+            val groups = listOf(0)
+            val comment = null
             // Given
             coEvery {
                 fetchLogsUseCase(
@@ -232,6 +241,8 @@ class LogsViewModelTest {
             coEvery {
                 addFilterRuleUseCase(
                     domain,
+                    groups,
+                    comment,
                     FilterRuleTypeEntity.ALLOW
                 )
             } returns Result.success(
@@ -248,12 +259,14 @@ class LogsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            coVerify { addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW) }
+            coVerify { addFilterRuleUseCase(domain, groups, comment, FilterRuleTypeEntity.ALLOW) }
         }
 
     @Test
     fun `WHEN AddToBlockList event is received THEN addFilterRuleUseCase should be called with correct parameters`() =
         runTest {
+            val comment = null
+            val groups = listOf(0)
             // Given
             coEvery {
                 fetchLogsUseCase(
@@ -272,6 +285,8 @@ class LogsViewModelTest {
             coEvery {
                 addFilterRuleUseCase(
                     domain,
+                    groups = groups,
+                    comment = comment,
                     FilterRuleTypeEntity.DENY
                 )
             } returns Result.success(
@@ -288,7 +303,7 @@ class LogsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            coVerify { addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY) }
+            coVerify { addFilterRuleUseCase(domain, groups, comment, FilterRuleTypeEntity.DENY) }
         }
 
     @Test
@@ -308,14 +323,21 @@ class LogsViewModelTest {
                     until = any()
                 )
             } returns flowOf(Result.success(mockk(relaxed = true)))
-            val log = LogEntryInfo.Version5(
+            val log = LogEntryInfo(
                 timestamp = 1672531200,
-                time = "23:53:25",
-                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
-                domain = "test.com",
-                answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
                 client = "192.168.1.1",
-                replyTime = 1.0
+                domain = "test.com",
+                time = "23:53:25",
+                replyTime = 1.0,
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.A,
+                id = 1,
+                status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
+                dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                listId = null,
+                edeCode = -1,
+                edeText = null,
+                cname = null
             )
             viewModel = LogsViewModel(
                 fetchLogsUseCase,
@@ -1109,7 +1131,12 @@ class LogsViewModelTest {
         val domain = "test.com"
         val errorMessage = "Add to allow list failed"
         coEvery {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW)
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.ALLOW
+            )
         } returns Result.failure(Exception(errorMessage))
 
         viewModel =
@@ -1153,7 +1180,12 @@ class LogsViewModelTest {
         val domain = "test.com"
         val errorMessage = "Add to block list failed"
         coEvery {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY)
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.DENY
+            )
         } returns Result.failure(Exception(errorMessage))
 
         viewModel =
@@ -1463,7 +1495,12 @@ class LogsViewModelTest {
 
         val domain = "test.com"
         coEvery {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.ALLOW)
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.ALLOW
+            )
         } returns Result.success(
             ModifyFilterRuleResponseEntity(success = true, message = null)
         )
@@ -1505,7 +1542,12 @@ class LogsViewModelTest {
 
         val domain = "test.com"
         coEvery {
-            addFilterRuleUseCase(domain, FilterRuleTypeEntity.DENY)
+            addFilterRuleUseCase(
+                domain,
+                groups = listOf(0),
+                comment = null,
+                FilterRuleTypeEntity.DENY
+            )
         } returns Result.success(
             ModifyFilterRuleResponseEntity(success = true, message = null)
         )

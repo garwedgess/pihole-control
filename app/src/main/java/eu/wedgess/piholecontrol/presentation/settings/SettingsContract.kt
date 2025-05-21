@@ -17,7 +17,7 @@ interface SettingsContract {
 
         companion object {
             fun initial() = UiState(
-                currentConnection = ConnectionEntity.Version5.default,
+                currentConnection = ConnectionEntity.default,
                 currentTheme = AppThemePres.System,
                 refreshInterval = 10_000,
                 useDynamicThemeColors = false,
@@ -38,7 +38,7 @@ interface SettingsContract {
         data class OnDynamicThemeColorsChanged(val useDynamicTheme: Boolean) : Event
         data class OnRefreshIntervalChanged(val refreshInterval: Long) : Event
         data class OnChangeStatusOnAllConnectionsChanged(val changeOnAll: Boolean) : Event
-        data object OnRefreshIntervalClicked : Event
+        data class OnRefreshIntervalClicked(val currentRefreshInterval: Long) : Event
         data object OnServerClicked : Event
         data object OnDismissDialog : Event
     }

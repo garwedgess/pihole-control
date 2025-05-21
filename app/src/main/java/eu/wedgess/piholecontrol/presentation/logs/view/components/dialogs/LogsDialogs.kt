@@ -62,14 +62,21 @@ private class LogsDialogsPreviewParameters : PreviewParameterProvider<LogsDialog
     override val values: Sequence<LogsDialogType>
         get() = sequenceOf(
             LogsDialogType.ShowDetailsDialog(
-                details = LogEntryInfo.Version5(
+                details = LogEntryInfo(
                     timestamp = System.currentTimeMillis().div(1000L),
-                    time = "10:12",
-                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.SOA,
-                    domain = "www.google.com",
                     client = "My Android",
-                    answerType = PiHoleLogsEntity.LogsAnswerTypeEntity.LOCAL_CACHE,
-                    replyTime = 1.2
+                    domain = "www.google.com.ccckjkjakjkldasjklasjkjlj",
+                    time = "10:12:01",
+                    replyTime = 1.2,
+                    queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
+                    id = 1,
+                    status = PiHoleLogsEntity.LogEntryStatusEntity.CACHE,
+                    dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                    replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                    listId = null,
+                    edeCode = -1,
+                    edeText = null,
+                    cname = null,
                 )
             ),
             LogsDialogType.ShowDatePickerDialog(pickerType = PickerType.ToTime),

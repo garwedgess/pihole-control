@@ -122,15 +122,22 @@ private fun LogListItemPreview(
 
 private class LogListItemPreviewProvider : PreviewParameterProvider<LogEntryInfo> {
     override val values: Sequence<LogEntryInfo>
-        get() = PiHoleLogsEntity.LogsAnswerTypeEntity.entries.asSequence().map {
-            LogEntryInfo.Version5(
+        get() = PiHoleLogsEntity.LogEntryStatusEntity.entries.asSequence().map {
+            LogEntryInfo(
                 timestamp = System.currentTimeMillis().div(1000L),
-                time = "10:12:01",
-                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
-                domain = "www.google.com.ccckjkjakjkldasjklasjkjlj",
                 client = "My Android",
-                answerType = it,
-                replyTime = 1.2
+                domain = "www.google.com.ccckjkjakjkldasjklasjkjlj",
+                time = "10:12:01",
+                replyTime = 1.2,
+                queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
+                id = 1,
+                status = it,
+                dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                listId = null,
+                edeCode = -1,
+                edeText = null,
+                cname = null,
             )
         }
 }

@@ -20,6 +20,7 @@ fun FilterDialogs(
         FilterDialogType.None -> Unit
         is FilterDialogType.AddFilterRule -> AddFilterRuleDialog(
             filterRuleType = dialogType.type,
+            groups = dialogType.groups,
             onDismissRequest = onDismissDialogClick,
             onConfirmClick = onAddRuleClick
         )

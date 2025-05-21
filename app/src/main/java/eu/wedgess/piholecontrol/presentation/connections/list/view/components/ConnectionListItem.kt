@@ -127,7 +127,7 @@ private fun ConnectionListItemPreview() {
     PiHoleControlTheme {
         Surface {
             ConnectionListItem(
-                ConnectionEntity.Version5.default,
+                ConnectionEntity.default,
                 onEditClick = {},
                 onSetActiveClick = {},
                 onDeleteClick = {}

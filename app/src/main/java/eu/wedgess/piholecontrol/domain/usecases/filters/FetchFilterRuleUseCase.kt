@@ -4,8 +4,9 @@ import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
+import javax.inject.Inject
 
-class FetchFilterRuleUseCase(
+class FetchFilterRuleUseCase @Inject constructor(
     private val filterRulesRepository: FilterRulesRepository
 ) {
     suspend operator fun invoke(

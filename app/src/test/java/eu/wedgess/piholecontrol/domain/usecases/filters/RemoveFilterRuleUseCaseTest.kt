@@ -33,7 +33,7 @@ class RemoveFilterRuleUseCaseTest {
     fun `invoke - returns success when rule is removed successfully`() = runTest {
         val rule = "example.com"
         val ruleType = FilterRuleTypeEntity.ALLOW
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val expectedResponse = ModifyFilterRuleResponseEntity(success = true, message = null)
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
         coEvery {
@@ -67,7 +67,7 @@ class RemoveFilterRuleUseCaseTest {
     fun `invoke - returns failure when removeFilterRule fails`() = runTest {
         val rule = "example.com"
         val ruleType = FilterRuleTypeEntity.ALLOW
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to remove filter rule")
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
         coEvery {

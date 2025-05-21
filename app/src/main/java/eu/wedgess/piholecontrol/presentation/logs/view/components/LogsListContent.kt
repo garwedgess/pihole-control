@@ -35,14 +35,8 @@ fun LogsListContent(
                 onLiveLoggingChange = { onEvent(LogsContract.Event.OnLiveLoggingChanged(it)) }
             )
         }
-        if (logsList.firstOrNull() is LogEntryInfo.Version6) {
-            items(logsList, key = { (it as LogEntryInfo.Version6).id }) { log ->
-                LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
-            }
-        } else {
-            items(logsList) { log ->
-                LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
-            }
+        items(logsList, key = { it.id }) { log ->
+            LogListItem(log, onItemClick = { onEvent(LogsContract.Event.OnLogSelected(log)) })
         }
     }
     LogsDialogs(dialogType, onEvent)
@@ -54,15 +48,22 @@ private fun LogsListContentPreview() {
     PiHoleControlTheme {
         Surface {
             LogsListContent(
-                logsList = PiHoleLogsEntity.LogsAnswerTypeEntity.entries.map {
-                    LogEntryInfo.Version5(
+                logsList = PiHoleLogsEntity.LogEntryStatusEntity.entries.map {
+                    LogEntryInfo(
                         timestamp = System.currentTimeMillis().div(1000L),
-                        time = "10:12:01",
-                        queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
-                        domain = "www.google.com",
                         client = "My Android",
-                        answerType = it,
-                        replyTime = 1.2
+                        domain = "www.google.com.ccckjkjakjkldasjklasjkjlj",
+                        time = "10:12:01",
+                        replyTime = 1.2,
+                        queryType = PiHoleLogsEntity.LogEntryQueryTypeEntity.AAAA,
+                        id = 1,
+                        status = it,
+                        dnssec = PiHoleLogsEntity.LogEntryDnssecEntity.UNKNOWN,
+                        replyType = PiHoleLogsEntity.LogEntryReplyTypeEntity.DOMAIN,
+                        listId = null,
+                        edeCode = -1,
+                        edeText = null,
+                        cname = null,
                     )
                 },
                 liveLoggingEnabled = false,

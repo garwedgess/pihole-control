@@ -34,7 +34,7 @@ class FetchQueryPiHoleSummaryTypesDataUseCaseTest {
     fun `invoke - emits success when repository returns data`() = runTest {
         val queryTypes = mapOf("A" to 50f, "AAAA" to 30f, "CNAME" to 20f)
         val expectedData = queryTypes.map { QueryTypeChartData(it.key, it.value) }
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
 
         coEvery {
             periodicRefreshUseCase<List<QueryTypeChartData>>(any())
@@ -60,7 +60,7 @@ class FetchQueryPiHoleSummaryTypesDataUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch query types")
 
         coEvery {

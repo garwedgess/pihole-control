@@ -43,7 +43,7 @@ class FetchTopPiHoleSummaryQueriesDataUseCaseTest {
                 TopDomainEntity(domain = "trackers.com", hits = 70, 40f)
             )
         )
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
 
         coEvery {
             periodicRefreshUseCase<TopQueriesEntity>(any())
@@ -67,7 +67,7 @@ class FetchTopPiHoleSummaryQueriesDataUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch top queries")
 
         coEvery {

@@ -27,7 +27,7 @@ class FetchPiHoleSummaryClientsDataOverallTimeDataUseCaseTest {
 
     @Test
     fun `invoke - successfully fetches clients overall time data`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val clientData = listOf(
             ClientOverTimeEntity(
                 clientName = "client",
@@ -53,7 +53,7 @@ class FetchPiHoleSummaryClientsDataOverallTimeDataUseCaseTest {
 
     @Test
     fun `invoke - returns failure when fetching clients overall time data fails`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch clients overall time data")
         coEvery { dashboardRepository.fetchOverTimeDataClients(connection) } returns Result.failure(
             exception

@@ -27,7 +27,7 @@ class FetchAllConnectionsUseCaseTest {
 
     @Test
     fun `invoke - fetches all connections and returns success`() = runTest {
-        val connections = listOf(ConnectionEntity.Version5.default, ConnectionEntity.Version5.default)
+        val connections = listOf(ConnectionEntity.default, ConnectionEntity.default)
 
         coEvery { repository.fetchAll() } returns flowOf(
             Result.success(

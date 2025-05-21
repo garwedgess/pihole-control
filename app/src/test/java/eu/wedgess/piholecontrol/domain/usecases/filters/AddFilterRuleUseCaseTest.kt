@@ -32,65 +32,99 @@ class AddFilterRuleUseCaseTest {
 
     @Test
     fun `invoke - returns success when filter rule is added successfully`() = runTest {
-        val rule = "example.com"
-        val ruleType = FilterRuleTypeEntity.ALLOW
-        val connection = ConnectionEntity.Version5.default
+        val domain = "example.com"
+        val comment = "comment"
+        val groups = listOf(1, 2)
+        val domainType = FilterRuleTypeEntity.ALLOW
+        val connection = ConnectionEntity.default
         val response = ModifyFilterRuleResponseEntity(success = true, message = null)
 
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
         coEvery {
             filterRuleRepository.addFilterRule(
                 connection,
-                rule,
-                ruleType
+                domain,
+                groups,
+                comment,
+                domainType
             )
         } returns Result.success(response)
 
-        val result = target(rule, ruleType)
+        val result = target(domain, groups, comment, domainType)
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrNull()).isEqualTo(response)
         coVerify { connectionRepository.fetchActive() }
-        coVerify { filterRuleRepository.addFilterRule(connection, rule, ruleType) }
+        coVerify {
+            filterRuleRepository.addFilterRule(
+                connection,
+                domain,
+                groups,
+                comment,
+                domainType
+            )
+        }
     }
 
     @Test
     fun `invoke - returns failure when connection fetch fails`() = runTest {
-        val rule = "example.com"
+        val domain = "example.com"
+        val comment = "comment"
+        val groups = listOf(1, 2)
         val ruleType = FilterRuleTypeEntity.ALLOW
         val exception = Exception("No active connection found")
 
         coEvery { connectionRepository.fetchActive() } returns Result.failure(exception)
 
-        val result = target(rule, ruleType)
+        val result = target(domain, groups, comment, ruleType)
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { connectionRepository.fetchActive() }
-        coVerify(exactly = 0) { filterRuleRepository.addFilterRule(any(), any(), any()) }
+        coVerify(exactly = 0) {
+            filterRuleRepository.addFilterRule(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
     }
 
     @Test
     fun `invoke - returns failure when adding filter rule fails`() = runTest {
-        val rule = "example.com"
+        val domain = "example.com"
+        val comment = "comment"
+        val groups = listOf(1, 2)
         val ruleType = FilterRuleTypeEntity.ALLOW
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to add filter rule")
 
         coEvery { connectionRepository.fetchActive() } returns Result.success(connection)
         coEvery {
             filterRuleRepository.addFilterRule(
                 connection,
-                rule,
+                domain,
+                groups,
+                comment,
                 ruleType
             )
         } returns Result.failure(exception)
 
-        val result = target(rule, ruleType)
+        val result = target(domain, groups, comment, ruleType)
 
         assertThat(result.isFailure).isTrue()
         assertThat(result.exceptionOrNull()).isEqualTo(exception)
         coVerify { connectionRepository.fetchActive() }
-        coVerify { filterRuleRepository.addFilterRule(connection, rule, ruleType) }
+        coVerify {
+            filterRuleRepository.addFilterRule(
+                connection,
+                domain,
+                groups,
+                comment,
+                ruleType
+            )
+        }
     }
 }

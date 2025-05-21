@@ -4,8 +4,9 @@ import eu.wedgess.piholecontrol.domain.model.StatusEntity
 import eu.wedgess.piholecontrol.domain.usecases.ObserveActiveUserUseCase
 import eu.wedgess.piholecontrol.domain.usecases.connections.FetchAllConnectionsUseCase
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class EnableAdBlockingConditionalUseCase(
+class EnableAdBlockingConditionalUseCase @Inject constructor(
     private val fetchShouldChangeStatusOnAllConnectionsUseCase: FetchShouldChangeStatusOnAllConnectionsUseCase,
     private val fetchAllConnectionsUseCase: FetchAllConnectionsUseCase,
     private val observeActiveUserUseCase: ObserveActiveUserUseCase,

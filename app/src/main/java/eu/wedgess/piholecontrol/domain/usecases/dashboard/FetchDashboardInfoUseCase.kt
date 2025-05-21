@@ -5,8 +5,9 @@ import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.supervisorScope
+import javax.inject.Inject
 
-class FetchDashboardInfoUseCase(
+class FetchDashboardInfoUseCase @Inject constructor(
     private val fetchStatusSummaryUseCase: FetchStatusSummaryUseCase,
     private val fetchOverallTimeDataUseCase: FetchOverallTimeDataUseCase,
     private val fetchClientsOverallTimeDataUseCase: FetchClientsOverallTimeDataUseCase,

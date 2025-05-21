@@ -45,7 +45,7 @@ class FetchDashboardInfoUseCaseTest {
 
     @Test
     fun `invoke - successfully fetches dashboard info`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val summary = Result.success(
             SummaryEntity(
                 dnsQueries = 1234,
@@ -91,7 +91,7 @@ class FetchDashboardInfoUseCaseTest {
 
     @Test
     fun `invoke - returns success when one of the results fails`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val summary = Result.success(
             SummaryEntity(
                 dnsQueries = 1234,

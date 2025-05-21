@@ -1,7 +1,7 @@
 package eu.wedgess.piholecontrol.data.network
 
+import eu.wedgess.piholecontrol.data.extensions.SID_HEADER
 import eu.wedgess.piholecontrol.data.repository.TokenRefresher
-import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -43,7 +43,7 @@ class SessionIdAuthenticator @Inject constructor(
     }
 
     private suspend fun handleTokenRefresh(requestBuilder: Request.Builder): Request? {
-        val connection = connectionRepository.fetchActive().getOrNull() as? ConnectionEntity.Version6
+        val connection = connectionRepository.fetchActive().getOrNull()
             ?: return null
 
         val newAuthSession = tokenRefresher.generateSessionId(connection).getOrNull() ?: return null
@@ -51,7 +51,7 @@ class SessionIdAuthenticator @Inject constructor(
         connectionRepository.update(newConnection)
 
         return requestBuilder
-            .header("sid", newConnection.sid)
+            .header(SID_HEADER, newConnection.sid)
             .build()
     }
 }

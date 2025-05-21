@@ -26,7 +26,7 @@ class EnableAdBlockingUseCaseTest {
 
     @Test
     fun `invoke - enables ad blocking and returns success`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val status = StatusEntity.ENABLED
 
         coEvery { repository.enableAdBlocking(connection) } returns Result.success(status)
@@ -40,7 +40,7 @@ class EnableAdBlockingUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fails to enable ad blocking`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to enable ad blocking")
 
         coEvery { repository.enableAdBlocking(connection) } returns Result.failure(exception)

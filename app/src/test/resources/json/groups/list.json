@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "name": "Default",
+      "comment": null,
+      "enabled": true,
+      "id": 0,
+      "date_added": 1735427831,
+      "date_modified": 1735427831
+    },
+    {
+      "name": "Minimal blocking",
+      "comment": "Minimal ad blocking",
+      "enabled": true,
+      "id": 1,
+      "date_added": 1694192552,
+      "date_modified": 1735427831
+    },
+    {
+      "name": "Full blocking",
+      "comment": "Uses all lists to block",
+      "enabled": true,
+      "id": 2,
+      "date_added": 1694201031,
+      "date_modified": 1735427831
+    }
+  ],
+  "took": 0.00010585784912109375
+}

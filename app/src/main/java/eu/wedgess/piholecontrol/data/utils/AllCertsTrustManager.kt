@@ -1,8 +1,10 @@
 package eu.wedgess.piholecontrol.data.utils
 
+import android.annotation.SuppressLint
 import java.security.cert.X509Certificate
 import javax.net.ssl.X509TrustManager
 
+@SuppressLint("CustomX509TrustManager")
 internal class AllCertsTrustManager : X509TrustManager {
 
     @Suppress("TrustAllX509TrustManager")

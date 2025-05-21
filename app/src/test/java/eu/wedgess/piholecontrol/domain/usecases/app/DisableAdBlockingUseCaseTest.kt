@@ -28,7 +28,7 @@ class DisableAdBlockingUseCaseTest {
 
     @Test
     fun `invoke - disables ad blocking and returns success`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val status = StatusEntity.DISABLED
         val duration: Duration = 30.minutes
 
@@ -49,7 +49,7 @@ class DisableAdBlockingUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fails to disable ad blocking`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to disable ad blocking")
         val duration: Duration = 30.minutes
 

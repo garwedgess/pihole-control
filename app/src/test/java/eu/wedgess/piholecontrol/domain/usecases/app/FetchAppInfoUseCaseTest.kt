@@ -40,8 +40,8 @@ class FetchAppInfoUseCaseTest {
 
     @Test
     fun `invoke - returns PiHoleAppInfo with combined results`() = runTest {
-        val activeConnection = ConnectionEntity.Version5.default
-        val connections = listOf(activeConnection, ConnectionEntity.Version5.default)
+        val activeConnection = ConnectionEntity.default
+        val connections = listOf(activeConnection, ConnectionEntity.default)
         val status = StatusEntity.ENABLED
 
         coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(connections))
@@ -66,7 +66,7 @@ class FetchAppInfoUseCaseTest {
     fun `invoke - returns PiHoleAppInfo with default values when repository returns empty or null`() =
         runTest {
             val emptyConnections = emptyList<ConnectionEntity>()
-            val activeConnection = ConnectionEntity.Version5.default
+            val activeConnection = ConnectionEntity.default
             val defaultStatus = StatusEntity.UNKNOWN
 
             coEvery { fetchAllConnectionsUseCase() } returns flowOf(Result.success(emptyConnections))
@@ -89,7 +89,7 @@ class FetchAppInfoUseCaseTest {
 
     @Test
     fun `invoke - returns PiHoleAppInfo with error status when fetching status fails`() = runTest {
-        val connection1 = ConnectionEntity.Version5.default
+        val connection1 = ConnectionEntity.default
         val connections = listOf(connection1)
         val activeConnection = connection1
         val exception = Exception("Failed to fetch status")

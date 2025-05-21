@@ -31,7 +31,7 @@ class FetchLogFilterSuggestionsUseCaseTest {
 
     @Test
     fun `invoke - emits log filter suggestions successfully`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val expectedSuggestions = LogFilterSuggestionsEntity(
             clientIpAddresses = listOf("192.168.1.22", "192.168.1.70"),
             clientNames = listOf("client1", "client2"),
@@ -59,7 +59,7 @@ class FetchLogFilterSuggestionsUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val expectedError = Result.failure<LogFilterSuggestionsEntity>(
             Exception("Error fetching log filter suggestions")
         )

@@ -43,8 +43,8 @@ class EnableAdBlockingConditionalUseCaseTest {
 
     @Test
     fun `invoke - enables ad blocking for all connections when changeForAll is true`() = runTest {
-        val connection1 = ConnectionEntity.Version5.default
-        val connection2 = ConnectionEntity.Version5.default
+        val connection1 = ConnectionEntity.default
+        val connection2 = ConnectionEntity.default
         val connections = listOf(connection1, connection2)
         val status = StatusEntity.ENABLED
 
@@ -61,7 +61,7 @@ class EnableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - enables ad blocking for active connection when changeForAll is false`() =
         runTest {
-            val activeConnection = ConnectionEntity.Version5.default
+            val activeConnection = ConnectionEntity.default
             val status = StatusEntity.ENABLED
 
             coEvery { fetchShouldChangeStatusOnAllConnectionsUseCase() } returns false

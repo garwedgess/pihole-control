@@ -25,7 +25,7 @@ class AddConnectionUseCaseTest {
 
     @Test
     fun `invoke - inserts connection and returns success`() = runTest {
-        val connectionInfo = ConnectionEntity.Version5.default
+        val connectionInfo = ConnectionEntity.default
         coEvery { repository.insert(connectionInfo) } returns Result.success(Unit)
 
         val result = addConnectionUseCase(connectionInfo)
@@ -36,7 +36,7 @@ class AddConnectionUseCaseTest {
 
     @Test
     fun `invoke - returns failure when repository fails`() = runTest {
-        val connectionInfo = ConnectionEntity.Version5.default
+        val connectionInfo = ConnectionEntity.default
         val exception = Exception("Insert failed")
         coEvery { repository.insert(connectionInfo) } returns Result.failure(exception)
 

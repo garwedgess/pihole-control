@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
@@ -45,6 +47,7 @@ fun MainAppBar(
         label = "title animation"
     )
     CenterAlignedTopAppBar(
+        windowInsets = WindowInsets(0.dp),
         title = {
             appBarState.currentConnection?.takeIf { appBarState.displayConnection }?.run {
                 CurrentConnectionStatus(
@@ -110,10 +113,10 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionEntity.Version5.default,
+            currentConnection = ConnectionEntity.default,
             adBlockingEnabled = true,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionEntity.Version5.default),
+            connections = listOf(ConnectionEntity.default),
             actions = {
                 FilterTopBarActions(
                     onSearchClick = {},
@@ -130,10 +133,10 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_filters),
-            currentConnection = ConnectionEntity.Version5.default,
+            currentConnection = ConnectionEntity.default,
             adBlockingEnabled = false,
             showNavigateBackIcon = false,
-            connections = listOf(ConnectionEntity.Version5.default),
+            connections = listOf(ConnectionEntity.default),
             actions = {
                 FilterTopBarActions(
                     onSearchClick = {},
@@ -150,7 +153,7 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
         ),
         AppBarState(
             title = UiText.StringResource(R.string.nav_title_logs),
-            currentConnection = ConnectionEntity.Version5.default,
+            currentConnection = ConnectionEntity.default,
             showNavigateBackIcon = false,
             connections = emptyList(),
             actions = {

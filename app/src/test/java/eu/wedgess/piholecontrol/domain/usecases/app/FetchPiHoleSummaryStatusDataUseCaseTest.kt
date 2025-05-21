@@ -32,7 +32,7 @@ class FetchPiHoleSummaryStatusDataUseCaseTest {
 
     @Test
     fun `invoke - emits success when repository returns status`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val status = StatusEntity.ENABLED
 
         coEvery { periodicRefreshUseCase<StatusEntity>(any()) } answers {
@@ -55,7 +55,7 @@ class FetchPiHoleSummaryStatusDataUseCaseTest {
 
     @Test
     fun `invoke - emits error when repository returns failure`() = runTest {
-        val connection = ConnectionEntity.Version5.default
+        val connection = ConnectionEntity.default
         val exception = Exception("Failed to fetch status")
 
         coEvery { periodicRefreshUseCase<StatusEntity>(any()) } answers {

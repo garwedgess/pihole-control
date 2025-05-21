@@ -45,8 +45,8 @@ class DisableAdBlockingConditionalUseCaseTest {
 
     @Test
     fun `invoke - disables ad blocking for all connections when changeForAll is true`() = runTest {
-        val connection1 = ConnectionEntity.Version5.default
-        val connection2 = ConnectionEntity.Version5.default
+        val connection1 = ConnectionEntity.default
+        val connection2 = ConnectionEntity.default
         val connections = listOf(connection1, connection2)
         val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
         val status = StatusEntity.DISABLED
@@ -66,7 +66,7 @@ class DisableAdBlockingConditionalUseCaseTest {
     @Test
     fun `invoke - disables ad blocking for active connection when changeForAll is false`() =
         runTest {
-            val activeConnection = ConnectionEntity.Version5.default
+            val activeConnection = ConnectionEntity.default
             val duration = 5000L.toDuration(DurationUnit.MILLISECONDS)
             val status = StatusEntity.DISABLED
 

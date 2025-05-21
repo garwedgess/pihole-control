@@ -179,7 +179,7 @@ private fun SwipeToDeleteItemPreview() {
             SwipeToDeleteItem(
                 content = {
                     ConnectionListItem(
-                        connectionInfo = ConnectionEntity.Version5.default,
+                        connectionInfo = ConnectionEntity.default,
                         onDeleteClick = {},
                         onEditClick = {},
                         onSetActiveClick = {}

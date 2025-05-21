@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.google.mlkit.vision.barcode.BarcodeScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
@@ -20,7 +19,6 @@ import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
 import eu.wedgess.piholecontrol.presentation.connections.modify.ModifyConnectionsContract
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ConnectionInputError
 import eu.wedgess.piholecontrol.presentation.connections.modify.model.ModifyConnectionDialogType
-import eu.wedgess.piholecontrol.presentation.connections.modify.model.PiHoleApiVersion
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.utils.UiText
 import eu.wedgess.piholecontrol.utils.extensions.isDigitsOnly
@@ -36,7 +34,6 @@ class ModifyConnectionViewModel @Inject constructor(
     private val addConnectionUseCase: AddConnectionUseCase,
     private val updateConnectionUseCase: UpdateConnectionUseCase,
     private val generateSessionIdUseCase: GenerateSessionIdUseCase,
-    private val barcodeScanner: BarcodeScanner,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
     EventDrivenViewModel<ModifyConnectionsContract.Event>,
@@ -54,9 +51,6 @@ class ModifyConnectionViewModel @Inject constructor(
         when (event) {
             ModifyConnectionsContract.Event.FetchCurrentConnection -> fetchConnection()
             ModifyConnectionsContract.Event.SaveConnection -> saveConnection()
-            ModifyConnectionsContract.Event.OnOpenBarcodeScanner -> updateUiState {
-                copy(dialogType = ModifyConnectionDialogType.ApiTokenScanner(barcodeScanner))
-            }
 
             ModifyConnectionsContract.Event.OnDismissDialog -> updateUiState {
                 copy(dialogType = ModifyConnectionDialogType.None)
@@ -64,13 +58,6 @@ class ModifyConnectionViewModel @Inject constructor(
 
             is ModifyConnectionsContract.Event.OnApiPathChanged -> updateUiState {
                 copy(apiPath = event.apiPath)
-            }
-
-            is ModifyConnectionsContract.Event.OnApiTokenChanged -> updateUiState {
-                copy(
-                    apiToken = event.apiToken,
-                    dialogType = ModifyConnectionDialogType.None
-                )
             }
 
             is ModifyConnectionsContract.Event.OnAuthUsernameChanged -> updateUiState {
@@ -99,6 +86,9 @@ class ModifyConnectionViewModel @Inject constructor(
 
             is ModifyConnectionsContract.Event.OnPortChanged -> onPortChanged(event.port)
 
+            is ModifyConnectionsContract.Event.OnPasswordChanged ->
+                onPasswordChanged(event.password)
+
             is ModifyConnectionsContract.Event.OnProtocolChanged -> {
                 updateUiState {
                     copy(
@@ -108,26 +98,25 @@ class ModifyConnectionViewModel @Inject constructor(
                 }
             }
 
-            is ModifyConnectionsContract.Event.OnApiVersionChanged -> updateUiState {
-                copy(apiVersion = event.apiVersion)
-            }
-
             is ModifyConnectionsContract.Event.OnPasswordFieldVisibilityChanged -> updateUiState {
-                copy(apiKeyPasswordVisible = event.visible)
+                copy(passwordVisible = event.visible)
             }
 
-            is ModifyConnectionsContract.Event.OnBasicPasswordFieldVisibilityChanged -> updateUiState {
-                copy(basicAuthPasswordVisible = event.visible)
+            is ModifyConnectionsContract.Event.OnBasicPasswordFieldVisibilityChanged -> {
+                updateUiState {
+                    copy(basicAuthPasswordVisible = event.visible)
+                }
             }
 
-            is ModifyConnectionsContract.Event.OnPasswordChanged -> onPasswordChanged(event.password)
         }
     }
 
     private fun onPasswordChanged(password: String) {
         val isValidPassword = password.isNotBlank()
         val passwordError = if (!isValidPassword) {
-            ConnectionInputError.Password(UiText.StringResource(R.string.connection_password_error_blank))
+            ConnectionInputError.Password(
+                UiText.StringResource(R.string.connection_password_error_blank)
+            )
         } else {
             null
         }
@@ -251,16 +240,12 @@ class ModifyConnectionViewModel @Inject constructor(
                 updateConnection(updatedConnection)
             } else {
                 val newConnection = uiState.value.toPiHoleConnectionEntity()
-                if (newConnection is ConnectionEntity.Version6) {
-                    generateSessionAndInsert(newConnection)
-                } else {
-                    insertConnection(newConnection)
-                }
+                generateSessionAndInsert(newConnection)
             }
         }
     }
 
-    private fun generateSessionAndInsert(newConnection: ConnectionEntity.Version6) {
+    private fun generateSessionAndInsert(newConnection: ConnectionEntity) {
         updateUiState {
             copy(
                 dialogType = ModifyConnectionDialogType.LoadingDialog(
@@ -364,44 +349,20 @@ class ModifyConnectionViewModel @Inject constructor(
             viewModelScope.launch {
                 val connection = fetchConnectionByIdUseCase(this@run).getOrThrow()
                 updateUiState {
-                    when (connection) {
-                        is ConnectionEntity.Version5 -> {
-                            with(connection) {
-                                copy(
-                                    currentConnection = this,
-                                    name = this.name,
-                                    host = this.host,
-                                    port = this.port.toString(),
-                                    protocol = this.protocol,
-                                    apiPath = this.apiPath,
-                                    apiToken = this.token,
-                                    apiVersion = PiHoleApiVersion.Version5,
-                                    authUsername = this.authUsername,
-                                    authPassword = this.authPassword,
-                                    authRealm = this.authRealm,
-                                    trustAllCerts = this.trustAllCerts
-                                )
-                            }
-                        }
-
-                        is ConnectionEntity.Version6 -> {
-                            with(connection) {
-                                copy(
-                                    currentConnection = this,
-                                    name = this.name,
-                                    host = this.host,
-                                    port = this.port.toString(),
-                                    protocol = this.protocol,
-                                    apiPath = "",
-                                    apiToken = this.password,
-                                    apiVersion = PiHoleApiVersion.Version6,
-                                    authUsername = this.authUsername,
-                                    authPassword = this.authPassword,
-                                    authRealm = this.authRealm,
-                                    trustAllCerts = this.trustAllCerts
-                                )
-                            }
-                        }
+                    with(connection) {
+                        copy(
+                            currentConnection = this,
+                            name = this.name,
+                            host = this.host,
+                            port = this.port.toString(),
+                            protocol = this.protocol,
+                            password = this.password,
+                            apiPath = this.apiPath,
+                            authUsername = this.authUsername,
+                            authPassword = this.authPassword,
+                            authRealm = this.authRealm,
+                            trustAllCerts = this.trustAllCerts
+                        )
                     }
                 }
             }

@@ -26,7 +26,7 @@ class GenerateSessionIdUseCaseTest {
     @Test
     fun `invoke should return repository result when successful`() = runTest {
         // Given
-        val connection = ConnectionEntity.Version6.default
+        val connection = ConnectionEntity.default
         val expectedResponse = AuthSessionStatusEntity(
             valid = true,
             totp = false,
@@ -50,7 +50,7 @@ class GenerateSessionIdUseCaseTest {
     @Test
     fun `invoke should return null when session generation fails`() = runTest {
         // Given
-        val connection = ConnectionEntity.Version6.default
+        val connection = ConnectionEntity.default
 
         coEvery { authRepository.generateSessionId(connection) } returns Result.failure(
             RuntimeException("Error")

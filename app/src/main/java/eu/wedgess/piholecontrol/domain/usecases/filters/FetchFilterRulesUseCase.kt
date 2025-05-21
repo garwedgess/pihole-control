@@ -5,8 +5,9 @@ import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.RefreshMode
 import eu.wedgess.piholecontrol.domain.usecases.PeriodicRefreshUseCase
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class FetchFilterRulesUseCase(
+class FetchFilterRulesUseCase @Inject constructor(
     private val fetchFilterRuleUseCase: FetchFilterRuleUseCase,
     private val periodicRefreshUseCase: PeriodicRefreshUseCase
 ) {

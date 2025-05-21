@@ -48,7 +48,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - automatic mode fetch success`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val expectedData = "Fetched Data"
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
@@ -73,7 +73,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - automatic mode fetch failure transitions to manual mode`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
             Result.failure(Exception("Fetch failed"))
@@ -96,7 +96,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - manual mode fetch success transitions to automatic mode`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val expectedData = "Fetched Data"
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
@@ -122,7 +122,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - manual mode fetch failure remains in manual mode`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
             // All calls fail
@@ -171,7 +171,7 @@ class PeriodicRefreshUseCaseTest {
 
     @Test
     fun `invoke - network unavailable transitions to none mode and emits last result`() = runTest {
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val expectedData = "Fetched Data"
         val fetchData: suspend (ConnectionEntity) -> Result<String> =
             { Result.success(expectedData) }
@@ -197,7 +197,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - network unavailable transitions to none mode and emits failure when no last result`() =
         runTest {
-            val activeConnection = ConnectionEntity.Version5.default
+            val activeConnection = ConnectionEntity.default
             val fetchData: suspend (ConnectionEntity) -> Result<String> =
                 { Result.failure(Exception("No data")) }
             every { observeActiveUser() } returns flowOf(Result.success(activeConnection))
@@ -216,7 +216,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `invoke - network recovers transitions to automatic mode and resumes refresh`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val expectedData = "Fetched Data"
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
@@ -244,7 +244,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `triggerRefresh - forces manual refresh`() = runTest {
         var fetchDataCallCount = 0
-        val activeConnection = ConnectionEntity.Version5.default
+        val activeConnection = ConnectionEntity.default
         val expectedData = "Fetched Data"
         val fetchData: suspend (ConnectionEntity) -> Result<String> = {
             fetchDataCallCount++
@@ -268,7 +268,7 @@ class PeriodicRefreshUseCaseTest {
     @Test
     fun `setRefreshModeBasedOnNetworkStatus - available network transitions to automatic mode`() =
         runTest {
-            val activeConnection = ConnectionEntity.Version5.default
+            val activeConnection = ConnectionEntity.default
             val expectedData = "Data"
             val fetchData: suspend (ConnectionEntity) -> Result<String> =
                 { Result.success(expectedData) }

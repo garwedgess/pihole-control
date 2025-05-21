@@ -12,8 +12,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class PeriodicRefreshUseCase(
+class PeriodicRefreshUseCase @Inject constructor(
     private val observeActiveUser: ObserveActiveUserUseCase,
     private val observeNetworkConnectivityUseCase: ObserveNetworkConnectivityUseCase,
     private val settingsRepository: SettingsRepository

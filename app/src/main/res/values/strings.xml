@@ -97,7 +97,7 @@
     <string name="filters_tab_title_allow_list">Allow List</string>
     <string name="filters_tab_title_deny_list">Deny List</string>
     <string name="filters_add_rule_dialog_title">Add rule</string>
-    <string name="filters_add_rule_dialog_label_as_wildcard">Add as wildcard</string>
+    <string name="filters_add_rule_dialog_label_as_regex">Add as regex</string>
     <string name="filters_add_rule_dialog_btn_add">Add</string>
     <string name="filters_add_rule_dialog_label_domain">Domain</string>
     <string name="filters_details_dialog_title">Filter rule</string>
@@ -195,8 +195,6 @@
 
     <string name="network_connected">Connected to network</string>
     <string name="network_disconnected">Disconnected from network</string>
-    <string name="label_api_version_5">Version 5</string>
-    <string name="label_api_version_6">Version 6</string>
     <string name="connection_dialog_title_saving_failed">Error</string>
     <string name="connection_dialog_message_update_failed">Failed to save update: %s</string>
     <string name="connection_dialog_message_saving_failed">Failed to save connection: %s</string>
