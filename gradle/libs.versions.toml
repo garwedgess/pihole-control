@@ -30,7 +30,7 @@ androidXCamera = "1.6.1"
 mlkitBarcodeScanning = "17.3.0"
 truth = "1.4.5"
 turbine = "1.2.1"
-vicoComposeM3 = "1.16.0"
+vicoComposeM3 = "3.2.3"
 jacoco = "0.8.15"
 detekt = "1.23.8"
 detektCompose = "0.6.4"
@@ -102,7 +102,6 @@ mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning"
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 vicoCompose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vicoComposeM3" }
-vicoCore = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vicoComposeM3" }
 vicoM3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vicoComposeM3" }
 android-date-backport = { group = "com.jakewharton.threetenabp", name = "threetenabp", version = "1.4.8" }
 
@@ -111,7 +110,7 @@ coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 spotless-plugin-gradle = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotlessPluginGradle" }
 
 [bundles]
-vico = ["vicoCompose", "vicoCore", "vicoM3"]
+vico = ["vicoCompose", "vicoM3"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines-extensions", "sqldelight-primitive-adapters"]
 ktor = ["ktor-client-core", "ktor-client-android", "ktor-client-serialization", "ktor-client-logging", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json", "ktor-client-okhttp", "ktor-client-auth"]
 camera = ["androidx-camera-camera2", "androidx-camera-lifecycle", "androidx-camera-view", "androidx-camera-extensions"]

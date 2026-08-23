@@ -1,152 +1,148 @@
 package eu.wedgess.piholecontrol.utils.vico
 
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.patrykandpatrick.vico.compose.component.lineComponent
-import com.patrykandpatrick.vico.compose.component.overlayingComponent
-import com.patrykandpatrick.vico.compose.component.shapeComponent
-import com.patrykandpatrick.vico.compose.component.textComponent
-import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
-import com.patrykandpatrick.vico.core.chart.dimensions.HorizontalDimensions
-import com.patrykandpatrick.vico.core.chart.insets.Insets
-import com.patrykandpatrick.vico.core.chart.values.ChartValues
-import com.patrykandpatrick.vico.core.component.marker.MarkerComponent
-import com.patrykandpatrick.vico.core.component.shape.DashedShape
-import com.patrykandpatrick.vico.core.component.shape.ShapeComponent
-import com.patrykandpatrick.vico.core.component.shape.Shapes
-import com.patrykandpatrick.vico.core.component.shape.cornered.Corner
-import com.patrykandpatrick.vico.core.component.shape.cornered.MarkerCorneredShape
-import com.patrykandpatrick.vico.core.context.MeasureContext
-import com.patrykandpatrick.vico.core.extension.appendCompat
-import com.patrykandpatrick.vico.core.extension.copyColor
-import com.patrykandpatrick.vico.core.extension.transformToSpannable
-import com.patrykandpatrick.vico.core.marker.Marker
-import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
-import eu.wedgess.piholecontrol.presentation.dashboard.model.LineChartEntry
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.LineCartesianLayerMarkerTarget
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.LayeredComponent
+import com.patrykandpatrick.vico.compose.common.component.ShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.compose.common.data.ExtraStore
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
+
+val xDisplayValuesKey = ExtraStore.Key<Map<Int, String>>()
+val yDisplayLabelsKey = ExtraStore.Key<List<String?>>()
 
 @Composable
-fun rememberMarker(): Marker {
-    val labelBackgroundColor = MaterialTheme.colorScheme.surface
-    val labelBackground = remember(labelBackgroundColor) {
-        ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
-            radius = LABEL_BACKGROUND_SHADOW_RADIUS,
-            dy = LABEL_BACKGROUND_SHADOW_DY,
-            applyElevationOverlay = true
-        )
-    }
-    val label = textComponent(
-        color = MaterialTheme.colorScheme.onSurface,
-        background = labelBackground,
-        lineCount = LABEL_LINE_COUNT,
-        padding = labelPadding,
-        typeface = Typeface.MONOSPACE
-    )
-    val indicatorInnerComponent =
-        shapeComponent(Shapes.pillShape, MaterialTheme.colorScheme.surface)
-    val indicatorCenterComponent = shapeComponent(Shapes.pillShape, Color.White)
-    val indicatorOuterComponent = shapeComponent(Shapes.pillShape, Color.White)
-    val indicator = overlayingComponent(
-        outer = indicatorOuterComponent,
-        inner = overlayingComponent(
-            outer = indicatorCenterComponent,
-            inner = indicatorInnerComponent,
-            innerPaddingAll = indicatorInnerAndCenterComponentPaddingValue
-        ),
-        innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue
-    )
-    val guideline = lineComponent(
-        MaterialTheme.colorScheme.onSurface.copy(GUIDELINE_ALPHA),
-        guidelineThickness,
-        guidelineShape
-    )
-    return remember(label, indicator, guideline) {
-        object : MarkerComponent(label, indicator, guideline) {
-            init {
-                indicatorSizeDp = INDICATOR_SIZE_DP
-                onApplyEntryColor = { entryColor ->
-                    indicatorOuterComponent.color =
-                        entryColor.copyColor(INDICATOR_OUTER_COMPONENT_ALPHA)
-                    with(indicatorCenterComponent) {
-                        color = entryColor
-                        setShadow(
-                            radius = INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS,
-                            color = entryColor
-                        )
+fun rememberMarker(): CartesianMarker {
+    val valueFormatter = remember {
+        DefaultCartesianMarker.ValueFormatter { context, targets ->
+            val pattern = DecimalFormat("#.##;-#.##")
+            val xDisplayValues = context.model.extraStore.getOrNull(xDisplayValuesKey).orEmpty()
+            val yDisplayLabels = context.model.extraStore.getOrNull(yDisplayLabelsKey).orEmpty()
+            val xValue = targets.firstOrNull()?.x ?: return@ValueFormatter ""
+            val xLabel = xDisplayValues[xValue.roundToInt()] ?: pattern.format(xValue)
+            val points = targets
+                .filterIsInstance<LineCartesianLayerMarkerTarget>()
+                .flatMap { it.points }
+
+            buildAnnotatedString {
+                if (points.size > ONE_LINE_POINT_LIMIT) {
+                    append(xLabel)
+                    append(" ")
+                    points.forEachIndexed { index, point ->
+                        if (index > 0) {
+                            append("\n")
+                        }
+                        appendPointLabel(point, yDisplayLabels, pattern)
                     }
-                }
-            }
-
-            override fun getInsets(
-                context: MeasureContext,
-                outInsets: Insets,
-                horizontalDimensions: HorizontalDimensions
-            ) = with(context) {
-                outInsets.top = label.getHeight(context) +
-                    labelBackgroundShape.tickSizeDp.pixels +
-                    LABEL_BACKGROUND_SHADOW_RADIUS.pixels *
-                    SHADOW_RADIUS_MULTIPLIER -
-                    LABEL_BACKGROUND_SHADOW_DY.pixels
-            }
-        }.apply {
-            labelFormatter = object : MarkerLabelFormatter {
-
-                private val PATTERN = DecimalFormat("#.##;−#.##")
-
-                override fun getLabel(
-                    markedEntries: List<Marker.EntryModel>,
-                    chartValues: ChartValues
-                ): CharSequence {
-                    return markedEntries.transformToSpannable(
-                        prefix = when (val entry = markedEntries.firstOrNull()?.entry) {
-                            is LineChartEntry -> entry.xDisplayValue ?: PATTERN.format(entry.x)
-                            null -> ""
-                            else -> PATTERN.format(entry.x)
-                        } + if (markedEntries.size > 1) " (" else " ",
-                        postfix = if (markedEntries.size > 1) ")" else "",
-                        separator = " : "
-                    ) { model ->
-                        appendCompat(
-                            when (val entry = model.entry) {
-                                is LineChartEntry -> PATTERN.format(model.entry.y) +
-                                    (entry.yLabel?.let { " $it" } ?: "")
-
-                                else -> PATTERN.format(model.entry.y)
-                            },
-                            ForegroundColorSpan(model.color),
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+                } else {
+                    append(xLabel)
+                    append(if (points.size > 1) " (" else " ")
+                    points.forEachIndexed { index, point ->
+                        if (index > 0) {
+                            append(" : ")
+                        }
+                        appendPointLabel(point, yDisplayLabels, pattern)
+                    }
+                    if (points.size > 1) {
+                        append(")")
                     }
                 }
             }
         }
     }
+    val labelBackground = rememberShapeComponent(
+        fill = Fill(MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(50)
+    )
+    val indicatorHoleFill = Fill(MaterialTheme.colorScheme.surface)
+    val indicator = remember(indicatorHoleFill) {
+        { color: Color ->
+            LayeredComponent(
+                back = ShapeComponent(
+                    fill = Fill(color.copy(alpha = INDICATOR_GLOW_ALPHA)),
+                    shape = CircleShape
+                ),
+                front = LayeredComponent(
+                    back = ShapeComponent(
+                        fill = Fill(color.copy(alpha = INDICATOR_OUTER_ALPHA)),
+                        shape = CircleShape
+                    ),
+                    front = ShapeComponent(
+                        fill = indicatorHoleFill,
+                        shape = CircleShape,
+                        strokeFill = Fill(color),
+                        strokeThickness = INDICATOR_STROKE_THICKNESS
+                    ),
+                    padding = Insets(INDICATOR_RING_PADDING)
+                ),
+                padding = Insets(INDICATOR_GLOW_PADDING)
+            )
+        }
+    }
+
+    return rememberDefaultCartesianMarker(
+        label = rememberTextComponent(
+            MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontFamily = FontFamily.Monospace
+            ),
+            lineCount = LABEL_LINE_COUNT,
+            padding = Insets(LABEL_HORIZONTAL_PADDING, LABEL_VERTICAL_PADDING),
+            background = labelBackground
+        ),
+        valueFormatter = valueFormatter,
+        indicator = indicator,
+        indicatorSize = INDICATOR_SIZE,
+        guideline = rememberLineComponent(
+            fill = Fill(MaterialTheme.colorScheme.onSurface.copy(alpha = GUIDELINE_ALPHA)),
+            thickness = GUIDELINE_THICKNESS
+        )
+    )
 }
 
-const val LABEL_BACKGROUND_SHADOW_RADIUS = 4f
-const val LABEL_BACKGROUND_SHADOW_DY = 2f
-const val LABEL_LINE_COUNT = 1
-const val GUIDELINE_ALPHA = .2f
-const val INDICATOR_SIZE_DP = 36f
-const val INDICATOR_OUTER_COMPONENT_ALPHA = 32
-const val INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS = 12f
-const val GUIDELINE_DASH_LENGTH_DP = 8f
-const val GUIDELINE_GAP_LENGTH_DP = 4f
-const val SHADOW_RADIUS_MULTIPLIER = 1.3f
+private fun AnnotatedString.Builder.appendPointLabel(
+    point: LineCartesianLayerMarkerTarget.Point,
+    yDisplayLabels: List<String?>,
+    pattern: DecimalFormat
+) {
+    withStyle(SpanStyle(color = point.color)) {
+        append(pattern.format(point.entry.y))
+        val label = yDisplayLabels.getOrNull(point.entry.seriesIndex)
+        if (label != null) {
+            append(" ")
+            append(label)
+        }
+    }
+}
 
-val labelBackgroundShape = MarkerCorneredShape(Corner.FullyRounded)
-val labelHorizontalPaddingValue = 8.dp
-val labelVerticalPaddingValue = 4.dp
-val labelPadding = dimensionsOf(labelHorizontalPaddingValue, labelVerticalPaddingValue)
-val indicatorInnerAndCenterComponentPaddingValue = 5.dp
-val indicatorCenterAndOuterComponentPaddingValue = 10.dp
-val guidelineThickness = 2.dp
-val guidelineShape =
-    DashedShape(Shapes.pillShape, GUIDELINE_DASH_LENGTH_DP, GUIDELINE_GAP_LENGTH_DP)
+private const val ONE_LINE_POINT_LIMIT = 2
+private const val LABEL_LINE_COUNT = 3
+private const val GUIDELINE_ALPHA = .2f
+private const val INDICATOR_GLOW_ALPHA = .1f
+private const val INDICATOR_OUTER_ALPHA = .22f
+private val LABEL_HORIZONTAL_PADDING = 12.dp
+private val LABEL_VERTICAL_PADDING = 8.dp
+private val GUIDELINE_THICKNESS = 2.dp
+private val INDICATOR_SIZE = 26.dp
+private val INDICATOR_GLOW_PADDING = 3.dp
+private val INDICATOR_RING_PADDING = 4.dp
+private val INDICATOR_STROKE_THICKNESS = 3.dp
