@@ -21,7 +21,10 @@ class ConnectionRepositoryImpl @Inject constructor(
     override suspend fun insert(
         connection: ConnectionEntity
     ): Result<Unit> = withContext(dispatcherProvider.io) {
-        resultOf { connectionDao.insert(connection.toData()) }
+        resultOf {
+            connectionDao.insert(connection.toData())
+            Unit
+        }
     }
 
     override fun fetchAll(): Flow<Result<List<ConnectionEntity>>> =
@@ -53,6 +56,7 @@ class ConnectionRepositoryImpl @Inject constructor(
     ): Result<Unit> = withContext(dispatcherProvider.io) {
         resultOf {
             connectionDao.update(connection.toData())
+            Unit
         }
     }
 
@@ -61,12 +65,14 @@ class ConnectionRepositoryImpl @Inject constructor(
     ): Result<Unit> = withContext(dispatcherProvider.io) {
         resultOf {
             connectionDao.setActive(id)
+            Unit
         }
     }
 
     override suspend fun deleteById(id: UUID): Result<Unit> = withContext(dispatcherProvider.io) {
         resultOf {
             connectionDao.delete(id)
+            Unit
         }
     }
 
@@ -74,6 +80,7 @@ class ConnectionRepositoryImpl @Inject constructor(
         withContext(dispatcherProvider.io) {
             resultOf {
                 connectionDao.deleteMarkedForDeletion()
+                Unit
             }
         }
 
@@ -81,6 +88,7 @@ class ConnectionRepositoryImpl @Inject constructor(
         withContext(dispatcherProvider.io) {
             resultOf {
                 connectionDao.markAsDeleted(id)
+                Unit
             }
         }
 
@@ -88,6 +96,7 @@ class ConnectionRepositoryImpl @Inject constructor(
         withContext(dispatcherProvider.io) {
             resultOf {
                 connectionDao.unmarkAsDeleted(id)
+                Unit
             }
         }
 }

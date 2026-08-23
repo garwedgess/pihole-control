@@ -3,11 +3,11 @@ plugins {
 }
 
 dependencies {
-    api(libs.jetbrains.kotlin.gradle.plugin)
-    api(libs.android.tools.build.gradle)
-    gradleApi()
-    compileOnly(libs.detekt.gradle)
+    compileOnly(libs.android.tools.build.gradle)
+    implementation(libs.detekt.gradle)
     implementation(libs.spotless.plugin.gradle)
+
+    gradleApi()
 }
 
 gradlePlugin {
