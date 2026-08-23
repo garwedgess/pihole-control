@@ -18,10 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -30,19 +27,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.Dialog
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
 import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.presentation.common.components.DropdownTextField
 import eu.wedgess.piholecontrol.presentation.compose.ThemePreviewWithBackground
-import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.filters.extensions.isRegexFilterRuleType
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterRuleDraft
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
 @Composable
 fun AddFilterRuleDialog(
-    filterRuleType: FilterRuleTypeEntity,
     groups: List<GroupEntity>,
+    draft: FilterRuleDraft,
+    onDomainChange: (String) -> Unit,
+    onGroupsChange: (Set<GroupEntity>) -> Unit,
+    onCommentChange: (String) -> Unit,
+    onRegexChange: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
-    onConfirmClick: (ModifyFilterRule.Add) -> Unit
+    onConfirmClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -51,9 +53,22 @@ fun AddFilterRuleDialog(
     }
 
     Dialog(onDismissRequest = onDismissRequest) {
-        AddFilterRuleDialogContent(
-            filterRuleType = filterRuleType,
+        FilterRuleDialogContent(
+            title = stringResource(R.string.filters_add_rule_dialog_title),
+            confirmText = stringResource(R.string.filters_add_rule_dialog_btn_add),
             groups = groups,
+            domain = draft.domain,
+            selectedGroups = draft.selectedGroups,
+            comment = draft.comment,
+            enabled = true,
+            isRegex = draft.isRegex,
+            canConfirm = draft.canConfirm,
+            statusEditable = false,
+            onDomainChange = onDomainChange,
+            onGroupsChange = onGroupsChange,
+            onCommentChange = onCommentChange,
+            onEnabledChange = {},
+            onRegexChange = onRegexChange,
             focusRequester = focusRequester,
             onConfirmClick = onConfirmClick,
             onCancelClick = onDismissRequest
@@ -62,25 +77,68 @@ fun AddFilterRuleDialog(
 }
 
 @Composable
-private fun AddFilterRuleDialogContent(
-    filterRuleType: FilterRuleTypeEntity,
+fun EditFilterRuleDialog(
+    draft: FilterRuleInfo,
     groups: List<GroupEntity>,
-    onConfirmClick: (ModifyFilterRule.Add) -> Unit,
+    onDomainChange: (String) -> Unit,
+    onGroupsChange: (Set<GroupEntity>) -> Unit,
+    onCommentChange: (String) -> Unit,
+    onEnabledChange: (Boolean) -> Unit,
+    onRegexChange: (Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit
+) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    Dialog(onDismissRequest = onDismissRequest) {
+        FilterRuleDialogContent(
+            title = stringResource(R.string.filters_edit_rule_dialog_title),
+            confirmText = stringResource(R.string.filters_edit_rule_dialog_btn_update),
+            groups = groups,
+            domain = draft.domain,
+            selectedGroups = groups.filter { it.id in draft.groups }.toSet(),
+            comment = draft.comment.orEmpty(),
+            enabled = draft.enabled,
+            isRegex = draft.type.isRegexFilterRuleType(),
+            canConfirm = draft.domain.isNotBlank(),
+            statusEditable = true,
+            onDomainChange = onDomainChange,
+            onGroupsChange = onGroupsChange,
+            onCommentChange = onCommentChange,
+            onEnabledChange = onEnabledChange,
+            onRegexChange = onRegexChange,
+            focusRequester = focusRequester,
+            onConfirmClick = onConfirmClick,
+            onCancelClick = onDismissRequest
+        )
+    }
+}
+
+@Composable
+private fun FilterRuleDialogContent(
+    title: String,
+    confirmText: String,
+    groups: List<GroupEntity>,
+    domain: String,
+    selectedGroups: Set<GroupEntity>,
+    comment: String,
+    enabled: Boolean,
+    isRegex: Boolean,
+    canConfirm: Boolean,
+    statusEditable: Boolean,
+    onDomainChange: (String) -> Unit,
+    onGroupsChange: (Set<GroupEntity>) -> Unit,
+    onCommentChange: (String) -> Unit,
+    onEnabledChange: (Boolean) -> Unit,
+    onRegexChange: (Boolean) -> Unit,
+    onConfirmClick: () -> Unit,
     onCancelClick: () -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    var isWildcardChecked by remember {
-        mutableStateOf(false)
-    }
-    var domain by remember {
-        mutableStateOf("")
-    }
-    var domainGroups by remember {
-        mutableStateOf(setOfNotNull(groups.firstOrNull()))
-    }
-    var comment by remember {
-        mutableStateOf("")
-    }
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = RoundedCornerShape(PiHoleControlTheme.dimens.size.cornerRadiusLarge)
@@ -98,7 +156,7 @@ private fun AddFilterRuleDialogContent(
                     modifier = Modifier.padding(
                         bottom = PiHoleControlTheme.dimens.padding.screenContent
                     ),
-                    text = stringResource(R.string.filters_add_rule_dialog_title),
+                    text = title,
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -109,35 +167,46 @@ private fun AddFilterRuleDialogContent(
                 label = { Text(stringResource(R.string.filters_add_rule_dialog_label_domain)) },
                 value = domain,
                 maxLines = 1,
-                onValueChange = {
-                    domain = it
-                },
+                onValueChange = onDomainChange,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
             )
             AnimatedVisibility(visible = groups.isNotEmpty()) {
                 DropdownTextField(
-                    selectedValues = domainGroups,
+                    selectedValues = selectedGroups,
                     options = groups,
                     label = "Group",
-                    onValueChange = {
-                        domainGroups = it
-                    },
+                    onValueChange = onGroupsChange,
                     valueFormatter = { it.name },
                     multiSelect = true
                 )
             }
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.filters_details_dialog_label_comment)) },
                 value = comment,
                 maxLines = 1,
-                onValueChange = {
-                    comment = it
-                },
+                onValueChange = onCommentChange,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
+            AnimatedVisibility(visible = statusEditable) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        PiHoleControlTheme.dimens.padding.itemContent,
+                        Alignment.Start
+                    ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        stringResource(R.string.filters_edit_rule_dialog_label_enabled),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Checkbox(
+                        checked = enabled,
+                        onCheckedChange = onEnabledChange
+                    )
+                }
+            }
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -155,10 +224,8 @@ private fun AddFilterRuleDialogContent(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Checkbox(
-                    checked = isWildcardChecked,
-                    onCheckedChange = {
-                        isWildcardChecked = it
-                    }
+                    checked = isRegex,
+                    onCheckedChange = onRegexChange
                 )
             }
             Row(
@@ -169,29 +236,10 @@ private fun AddFilterRuleDialogContent(
                     Text(stringResource(R.string.all_btn_cancel))
                 }
                 TextButton(
-                    onClick = {
-                        val type = if (isWildcardChecked) {
-                            if (filterRuleType == FilterRuleTypeEntity.ALLOW) {
-                                FilterRuleTypeEntity.REGEX_ALLOW
-                            } else {
-                                FilterRuleTypeEntity.REGEX_DENY
-                            }
-                        } else {
-                            filterRuleType
-                        }
-                        onConfirmClick(
-                            ModifyFilterRule.Add(
-                                domain = domain,
-                                groups = domainGroups.map { it.id },
-                                comment = comment,
-                                type = type
-                            )
-                        )
-                    }
+                    enabled = canConfirm,
+                    onClick = onConfirmClick
                 ) {
-                    Text(
-                        stringResource(R.string.filters_add_rule_dialog_btn_add)
-                    )
+                    Text(confirmText)
                 }
             }
         }
@@ -204,8 +252,12 @@ private fun AddFilterRuleDialogPreview() {
     PiHoleControlTheme {
         Surface {
             AddFilterRuleDialog(
-                filterRuleType = FilterRuleTypeEntity.ALLOW,
                 groups = emptyList(),
+                draft = FilterRuleDraft(),
+                onDomainChange = {},
+                onGroupsChange = {},
+                onCommentChange = {},
+                onRegexChange = {},
                 onConfirmClick = { },
                 onDismissRequest = { }
             )

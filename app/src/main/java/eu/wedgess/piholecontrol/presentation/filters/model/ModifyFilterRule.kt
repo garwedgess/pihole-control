@@ -13,4 +13,14 @@ sealed class ModifyFilterRule(val rule: String, val ruleType: FilterRuleTypeEnti
 
     data class Delete(val domain: String, val type: FilterRuleTypeEntity) :
         ModifyFilterRule(domain, type)
+
+    data class Update(
+        val originalDomain: String,
+        val domain: String,
+        val groups: List<Int>,
+        val comment: String?,
+        val enabled: Boolean,
+        val originalType: FilterRuleTypeEntity,
+        val type: FilterRuleTypeEntity
+    ) : ModifyFilterRule(domain, type)
 }

@@ -69,8 +69,15 @@ fun FiltersScreen(
         }
     )
     FilterDialogs(
-        uiState.dialogType,
-        onAddRuleClick = { onEvent(FiltersContract.Event.OnAddFilterRule(it)) },
+        dialogType = uiState.dialogType,
+        onAddRuleClick = { onEvent(FiltersContract.Event.OnAddFilterRuleConfirmed) },
+        onUpdateRuleClick = { onEvent(FiltersContract.Event.OnUpdateFilterRuleConfirmed) },
+        onEditRuleClick = { onEvent(FiltersContract.Event.OnEditFilterRuleClick(it)) },
+        onDomainChange = { onEvent(FiltersContract.Event.OnFilterRuleDomainChanged(it)) },
+        onGroupsChange = { onEvent(FiltersContract.Event.OnFilterRuleGroupsChanged(it)) },
+        onCommentChange = { onEvent(FiltersContract.Event.OnFilterRuleCommentChanged(it)) },
+        onEnabledChange = { onEvent(FiltersContract.Event.OnFilterRuleEnabledChanged(it)) },
+        onRegexChange = { onEvent(FiltersContract.Event.OnFilterRuleRegexChanged(it)) },
         onDeleteRuleClick = { onEvent(FiltersContract.Event.OnDeleteFilterRuleConfirmed(it)) },
         onDismissDialogClick = { onEvent(FiltersContract.Event.OnDismissDialog) }
     )

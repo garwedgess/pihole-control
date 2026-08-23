@@ -8,6 +8,7 @@ import eu.wedgess.piholecontrol.data.model.requests.PiHoleAddFilterRuleRequestDa
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.FilterRuleUpdateEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.utils.DispatcherProvider
@@ -38,16 +39,12 @@ class FilterRulesRepositoryImpl(
         domain: String,
         groups: List<Int>,
         comment: String?,
-        domainType: FilterRuleTypeEntity
+        domainType: FilterRuleTypeEntity,
+        enabled: Boolean
     ): Result<ModifyFilterRuleResponseEntity> = withContext(dispatcherProvider.io) {
         filterRulesApiService.addFilterRule(
             connection = activeConnection,
-            body = PiHoleAddFilterRuleRequestData(
-                domain = domain,
-                comment = comment ?: "",
-                groups = groups,
-                enabled = true
-            ),
+            body = createFilterRuleRequest(domain, groups, comment, enabled),
             ruleType = domainType.toPiHoleFilterRuleTypeV6()
         ).mapCatching { it.toEntity() }
     }
@@ -68,4 +65,87 @@ class FilterRulesRepositoryImpl(
             )
         }
     }
+
+    override suspend fun updateFilterRule(
+        activeConnection: ConnectionEntity,
+        update: FilterRuleUpdateEntity
+    ): Result<ModifyFilterRuleResponseEntity> = withContext(dispatcherProvider.io) {
+        if (update.originalType == update.type) {
+            updateExistingFilterRule(
+                activeConnection = activeConnection,
+                update = update
+            )
+        } else {
+            replaceFilterRule(
+                activeConnection = activeConnection,
+                update = update
+            )
+        }
+    }
+
+    private suspend fun updateExistingFilterRule(
+        activeConnection: ConnectionEntity,
+        update: FilterRuleUpdateEntity
+    ): Result<ModifyFilterRuleResponseEntity> {
+        return filterRulesApiService.updateFilterRule(
+            connection = activeConnection,
+            rule = update.originalDomain,
+            body = createFilterRuleRequest(update),
+            ruleType = update.type.toPiHoleFilterRuleTypeV6()
+        ).mapCatching { successModifyFilterRuleResponse() }
+    }
+
+    private suspend fun replaceFilterRule(
+        activeConnection: ConnectionEntity,
+        update: FilterRuleUpdateEntity
+    ): Result<ModifyFilterRuleResponseEntity> {
+        return filterRulesApiService.addFilterRule(
+            connection = activeConnection,
+            body = createFilterRuleRequest(update),
+            ruleType = update.type.toPiHoleFilterRuleTypeV6()
+        ).fold(
+            onSuccess = {
+                removeOriginalFilterRule(
+                    activeConnection = activeConnection,
+                    update = update
+                )
+            },
+            onFailure = { error -> Result.failure(error) }
+        )
+    }
+
+    private suspend fun removeOriginalFilterRule(
+        activeConnection: ConnectionEntity,
+        update: FilterRuleUpdateEntity
+    ): Result<ModifyFilterRuleResponseEntity> {
+        return filterRulesApiService.removeFilterRule(
+            connection = activeConnection,
+            rule = update.originalDomain,
+            ruleType = update.originalType.toPiHoleFilterRuleTypeV6()
+        ).mapCatching { successModifyFilterRuleResponse() }
+    }
+
+    private fun createFilterRuleRequest(update: FilterRuleUpdateEntity) = createFilterRuleRequest(
+        domain = update.domain,
+        groups = update.groups,
+        comment = update.comment,
+        enabled = update.enabled
+    )
+
+    private fun createFilterRuleRequest(
+        domain: String,
+        groups: List<Int>,
+        comment: String?,
+        enabled: Boolean
+    ) = PiHoleAddFilterRuleRequestData(
+        domain = domain,
+        comment = comment ?: "",
+        groups = groups,
+        enabled = enabled
+    )
+
+    private fun successModifyFilterRuleResponse() = ModifyFilterRuleResponseEntity(
+        success = true,
+        message = null
+    )
 }

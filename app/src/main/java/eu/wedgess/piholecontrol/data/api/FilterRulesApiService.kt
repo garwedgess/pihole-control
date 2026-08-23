@@ -20,6 +20,13 @@ interface FilterRulesApiService {
         ruleType: PiHoleFilterRuleType
     ): PiHoleApiResult<PiHoleAddFilterRuleResponseData>
 
+    suspend fun updateFilterRule(
+        connection: ConnectionEntity,
+        rule: String,
+        body: PiHoleAddFilterRuleRequestData,
+        ruleType: PiHoleFilterRuleType
+    ): PiHoleApiResult<Unit>
+
     suspend fun removeFilterRule(
         connection: ConnectionEntity,
         rule: String,

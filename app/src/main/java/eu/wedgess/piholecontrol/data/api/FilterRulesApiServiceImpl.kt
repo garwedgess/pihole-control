@@ -72,6 +72,25 @@ class FilterRulesApiServiceImpl(
         }
     }
 
+    override suspend fun updateFilterRule(
+        connection: ConnectionEntity,
+        rule: String,
+        body: PiHoleAddFilterRuleRequestData,
+        ruleType: PiHoleFilterRuleType
+    ): PiHoleApiResult<Unit> {
+        val client = if (connection.trustAllCerts) trustAllCertsHttpClient else defaultHttpClient
+        return client.requestResult {
+            val path = FILTER_RULES_UPDATE_ENDPOINT
+                .replace(TYPE_KEY, ruleType.type)
+                .replace(KIND_KEY, ruleType.kind)
+                .replace(DOMAIN_KEY, rule.encodeURLPath())
+            fetchBaseRequestInfo(connection, path = path)
+            method = HttpMethod.Put
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+    }
+
     companion object {
         private const val TYPE_KEY = "{type}"
         private const val KIND_KEY = "{kind}"
@@ -80,5 +99,6 @@ class FilterRulesApiServiceImpl(
         private const val FILTER_RULES_DENY_ENDPOINT = "/domains/deny"
         private const val FILTER_RULES_ADD_ENDPOINT = "/domains/$TYPE_KEY/$KIND_KEY"
         private const val FILTER_RULES_DELETE_ENDPOINT = "/domains/$TYPE_KEY/$KIND_KEY/$DOMAIN_KEY"
+        private const val FILTER_RULES_UPDATE_ENDPOINT = "/domains/$TYPE_KEY/$KIND_KEY/$DOMAIN_KEY"
     }
 }

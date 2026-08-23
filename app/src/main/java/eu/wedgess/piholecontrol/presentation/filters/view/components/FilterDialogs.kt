@@ -3,30 +3,57 @@ package eu.wedgess.piholecontrol.presentation.filters.view.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import eu.wedgess.piholecontrol.R
+import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.presentation.common.components.AlertMessageDialog
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
+import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs.AddFilterRuleDialog
 import eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs.DisplayFilterRuleDetailsDialog
+import eu.wedgess.piholecontrol.presentation.filters.view.components.dialogs.EditFilterRuleDialog
 
 @Composable
 fun FilterDialogs(
     dialogType: FilterDialogType,
-    onAddRuleClick: (ModifyFilterRule.Add) -> Unit,
+    onAddRuleClick: () -> Unit,
+    onUpdateRuleClick: () -> Unit,
+    onEditRuleClick: (FilterRuleInfo) -> Unit,
+    onDomainChange: (String) -> Unit,
+    onGroupsChange: (Set<GroupEntity>) -> Unit,
+    onCommentChange: (String) -> Unit,
+    onEnabledChange: (Boolean) -> Unit,
+    onRegexChange: (Boolean) -> Unit,
     onDeleteRuleClick: (ModifyFilterRule.Delete) -> Unit,
     onDismissDialogClick: () -> Unit
 ) {
     when (dialogType) {
         FilterDialogType.None -> Unit
         is FilterDialogType.AddFilterRule -> AddFilterRuleDialog(
-            filterRuleType = dialogType.type,
             groups = dialogType.groups,
+            draft = dialogType.draft,
+            onDomainChange = onDomainChange,
+            onGroupsChange = onGroupsChange,
+            onCommentChange = onCommentChange,
+            onRegexChange = onRegexChange,
             onDismissRequest = onDismissDialogClick,
             onConfirmClick = onAddRuleClick
         )
 
+        is FilterDialogType.EditFilterRule -> EditFilterRuleDialog(
+            draft = dialogType.draft,
+            groups = dialogType.groups,
+            onDomainChange = onDomainChange,
+            onGroupsChange = onGroupsChange,
+            onCommentChange = onCommentChange,
+            onEnabledChange = onEnabledChange,
+            onRegexChange = onRegexChange,
+            onDismissRequest = onDismissDialogClick,
+            onConfirmClick = onUpdateRuleClick
+        )
+
         is FilterDialogType.ShowFilterRuleInfo -> DisplayFilterRuleDetailsDialog(
             filterRule = dialogType.filterRule,
+            onEdit = onEditRuleClick,
             onDismissRequest = onDismissDialogClick,
             onDelete = onDeleteRuleClick
         )

@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.domain.repository
 import eu.wedgess.piholecontrol.domain.model.ConnectionEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleEntity
 import eu.wedgess.piholecontrol.domain.model.FilterRuleTypeEntity
+import eu.wedgess.piholecontrol.domain.model.FilterRuleUpdateEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 
 interface FilterRulesRepository {
@@ -16,12 +17,18 @@ interface FilterRulesRepository {
         domain: String,
         groups: List<Int>,
         comment: String?,
-        domainType: FilterRuleTypeEntity
+        domainType: FilterRuleTypeEntity,
+        enabled: Boolean = true
     ): Result<ModifyFilterRuleResponseEntity>
 
     suspend fun removeFilterRule(
         activeConnection: ConnectionEntity,
         domain: String,
         domainType: FilterRuleTypeEntity
+    ): Result<ModifyFilterRuleResponseEntity>
+
+    suspend fun updateFilterRule(
+        activeConnection: ConnectionEntity,
+        update: FilterRuleUpdateEntity
     ): Result<ModifyFilterRuleResponseEntity>
 }

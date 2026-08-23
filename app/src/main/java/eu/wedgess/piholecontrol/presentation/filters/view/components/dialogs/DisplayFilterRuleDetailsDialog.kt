@@ -39,12 +39,14 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 @Composable
 fun DisplayFilterRuleDetailsDialog(
     filterRule: FilterRuleInfo,
+    onEdit: (FilterRuleInfo) -> Unit,
     onDelete: (ModifyFilterRule.Delete) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         DisplayFilterRuleDetailsDialogContent(
             filterRule = filterRule,
+            onEditClick = onEdit,
             onDeleteClick = onDelete,
             onCancelClick = { onDismissRequest() }
         )
@@ -54,6 +56,7 @@ fun DisplayFilterRuleDetailsDialog(
 @Composable
 private fun DisplayFilterRuleDetailsDialogContent(
     filterRule: FilterRuleInfo,
+    onEditClick: (FilterRuleInfo) -> Unit,
     onDeleteClick: (ModifyFilterRule.Delete) -> Unit,
     onCancelClick: () -> Unit
 ) {
@@ -121,6 +124,9 @@ private fun DisplayFilterRuleDetailsDialogContent(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(onClick = onCancelClick) { Text(stringResource(id = R.string.all_btn_cancel)) }
+                TextButton(onClick = { onEditClick(filterRule) }) {
+                    Text(stringResource(id = R.string.filters_details_dialog_btn_edit))
+                }
                 TextButton(onClick = {
                     onDeleteClick(
                         ModifyFilterRule.Delete(
@@ -183,6 +189,7 @@ private fun DisplayFilterRuleDetailsDialogPreview() {
                 groups = emptyList(),
                 type = FilterRuleTypeEntity.ALLOW
             ),
+            onEdit = {},
             onDelete = {},
             onDismissRequest = {}
         )

@@ -100,6 +100,9 @@
     <string name="filters_add_rule_dialog_label_as_regex">Add as regex</string>
     <string name="filters_add_rule_dialog_btn_add">Add</string>
     <string name="filters_add_rule_dialog_label_domain">Domain</string>
+    <string name="filters_edit_rule_dialog_title">Edit rule</string>
+    <string name="filters_edit_rule_dialog_btn_update">Update</string>
+    <string name="filters_edit_rule_dialog_label_enabled">Enabled</string>
     <string name="filters_details_dialog_title">Filter rule</string>
     <string name="filters_details_dialog_label_domain">Domain</string>
     <string name="filters_details_dialog_label_type">Type</string>
@@ -110,6 +113,7 @@
     <string name="filters_details_dialog_value_disabled">Disabled</string>
     <string name="filters_details_dialog_value_no_comment">No comment</string>
     <string name="filters_details_dialog_label_comment">Comment</string>
+    <string name="filters_details_dialog_btn_edit">Edit</string>
     <string name="filters_label_regex">Regex</string>
     <string name="filters_msg_loading_filters">Loading filters</string>
     <string name="filters_label_allowlist">Allow</string>

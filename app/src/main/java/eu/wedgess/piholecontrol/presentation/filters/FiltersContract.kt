@@ -1,5 +1,6 @@
 package eu.wedgess.piholecontrol.presentation.filters
 
+import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
@@ -48,6 +49,8 @@ interface FiltersContract {
             data object RuleAddFailed : Toast(UiText.DynamicString("Failed to add rule"))
             data object RuleRemoved : Toast(UiText.DynamicString("Successfully removed rule"))
             data object RuleRemovalFailed : Toast(UiText.DynamicString("Failed to remove rule"))
+            data object RuleUpdated : Toast(UiText.DynamicString("Successfully updated rule"))
+            data object RuleUpdateFailed : Toast(UiText.DynamicString("Failed to update rule"))
         }
     }
 
@@ -60,11 +63,18 @@ interface FiltersContract {
         data object OnDismissFilterBy : Event
         data class OnFilterRuleItemClick(val item: FilterRuleInfo) : Event
         data class OnFilterTabChanged(val type: FilterTab) : Event
-        data class OnAddFilterRule(val rule: ModifyFilterRule.Add) : Event
+        data object OnAddFilterRuleConfirmed : Event
+        data object OnUpdateFilterRuleConfirmed : Event
+        data class OnEditFilterRuleClick(val rule: FilterRuleInfo) : Event
         data class OnDeleteFilterRuleClick(val rule: FilterRuleInfo) : Event
         data class OnDeleteFilterRuleConfirmed(val rule: ModifyFilterRule.Delete) : Event
         data class OnClearSearchQuery(val query: String) : Event
         data class OnSearchExpandedChanged(val expanded: Boolean) : Event
         data class OnSearchQueryChanged(val query: String) : Event
+        data class OnFilterRuleDomainChanged(val domain: String) : Event
+        data class OnFilterRuleGroupsChanged(val groups: Set<GroupEntity>) : Event
+        data class OnFilterRuleCommentChanged(val comment: String) : Event
+        data class OnFilterRuleEnabledChanged(val enabled: Boolean) : Event
+        data class OnFilterRuleRegexChanged(val isRegex: Boolean) : Event
     }
 }

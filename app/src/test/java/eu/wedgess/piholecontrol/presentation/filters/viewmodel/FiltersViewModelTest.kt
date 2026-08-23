@@ -10,6 +10,7 @@ import eu.wedgess.piholecontrol.domain.model.GroupEntity
 import eu.wedgess.piholecontrol.domain.model.ModifyFilterRuleResponseEntity
 import eu.wedgess.piholecontrol.domain.usecases.filters.AddFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.filters.RemoveFilterRuleUseCase
+import eu.wedgess.piholecontrol.domain.usecases.filters.UpdateFilterRuleUseCase
 import eu.wedgess.piholecontrol.domain.usecases.groups.FetchAllGroupsUseCase
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toInfo
@@ -42,6 +43,9 @@ class FiltersViewModelTest {
 
     @RelaxedMockK
     private lateinit var removeFilterRuleUseCase: RemoveFilterRuleUseCase
+
+    @RelaxedMockK
+    private lateinit var updateFilterRuleUseCase: UpdateFilterRuleUseCase
 
     @RelaxedMockK
     private lateinit var fetchAllGroupsUseCase: FetchAllGroupsUseCase
@@ -78,8 +82,12 @@ class FiltersViewModelTest {
     @Test
     fun `WHEN viewmodel is initialized THEN uiState should emit initial state`() = runTest {
         // When
-        viewModel =
-            FiltersViewModel(addFilterRuleUseCase, removeFilterRuleUseCase, fetchAllGroupsUseCase)
+        viewModel = FiltersViewModel(
+            addFilterRuleUseCase,
+            removeFilterRuleUseCase,
+            updateFilterRuleUseCase,
+            fetchAllGroupsUseCase
+        )
 
         // Then
         viewModel.uiState.test {
@@ -95,6 +103,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -116,6 +125,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -137,6 +147,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -168,6 +179,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
             val query = "test query"
@@ -190,6 +202,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -231,20 +244,17 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
             // When
-            viewModel.onEvent(
-                FiltersContract.Event.OnAddFilterRule(
-                    ModifyFilterRule.Add(
-                        domain = rule.domain,
-                        groups = rule.groups,
-                        comment = rule.comment,
-                        type = rule.type
-                    )
-                )
-            )
+            viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleDomainChanged(rule.domain))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleGroupsChanged(testGroups.toSet()))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleCommentChanged(rule.comment.orEmpty()))
+            viewModel.onEvent(FiltersContract.Event.OnAddFilterRuleConfirmed)
             advanceUntilIdle()
 
             // Then
@@ -269,7 +279,7 @@ class FiltersViewModelTest {
                 addFilterRuleUseCase(
                     rule.domain,
                     rule.groups,
-                    rule.comment,
+                    rule.comment.orEmpty(),
                     rule.type
                 )
             } returns Result.success(
@@ -278,20 +288,17 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
             // When
-            viewModel.onEvent(
-                FiltersContract.Event.OnAddFilterRule(
-                    ModifyFilterRule.Add(
-                        domain = rule.domain,
-                        groups = rule.groups,
-                        comment = rule.comment,
-                        type = rule.type
-                    )
-                )
-            )
+            viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleDomainChanged(rule.domain))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleGroupsChanged(testGroups.toSet()))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleCommentChanged(rule.comment.orEmpty()))
+            viewModel.onEvent(FiltersContract.Event.OnAddFilterRuleConfirmed)
             advanceUntilIdle()
 
             // Then
@@ -319,7 +326,7 @@ class FiltersViewModelTest {
                 addFilterRuleUseCase(
                     rule.domain,
                     rule.groups,
-                    rule.comment,
+                    rule.comment.orEmpty(),
                     rule.type
                 )
             } returns Result.failure(
@@ -328,20 +335,17 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
             // When
-            viewModel.onEvent(
-                FiltersContract.Event.OnAddFilterRule(
-                    ModifyFilterRule.Add(
-                        domain = rule.domain,
-                        groups = rule.groups,
-                        comment = rule.comment,
-                        type = rule.type
-                    )
-                )
-            )
+            viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
+            advanceUntilIdle()
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleDomainChanged(rule.domain))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleRegexChanged(true))
+            viewModel.onEvent(FiltersContract.Event.OnFilterRuleCommentChanged(rule.comment.orEmpty()))
+            viewModel.onEvent(FiltersContract.Event.OnAddFilterRuleConfirmed)
             advanceUntilIdle()
 
             // Then
@@ -371,6 +375,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -409,6 +414,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -450,6 +456,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -478,6 +485,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
             viewModel.onEvent(FiltersContract.Event.AddFilterRuleClick)
@@ -511,6 +519,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -534,6 +543,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -562,6 +572,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -585,6 +596,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -621,6 +633,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -644,6 +657,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
             viewModel.onEvent(FiltersContract.Event.OnShowFilterByMenu)
@@ -666,6 +680,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
 
@@ -687,6 +702,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
             val option = FilterByOption.ALLOW_EXACT
@@ -710,6 +726,7 @@ class FiltersViewModelTest {
             viewModel = FiltersViewModel(
                 addFilterRuleUseCase,
                 removeFilterRuleUseCase,
+                updateFilterRuleUseCase,
                 fetchAllGroupsUseCase
             )
             val firstOption = FilterByOption.ALLOW_EXACT
@@ -730,3 +747,4 @@ class FiltersViewModelTest {
             }
         }
 }
+

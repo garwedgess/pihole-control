@@ -8,6 +8,12 @@ sealed interface FilterDialogType {
     data object None : FilterDialogType
     data class AddFilterRule(
         val type: FilterRuleTypeEntity,
+        val groups: List<GroupEntity>,
+        val draft: FilterRuleDraft
+    ) : FilterDialogType
+    data class EditFilterRule(
+        val original: FilterRuleIdentity,
+        val draft: FilterRuleInfo,
         val groups: List<GroupEntity>
     ) : FilterDialogType
     data class ShowFilterRuleInfo(val filterRule: FilterRuleInfo) : FilterDialogType
