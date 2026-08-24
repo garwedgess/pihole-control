@@ -12,7 +12,9 @@ import androidx.compose.material.icons.outlined.Update
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.settings.SettingsContract
 import eu.wedgess.piholecontrol.presentation.settings.model.AppThemePres
 import eu.wedgess.piholecontrol.presentation.settings.view.components.DropDownPreference
@@ -30,9 +32,9 @@ fun SettingsScreen(
     onEvent: (SettingsContract.Event) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        PreferenceCategory(title = "User Interface")
+        PreferenceCategory(title = stringResource(R.string.settings_category_user_interface))
         DropDownPreference(
-            title = "Theme",
+            title = stringResource(R.string.settings_theme_title),
             icon = Icons.Outlined.Palette,
             items = AppThemePres.entries.map { Pair(it, it.label.asString()) },
             selectedItem = uiState.currentTheme,
@@ -43,7 +45,7 @@ fun SettingsScreen(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Timber.d("Dynamic Colors: ${uiState.useDynamicThemeColors}")
             SwitchPreference(
-                title = "Dynamic Colors",
+                title = stringResource(R.string.settings_dynamic_colors_title),
                 icon = Icons.Outlined.FormatColorFill,
                 checked = uiState.useDynamicThemeColors,
                 onCheckedChange = {
@@ -52,9 +54,9 @@ fun SettingsScreen(
             )
         }
 
-        PreferenceCategory(title = "App Settings")
+        PreferenceCategory(title = stringResource(R.string.settings_category_app_settings))
         RegularPreference(
-            title = "Connections",
+            title = stringResource(R.string.settings_connections_title),
             icon = Icons.Outlined.Lan,
             subtitle = uiState.currentConnection.name,
             onClick = {
@@ -62,22 +64,31 @@ fun SettingsScreen(
             }
         )
         RegularPreference(
-            title = "Data Refresh Interval",
+            title = stringResource(R.string.local_dns_settings_title),
+            icon = Icons.Outlined.Lan,
+            subtitle = stringResource(R.string.local_dns_settings_subtitle),
+            onClick = {
+                onEvent(SettingsContract.Event.OnLocalDnsClicked)
+            }
+        )
+        RegularPreference(
+            title = stringResource(R.string.settings_data_refresh_interval_title),
             icon = Icons.Outlined.Update,
-            subtitle = "${
+            subtitle = stringResource(
+                R.string.settings_refresh_interval_seconds,
                 TimeUnit.SECONDS.convert(
                     uiState.refreshInterval,
                     TimeUnit.MILLISECONDS
                 )
-            } seconds",
+            ),
             onClick = {
                 onEvent(SettingsContract.Event.OnRefreshIntervalClicked(uiState.refreshInterval))
             }
         )
 
         SwitchPreference(
-            title = "Multi-status Change",
-            subtitle = "Apply status changes to all connections",
+            title = stringResource(R.string.settings_multi_status_change_title),
+            subtitle = stringResource(R.string.settings_multi_status_change_subtitle),
             icon = Icons.Outlined.Devices,
             checked = uiState.changeStatusOnAllConnections,
             onCheckedChange = {

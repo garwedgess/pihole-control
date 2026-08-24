@@ -12,6 +12,8 @@ import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.GroupApiService
 import eu.wedgess.piholecontrol.data.api.GroupApiServiceImpl
+import eu.wedgess.piholecontrol.data.api.LocalDnsApiService
+import eu.wedgess.piholecontrol.data.api.LocalDnsApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.LogsApiService
 import eu.wedgess.piholecontrol.data.api.LogsApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.StatisticsApiService
@@ -51,6 +53,14 @@ object ServicesModule {
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
     ): FilterRulesApiService =
         FilterRulesApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideLocalDnsApi(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): LocalDnsApiService =
+        LocalDnsApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     @Singleton

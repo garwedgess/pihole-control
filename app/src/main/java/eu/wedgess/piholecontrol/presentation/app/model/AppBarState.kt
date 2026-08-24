@@ -11,13 +11,9 @@ data class AppBarState(
     val adBlockingEnabled: Boolean = true,
     val connections: List<ConnectionEntity>? = null,
     val showNavigateBackIcon: Boolean = false,
+    val displayConnection: Boolean = !showNavigateBackIcon,
     val actions: (@Composable RowScope.() -> Unit)? = null,
     val showSearchView: Boolean = false,
     val searchContent: (@Composable () -> Unit)? = null,
     val bottomBarVisible: Boolean = true
-) {
-    val displayConnection: Boolean
-        get() {
-            return !showNavigateBackIcon
-        }
-}
+)

@@ -22,7 +22,8 @@ import eu.wedgess.piholecontrol.utils.UiText
 
 fun NavGraphBuilder.settingsRoot(
     onComposing: (AppBarState) -> Unit,
-    onNavigateToConnections: () -> Unit
+    onNavigateToConnections: () -> Unit,
+    onNavigateToLocalDns: () -> Unit
 ) {
     composable<Screens.Settings> {
         val viewModel: SettingsViewModel = hiltViewModel()
@@ -41,6 +42,10 @@ fun NavGraphBuilder.settingsRoot(
             when (effect) {
                 is SettingsContract.Effect.Navigation.Connections -> {
                     onNavigateToConnections()
+                }
+
+                is SettingsContract.Effect.Navigation.LocalDns -> {
+                    onNavigateToLocalDns()
                 }
             }
         }

@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import eu.wedgess.piholecontrol.presentation.app.model.AppBarState
 import eu.wedgess.piholecontrol.presentation.connections.list.navigation.connectionsRoot
 import eu.wedgess.piholecontrol.presentation.connections.modify.navigation.modifyConnectionRoot
+import eu.wedgess.piholecontrol.presentation.localdns.navigation.localDnsRoot
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.settings.navigation.settingsRoot
 
@@ -20,7 +21,8 @@ fun NavGraphBuilder.settingsNavigationGraph(
     ) {
         settingsRoot(
             onComposing = onComposing,
-            onNavigateToConnections = { navHostController.navigate(Screens.Connections) }
+            onNavigateToConnections = { navHostController.navigate(Screens.Connections) },
+            onNavigateToLocalDns = { navHostController.navigate(Screens.LocalDns) }
         )
         connectionsRoot(
             onComposing = onComposing,
@@ -36,6 +38,9 @@ fun NavGraphBuilder.settingsNavigationGraph(
         modifyConnectionRoot(
             onComposing = onComposing,
             onNavigateBack = { navHostController.navigateUp() }
+        )
+        localDnsRoot(
+            onComposing = onComposing
         )
     }
 }

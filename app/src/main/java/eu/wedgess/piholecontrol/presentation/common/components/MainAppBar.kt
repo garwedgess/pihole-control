@@ -1,9 +1,10 @@
 package eu.wedgess.piholecontrol.presentation.common.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -16,7 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -38,52 +42,83 @@ fun MainAppBar(
     onStatusClick: (() -> Unit)? = null,
     onConnectionClick: ((ConnectionEntity) -> Unit)? = null
 ) {
-    val titleAlpha: Float by animateFloatAsState(
-        targetValue = if (appBarState.showSearchView) 0f else 01f,
+    val normalAlpha by animateFloatAsState(
+        targetValue = if (appBarState.showSearchView) 0f else 1f,
+        animationSpec = tween(durationMillis = if (appBarState.showSearchView) 100 else 200),
+        label = "normal app bar content alpha"
+    )
+    val searchAlpha by animateFloatAsState(
+        targetValue = if (appBarState.showSearchView) 1f else 0f,
         animationSpec = tween(
-            durationMillis = if (appBarState.showSearchView) 20 else 300,
-            easing = LinearEasing
+            durationMillis = if (appBarState.showSearchView) 200 else 100,
+            delayMillis = if (appBarState.showSearchView) 100 else 0
         ),
-        label = "title animation"
+        label = "search app bar content alpha"
     )
     CenterAlignedTopAppBar(
         windowInsets = WindowInsets(0.dp),
         title = {
-            appBarState.currentConnection?.takeIf { appBarState.displayConnection }?.run {
-                CurrentConnectionStatus(
-                    modifier = Modifier.graphicsLayer { alpha = titleAlpha },
-                    currentConnection = this,
-                    connections = appBarState.connections ?: emptyList(),
-                    adBlockingEnabled = appBarState.adBlockingEnabled,
-                    onStatusClick = { onStatusClick?.invoke() },
-                    onConnectionClick = { onConnectionClick?.invoke(it) }
-                )
-            } ?: Text(
-                modifier = Modifier.graphicsLayer { alpha = titleAlpha },
-                text = appBarState.title.asString()
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                if (!appBarState.showSearchView || normalAlpha > MIN_VISIBLE_ALPHA) {
+                    Box(modifier = Modifier.alpha(normalAlpha)) {
+                        appBarState.currentConnection?.takeIf { appBarState.displayConnection }?.run {
+                            CurrentConnectionStatus(
+                                modifier = Modifier.graphicsLayer { alpha = normalAlpha },
+                                currentConnection = this,
+                                connections = appBarState.connections ?: emptyList(),
+                                adBlockingEnabled = appBarState.adBlockingEnabled,
+                                onStatusClick = { onStatusClick?.invoke() },
+                                onConnectionClick = { onConnectionClick?.invoke(it) }
+                            )
+                        } ?: Text(
+                            modifier = Modifier.graphicsLayer { alpha = normalAlpha },
+                            text = appBarState.title.asString()
+                        )
+                    }
+                }
+
+                if (appBarState.showSearchView || searchAlpha > MIN_VISIBLE_ALPHA) {
+                    Box(
+                        modifier = Modifier
+                            .alpha(searchAlpha)
+                            .graphicsLayer {
+                                scaleX = SEARCH_COLLAPSED_SCALE +
+                                    (1f - SEARCH_COLLAPSED_SCALE) * searchAlpha
+                                transformOrigin = TransformOrigin(0f, 0.5f)
+                            }
+                    ) {
+                        appBarState.searchContent?.invoke()
+                    }
+                }
+            }
         },
         actions = {
-            AnimatedVisibility(visible = appBarState.showSearchView) {
-                appBarState.searchContent?.invoke()
-            }
-            AnimatedVisibility(visible = !appBarState.showSearchView) {
-                appBarState.actions?.invoke(this@CenterAlignedTopAppBar)
+            if (normalAlpha > MIN_VISIBLE_ALPHA) {
+                AnimatedVisibility(visible = !appBarState.showSearchView) {
+                    Box(modifier = Modifier.alpha(normalAlpha)) {
+                        appBarState.actions?.invoke(this@CenterAlignedTopAppBar)
+                    }
+                }
             }
         },
         navigationIcon = {
-            if (appBarState.showNavigateBackIcon) {
-                IconButton(onClick = { onNavigateBack?.invoke() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
+            if (appBarState.showNavigateBackIcon && normalAlpha > MIN_VISIBLE_ALPHA) {
+                Box(modifier = Modifier.alpha(normalAlpha)) {
+                    IconButton(onClick = { onNavigateBack?.invoke() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.all_cd_back),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
             }
         }
     )
 }
+
+private const val MIN_VISIBLE_ALPHA = 0.01f
+private const val SEARCH_COLLAPSED_SCALE = 0.92f
 
 @ThemePreview
 @Composable
@@ -169,7 +204,7 @@ private class MainAppBarPreviewParameterProvider : PreviewParameterProvider<AppB
             },
             searchContent = {
                 SearchContent(
-                    placeHolderText = "Search for filter...",
+                    placeHolderText = stringResource(R.string.filter_search_placeholder),
                     searchQuery = "",
                     showSearchView = true,
                     onSearch = {},

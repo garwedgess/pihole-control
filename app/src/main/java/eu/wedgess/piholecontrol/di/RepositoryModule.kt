@@ -9,6 +9,7 @@ import eu.wedgess.piholecontrol.data.api.AuthApiService
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.GroupApiService
+import eu.wedgess.piholecontrol.data.api.LocalDnsApiService
 import eu.wedgess.piholecontrol.data.api.LogsApiService
 import eu.wedgess.piholecontrol.data.api.StatisticsApiService
 import eu.wedgess.piholecontrol.data.api.StatusApiService
@@ -19,6 +20,7 @@ import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.GroupRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.LocalDnsRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.LogsRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.SettingsRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.StatisticsRepositoryImpl
@@ -29,6 +31,7 @@ import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.domain.repository.GroupRepository
+import eu.wedgess.piholecontrol.domain.repository.LocalDnsRepository
 import eu.wedgess.piholecontrol.domain.repository.LogsRepository
 import eu.wedgess.piholecontrol.domain.repository.SettingsRepository
 import eu.wedgess.piholecontrol.domain.repository.StatisticsRepository
@@ -74,6 +77,14 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): FilterRulesRepository =
         FilterRulesRepositoryImpl(apiV6, dispatcherProvider)
+
+    @Provides
+    @Singleton
+    fun provideLocalDnsRepository(
+        apiV6: LocalDnsApiService,
+        dispatcherProvider: DispatcherProvider
+    ): LocalDnsRepository =
+        LocalDnsRepositoryImpl(apiV6, dispatcherProvider)
 
     @Provides
     @Singleton

@@ -22,5 +22,8 @@ sealed interface Screens {
     data object Connections : Screens
 
     @Serializable
+    data object LocalDns : Screens
+
+    @Serializable
     data class ModifyConnection(val connectionId: String? = null) : Screens
 }
