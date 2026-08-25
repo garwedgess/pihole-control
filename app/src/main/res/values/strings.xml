@@ -6,6 +6,7 @@
     <string name="all_msg_no_results_found_for">No results found for: %s</string>
     <string name="all_error_msg_unknown">Unknown error</string>
     <string name="all_cd_back">Back</string>
+    <string name="all_btn_close">Close</string>
 
     <!-- Bottom Nav / AppBar -->
     <string name="nav_title_home">Home</string>
@@ -14,6 +15,7 @@
     <string name="nav_title_logs">Logs</string>
     <string name="nav_title_settings">Settings</string>
     <string name="nav_title_local_dns">Local DNS</string>
+    <string name="nav_title_diagnosis">Diagnosis</string>
 
     <string name="appbar_title_connections">Connections</string>
     <string name="appbar_title_connection">Connection</string>
@@ -160,6 +162,28 @@
     <string name="local_dns_delete_dialog_message">Are you sure you want to delete %s? This cannot be undone.</string>
     <string name="local_dns_label_domain">Domain</string>
     <string name="local_dns_label_ip_address">IP address</string>
+
+    <!-- Diagnosis Screen -->
+    <string name="diagnosis_settings_title">Diagnosis</string>
+    <string name="diagnosis_settings_subtitle">View Pi-hole diagnosis messages</string>
+    <string name="diagnosis_empty_title">No diagnosis messages</string>
+    <string name="diagnosis_empty_message">Pi-hole has not reported any active diagnosis issues.</string>
+    <string name="diagnosis_fetch_error_title">Failed to fetch diagnosis messages</string>
+    <string name="diagnosis_fetch_error">Failed to fetch diagnosis messages: %s</string>
+    <string name="diagnosis_toast_message_dismissed">Diagnosis message dismissed</string>
+    <string name="diagnosis_toast_message_dismiss_failed">Failed to dismiss diagnosis message</string>
+    <string name="diagnosis_toast_refresh_failed">Failed to refresh diagnosis messages</string>
+    <string name="diagnosis_details_dialog_title">Diagnosis message</string>
+    <string name="diagnosis_dismiss_dialog_title">Dismiss diagnosis message</string>
+    <string name="diagnosis_dismiss_dialog_message">Dismiss the %s diagnosis message?</string>
+    <string name="diagnosis_btn_dismiss">Dismiss</string>
+    <string name="diagnosis_label_type">Type</string>
+    <string name="diagnosis_label_severity">Severity</string>
+    <string name="diagnosis_label_message">Message</string>
+    <string name="diagnosis_label_url">More information</string>
+    <string name="diagnosis_severity_error">Error</string>
+    <string name="diagnosis_severity_warning">Warning</string>
+    <string name="diagnosis_severity_info">Info</string>
 
     <!-- Statistics Screen -->
     <string name="statistics_title_top_blocked">Top Blocked</string>

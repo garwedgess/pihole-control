@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import eu.wedgess.piholecontrol.data.api.AuthApiService
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
+import eu.wedgess.piholecontrol.data.api.DiagnosisApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.GroupApiService
 import eu.wedgess.piholecontrol.data.api.LocalDnsApiService
@@ -18,6 +19,7 @@ import eu.wedgess.piholecontrol.data.model.UserPreferences
 import eu.wedgess.piholecontrol.data.repository.AuthRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.ConnectionRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.DashboardRepositoryImpl
+import eu.wedgess.piholecontrol.data.repository.DiagnosisRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.FilterRulesRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.GroupRepositoryImpl
 import eu.wedgess.piholecontrol.data.repository.LocalDnsRepositoryImpl
@@ -29,6 +31,7 @@ import eu.wedgess.piholecontrol.data.repository.TokenRefresher
 import eu.wedgess.piholecontrol.domain.repository.AuthRepository
 import eu.wedgess.piholecontrol.domain.repository.ConnectionRepository
 import eu.wedgess.piholecontrol.domain.repository.DashboardRepository
+import eu.wedgess.piholecontrol.domain.repository.DiagnosisRepository
 import eu.wedgess.piholecontrol.domain.repository.FilterRulesRepository
 import eu.wedgess.piholecontrol.domain.repository.GroupRepository
 import eu.wedgess.piholecontrol.domain.repository.LocalDnsRepository
@@ -50,6 +53,14 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): DashboardRepository =
         DashboardRepositoryImpl(apiV6, dispatcherProvider)
+
+    @Provides
+    @Singleton
+    fun provideDiagnosisRepository(
+        apiV6: DiagnosisApiService,
+        dispatcherProvider: DispatcherProvider
+    ): DiagnosisRepository =
+        DiagnosisRepositoryImpl(apiV6, dispatcherProvider)
 
     @Provides
     @Singleton

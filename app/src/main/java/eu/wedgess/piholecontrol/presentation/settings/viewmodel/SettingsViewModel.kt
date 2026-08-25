@@ -78,6 +78,9 @@ class SettingsViewModel @Inject constructor(
             SettingsContract.Event.OnLocalDnsClicked ->
                 navigateTo(SettingsContract.Effect.Navigation.LocalDns)
 
+            SettingsContract.Event.OnDiagnosisClicked ->
+                navigateTo(SettingsContract.Effect.Navigation.Diagnosis)
+
             SettingsContract.Event.OnDismissDialog -> _uiState.update {
                 it.copy(dialogType = SettingsDialogType.None)
             }

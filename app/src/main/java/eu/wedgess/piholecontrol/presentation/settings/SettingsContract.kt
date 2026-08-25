@@ -31,6 +31,7 @@ interface SettingsContract {
         sealed interface Navigation : Effect {
             data object Connections : Navigation
             data object LocalDns : Navigation
+            data object Diagnosis : Navigation
         }
     }
 
@@ -42,6 +43,7 @@ interface SettingsContract {
         data class OnRefreshIntervalClicked(val currentRefreshInterval: Long) : Event
         data object OnServerClicked : Event
         data object OnLocalDnsClicked : Event
+        data object OnDiagnosisClicked : Event
         data object OnDismissDialog : Event
     }
 }

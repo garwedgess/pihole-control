@@ -8,6 +8,8 @@ import eu.wedgess.piholecontrol.data.api.AuthApiService
 import eu.wedgess.piholecontrol.data.api.AuthApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.DashboardApiService
 import eu.wedgess.piholecontrol.data.api.DashboardApiServiceImpl
+import eu.wedgess.piholecontrol.data.api.DiagnosisApiService
+import eu.wedgess.piholecontrol.data.api.DiagnosisApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiService
 import eu.wedgess.piholecontrol.data.api.FilterRulesApiServiceImpl
 import eu.wedgess.piholecontrol.data.api.GroupApiService
@@ -45,6 +47,14 @@ object ServicesModule {
         @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
     ): DashboardApiService =
         DashboardApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
+
+    @Provides
+    @Singleton
+    fun provideDiagnosisApi(
+        @DefaultHttpClient defaultHttpClient: HttpClient,
+        @TrustAllCertificatesHttpClient trustAllCertsHttpClient: HttpClient
+    ): DiagnosisApiService =
+        DiagnosisApiServiceImpl(defaultHttpClient, trustAllCertsHttpClient)
 
     @Provides
     @Singleton
