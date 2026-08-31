@@ -12,10 +12,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.CartesianMeasuringContext
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.CartesianLayerDimensions
+import com.patrykandpatrick.vico.compose.cartesian.layer.CartesianLayerMargins
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.LineCartesianLayerMarkerTarget
-import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.common.DashedShape
 import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.Insets
 import com.patrykandpatrick.vico.compose.common.LayeredComponent
@@ -99,24 +104,62 @@ fun rememberMarker(): CartesianMarker {
         }
     }
 
-    return rememberDefaultCartesianMarker(
-        label = rememberTextComponent(
-            MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontFamily = FontFamily.Monospace
-            ),
-            lineCount = LABEL_LINE_COUNT,
-            padding = Insets(LABEL_HORIZONTAL_PADDING, LABEL_VERTICAL_PADDING),
-            background = labelBackground
+    val label = rememberTextComponent(
+        MaterialTheme.typography.labelSmall.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = FontFamily.Monospace
         ),
-        valueFormatter = valueFormatter,
-        indicator = indicator,
-        indicatorSize = INDICATOR_SIZE,
-        guideline = rememberLineComponent(
-            fill = Fill(MaterialTheme.colorScheme.onSurface.copy(alpha = GUIDELINE_ALPHA)),
-            thickness = GUIDELINE_THICKNESS
+        lineCount = LABEL_LINE_COUNT,
+        padding = Insets(LABEL_HORIZONTAL_PADDING, LABEL_VERTICAL_PADDING),
+        background = labelBackground
+    )
+    val guideline = rememberLineComponent(
+        fill = Fill(MaterialTheme.colorScheme.onSurface.copy(alpha = GUIDELINE_ALPHA)),
+        thickness = GUIDELINE_THICKNESS,
+        shape = DashedShape(
+            dashLength = GUIDELINE_DASH_LENGTH,
+            gapLength = GUIDELINE_GAP_LENGTH,
+            fitStrategy = DashedShape.FitStrategy.Fixed
         )
     )
+
+    return remember(label, valueFormatter, indicator, guideline) {
+        TopOverlayCartesianMarker(
+            DefaultCartesianMarker(
+                label = label,
+                valueFormatter = valueFormatter,
+                labelPosition = DefaultCartesianMarker.LabelPosition.Top,
+                indicator = indicator,
+                indicatorSize = INDICATOR_SIZE,
+                guideline = guideline
+            )
+        )
+    }
+}
+
+private class TopOverlayCartesianMarker(
+    private val marker: DefaultCartesianMarker
+) : CartesianMarker {
+    override fun drawUnderLayers(
+        context: CartesianDrawingContext,
+        targets: List<CartesianMarker.Target>
+    ) {
+        marker.drawUnderLayers(context, targets)
+    }
+
+    override fun drawOverLayers(
+        context: CartesianDrawingContext,
+        targets: List<CartesianMarker.Target>
+    ) {
+        marker.drawOverLayers(context, targets)
+    }
+
+    override fun updateLayerMargins(
+        context: CartesianMeasuringContext,
+        layerMargins: CartesianLayerMargins,
+        layerDimensions: CartesianLayerDimensions,
+        model: CartesianChartModel
+    ) = Unit
 }
 
 private fun AnnotatedString.Builder.appendPointLabel(
@@ -137,12 +180,14 @@ private fun AnnotatedString.Builder.appendPointLabel(
 private const val ONE_LINE_POINT_LIMIT = 2
 private const val LABEL_LINE_COUNT = 3
 private const val GUIDELINE_ALPHA = .2f
-private const val INDICATOR_GLOW_ALPHA = .1f
-private const val INDICATOR_OUTER_ALPHA = .22f
+private const val INDICATOR_GLOW_ALPHA = .18f
+private const val INDICATOR_OUTER_ALPHA = .3f
 private val LABEL_HORIZONTAL_PADDING = 12.dp
 private val LABEL_VERTICAL_PADDING = 8.dp
 private val GUIDELINE_THICKNESS = 2.dp
-private val INDICATOR_SIZE = 26.dp
-private val INDICATOR_GLOW_PADDING = 3.dp
-private val INDICATOR_RING_PADDING = 4.dp
-private val INDICATOR_STROKE_THICKNESS = 3.dp
+private val GUIDELINE_DASH_LENGTH = 6.dp
+private val GUIDELINE_GAP_LENGTH = 5.dp
+private val INDICATOR_SIZE = 36.dp
+private val INDICATOR_GLOW_PADDING = 5.dp
+private val INDICATOR_RING_PADDING = 5.dp
+private val INDICATOR_STROKE_THICKNESS = 4.dp

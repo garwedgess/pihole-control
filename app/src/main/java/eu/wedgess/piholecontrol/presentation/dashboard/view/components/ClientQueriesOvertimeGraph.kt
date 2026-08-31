@@ -1,8 +1,8 @@
 package eu.wedgess.piholecontrol.presentation.dashboard.view.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,8 +19,8 @@ fun ClientQueriesOvertimeGraph(clientsOvertimeChartInfo: List<LineChartInfo.Clie
     Column {
         LineChart(
             modifier = Modifier
-                .fillMaxSize()
-                .heightIn(min = PiHoleControlTheme.dimens.size.lineChartHeight),
+                .fillMaxWidth()
+                .height(PiHoleControlTheme.dimens.size.lineChartHeight),
             data = clientsOvertimeChartInfo
         )
 

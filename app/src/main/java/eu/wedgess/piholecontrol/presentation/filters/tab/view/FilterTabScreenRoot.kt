@@ -8,11 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.wedgess.piholecontrol.di.FilterTabViewModelFactory
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
 import eu.wedgess.piholecontrol.presentation.compose.LoadingScreen
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterRuleIdentity
 import eu.wedgess.piholecontrol.presentation.filters.tab.FilterTabContract
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.filters.tab.viewmodel.FilterTabViewModel
@@ -22,7 +24,9 @@ import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
 fun FilterTabScreenRoot(
     filterScreenTabType: FilterTab,
     filterByOptions: List<FilterByOption>,
+    selectionMode: SelectionMode<FilterRuleIdentity>,
     onFilterRuleClick: (FilterRuleInfo) -> Unit,
+    onFilterRuleLongClick: (FilterRuleInfo) -> Unit,
     onRefreshFilters: (() -> Unit) -> Unit,
     searchQuery: String? = null
 ) {
@@ -56,7 +60,9 @@ fun FilterTabScreenRoot(
         onLoaded = {
             FilterListContent(
                 filtersList = it.filterRules,
-                onFilterRuleClick = onFilterRuleClick
+                selectionMode = selectionMode,
+                onFilterRuleClick = onFilterRuleClick,
+                onFilterRuleLongClick = onFilterRuleLongClick
             )
         }
     )

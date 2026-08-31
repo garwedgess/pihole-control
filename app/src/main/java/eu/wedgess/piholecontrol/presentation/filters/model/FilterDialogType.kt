@@ -18,4 +18,5 @@ sealed interface FilterDialogType {
     ) : FilterDialogType
     data class ShowFilterRuleInfo(val filterRule: FilterRuleInfo) : FilterDialogType
     data class OnConfirmFilterDelete(val filterRule: FilterRuleInfo) : FilterDialogType
+    data class OnConfirmSelectedFiltersDelete(val count: Int) : FilterDialogType
 }

@@ -1,8 +1,9 @@
 package eu.wedgess.piholecontrol.presentation.localdns
 
 import eu.wedgess.piholecontrol.R
-import eu.wedgess.piholecontrol.presentation.compose.UIResult
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
+import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.localdns.model.LocalDnsDialogType
 import eu.wedgess.piholecontrol.presentation.localdns.model.LocalDnsRecordInfo
 import eu.wedgess.piholecontrol.utils.UiText
@@ -14,6 +15,7 @@ interface LocalDnsContract {
         val searchQuery: String,
         val showSearchView: Boolean,
         val isRefreshing: Boolean,
+        val selectionMode: SelectionMode<String>,
         val dialogType: LocalDnsDialogType
     ) {
         val filteredRecords: UIResult<List<LocalDnsRecordInfo>>
@@ -48,6 +50,7 @@ interface LocalDnsContract {
                 searchQuery = "",
                 showSearchView = false,
                 isRefreshing = false,
+                selectionMode = SelectionMode.Inactive,
                 dialogType = LocalDnsDialogType.None
             )
         }
@@ -70,6 +73,9 @@ interface LocalDnsContract {
             data object RecordDeleted :
                 Toast(UiText.StringResource(R.string.local_dns_toast_record_deleted))
 
+            data object SelectedRecordsDeleted :
+                Toast(UiText.StringResource(R.string.local_dns_toast_selected_records_deleted))
+
             data object RecordDeleteFailed :
                 Toast(UiText.StringResource(R.string.local_dns_toast_record_delete_failed))
 
@@ -90,6 +96,10 @@ interface LocalDnsContract {
         data object OnAddLocalDnsRecordConfirmed : Event
         data object OnUpdateLocalDnsRecordConfirmed : Event
         data object OnDeleteLocalDnsRecordConfirmed : Event
+        data object OnDeleteSelectedLocalDnsRecordsClick : Event
+        data object OnDeleteSelectedLocalDnsRecordsConfirmed : Event
+        data object OnClearSelection : Event
+        data class OnLocalDnsRecordLongClick(val record: LocalDnsRecordInfo) : Event
         data class OnLocalDnsRecordIpAddressChanged(val ipAddress: String) : Event
         data class OnLocalDnsRecordDomainChanged(val domain: String) : Event
         data object OnRefresh : Event

@@ -30,6 +30,7 @@ fun LocalDnsDialogs(
     onEditClick: (LocalDnsRecordInfo) -> Unit,
     onDeleteClick: (LocalDnsRecordInfo) -> Unit,
     onDeleteConfirmClick: () -> Unit,
+    onDeleteSelectedConfirmClick: () -> Unit,
     onDismissDialogClick: () -> Unit
 ) {
     when (dialogType) {
@@ -67,6 +68,17 @@ fun LocalDnsDialogs(
             confirmText = stringResource(R.string.local_dns_details_dialog_btn_delete),
             onDismiss = onDismissDialogClick,
             onConfirm = onDeleteConfirmClick
+        )
+        is LocalDnsDialogType.ConfirmDeleteSelectedLocalDnsRecords -> AlertMessageDialog(
+            titleText = stringResource(R.string.local_dns_delete_selected_dialog_title),
+            messageText = stringResource(
+                R.string.local_dns_delete_selected_dialog_message,
+                dialogType.count
+            ),
+            dismissText = stringResource(R.string.all_btn_cancel),
+            confirmText = stringResource(R.string.local_dns_details_dialog_btn_delete),
+            onDismiss = onDismissDialogClick,
+            onConfirm = onDeleteSelectedConfirmClick
         )
         LocalDnsDialogType.None -> Unit
     }

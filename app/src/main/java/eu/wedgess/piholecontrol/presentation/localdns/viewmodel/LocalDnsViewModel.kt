@@ -11,6 +11,8 @@ import eu.wedgess.piholecontrol.domain.usecases.localdns.UpdateLocalDnsRecordUse
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
+import eu.wedgess.piholecontrol.presentation.common.model.selectedItems
 import eu.wedgess.piholecontrol.presentation.compose.ResultType
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.localdns.LocalDnsContract
@@ -80,7 +82,14 @@ class LocalDnsViewModel @Inject constructor(
                 copy(dialogType = LocalDnsDialogType.AddLocalDnsRecord(LocalDnsRecordDraft()))
             }
             is LocalDnsContract.Event.OnLocalDnsRecordClick -> updateUiState {
-                copy(dialogType = LocalDnsDialogType.ShowLocalDnsRecordInfo(event.record))
+                if (selectionMode is SelectionMode.Active) {
+                    copy(selectionMode = selectionMode.toggle(event.record.rawValue))
+                } else {
+                    copy(dialogType = LocalDnsDialogType.ShowLocalDnsRecordInfo(event.record))
+                }
+            }
+            is LocalDnsContract.Event.OnLocalDnsRecordLongClick -> updateUiState {
+                copy(selectionMode = selectionMode.toggle(event.record.rawValue))
             }
             is LocalDnsContract.Event.OnEditLocalDnsRecordClick -> updateUiState {
                 copy(
@@ -96,6 +105,23 @@ class LocalDnsViewModel @Inject constructor(
             LocalDnsContract.Event.OnAddLocalDnsRecordConfirmed -> addLocalDnsRecord()
             LocalDnsContract.Event.OnUpdateLocalDnsRecordConfirmed -> updateLocalDnsRecord()
             LocalDnsContract.Event.OnDeleteLocalDnsRecordConfirmed -> deleteLocalDnsRecord()
+            LocalDnsContract.Event.OnDeleteSelectedLocalDnsRecordsClick -> updateUiState {
+                val selectedCount = selectionMode.selectedItems().size
+                if (selectedCount == 0) {
+                    copy(selectionMode = SelectionMode.Inactive)
+                } else {
+                    copy(
+                        dialogType = LocalDnsDialogType.ConfirmDeleteSelectedLocalDnsRecords(
+                            selectedCount
+                        )
+                    )
+                }
+            }
+            LocalDnsContract.Event.OnDeleteSelectedLocalDnsRecordsConfirmed ->
+                deleteSelectedLocalDnsRecords()
+            LocalDnsContract.Event.OnClearSelection -> updateUiState {
+                copy(selectionMode = SelectionMode.Inactive)
+            }
             is LocalDnsContract.Event.OnLocalDnsRecordIpAddressChanged ->
                 updateLocalDnsRecordDraft(ipAddress = event.ipAddress)
             is LocalDnsContract.Event.OnLocalDnsRecordDomainChanged ->
@@ -212,6 +238,31 @@ class LocalDnsViewModel @Inject constructor(
         }
     }
 
+    private fun deleteSelectedLocalDnsRecords() {
+        val selectedRecords = _uiState.value.selectionMode.selectedItems()
+        if (selectedRecords.isEmpty()) {
+            updateUiState { copy(selectionMode = SelectionMode.Inactive, dialogType = LocalDnsDialogType.None) }
+            return
+        }
+
+        viewModelScope.launch {
+            val failedRecords = selectedRecords.filter { rawValue ->
+                deleteLocalDnsRecordUseCase(rawValue).isFailure
+            }
+            if (failedRecords.isEmpty()) {
+                emitSideEffect(LocalDnsContract.Effect.Toast.SelectedRecordsDeleted)
+                updateLocalDnsRecords { records ->
+                    records.filterNot { it.rawValue in selectedRecords }
+                }
+                updateUiState { copy(selectionMode = SelectionMode.Inactive) }
+            } else {
+                Timber.e("Failed to delete ${failedRecords.size} local DNS records")
+                emitSideEffect(LocalDnsContract.Effect.Toast.RecordDeleteFailed)
+                updateUiState { copy(dialogType = LocalDnsDialogType.None) }
+            }
+        }
+    }
+
     private fun handleClearSearchQuery(query: String) {
         if (query.isEmpty()) {
             updateUiState { copy(showSearchView = false) }
@@ -257,6 +308,17 @@ class LocalDnsViewModel @Inject constructor(
 
     private fun updateUiState(block: LocalDnsContract.UiState.() -> LocalDnsContract.UiState) {
         _uiState.update { it.block() }
+    }
+
+    private fun SelectionMode<String>.toggle(item: String): SelectionMode<String> {
+        val selected = when (this) {
+            is SelectionMode.Active -> this.selected.toMutableSet()
+            SelectionMode.Inactive -> mutableSetOf()
+        }
+        if (!selected.add(item)) {
+            selected.remove(item)
+        }
+        return if (selected.isEmpty()) SelectionMode.Inactive else SelectionMode.Active(selected)
     }
 
     private fun List<LocalDnsRecordInfo>.toRecordsResult(): UIResult<List<LocalDnsRecordInfo>> {

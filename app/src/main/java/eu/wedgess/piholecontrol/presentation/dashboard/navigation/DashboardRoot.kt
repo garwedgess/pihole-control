@@ -27,7 +27,7 @@ fun NavGraphBuilder.dashboardRoot(
         val context = LocalContext.current
 
         LaunchedEffect(Unit) {
-            onComposing(AppBarState(showSearchView = false, showNavigateBackIcon = false))
+            onComposing(AppBarState.Normal(showNavigateBackIcon = false))
         }
         CollectSideEffect(sideEffect) { effect ->
             if (effect is DashboardContract.Effect.ShowErrorSnackbar) {

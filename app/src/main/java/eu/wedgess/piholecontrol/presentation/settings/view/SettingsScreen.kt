@@ -8,7 +8,6 @@ import androidx.compose.material.icons.outlined.Devices
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.Lan
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.ReportProblem
 import androidx.compose.material.icons.outlined.Update
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -62,22 +61,6 @@ fun SettingsScreen(
             subtitle = uiState.currentConnection.name,
             onClick = {
                 onEvent(SettingsContract.Event.OnServerClicked)
-            }
-        )
-        RegularPreference(
-            title = stringResource(R.string.local_dns_settings_title),
-            icon = Icons.Outlined.Lan,
-            subtitle = stringResource(R.string.local_dns_settings_subtitle),
-            onClick = {
-                onEvent(SettingsContract.Event.OnLocalDnsClicked)
-            }
-        )
-        RegularPreference(
-            title = stringResource(R.string.diagnosis_settings_title),
-            icon = Icons.Outlined.ReportProblem,
-            subtitle = stringResource(R.string.diagnosis_settings_subtitle),
-            onClick = {
-                onEvent(SettingsContract.Event.OnDiagnosisClicked)
             }
         )
         RegularPreference(

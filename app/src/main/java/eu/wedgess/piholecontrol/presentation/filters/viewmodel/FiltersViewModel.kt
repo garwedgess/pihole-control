@@ -14,9 +14,11 @@ import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModel
 import eu.wedgess.piholecontrol.presentation.base.SideEffectViewModelImpl
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModel
 import eu.wedgess.piholecontrol.presentation.base.UiStateViewModelImpl
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
+import eu.wedgess.piholecontrol.presentation.common.model.selectedItems
 import eu.wedgess.piholecontrol.presentation.filters.FiltersContract
-import eu.wedgess.piholecontrol.presentation.filters.extensions.toFilterRuleUpdateEntity
 import eu.wedgess.piholecontrol.presentation.filters.extensions.toBaseFilterRuleType
+import eu.wedgess.piholecontrol.presentation.filters.extensions.toFilterRuleUpdateEntity
 import eu.wedgess.piholecontrol.presentation.filters.extensions.withRegexFilterRuleType
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
@@ -65,6 +67,25 @@ class FiltersViewModel @Inject constructor(
                 type = event.rule.type
             )
 
+            FiltersContract.Event.OnDeleteSelectedFilterRulesClick -> updateUiState {
+                val selectedCount = selectionMode.selectedItems().size
+                if (selectedCount == 0) {
+                    copy(selectionMode = SelectionMode.Inactive)
+                } else {
+                    copy(
+                        dialogType = FilterDialogType.OnConfirmSelectedFiltersDelete(
+                            selectedCount
+                        )
+                    )
+                }
+            }
+
+            FiltersContract.Event.OnDeleteSelectedFilterRulesConfirmed -> handleRemoveSelectedRules()
+
+            FiltersContract.Event.OnClearSelection -> updateUiState {
+                copy(selectionMode = SelectionMode.Inactive)
+            }
+
             FiltersContract.Event.OnUpdateFilterRuleConfirmed -> handleUpdateFilterRuleConfirmed()
 
             FiltersContract.Event.OnDismissDialog -> updateUiState {
@@ -72,7 +93,15 @@ class FiltersViewModel @Inject constructor(
             }
 
             is FiltersContract.Event.OnFilterRuleItemClick -> updateUiState {
-                copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
+                if (selectionMode is SelectionMode.Active) {
+                    copy(selectionMode = selectionMode.toggle(event.item.identity()))
+                } else {
+                    copy(dialogType = FilterDialogType.ShowFilterRuleInfo(event.item))
+                }
+            }
+
+            is FiltersContract.Event.OnFilterRuleItemLongClick -> updateUiState {
+                copy(selectionMode = selectionMode.toggle(event.item.identity()))
             }
 
             FiltersContract.Event.AddFilterRuleClick -> fetchGroupsAndShowDialog()
@@ -247,6 +276,40 @@ class FiltersViewModel @Inject constructor(
         }
     }
 
+    private fun handleRemoveSelectedRules() {
+        val selectedRules = uiState.value.selectionMode.selectedItems()
+        if (selectedRules.isEmpty()) {
+            updateUiState {
+                copy(
+                    selectionMode = SelectionMode.Inactive,
+                    dialogType = FilterDialogType.None
+                )
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            val failedRules = selectedRules.filter { rule ->
+                removeFilterRuleUseCase(rule.domain, rule.type).isFailure
+            }
+            if (failedRules.isEmpty()) {
+                emitSideEffect(FiltersContract.Effect.Toast.SelectedRulesRemoved).also {
+                    updateUiState {
+                        copy(
+                            selectionMode = SelectionMode.Inactive,
+                            dialogType = FilterDialogType.None
+                        )
+                    }
+                }
+            } else {
+                Timber.e("Failed to remove ${failedRules.size} selected filter rules")
+                emitSideEffect(FiltersContract.Effect.Toast.RuleRemovalFailed).also {
+                    updateUiState { copy(dialogType = FilterDialogType.None) }
+                }
+            }
+        }
+    }
+
     private fun handleAddFilterRuleConfirmed() {
         val dialog = uiState.value.dialogType as? FilterDialogType.AddFilterRule ?: return
         val ruleType = dialog.type
@@ -339,5 +402,23 @@ class FiltersViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    private fun FilterRuleInfo.identity() = FilterRuleIdentity(
+        domain = domain,
+        type = type
+    )
+
+    private fun SelectionMode<FilterRuleIdentity>.toggle(
+        item: FilterRuleIdentity
+    ): SelectionMode<FilterRuleIdentity> {
+        val selected = when (this) {
+            is SelectionMode.Active -> this.selected.toMutableSet()
+            SelectionMode.Inactive -> mutableSetOf()
+        }
+        if (!selected.add(item)) {
+            selected.remove(item)
+        }
+        return if (selected.isEmpty()) SelectionMode.Inactive else SelectionMode.Active(selected)
     }
 }

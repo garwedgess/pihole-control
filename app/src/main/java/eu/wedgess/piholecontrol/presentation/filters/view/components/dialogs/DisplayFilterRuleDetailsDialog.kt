@@ -134,7 +134,7 @@ private fun DisplayFilterRuleDetailsDialogContent(
                             filterRule.type
                         )
                     )
-                }) { Text("Delete") }
+                }) { Text(stringResource(id = R.string.delete_filter_dialog_confirm_btn)) }
             }
         }
     }

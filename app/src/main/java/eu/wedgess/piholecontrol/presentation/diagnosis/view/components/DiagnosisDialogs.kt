@@ -22,6 +22,7 @@ fun DiagnosisDialogs(
     dialogType: DiagnosisDialogType,
     onDismissMessageClick: (DiagnosisMessageInfo) -> Unit,
     onDismissMessageConfirmClick: () -> Unit,
+    onDismissSelectedMessagesConfirmClick: () -> Unit,
     onDismissDialogClick: () -> Unit
 ) {
     when (dialogType) {
@@ -40,6 +41,17 @@ fun DiagnosisDialogs(
             confirmText = stringResource(R.string.diagnosis_btn_dismiss),
             onDismiss = onDismissDialogClick,
             onConfirm = onDismissMessageConfirmClick
+        )
+        is DiagnosisDialogType.ConfirmDismissSelectedMessages -> AlertMessageDialog(
+            titleText = stringResource(R.string.diagnosis_dismiss_selected_dialog_title),
+            messageText = stringResource(
+                R.string.diagnosis_dismiss_selected_dialog_message,
+                dialogType.count
+            ),
+            dismissText = stringResource(R.string.all_btn_cancel),
+            confirmText = stringResource(R.string.diagnosis_btn_dismiss),
+            onDismiss = onDismissDialogClick,
+            onConfirm = onDismissSelectedMessagesConfirmClick
         )
         DiagnosisDialogType.None -> Unit
     }

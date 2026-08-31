@@ -144,10 +144,6 @@ class LogsViewModel @Inject constructor(
                 it.copy(dialogType = LogsDialogType.None)
             }
 
-            LogsContract.Event.OnHideSortingMenu -> _uiState.update {
-                it.copy(showSortingDropdownMenu = false)
-            }
-
             is LogsContract.Event.OnLogLimitChanged -> _bottomSheetUiState.update {
                 it.copy(logsLimit = event.limit)
             }
@@ -164,10 +160,6 @@ class LogsViewModel @Inject constructor(
                 it.copy(showSearchView = true)
             }.also {
                 fetchLogsUseCase.setRefreshMode(RefreshMode.Manual)
-            }
-
-            LogsContract.Event.OnShowSortingMenu -> _uiState.update {
-                it.copy(showSortingDropdownMenu = true)
             }
 
             is LogsContract.Event.OnDateConfirmed -> {
@@ -207,11 +199,7 @@ class LogsViewModel @Inject constructor(
             }
 
             is LogsContract.Event.OnSortTypeSelected -> _uiState.update {
-                it.copy(sorting = event.sorting, showSortingDropdownMenu = false)
-            }
-
-            LogsContract.Event.OnSortingDismissed -> _uiState.update {
-                it.copy(showSortingDropdownMenu = false)
+                it.copy(sorting = event.sorting)
             }
 
             LogsContract.Event.OnClearFiltersClick -> _bottomSheetUiState.update {

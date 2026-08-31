@@ -32,6 +32,6 @@ fun MainNavigationGraph(
         statisticsRoot(onComposing, onResetBottomAppBarOffset)
         filtersRoot(onComposing)
         logsRoot(onComposing)
-        settingsNavigationGraph(navController, onComposing)
+        toolsNavigationGraph(navController, onComposing)
     }
 }

@@ -56,7 +56,9 @@ class FilterTabViewModel @AssistedInject constructor(
 
                 if (filteredRules.isEmpty()) {
                     UIResult.Empty(
-                        ResultType.Empty.WithTitle(UiText.DynamicString("No rules found"))
+                        ResultType.Empty.WithTitle(
+                            UiText.StringResource(R.string.filters_empty_rules_title)
+                        )
                     )
                 } else {
                     UIResult.Loaded(FilterTabContract.UiState(filteredRules))
@@ -92,7 +94,10 @@ class FilterTabViewModel @AssistedInject constructor(
         return UIResult.Error(
             ResultType.Error.WithTitleAndSubTitleAndRetry(
                 title = UiText.StringResource(R.string.filter_rules_fetch_error),
-                subTitle = UiText.DynamicString(throwable?.message ?: "Unknown error"),
+                subTitle = UiText.StringResourceWithArgs(
+                    R.string.filter_rules_fetch_error_message,
+                    throwable?.message ?: ""
+                ),
                 onRetry = onRetry
             )
         )

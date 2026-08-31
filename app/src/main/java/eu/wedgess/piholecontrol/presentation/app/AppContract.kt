@@ -20,7 +20,7 @@ interface AppContract {
             fun initial() = UiState(
                 appInfo = PiHoleAppInfo.initial(),
                 showConnectionDropdown = false,
-                appBarState = AppBarState(),
+                appBarState = AppBarState.Normal(),
                 networkConnectionState = NetworkStatusUiState(),
                 dialogType = AppDialogType.None
             )

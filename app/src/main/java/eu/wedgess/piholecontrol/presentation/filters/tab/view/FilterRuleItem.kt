@@ -1,7 +1,8 @@
 package eu.wedgess.piholecontrol.presentation.filters.tab.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,17 +26,30 @@ import eu.wedgess.piholecontrol.presentation.compose.ThemePreview
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FilterRuleItem(
     rule: FilterRuleInfo,
     onItemClick: () -> Unit,
+    onItemLongClick: () -> Unit,
+    isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val backgroundColor = if (isSelected) {
+        MaterialTheme.colorScheme.primary.copy(alpha = SELECTED_ITEM_ALPHA)
+            .compositeOver(MaterialTheme.colorScheme.background)
+    } else {
+        MaterialTheme.colorScheme.background
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-            .clickable { onItemClick() }
+            .background(backgroundColor)
+            .combinedClickable(
+                onClick = onItemClick,
+                onLongClick = onItemLongClick
+            )
             .padding(
                 horizontal = PiHoleControlTheme.dimens.padding.screenContent,
                 vertical = PiHoleControlTheme.dimens.padding.itemContentSmall
@@ -88,10 +103,17 @@ private fun FilterRuleItemPreview(
 ) {
     PiHoleControlTheme {
         Surface {
-            FilterRuleItem(rule = filter, onItemClick = {})
+            FilterRuleItem(
+                rule = filter,
+                isSelected = false,
+                onItemClick = {},
+                onItemLongClick = {}
+            )
         }
     }
 }
+
+private const val SELECTED_ITEM_ALPHA = 0.08f
 
 private class FilterListItemPreviewParameterProvider :
     PreviewParameterProvider<FilterRuleInfo> {

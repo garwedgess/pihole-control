@@ -4,4 +4,5 @@ sealed interface DiagnosisDialogType {
     data object None : DiagnosisDialogType
     data class ShowMessageDetails(val message: DiagnosisMessageInfo) : DiagnosisDialogType
     data class ConfirmDismissMessage(val message: DiagnosisMessageInfo) : DiagnosisDialogType
+    data class ConfirmDismissSelectedMessages(val count: Int) : DiagnosisDialogType
 }

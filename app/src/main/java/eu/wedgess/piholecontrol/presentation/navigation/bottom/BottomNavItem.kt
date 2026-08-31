@@ -3,9 +3,9 @@ package eu.wedgess.piholecontrol.presentation.navigation.bottom
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.PlaylistAddCheck
 import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocalPolice
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
@@ -41,13 +41,13 @@ sealed class BottomNavItem<T>(
         Icons.AutoMirrored.Outlined.PlaylistAddCheck
     )
 
-    data object Settings : BottomNavItem<Screens.Settings>(
-        route = Screens.Settings,
-        UiText.StringResource(R.string.nav_title_settings),
-        Icons.Outlined.Settings
+    data object Tools : BottomNavItem<Screens.Tools>(
+        route = Screens.Tools,
+        UiText.StringResource(R.string.nav_title_tools),
+        Icons.Outlined.Build
     )
 
     companion object {
-        fun all() = listOf(Home, Statistics, Filters, Logs, Settings)
+        fun all() = listOf(Home, Statistics, Filters, Logs, Tools)
     }
 }

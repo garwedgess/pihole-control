@@ -24,6 +24,7 @@ fun FilterDialogs(
     onEnabledChange: (Boolean) -> Unit,
     onRegexChange: (Boolean) -> Unit,
     onDeleteRuleClick: (ModifyFilterRule.Delete) -> Unit,
+    onDeleteSelectedRulesClick: () -> Unit,
     onDismissDialogClick: () -> Unit
 ) {
     when (dialogType) {
@@ -74,6 +75,18 @@ fun FilterDialogs(
                     )
                 )
             },
+            onDismiss = onDismissDialogClick
+        )
+
+        is FilterDialogType.OnConfirmSelectedFiltersDelete -> AlertMessageDialog(
+            titleText = stringResource(id = R.string.delete_selected_filters_dialog_title),
+            messageText = stringResource(
+                id = R.string.delete_selected_filters_dialog_message,
+                dialogType.count
+            ),
+            confirmText = stringResource(id = R.string.delete_filter_dialog_confirm_btn),
+            dismissText = stringResource(id = R.string.delete_filter_dialog_cancel_btn),
+            onConfirm = onDeleteSelectedRulesClick,
             onDismiss = onDismissDialogClick
         )
     }

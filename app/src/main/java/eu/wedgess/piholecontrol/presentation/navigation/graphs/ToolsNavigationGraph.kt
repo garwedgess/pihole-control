@@ -11,20 +11,24 @@ import eu.wedgess.piholecontrol.presentation.diagnosis.navigation.diagnosisRoot
 import eu.wedgess.piholecontrol.presentation.localdns.navigation.localDnsRoot
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.settings.navigation.settingsRoot
+import eu.wedgess.piholecontrol.presentation.tools.navigation.toolsRoot
 
 @ExperimentalGetImage
-fun NavGraphBuilder.settingsNavigationGraph(
+fun NavGraphBuilder.toolsNavigationGraph(
     navHostController: NavHostController,
     onComposing: (AppBarState) -> Unit
 ) {
-    navigation<Graphs.Settings>(
-        startDestination = Screens.Settings
+    navigation<Graphs.Tools>(
+        startDestination = Screens.Tools
     ) {
-        settingsRoot(
+        toolsRoot(
             onComposing = onComposing,
-            onNavigateToConnections = { navHostController.navigate(Screens.Connections) },
             onNavigateToLocalDns = { navHostController.navigate(Screens.LocalDns) },
             onNavigateToDiagnosis = { navHostController.navigate(Screens.Diagnosis) }
+        )
+        settingsRoot(
+            onComposing = onComposing,
+            onNavigateToConnections = { navHostController.navigate(Screens.Connections) }
         )
         connectionsRoot(
             onComposing = onComposing,

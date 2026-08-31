@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -26,10 +27,10 @@ import eu.wedgess.piholecontrol.presentation.compose.CollectSideEffect
 import eu.wedgess.piholecontrol.presentation.compose.UIResult
 import eu.wedgess.piholecontrol.presentation.logs.LogsContract
 import eu.wedgess.piholecontrol.presentation.logs.view.LogsScreen
+import eu.wedgess.piholecontrol.presentation.logs.view.components.actions.LogsOverflowMenuItems
 import eu.wedgess.piholecontrol.presentation.logs.view.components.actions.LogsTopBarActions
 import eu.wedgess.piholecontrol.presentation.logs.viewmodel.LogsViewModel
 import eu.wedgess.piholecontrol.presentation.navigation.Screens
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.logsRoot(
@@ -42,13 +43,12 @@ fun NavGraphBuilder.logsRoot(
         val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
         val sideEffect = viewModel.sideEffect
         val context = LocalContext.current
-        var appbarState by remember { mutableStateOf(AppBarState()) }
+        var normalAppBarState by remember { mutableStateOf(AppBarState.Normal()) }
         val scaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = rememberStandardBottomSheetState(
                 skipHiddenState = false,
                 confirmValueChange = {
-                    Timber.d("GARETH SHEETSTATE confirmValueChange $it")
-                    if (it == SheetValue.PartiallyExpanded) {
+                    if (it == SheetValue.Hidden) {
                         viewModel.onEvent(LogsContract.Event.OnToggleFiltersBottomSheet(false))
                     }
                     true
@@ -60,64 +60,75 @@ fun NavGraphBuilder.logsRoot(
         uiResult.run {
             if (this is UIResult.Loaded) {
                 val state = this.data
-                LaunchedEffect(state.showSortingDropdownMenu) {
-                    appbarState = appbarState.copy(
+                LaunchedEffect(
+                    state.sorting,
+                    bottomSheetUiState.showFilterBottomSheet
+                ) {
+                    normalAppBarState = normalAppBarState.copy(
                         actions = {
                             LogsTopBarActions(
                                 onSearchClick = {
                                     viewModel.onEvent(LogsContract.Event.OnShowSearchView)
-                                },
+                                }
+                            )
+                        },
+                        overflowActions = { dismiss ->
+                            LogsOverflowMenuItems(
+                                selectedSorting = state.sorting,
                                 onFilterClick = {
+                                    dismiss()
                                     viewModel.onEvent(
-                                        LogsContract.Event.OnToggleFiltersBottomSheet(
-                                            !bottomSheetUiState.showFilterBottomSheet
-                                        )
+                                        LogsContract.Event.OnToggleFiltersBottomSheet(true)
                                     )
                                 },
-                                onSortClick = {
-                                    viewModel.onEvent(LogsContract.Event.OnShowSortingMenu)
-                                },
                                 onSortItemClick = {
+                                    dismiss()
                                     viewModel.onEvent(LogsContract.Event.OnSortTypeSelected(it))
-                                },
-                                onDismissSort = {
-                                    viewModel.onEvent(LogsContract.Event.OnSortingDismissed)
-                                },
-                                isSortingMenuVisible = state.showSortingDropdownMenu,
-                                selectedSorting = state.sorting
+                                }
                             )
                         }
                     )
-                    onComposing(appbarState)
+                    if (!searchUiState.showSearchView) {
+                        onComposing(normalAppBarState)
+                    }
                 }
             }
         }
 
         LaunchedEffect(searchUiState.showSearchView, searchUiState.searchQuery) {
-            appbarState = appbarState.copy(
-                showSearchView = searchUiState.showSearchView,
-                searchContent = {
-                    SearchContent(
-                        placeHolderText = context.getString(
-                            R.string.logs_search_placeholder
-                        ),
-                        searchQuery = searchUiState.searchQuery,
-                        showSearchView = searchUiState.showSearchView,
-                        onExpandedChange = {
-                            viewModel.onEvent(
-                                LogsContract.Event.OnSearchExpandedChanged(it)
+            onComposing(
+                if (searchUiState.showSearchView) {
+                    AppBarState.Search(
+                        title = normalAppBarState.title,
+                        searchContent = {
+                            SearchContent(
+                                placeHolderText = stringResource(
+                                    R.string.logs_search_placeholder
+                                ),
+                                searchQuery = searchUiState.searchQuery,
+                                showSearchView = true,
+                                onExpandedChange = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnSearchExpandedChanged(it)
+                                    )
+                                },
+                                onQueryChange = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnSearchQueryChanged(it)
+                                    )
+                                },
+                                onClearSearchQuery = {
+                                    viewModel.onEvent(
+                                        LogsContract.Event.OnClearSearchQuery(it)
+                                    )
+                                }
                             )
-                        },
-                        onQueryChange = {
-                            viewModel.onEvent(LogsContract.Event.OnSearchQueryChanged(it))
-                        },
-                        onClearSearchQuery = {
-                            viewModel.onEvent(LogsContract.Event.OnClearSearchQuery(it))
                         }
                     )
+                } else {
+                    normalAppBarState
                 }
             )
-            onComposing(appbarState)
         }
         LaunchedEffect(bottomSheetUiState.showFilterBottomSheet) {
             if (bottomSheetUiState.showFilterBottomSheet) {

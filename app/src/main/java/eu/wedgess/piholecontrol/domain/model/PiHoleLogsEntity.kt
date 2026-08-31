@@ -1,5 +1,7 @@
 package eu.wedgess.piholecontrol.domain.model
 
+import kotlinx.serialization.SerialName
+
 data class PiHoleLogsEntity(
     val timestamp: Long,
     val client: String,
@@ -78,7 +80,8 @@ data class PiHoleLogsEntity(
         NS("NS"),
         OTHER("OTHER"),
         SVCB("SVCB"),
-        HTTPS("HTTPS");
+        HTTPS("HTTPS"),
+        NA("N/A");
 
         companion object {
             operator fun get(key: String) =

@@ -13,6 +13,7 @@ import eu.wedgess.piholecontrol.domain.usecases.app.ObserveNetworkConnectivityUs
 import eu.wedgess.piholecontrol.domain.usecases.connections.SetConnectionAsActiveUseCase
 import eu.wedgess.piholecontrol.presentation.app.AppContract
 import eu.wedgess.piholecontrol.presentation.app.model.AppDialogType
+import eu.wedgess.piholecontrol.presentation.app.model.withAppInfo
 import eu.wedgess.piholecontrol.presentation.base.EventDrivenViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,7 +50,7 @@ class AppViewModel @Inject constructor(
     ) { appInfo, uiState ->
         uiState.copy(
             appInfo = appInfo,
-            appBarState = uiState.appBarState.copy(
+            appBarState = uiState.appBarState.withAppInfo(
                 adBlockingEnabled = appInfo.status == StatusEntity.ENABLED,
                 currentConnection = appInfo.currentConnection,
                 connections = appInfo.connections

@@ -3,6 +3,7 @@ package eu.wedgess.piholecontrol.presentation.settings.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,35 +23,29 @@ import eu.wedgess.piholecontrol.utils.UiText
 
 fun NavGraphBuilder.settingsRoot(
     onComposing: (AppBarState) -> Unit,
-    onNavigateToConnections: () -> Unit,
-    onNavigateToLocalDns: () -> Unit,
-    onNavigateToDiagnosis: () -> Unit
+    onNavigateToConnections: () -> Unit
 ) {
     composable<Screens.Settings> {
         val viewModel: SettingsViewModel = hiltViewModel()
         val uiResult by viewModel.uiResult.collectAsStateWithLifecycle()
-
-        LaunchedEffect(Unit) {
-            onComposing(
-                AppBarState(
-                    title = UiText.StringResource(id = R.string.nav_title_settings),
-                    bottomBarVisible = true
-                )
+        val appBarState = remember {
+            AppBarState.Normal(
+                title = UiText.StringResource(id = R.string.nav_title_settings),
+                showNavigateBackIcon = true,
+                displayConnection = false,
+                bottomBarVisible = false,
+                showSettingsAction = false
             )
+        }
+
+        LaunchedEffect(appBarState) {
+            onComposing(appBarState)
         }
 
         CollectSideEffect(viewModel.sideEffect) { effect ->
             when (effect) {
                 is SettingsContract.Effect.Navigation.Connections -> {
                     onNavigateToConnections()
-                }
-
-                is SettingsContract.Effect.Navigation.LocalDns -> {
-                    onNavigateToLocalDns()
-                }
-
-                is SettingsContract.Effect.Navigation.Diagnosis -> {
-                    onNavigateToDiagnosis()
                 }
             }
         }

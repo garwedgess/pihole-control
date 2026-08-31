@@ -19,7 +19,7 @@ fun NavGraphBuilder.statisticsRoot(
 ) {
     composable<Screens.Statistics> {
         LaunchedEffect(Unit) {
-            onComposing(AppBarState(showSearchView = false, showNavigateBackIcon = false))
+            onComposing(AppBarState.Normal(showNavigateBackIcon = false))
         }
 
         AnimatedTabContainer(

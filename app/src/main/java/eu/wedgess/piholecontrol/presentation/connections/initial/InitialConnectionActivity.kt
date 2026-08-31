@@ -46,7 +46,7 @@ class InitialConnectionActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         MainAppBar(
-                            appBarState = AppBarState(
+                            appBarState = AppBarState.Normal(
                                 title = UiText.StringResource(R.string.initial_setup_title)
                             )
                         )

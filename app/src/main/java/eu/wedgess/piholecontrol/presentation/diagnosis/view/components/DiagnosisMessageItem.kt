@@ -1,7 +1,8 @@
 package eu.wedgess.piholecontrol.presentation.diagnosis.view.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,13 +36,23 @@ import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
 import java.text.DateFormat
 import java.util.Date
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiagnosisMessageItem(
     message: DiagnosisMessageInfo,
+    isSelected: Boolean,
+    showDismissAction: Boolean,
     onItemClick: () -> Unit,
+    onItemLongClick: () -> Unit,
     onDismissClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val containerColor = if (isSelected) {
+        MaterialTheme.colorScheme.primary.copy(alpha = SELECTED_ITEM_ALPHA)
+            .compositeOver(MaterialTheme.colorScheme.surfaceContainerLow)
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerLow
+    }
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -49,14 +61,17 @@ fun DiagnosisMessageItem(
                 vertical = PiHoleControlTheme.dimens.padding.itemContentXSmall
             ),
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        color = containerColor,
         tonalElevation = 1.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .clickable { onItemClick() },
+                .combinedClickable(
+                    onClick = onItemClick,
+                    onLongClick = onItemLongClick
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -118,16 +133,20 @@ fun DiagnosisMessageItem(
                     )
                 )
             }
-            IconButton(onClick = onDismissClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            if (showDismissAction) {
+                IconButton(onClick = onDismissClick) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }
 }
+
+private const val SELECTED_ITEM_ALPHA = 0.08f
 
 private fun DiagnosisMessageInfo.formattedTimestamp(): String {
     return DateFormat.getDateTimeInstance(

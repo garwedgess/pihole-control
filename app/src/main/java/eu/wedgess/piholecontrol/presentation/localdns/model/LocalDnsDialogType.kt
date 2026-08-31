@@ -9,4 +9,5 @@ sealed interface LocalDnsDialogType {
     ) : LocalDnsDialogType
     data class ShowLocalDnsRecordInfo(val record: LocalDnsRecordInfo) : LocalDnsDialogType
     data class ConfirmDeleteLocalDnsRecord(val record: LocalDnsRecordInfo) : LocalDnsDialogType
+    data class ConfirmDeleteSelectedLocalDnsRecords(val count: Int) : LocalDnsDialogType
 }

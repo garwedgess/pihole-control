@@ -63,6 +63,9 @@ data class PiHoleLogsResponseData(
 
 @Serializable
 enum class PiHoleLogEntryType(val key: String) {
+    @SerialName("N/A")
+    NA("N/A"),
+
     @SerialName("A")
     A("A"),
 

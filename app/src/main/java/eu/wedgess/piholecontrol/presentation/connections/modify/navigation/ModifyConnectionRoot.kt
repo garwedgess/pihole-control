@@ -30,7 +30,7 @@ fun NavGraphBuilder.modifyConnectionRoot(
 
         LaunchedEffect(Unit) {
             onComposing(
-                AppBarState(
+                AppBarState.Normal(
                     title = UiText.StringResource(id = R.string.appbar_title_connection),
                     showNavigateBackIcon = true,
                     bottomBarVisible = false

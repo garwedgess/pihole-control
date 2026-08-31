@@ -1,8 +1,11 @@
 package eu.wedgess.piholecontrol.presentation.filters
 
+import eu.wedgess.piholecontrol.R
 import eu.wedgess.piholecontrol.domain.model.GroupEntity
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterByOption
 import eu.wedgess.piholecontrol.presentation.filters.model.FilterDialogType
+import eu.wedgess.piholecontrol.presentation.filters.model.FilterRuleIdentity
 import eu.wedgess.piholecontrol.presentation.filters.model.ModifyFilterRule
 import eu.wedgess.piholecontrol.presentation.filters.tab.model.FilterRuleInfo
 import eu.wedgess.piholecontrol.presentation.navigation.tabs.FilterTab
@@ -19,7 +22,8 @@ interface FiltersContract {
         val allowSelectedFilterBy: List<FilterByOption>,
         val denySelectedFilterBy: List<FilterByOption>,
         val tabOptionItems: List<FilterTab>,
-        val selectedTabType: FilterTab
+        val selectedTabType: FilterTab,
+        val selectionMode: SelectionMode<FilterRuleIdentity>
     ) {
 
         val selectedFilterByOptions: List<FilterByOption>
@@ -38,19 +42,34 @@ interface FiltersContract {
                 allowSelectedFilterBy = FilterByOption.getByTab(FilterTab.AllowList),
                 denySelectedFilterBy = FilterByOption.getByTab(FilterTab.DenyList),
                 tabOptionItems = FilterTab.all(),
-                selectedTabType = FilterTab.AllowList
+                selectedTabType = FilterTab.AllowList,
+                selectionMode = SelectionMode.Inactive
             )
         }
     }
 
     sealed interface Effect {
         sealed class Toast(val message: UiText) : Effect {
-            data object RuleAdded : Toast(UiText.DynamicString("Successfully added rule"))
-            data object RuleAddFailed : Toast(UiText.DynamicString("Failed to add rule"))
-            data object RuleRemoved : Toast(UiText.DynamicString("Successfully removed rule"))
-            data object RuleRemovalFailed : Toast(UiText.DynamicString("Failed to remove rule"))
-            data object RuleUpdated : Toast(UiText.DynamicString("Successfully updated rule"))
-            data object RuleUpdateFailed : Toast(UiText.DynamicString("Failed to update rule"))
+            data object RuleAdded :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_added))
+
+            data object RuleAddFailed :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_add_failed))
+
+            data object RuleRemoved :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_removed))
+
+            data object SelectedRulesRemoved :
+                Toast(UiText.StringResource(R.string.filters_toast_selected_rules_removed))
+
+            data object RuleRemovalFailed :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_removal_failed))
+
+            data object RuleUpdated :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_updated))
+
+            data object RuleUpdateFailed :
+                Toast(UiText.StringResource(R.string.filters_toast_rule_update_failed))
         }
     }
 
@@ -62,12 +81,16 @@ interface FiltersContract {
         data class OnFilterByOptionClick(val option: FilterByOption) : Event
         data object OnDismissFilterBy : Event
         data class OnFilterRuleItemClick(val item: FilterRuleInfo) : Event
+        data class OnFilterRuleItemLongClick(val item: FilterRuleInfo) : Event
         data class OnFilterTabChanged(val type: FilterTab) : Event
         data object OnAddFilterRuleConfirmed : Event
         data object OnUpdateFilterRuleConfirmed : Event
         data class OnEditFilterRuleClick(val rule: FilterRuleInfo) : Event
         data class OnDeleteFilterRuleClick(val rule: FilterRuleInfo) : Event
         data class OnDeleteFilterRuleConfirmed(val rule: ModifyFilterRule.Delete) : Event
+        data object OnDeleteSelectedFilterRulesClick : Event
+        data object OnDeleteSelectedFilterRulesConfirmed : Event
+        data object OnClearSelection : Event
         data class OnClearSearchQuery(val query: String) : Event
         data class OnSearchExpandedChanged(val expanded: Boolean) : Event
         data class OnSearchQueryChanged(val query: String) : Event

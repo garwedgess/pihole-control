@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import eu.wedgess.piholecontrol.presentation.common.model.SelectionMode
 import eu.wedgess.piholecontrol.presentation.compose.Compose
 import eu.wedgess.piholecontrol.presentation.compose.EmptyScreen
 import eu.wedgess.piholecontrol.presentation.compose.ErrorScreen
@@ -28,10 +29,12 @@ fun LocalDnsScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onEvent(LocalDnsContract.Event.OnAddLocalDnsRecordClick) }
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            if (uiState.selectionMode !is SelectionMode.Active) {
+                FloatingActionButton(
+                    onClick = { onEvent(LocalDnsContract.Event.OnAddLocalDnsRecordClick) }
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }
             }
         }
     ) { padding ->
@@ -48,6 +51,7 @@ fun LocalDnsScreen(
                     onLoaded = {
                         LocalDnsListContent(
                             records = it,
+                            selectionMode = uiState.selectionMode,
                             onEvent = onEvent
                         )
                     }
@@ -69,6 +73,9 @@ fun LocalDnsScreen(
         onEditClick = { onEvent(LocalDnsContract.Event.OnEditLocalDnsRecordClick(it)) },
         onDeleteClick = { onEvent(LocalDnsContract.Event.OnDeleteLocalDnsRecordClick(it)) },
         onDeleteConfirmClick = { onEvent(LocalDnsContract.Event.OnDeleteLocalDnsRecordConfirmed) },
+        onDeleteSelectedConfirmClick = {
+            onEvent(LocalDnsContract.Event.OnDeleteSelectedLocalDnsRecordsConfirmed)
+        },
         onDismissDialogClick = { onEvent(LocalDnsContract.Event.OnDismissDialog) }
     )
 }

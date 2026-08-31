@@ -174,7 +174,7 @@ private fun FilterRuleDialogContent(
                 DropdownTextField(
                     selectedValues = selectedGroups,
                     options = groups,
-                    label = "Group",
+                    label = stringResource(R.string.filters_dialog_label_group),
                     onValueChange = onGroupsChange,
                     valueFormatter = { it.name },
                     multiSelect = true

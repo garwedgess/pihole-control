@@ -55,6 +55,7 @@ import eu.wedgess.piholecontrol.presentation.app.view.components.NetworkStatusRo
 import eu.wedgess.piholecontrol.presentation.app.view.components.dialog.AppDialogs
 import eu.wedgess.piholecontrol.presentation.app.viewmodel.AppViewModel
 import eu.wedgess.piholecontrol.presentation.common.components.MainAppBar
+import eu.wedgess.piholecontrol.presentation.navigation.Screens
 import eu.wedgess.piholecontrol.presentation.navigation.bottom.BottomNavigationBar
 import eu.wedgess.piholecontrol.presentation.navigation.graphs.MainNavigationGraph
 import eu.wedgess.piholecontrol.presentation.theme.PiHoleControlTheme
@@ -156,6 +157,9 @@ fun PiHoleControlApp(
                                     it
                                 )
                             )
+                        },
+                        onSettingsClick = {
+                            navHostController.navigate(Screens.Settings)
                         }
                     )
                 },

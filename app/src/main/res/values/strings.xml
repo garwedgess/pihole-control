@@ -6,7 +6,11 @@
     <string name="all_msg_no_results_found_for">No results found for: %s</string>
     <string name="all_error_msg_unknown">Unknown error</string>
     <string name="all_cd_back">Back</string>
+    <string name="all_cd_more_options">More options</string>
     <string name="all_btn_close">Close</string>
+    <string name="all_selected_count">%d selected</string>
+    <string name="all_cd_delete_selected">Delete selected</string>
+    <string name="all_cd_dismiss_selected">Dismiss selected</string>
 
     <!-- Bottom Nav / AppBar -->
     <string name="nav_title_home">Home</string>
@@ -14,6 +18,7 @@
     <string name="nav_title_filters">Filters</string>
     <string name="nav_title_logs">Logs</string>
     <string name="nav_title_settings">Settings</string>
+    <string name="nav_title_tools">Tools</string>
     <string name="nav_title_local_dns">Local DNS</string>
     <string name="nav_title_diagnosis">Diagnosis</string>
 
@@ -30,6 +35,13 @@
     <string name="settings_refresh_interval_seconds">%d seconds</string>
     <string name="settings_multi_status_change_title">Multi-status Change</string>
     <string name="settings_multi_status_change_subtitle">Apply status changes to all connections</string>
+
+    <!-- Tools Screen -->
+    <string name="tools_category_pihole">Pi-hole Tools</string>
+    <string name="tools_local_dns_title">Local DNS</string>
+    <string name="tools_local_dns_subtitle">Search, add, edit, and delete local DNS records</string>
+    <string name="tools_diagnosis_title">Diagnosis</string>
+    <string name="tools_diagnosis_subtitle">View and dismiss Pi-hole diagnosis messages</string>
 
     <!-- Summary Screen -->
     <string name="summary_title_total_queries">Total Queries</string>
@@ -52,6 +64,8 @@
     <string name="log_label_date_sort_asc">Date Ascending</string>
     <string name="log_label_response_time_sort_asc">Response Time Ascending</string>
     <string name="log_label_response_time_sort_desc">Response Time Descending</string>
+    <string name="logs_cd_search">Search logs</string>
+    <string name="logs_menu_filter">Filter logs</string>
     <string name="log_version_5_response_time_postfix">%s ms</string>
     <string name="log_version_6_response_time_postfix">%s µs</string>
 
@@ -118,6 +132,7 @@
     <string name="filters_edit_rule_dialog_title">Edit rule</string>
     <string name="filters_edit_rule_dialog_btn_update">Update</string>
     <string name="filters_edit_rule_dialog_label_enabled">Enabled</string>
+    <string name="filters_dialog_label_group">Group</string>
     <string name="filters_details_dialog_title">Filter rule</string>
     <string name="filters_details_dialog_label_domain">Domain</string>
     <string name="filters_details_dialog_label_type">Type</string>
@@ -136,10 +151,17 @@
     <string name="filters_label_allowlist_regex">Allow Regex</string>
     <string name="filters_label_denylist_regex">Deny Regex</string>
     <string name="filter_rules_fetch_error">Failed to fetch filter rules</string>
+    <string name="filter_rules_fetch_error_message">Failed to fetch filter rules: %s</string>
+    <string name="filters_empty_rules_title">No rules found</string>
+    <string name="filters_toast_rule_added">Filter rule added</string>
+    <string name="filters_toast_rule_add_failed">Failed to add filter rule</string>
+    <string name="filters_toast_rule_removed">Filter rule removed</string>
+    <string name="filters_toast_selected_rules_removed">Selected filters removed</string>
+    <string name="filters_toast_rule_removal_failed">Failed to remove filter rule</string>
+    <string name="filters_toast_rule_updated">Filter rule updated</string>
+    <string name="filters_toast_rule_update_failed">Failed to update filter rule</string>
 
     <!-- Local DNS Screen -->
-    <string name="local_dns_settings_title">Local DNS</string>
-    <string name="local_dns_settings_subtitle">Manage local DNS records</string>
     <string name="local_dns_empty_title">No local DNS records found</string>
     <string name="local_dns_empty_search_title">No matching local DNS records</string>
     <string name="local_dns_fetch_error_title">Failed to fetch local DNS records</string>
@@ -149,6 +171,7 @@
     <string name="local_dns_toast_record_updated">Local DNS record updated</string>
     <string name="local_dns_toast_record_update_failed">Failed to update local DNS record</string>
     <string name="local_dns_toast_record_deleted">Local DNS record deleted</string>
+    <string name="local_dns_toast_selected_records_deleted">Selected local DNS records deleted</string>
     <string name="local_dns_toast_record_delete_failed">Failed to delete local DNS record</string>
     <string name="local_dns_toast_refresh_failed">Failed to refresh local DNS records</string>
     <string name="local_dns_add_dialog_title">Add local DNS record</string>
@@ -160,12 +183,12 @@
     <string name="local_dns_details_dialog_btn_delete">Delete</string>
     <string name="local_dns_delete_dialog_title">Delete local DNS record</string>
     <string name="local_dns_delete_dialog_message">Are you sure you want to delete %s? This cannot be undone.</string>
+    <string name="local_dns_delete_selected_dialog_title">Delete selected local DNS records</string>
+    <string name="local_dns_delete_selected_dialog_message">Are you sure you want to delete %d selected local DNS records? This cannot be undone.</string>
     <string name="local_dns_label_domain">Domain</string>
     <string name="local_dns_label_ip_address">IP address</string>
 
     <!-- Diagnosis Screen -->
-    <string name="diagnosis_settings_title">Diagnosis</string>
-    <string name="diagnosis_settings_subtitle">View Pi-hole diagnosis messages</string>
     <string name="diagnosis_empty_title">No diagnosis messages</string>
     <string name="diagnosis_empty_message">Pi-hole has not reported any active diagnosis issues.</string>
     <string name="diagnosis_fetch_error_title">Failed to fetch diagnosis messages</string>
@@ -176,6 +199,8 @@
     <string name="diagnosis_details_dialog_title">Diagnosis message</string>
     <string name="diagnosis_dismiss_dialog_title">Dismiss diagnosis message</string>
     <string name="diagnosis_dismiss_dialog_message">Dismiss the %s diagnosis message?</string>
+    <string name="diagnosis_dismiss_selected_dialog_title">Dismiss selected diagnosis messages</string>
+    <string name="diagnosis_dismiss_selected_dialog_message">Dismiss %d selected diagnosis messages from Pi-hole?</string>
     <string name="diagnosis_btn_dismiss">Dismiss</string>
     <string name="diagnosis_label_type">Type</string>
     <string name="diagnosis_label_severity">Severity</string>
@@ -249,6 +274,8 @@
     <string name="delete_filter_dialog_message">Are you sure you want to delete the filter for %s? This cannot be undone.</string>
     <string name="delete_filter_dialog_confirm_btn">Confirm</string>
     <string name="delete_filter_dialog_cancel_btn">Cancel</string>
+    <string name="delete_selected_filters_dialog_title">Delete selected filters</string>
+    <string name="delete_selected_filters_dialog_message">Are you sure you want to delete %d selected filters? This cannot be undone.</string>
 
 
     <string name="connections_error_title">Failed to fetch connections</string>

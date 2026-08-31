@@ -36,6 +36,7 @@ fun DiagnosisScreen(
                     onLoaded = {
                         DiagnosisListContent(
                             messages = it,
+                            selectionMode = uiState.selectionMode,
                             onEvent = onEvent
                         )
                     }
@@ -51,6 +52,9 @@ fun DiagnosisScreen(
         },
         onDismissMessageConfirmClick = {
             onEvent(DiagnosisContract.Event.OnDismissDiagnosisMessageConfirmed)
+        },
+        onDismissSelectedMessagesConfirmClick = {
+            onEvent(DiagnosisContract.Event.OnDismissSelectedDiagnosisMessagesConfirmed)
         },
         onDismissDialogClick = {
             onEvent(DiagnosisContract.Event.OnDismissDialog)

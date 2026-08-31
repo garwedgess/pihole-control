@@ -19,6 +19,9 @@ sealed interface Screens {
     data object Settings : Screens
 
     @Serializable
+    data object Tools : Screens
+
+    @Serializable
     data object Connections : Screens
 
     @Serializable

@@ -66,7 +66,6 @@ interface LogsContract {
     data class UiState(
         val logs: List<LogEntryInfo>,
         val sorting: LogSorting,
-        val showSortingDropdownMenu: Boolean,
         val liveLogging: Boolean,
         val dialogType: LogsDialogType
     ) {
@@ -75,7 +74,6 @@ interface LogsContract {
 
             fun initial() = UiState(
                 logs = emptyList(),
-                showSortingDropdownMenu = false,
                 sorting = LogSorting.DATE_DESC,
                 dialogType = LogsDialogType.None,
                 liveLogging = false
@@ -101,12 +99,9 @@ interface LogsContract {
 
     sealed interface Event {
         data object OnShowSearchView : Event
-        data object OnShowSortingMenu : Event
-        data object OnHideSortingMenu : Event
         data object OnDismissDialog : Event
         data object OnFromTimeCleared : Event
         data object OnToTimeCleared : Event
-        data object OnSortingDismissed : Event
         data object OnClearFiltersClick : Event
         data class OnLogLimitChanged(val limit: Int) : Event
         data class OnStatusChanged(val status: LogEntryStatus) : Event
